@@ -1,0 +1,8 @@
+env
+data
+.idea
+tmp
+*.pyc
+.DS_Store
+
+/deploy/node_modules
