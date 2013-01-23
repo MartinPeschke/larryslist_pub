@@ -1,0 +1,7 @@
+@cachebuster: CACHEBUSTTOKEN;
+.background-image(@url){
+  background-image: url("@{url}?v=@{cachebuster}");
+}
+.background-pic(@url){
+  background: url("@{url}?v=@{cachebuster}") no-repeat 0 0;
+}
