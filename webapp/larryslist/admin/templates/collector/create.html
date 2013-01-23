@@ -2,6 +2,15 @@
 
 
 <%block name="contentbody">
-    Create Collector
+
+    ${view.form().render(request)|n}
+
 </%block>
 
+
+
+<%def name="formfooter()">
+    <div class="action-items">
+        footer is rendered
+    </div>
+</%def>

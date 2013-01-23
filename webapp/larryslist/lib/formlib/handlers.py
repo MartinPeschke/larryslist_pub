@@ -15,11 +15,6 @@ _ = lambda s:s
 
 class InvalidCSRFToken(Exception):pass
 
-class BaseForm(object):
-    form_id = 'formdata'
-    validators = []
-
-
 
 
 
@@ -36,9 +31,9 @@ class ValidatedFormHandlerMetaClass(type):
         if 'schemas' not in dct:
             if 'form' in dct:
                 form = dct['form']
-                dct['schemas'] = OrderedDict([(form.form_id, form)])
+                dct['schemas'] = OrderedDict([(form.id, form)])
             elif 'forms' in dct:
-                dct['schemas'] = OrderedDict([(form.form_id, form) for form in dct['forms']])
+                dct['schemas'] = OrderedDict([(form.id, form) for form in dct['forms']])
         return super(ValidatedFormHandlerMetaClass, cls).__new__(cls, name, bases, dct)
 
 

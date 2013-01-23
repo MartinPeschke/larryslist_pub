@@ -1,0 +1,7 @@
+<form class="${form.classes}" method="post" id="${form.id}"
+    <input type="hidden" name="type" value="${form.id}"/>
+    <input type="hidden" name="token" value="${request.session.get_csrf_token()}"/>
+    %for field in form.fields:
+        ${field.render(request)|n}
+    %endfor
+</form>
