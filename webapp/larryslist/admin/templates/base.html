@@ -36,8 +36,6 @@
                     , baseUrl: "${STATIC_URL}scripts/apps"
                     , paths : {
                         "tools":"${ROOT_STATIC_URL}scripts/tools"
-                        ,"player":"${ROOT_STATIC_URL}scripts/player"
-                        ,"flowplayer":"${ROOT_STATIC_URL}fp"
                         ,"text":"${ROOT_STATIC_URL}scripts/text"
                     }};
   </script>
@@ -79,4 +77,18 @@
             </div>
         </div>
     </div>
+</%def>
+
+
+<%def name="navLink(label, route, classes = '', *args, **kwargs)">
+<li class="${'active' if request.matched_route.name == route else ''}"><a class="${classes}" href="${request.fwd_url(route, *args, **kwargs)}">${label|n}</a></li>
+</%def>
+
+<%def name="menuLink(label, route, icon, classes = 'nav-entry-link', startswith = None, *args, **kwargs)">
+<%
+active = request.matched_route.name.startswith(startswith) \
+if startswith \
+else request.matched_route.name == route
+%>
+<li class="nav-entry ${'active' if active else ''}"><a class="${classes}" href="${request.fwd_url(route, *args, **kwargs)}"><i class="${icon}"></i>${label|n}</a></li>
 </%def>

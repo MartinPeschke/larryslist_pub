@@ -1,0 +1,91 @@
+.form-fields {
+  padding:10px 20px 20px;
+  legend {
+    padding: 0 20px;
+    margin: 0 -20px 20px;
+  }
+}
+
+.sub-dued-well {
+  + .sub-dued-well {border-top:1px solid @frameBorder;}
+  .control-number {
+    position: absolute;
+    margin-top: 6px;
+  }
+}
+.add-more {
+  cursor:pointer;
+}
+
+.file-picker-upload  {
+  text-align: center;
+  padding: 20px;
+  background-color: #F6F6F6;
+  border: 1px dashed #666;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  width: 180px;
+  max-width: 100%;
+  margin-left:350px;
+  +.help-block{
+    margin-left:350px;
+  }
+}.upload-picture-display {
+   float:left;
+   display:block;
+   border: 1px solid #CCC;
+   width:320px;
+   height:240px;
+   overflow:hidden;
+   margin-right:25px;
+   .border-radius(4px);
+ }
+
+
+.form-grid {
+  select, textarea, input[type="text"], input[type="password"], input[type="datetime"]
+  , input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"]
+  , input[type="week"], input[type="number"], input[type="email"], input[type="url"]
+  , input[type="search"], input[type="tel"], input[type="color"], .uneditable-input{
+    margin-bottom:0;
+  }
+  .control-group {margin-bottom: 0;vertical-align: top;}
+
+  .form-fields {
+    padding: 20px;
+  }
+  .form-actions {padding:20px;}
+  .add-more-listitem {
+    text-align: center;
+    background: #eee;
+    border: 1px solid @frameBorder;
+    margin-top: 10px;
+    padding: 5px;
+    display:block;
+    &:hover {background-color:@frameBorder;}
+  }
+}
+
+.form-fields-grid {
+  .table-form-header {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  .table-form-row {
+    margin: 0;
+    border-top: 1px solid #ddd;
+    padding: 5px 0;
+  }
+  .control-group, .table-form-cell {
+    display: inline-block;
+    width: 30%;
+    text-align: center;
+    margni:0;
+  }
+}
+
+
+
+textarea.xxx-high{
+  height:60em;
+}

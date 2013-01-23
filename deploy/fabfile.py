@@ -16,7 +16,7 @@ Style = namedtuple("Style", ["list", "hasBuster"])
 
 PROJECTNAME="larryslist"
 SUBSITES = [
-    SubSite(location = 'website', scripts=['jquery.placeholder.js', 'store.js', 'setup.js'], styles=Style(['site.less'], True))
+    SubSite(location = 'website', scripts=['setup.js'], styles=Style(['site.less'], True))
     , SubSite(location = 'admin', scripts=["setup.js"], styles=Style(['site.less'], True))
   ]
 PROCESS_GROUPS = ['p1', 'p2']
@@ -111,6 +111,7 @@ def build_statics(env, version):
             {project}/static/scripts/libs/underscore.js \
             {project}/static/scripts/libs/backbone.js  \
             {project}/static/scripts/libs/jquery.validate.js \
+            {project}/static/scripts/libs/jquery.placeholder.js \
             {project}/static/scripts/libs/require.js \
             --warning_level QUIET --js_output_file {project}/static/scripts/build/libs.js".format(project=PROJECTNAME))
 
