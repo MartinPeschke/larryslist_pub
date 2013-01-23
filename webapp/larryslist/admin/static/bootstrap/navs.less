@@ -13,7 +13,7 @@
 }
 
 // Make links block level
-.nav > li > a {
+.nav > li > .nav-entry-link {
   display: block;
 }
 .nav > li > a:hover {
@@ -23,7 +23,7 @@
 
 // Prevent IE8 from misplacing imgs
 // See https://github.com/h5bp/html5-boilerplate/issues/984#issuecomment-3985989
-.nav > li > a > img {
+.nav > li > .nav-entry-link > img {
   max-width: none;
 }
 
@@ -58,13 +58,12 @@
   padding-right: 15px;
   margin-bottom: 0;
 }
-.nav-list > li > a,
+.nav-list > li > .nav-entry-link,
 .nav-list .nav-header {
   margin-left:  -15px;
-  margin-right: -15px;
   text-shadow: 0 1px 0 rgba(255,255,255,.5);
 }
-.nav-list > li > a {
+.nav-list > li > .nav-entry-link {
   padding: 3px 15px;
 }
 .nav-list > .active > a,

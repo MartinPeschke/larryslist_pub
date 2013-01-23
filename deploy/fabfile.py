@@ -19,7 +19,7 @@ SUBSITES = [
     SubSite(location = 'website', scripts=['setup.js'], styles=Style(['site.less'], True))
     , SubSite(location = 'admin', scripts=["setup.js"], styles=Style(['site.less'], True))
   ]
-PROCESS_GROUPS = ['p1', 'p2']
+PROCESS_GROUPS = ['p1']
 CLEAN_SESSIONS = False
 
 

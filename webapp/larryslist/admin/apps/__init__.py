@@ -1,5 +1,5 @@
 from jsonclient.routing import FunctionRoute, App, ClassRoute, RedirectRoute, JSON_FORM_ATTRS, route_factory
-from pyramid.httpexceptions import HTTPNotFound
+from larryslist.admin.apps import collector
 
 from . import contexts, index
 
@@ -9,7 +9,8 @@ class AdminSettings(object):
         self.clientToken = settings['backend.token']
 
 ROUTE_LIST = [
-    FunctionRoute("admin_index"         , "/", contexts.AdminRootContext, index.index, "index.html")
+    FunctionRoute("admin_index"          , "/", contexts.AdminRootContext, index.index, "index.html")
+    , ClassRoute("admin_collector_create", "/collector/create", contexts.AdminRootContext, collector.CreateHandler, "collector/create.html", view_attrs=JSON_FORM_ATTRS)
 ]
 ROUTE_MAP = {r.name:r for r in ROUTE_LIST}
 

@@ -1,0 +1,23 @@
+<%inherit file="../layout.html"/>
+
+<%def name="contentStatusImpl()">
+    <div class="content-status">
+        <h4>Status</h4>
+    </div>
+</%def>
+
+
+<%def name="contentMenuImpl()">
+    <div class="menu-heading">Collector</div>
+    <ul class="nav nav-list">
+        ${self.menuLink("Personal Details", "icon-user", "admin_collector_create")}
+        ${self.menuLink("Collection", "icon-picture", "admin_collector_create")}
+        ${self.menuLink("Art Engagement", "icon-calendar")}
+        ${self.menuLink("Media Recognition", "icon-signal")}
+        ${self.menuLink("Other Facts", "icon-arrow-right")}
+        <div class="divider"></div>
+        ${self.menuLink("Uploads", "icon-paper-clip")}
+        ${self.menuLink("News", "icon-align-left")}
+        ${self.menuLink("Interaction", "icon-refresh")}
+    </ul>
+</%def>

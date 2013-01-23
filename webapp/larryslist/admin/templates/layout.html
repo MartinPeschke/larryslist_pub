@@ -9,6 +9,16 @@
         <div class="navbar-inner">
             <div class="container">
                 <a class="brand" href="${request.fwd_url("admin_index")}">${g.project_name} - Admin</a>
+                <ul class="nav pull-right">
+                    <li>
+                        <span>
+                            Region
+                        </span>
+                    </li>
+                    <li>
+                        <img class="flag" src="${ROOT_STATIC_URL}img/flags/us.png"/>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
@@ -17,10 +27,13 @@
 <%block name="content">
     <div class="${self.containerClass()} ${self.contentClass()} body-wrapper">
         <%block name="outerContentBody">
+            <div class="content-status-wrapper">
+                <%block name="contentstatus">${self.contentStatusImpl()}</%block>
+            </div>
             <div class="content-menu">
                 <%block name="contentmenu">${self.contentMenuImpl()}</%block>
             </div>
-            <div class="content-body">
+            <div class="content-body ${'has-status' if local.contentStatusImpl != self.contentStatusImpl else ''}">
                 <div style="width:100%;float:left;">
                     ${self.header_messages()}
                     <%block name="contentbody"/>
@@ -34,6 +47,8 @@
 <%block name="scripts"></%block>
 
 
+<%def name="contentStatusImpl()"></%def>
+<%def name="contentStatusImpl()"></%def>
 <%def name="contentMenuImpl()">
     <div class="menu-heading">Admin Area</div>
     <ul class="nav nav-list">

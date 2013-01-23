@@ -84,11 +84,14 @@
 <li class="${'active' if request.matched_route.name == route else ''}"><a class="${classes}" href="${request.fwd_url(route, *args, **kwargs)}">${label|n}</a></li>
 </%def>
 
-<%def name="menuLink(label, route, icon, classes = 'nav-entry-link', startswith = None, *args, **kwargs)">
-<%
-active = request.matched_route.name.startswith(startswith) \
-if startswith \
-else request.matched_route.name == route
-%>
-<li class="nav-entry ${'active' if active else ''}"><a class="${classes}" href="${request.fwd_url(route, *args, **kwargs)}"><i class="${icon}"></i>${label|n}</a></li>
+<%def name="menuLink(label, icon, route = None, classes = 'nav-entry-link', startswith = None, *args, **kwargs)">
+%if route is not None:
+    <%
+        active = request.matched_route.name.startswith(startswith) if startswith else request.matched_route.name == route
+    %>
+    <li class="nav-entry ${'active' if active else ''}"><a class="${classes}" href="${request.fwd_url(route, *args, **kwargs)}"><i class="${icon}"></i>${label|n}</a></li>
+%else:
+    <li class="nav-entry"><span class="${classes}"><i class="${icon}"></i>${label|n}</span></li>
+%endif
+
 </%def>

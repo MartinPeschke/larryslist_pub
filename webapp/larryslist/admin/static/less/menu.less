@@ -19,7 +19,7 @@ span.nav-entry-link { padding: 9px; display:block; color:#CCC;}
   [class^="icon-"] {
     font-size: 2em;
     position: relative;
-    top: 6px;
+    top: 3px;
     line-height: 20px;
   }
 
@@ -30,16 +30,16 @@ span.nav-entry-link { padding: 9px; display:block; color:#CCC;}
   .active .nav-entry-link:after {
     content: ".";
     display: block;
+    border-top: 25px solid transparent;
+    border-bottom: 25px solid transparent;
+    border-right:25px solid white;
+    position: absolute;
     width: 0;
     height: 0;
-    border-top: 22px solid transparent;
-    border-bottom: 22px solid transparent;
-    border-right:22px solid white;
-    position: absolute;
     top: 0;
-    margin-top: 0;
-    right: -1px;
+    right: 0;
     z-index: 2;
+    text-indent: -999em;
   }
 
   .menu-heading {
