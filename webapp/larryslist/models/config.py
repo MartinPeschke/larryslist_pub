@@ -18,7 +18,7 @@ class GenderModel(Mapping):
     def getKey(self, request):return self.key
     def getLabel(self, request):return self.label
 
-GENDER_CHOICES = [GenderModel(key = 'M', label = 'male'), GenderModel(key = 'F', label = 'female')]
+GENDER_CHOICES = [GenderModel(key = 'm', label = 'male'), GenderModel(key = 'f', label = 'female')]
 
 
 

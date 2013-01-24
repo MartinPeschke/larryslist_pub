@@ -220,8 +220,8 @@
                 return this.optional(element) ||/^([0-1][0-9]+|2[0-3])(:[0-5][0-9]){1,2}$/gi.test(value.replace(/ /g, ""));
             }, hnc.translate("Please enter a valid time, like HH:MM."));
             jQuery.validator.addMethod("date-field", function (value, element) {
-                return this.optional(element) ||/^(0?[1-9]|[12][0-9]|3[01])\.(0?[1-9]|1[012])\.(19[0-9]{2}|20[0-9]{2})$/gi.test(value.replace(/ /g, ""));
-            }, hnc.translate("Please enter a valid date, like TT.MM.JJJJ"));
+                return this.optional(element) ||/^(19[0-9]{2}|20[0-9]{2}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01]))$/gi.test(value.replace(/ /g, ""));
+            }, hnc.translate("Please enter a valid date, like yyyy-mm-dd"));
             jQuery.validator.methods.number = function (value, element) {
                 return this.optional(element) || /^-?(?:\d+|\d{1,3}(?:[\s\.]\d{3})+)(?:[,]\d+)?$/.test(value);
             };

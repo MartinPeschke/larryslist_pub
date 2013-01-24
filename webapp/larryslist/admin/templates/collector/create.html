@@ -1,8 +1,6 @@
 <%inherit file="layout.html"/>
 
 
-
-
 <%def name="buildForm(form, values, errors)">
     <form class="${form.classes}" id="${form.id}" method="post">
         <input type="hidden" name="type" value="${form.id}"/>
@@ -14,6 +12,5 @@
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">Save</button>
         </div>
-
     </form>
 </%def>

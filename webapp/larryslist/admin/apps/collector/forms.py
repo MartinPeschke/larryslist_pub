@@ -1,10 +1,31 @@
-from larryslist.lib.formlib.formfields import REQUIRED, StringField, BaseForm, ChoiceField, configattr, ConfigChoiceField, DateField
+from larryslist.admin.apps.collector.models import CreateCollectorProc
+from larryslist.lib.formlib.formfields import REQUIRED, StringField, BaseForm, ChoiceField, configattr, ConfigChoiceField, DateField, MultipleFormField
 
 __author__ = 'Martin'
 
 class CollectorBaseForm(BaseForm):
     classes = "form-horizontal form-validated"
     fields = []
+
+class EmbeddedForm(object):
+    classes = "well"
+    fields = []
+
+
+class AddressForm(MultipleFormField):
+    fields = [
+        StringField('Country', 'Country', REQUIRED)
+        , StringField('Region', 'Region', REQUIRED)
+        , StringField('City', 'City', REQUIRED)
+        , StringField('postCode', 'Post Code')
+        , StringField('line1', 'Street 1')
+        , StringField('line2', 'Street 2')
+        , StringField('line3', 'Street 3')
+    ]
+
+
+
+
 
 class CollectorBaseForm(CollectorBaseForm):
     id = "collector_base"
@@ -18,10 +39,12 @@ class CollectorBaseForm(CollectorBaseForm):
         , DateField('dob', 'Born', REQUIRED)
         , ConfigChoiceField('Gender')
         , ConfigChoiceField('Nationality')
+        , AddressForm('address')
     ]
 
     @classmethod
     def on_success(cls, request, values):
+        result = CreateCollectorProc(request, {'Collector':values})
         return {}
 
 

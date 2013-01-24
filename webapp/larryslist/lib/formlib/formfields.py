@@ -1,4 +1,4 @@
-from operator import methodcaller
+from operator import methodcaller, attrgetter
 import formencode
 from formencode.validators import OneOf
 from larryslist.lib.formlib.validators import DateValidator
@@ -7,7 +7,6 @@ from pyramid.renderers import render
 
 
 REQUIRED = True
-
 
 class BaseForm(object):
     id = 'formdata'
@@ -23,7 +22,6 @@ class BaseForm(object):
         return formencode.Schema(**validators)
 
 
-
 class Field(object):
     template = 'larryslist:lib/formlib/templates/basefield.html'
     html_help = None
@@ -33,6 +31,15 @@ class Field(object):
     input_classes = ''
     required = False
     important = False
+    def __init__(self, name, label, required = False, classes = '', validator_args = None):
+        self.name = name
+        self.label = label
+        self.required = required
+        self.input_classes = '{} {}'.format(self.input_classes, classes)
+
+        params = (validator_args or self.validator_args)
+        params['required'] = required
+        self.validator = self._validator(**params)
 
     def getValidator(self, request):
         return self.validator
@@ -43,27 +50,41 @@ class Field(object):
             return '{}.{}'.format(prefix, self.name)
         else:
             return self.name
+    def getClasses(self):
+        return  '{} {}'.format(self.input_classes, 'required' if self.required else '')
     def render(self, form, request, values, errors):
         name = self.getName(request)
-        return render(self.template, {'widget': self, 'form':form, 'value': values.get(name, ''), 'error':errors.get(name, '')}, request)
+        return render(self.template, {'widget': self, 'prefix':form, 'value': values.get(name, ''), 'error':errors.get(name, '')}, request)
+
+
+
+
+
+class MultipleFormField(Field):
+    template = 'larryslist:lib/formlib/templates/repeatableform.html'
+    def __init__(self, name, form):
+        self.name = name
+        self.form = form
+
+    def getValidator(self, request):
+        return formencode.ForEach(self.form.getSchema())
+
+    def render(self, form, request, values, errors):
+        name = self.getName(request)
+        return render(self.template, {'widget': self, 'form':[form, self.form], 'value': values.get(name, ''), 'error':errors.get(name, '')}, request)
+
+
 
 
 
 class StringField(Field):
     validator_args = {'required':True, 'not_empty':True, 'min':2}
     input_classes = 'input-large'
-    def __init__(self, name, label, required = False, classes = '', validator_args = None):
-        self.name = name
-        self.label = label
-        self.required = required
-        self.input_classes = '{} {}'.format(self.input_classes, classes)
-
-        params = (validator_args or self.validator_args)
-        params['required'] = required
-        self.validator = formencode.validators.String(**params)
+    _validator = formencode.validators.String
 
 
 class DateField(StringField):
+    input_classes = 'input-large date-field'
     def html_help(self, request):
         return '(yyyy-mm-dd)'
     def __init__(self, name, label, required = False, validator_args = None):
@@ -101,3 +122,11 @@ class ConfigChoiceField(ChoiceField):
         self.name = name
         self.label = name
         self.optionGetter = configattr(name)
+
+
+
+
+
+
+
+

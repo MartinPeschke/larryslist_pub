@@ -1,0 +1,13 @@
+<%!
+    from itertools import izip_longest
+%>
+
+<div class="${widget.getClasses()}">
+    <div class="form-embedded-wrapper">
+        %for j, (values, errors) in enumerate(izip_longest(value or [{}], getattr(error, "error_list", []), fillvalue = {})):
+            %for field in widget.fields:
+                ${field.render(widget, request, values[j], errors[j])}
+            %endfor
+        %endfor
+    </div>
+</div>

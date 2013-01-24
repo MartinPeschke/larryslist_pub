@@ -4,7 +4,7 @@
         ${widget.getLabel(request)}
     </label>
     <div class="controls ${widget.control_classes}">
-        <select class="${widget.input_classes}" name="${widget.getName(request, form.id)}">
+        <select class="${widget.getClasses()}" name="${widget.getName(request, prefix)}">
             %for option in widget.getOptions(request):
                 <option ${'selected' if widget.isSelected(option, value, request) else ''}
                     value="${option.getKey(request)}">${option.getLabel(request)}</option>

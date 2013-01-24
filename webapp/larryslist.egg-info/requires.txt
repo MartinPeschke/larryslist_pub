@@ -15,5 +15,5 @@ pyramid_beaker
 pyramid_exclog
 beautifulsoup
 unidecode
-jsonclientHGMMP
+jsonclientHGMMP>=0.0.4
 dogpile.cache>=0.4.1
