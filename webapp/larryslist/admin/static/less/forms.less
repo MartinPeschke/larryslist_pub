@@ -1,21 +1,18 @@
-.form-fields {
-  padding:10px 20px 20px;
-  legend {
-    padding: 0 20px;
-    margin: 0 -20px 20px;
+.control-group.required, .control-group.important {
+  .control-label {
+    &:before {
+      content:"*";
+    }
+  }
+}
+.control-group.required .control-label{
+  font-weight:bold;
+  &:before{
+    content:"*";
+    color: @linkColor;
   }
 }
 
-.sub-dued-well {
-  + .sub-dued-well {border-top:1px solid @frameBorder;}
-  .control-number {
-    position: absolute;
-    margin-top: 6px;
-  }
-}
-.add-more {
-  cursor:pointer;
-}
 
 .file-picker-upload  {
   text-align: center;
@@ -94,27 +91,22 @@
     left: 10px;
     top: 15px;
   }
-}
-.control-group.required, .control-group.important {
-  .control-label {
-    &:before {
-      content:"*";
-    }
-  }
-}
-.control-group.required .control-label{
-  font-weight:bold;
-  &:before{
-    content:"*";
-    color: @linkColor;
+  + .form-embedded-wrapper {
+    border-top: none;
   }
 }
 
-textarea.xxx-high{
-  height:60em;
+
+.repeatable-form {
+  position: relative;
+  .add-more{
+      cursor:pointer;
+      position: absolute;
+      right: 35px;
+      bottom: 15px;
+  }
+  .close {padding: 0 10px;}
 }
-
-
 
 /* =================== TYPEAHEAD ================== */
 
@@ -140,3 +132,4 @@ textarea.xxx-high{
     }
   }
 }
+

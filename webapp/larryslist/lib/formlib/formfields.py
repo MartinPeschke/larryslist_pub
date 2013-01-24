@@ -1,8 +1,8 @@
-from collections import namedtuple
-from operator import methodcaller, attrgetter
+from datetime import datetime
+from operator import methodcaller
 import formencode
 from formencode.validators import OneOf
-from larryslist.lib.formlib.validators import DateValidator, TypAheadValidator
+from larryslist.lib.formlib.validators import DateValidator, TypeAheadValidator
 from pyramid.renderers import render
 
 class HtmlAttrs(object):
@@ -67,6 +67,8 @@ class Field(object):
             params['if_missing'] = None
         return params
 
+    def convertValue(self, value): return value
+
     def getValidator(self, request):
         return self.validator
     def getLabel(self, request):
@@ -83,6 +85,55 @@ class Field(object):
 
 
 
+class StringField(Field):
+    input_classes = 'input-large'
+    _validator = formencode.validators.String
+
+
+class DateField(StringField):
+    input_classes = 'input-large date-field'
+    format = "%Y-%m-%d"
+    def html_help(self, request):
+        return '(yyyy-mm-dd)'
+    def __init__(self, name, label, attrs = NONE, validator_args = None):
+        self.name = name
+        self.label = label
+        self.attrs = attrs
+        args = self.getValidatorArgs(attrs, validator_args)
+        if 'format' not in args:
+            args['format'] = self.format
+        self.validator = DateValidator(**args)
+
+    def convertValue(self, value):
+        return datetime.strptime(value, "%Y-%m-%dT%H:%M:%S").strftime(self.format)
+
+def configattr(name):
+    def f(request):
+        return getattr(request.context.config, name)
+    return f
+
+
+class ChoiceField(Field):
+    template = 'larryslist:lib/formlib/templates/dropdown.html'
+    def __init__(self, name, label, optionGetter, attrs = NONE):
+        self.name = name
+        self.label = label
+        self.attrs = attrs
+        self.optionGetter = optionGetter
+
+    def getValidator(self, request):
+        return OneOf(map(methodcaller('getKey', request), self.optionGetter(request)))
+    def getOptions(self, request):
+        return self.optionGetter(request)
+    def isSelected(self, option, value, request):
+        return option.getKey(request) == value
+
+class ConfigChoiceField(ChoiceField):
+    def __init__(self, name, label, configAttr, attrs = NONE):
+        self.name = name
+        self.label = label
+        self.attrs = attrs
+        self.optionGetter = configattr(configAttr)
 
 
 class MultipleFormField(Field):
@@ -107,63 +158,15 @@ class MultipleFormField(Field):
 
 
 
-class StringField(Field):
-    input_classes = 'input-large'
-    _validator = formencode.validators.String
-
-
-class DateField(StringField):
-    input_classes = 'input-large date-field'
-    def html_help(self, request):
-        return '(yyyy-mm-dd)'
-    def __init__(self, name, label, attrs = NONE, validator_args = None):
-        self.name = name
-        self.label = label
-        self.attrs = attrs
-        args = self.getValidatorArgs(attrs, validator_args)
-        if 'format' not in args:
-            args['format'] = "%Y-%m-%d"
-        self.validator = DateValidator(**args)
-
-
-def configattr(name):
-    def f(request):
-        return getattr(request.context.config, name)
-    return f
-
-
-class ChoiceField(Field):
-    template = 'larryslist:lib/formlib/templates/dropdown.html'
-    def __init__(self, name, label, optionGetter, attrs = NONE):
-        self.name = name
-        self.label = label
-        self.attrs = attrs
-        self.optionGetter = optionGetter
-
-    def getValidator(self, request):
-        return OneOf(map(methodcaller('getKey', request), self.optionGetter(request)))
-    def getOptions(self, request):
-        return self.optionGetter(request)
-    def isSelected(self, option, value, request):
-        return option.getKey(request) == value
-
-class ConfigChoiceField(ChoiceField):
-    def __init__(self, name, attrs = NONE):
-        self.name = name
-        self.label = name
-        self.attrs = attrs
-        self.optionGetter = configattr(name)
-
-
 
 
 class TypeAheadField(StringField):
     template = 'larryslist:lib/formlib/templates/typeahead.html'
-    def __init__(self, name, label, api_term, api_url, dependency = None, attrs = NONE, classes = 'typeahead', validator_args = None):
+    def __init__(self, name, label, api_url, dependency = None, attrs = NONE, classes = 'typeahead', validator_args = None):
         super(TypeAheadField, self).__init__(name, label, attrs, classes, validator_args)
         self.dependency = dependency
         self.api_url = api_url
-        self.api_term = api_term
 
     def getValidator(self, request):
-        return TypAheadValidator(accept_iterator = True)
+        return TypeAheadValidator()
+

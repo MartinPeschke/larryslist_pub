@@ -161,7 +161,6 @@ input[type="file"] {
 
 // Make select elements obey height by applying a border
 select {
-  width: 220px; // default input width + 10px of padding that doesn't get applied
   border: 1px solid @inputBorder;
   background-color: @inputBackground; // Chrome on Linux and Mobile Safari need background-color
 }
@@ -684,3 +683,14 @@ legend + .control-group {
     padding-left: @horizontalComponentOffset;
   }
 }
+
+
+.form-inline, .form-horizontal .form-inline {
+  .control-group{display: inline-block; vertical-align: top;}
+  .control-group + .control-group {
+    .control-label {width: auto;display: inline-block;float:none;margin-left:15px;}
+    .controls {margin-left:0;display: inline-block;}
+  }
+}
+
+.form-horizontal .form-inline {padding-top:@baseLineHeight;}

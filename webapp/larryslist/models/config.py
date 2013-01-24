@@ -11,6 +11,7 @@ class NationalityModel(NamedConfigModel): pass
 class TitleModel(NamedConfigModel): pass
 class IndustryModel(NamedConfigModel): pass
 class PositionModel(NamedConfigModel): pass
+class InterestModel(NamedConfigModel): pass
 
 class GenderModel(Mapping):
     key = TextField()
@@ -27,4 +28,5 @@ class ConfigModel(Mapping):
     Title = ListField(DictField(TitleModel))
     Industry = ListField(DictField(IndustryModel))
     Position = ListField(DictField(PositionModel))
+    Interest = ListField(DictField(InterestModel))
     Gender = GENDER_CHOICES

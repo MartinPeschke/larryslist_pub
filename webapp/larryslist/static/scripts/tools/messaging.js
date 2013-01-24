@@ -65,9 +65,7 @@ define(["tools/hash"], function(hashlib){
                 ,"click .call-back": "callBack"
                 }
 
-            , template:_.template('<a class="close">×</a><div class="container"><div class="row"><div class="span12">' +
-                '{% if(title){ %}<strong>{{ title }}</strong> {% } %} {{ message }}' +
-                '</div></div></div>')
+            , template:_.template('<a class="close">×</a>{% if(title){ %}<strong>{{ title }}</strong> {% } %} {{ message }}')
             , actionTemplate:_.template('<span class="actionText">{% if(title){ %}<strong>{{ title }}</strong> {% } %} {{ message }}</span>')
             , number_templ:_.template('<span class="numbering">{{ added }}</span>')
             , initialize: function(){

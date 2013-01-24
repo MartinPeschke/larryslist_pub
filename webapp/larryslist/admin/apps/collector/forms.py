@@ -1,6 +1,6 @@
 from operator import itemgetter
 from jsonclient.backend import DBException
-from larryslist.admin.apps.collector.models import CreateCollectorProc
+from larryslist.admin.apps.collector.models import CreateCollectorProc, EditCollectorBaseProc
 from larryslist.lib.formlib.formfields import REQUIRED, StringField, BaseForm, ChoiceField, configattr, ConfigChoiceField, DateField, MultipleFormField, IMPORTANT, TypeAheadField
 
 __author__ = 'Martin'
@@ -16,9 +16,9 @@ class EmbeddedForm(object):
 
 class AddressForm(MultipleFormField):
     fields = [
-        TypeAheadField('countryToken', 'Country', 'country', '/admin/search/address', None, REQUIRED)
-        , TypeAheadField('regionToken', 'Region', 'region', '/admin/search/address', 'country', REQUIRED)
-        , TypeAheadField('cityToken', 'City', 'city', '/admin/search/address', 'region', REQUIRED)
+        TypeAheadField('Country', 'Country', '/admin/search/address', None, REQUIRED)
+        , TypeAheadField('Region', 'Region', '/admin/search/address', 'Country', REQUIRED)
+        , TypeAheadField('City', 'City', '/admin/search/address', 'Region', REQUIRED)
         , StringField('postCode', 'Post Code')
         , StringField('line1', 'Street 1')
         , StringField('line2', 'Street 2')
@@ -26,48 +26,62 @@ class AddressForm(MultipleFormField):
     ]
 
 class UniversityForm(MultipleFormField):
+    classes = 'form-inline'
     fields = [
         StringField('name', 'Name of University')
         , StringField('city', 'City')
         ]
 
-class AreaOfInterestForm(MultipleFormField):
+class MultiConfigChoiceField(MultipleFormField):
     fields = [
-        ConfigChoiceField('areaOfInterest', 'Area of Interest')
+        ConfigChoiceField('name', 'Area of interest', "Interest")
     ]
 
 
-class CollectorBaseForm(CollectorBaseForm):
-    id = "collector_base"
+class CollectorCreateForm(CollectorBaseForm):
+    id = "create"
     label = "Basic"
 
     fields = [
         StringField('firstName', 'First Name', REQUIRED)
         , StringField('lastName', 'Last Name', REQUIRED)
-        , StringField('originalName', 'Name in orig. Language')
-        , ConfigChoiceField('Title', IMPORTANT)
+        , StringField('origName', 'Name in orig. Language')
+        , ConfigChoiceField('title', 'Title', 'Title', IMPORTANT)
         , DateField('dob', 'Born', IMPORTANT)
-        , ConfigChoiceField('Gender', IMPORTANT)
-        , ConfigChoiceField('Nationality', IMPORTANT)
-        , AddressForm('address', 'Location', REQUIRED)
+        , ConfigChoiceField('gender', 'Gender', 'Gender', IMPORTANT)
+        , ConfigChoiceField('nationality', 'Nationality', 'Nationality', IMPORTANT)
+        , AddressForm('Address', 'Location', REQUIRED)
         , UniversityForm('University')
-        #, AreaOfInterestForm('Area of interest')
+        , MultiConfigChoiceField("Interest")
     ]
 
     @classmethod
     def on_success(cls, request, values):
-        values['University'] = filter(itemgetter("name"), values['University'])
+        values['University'] = filter(itemgetter("name"), values.get('University', []))
+        values['Interest'] = [{'name':n} for n in values.get('Interest',[])]
         try:
-            result = CreateCollectorProc(request, {'Collector':values})
+            collector = CreateCollectorProc(request, {'Collector':values})
         except DBException, e:
             return {'success':False, 'message': e.message}
-        return {}
+        return {'redirect': request.fwd_url("admin_collector_edit", collectorId = collector.id, workflow='personal', stage='basic')}
 
+
+class CollectorEditForm(CollectorCreateForm):
+    id = "basic"
+    @classmethod
+    def on_success(cls, request, values):
+        values['University'] = filter(itemgetter("name"), values['University'])
+        values['id'] = request.matchdict['collectorId']
+        try:
+            collector = EditCollectorBaseProc(request, {'Collector':values})
+        except DBException, e:
+            return {'success':False, 'message': e.message}
+        return {'success': True, 'message':"Changes saved!"}
 
 class CollectorContactsForm(CollectorBaseForm):
-    id = "collector_contacts"
+    id = "contacts"
     label = "Contacts"
 
 class CollectorBusinessForm(CollectorBaseForm):
-    id = "collector_business"
+    id = "business"
     label = "Business / Industry"

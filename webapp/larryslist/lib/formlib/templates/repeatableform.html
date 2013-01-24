@@ -1,7 +1,7 @@
 <%!
     from itertools import izip_longest
 %>
-<div data-closure="form" ${'data-required="true"' if widget.attrs.required else ''|n}>
+<div data-closure="form" ${'data-required="true"' if widget.attrs.required else ''|n} class="repeatable-form">
     %for j, (values, errors) in enumerate(izip_longest(value or [{}], getattr(error, "error_list", [{}]), fillvalue = {})):
         <div class="${widget.getClasses()}" data-sequence="${j}">
             %if widget.label:
