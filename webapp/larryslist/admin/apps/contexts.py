@@ -1,4 +1,5 @@
 from jsonclient.cached import CachedLoader
+from larryslist.admin.apps.auth.models import getStandardUser
 from .models import AdminConfigModel
 from larryslist.lib.baseviews import RootContext
 from larryslist.models import ClientTokenProc
@@ -24,3 +25,7 @@ class AdminRootContext(RootContext):
 
     def is_allowed(self, request):
         return True
+
+    @reify
+    def user(self):
+        return getStandardUser()

@@ -4,7 +4,9 @@
         ${widget.getLabel(request)}
     </label>
     <div class="controls ${widget.control_classes}">
-        <input type="text" class="${widget.getClasses()}" name="${widget.getName(prefix, request)}" value="${value}"/>
+        <%block name="controls">
+            <input type="text" class="${widget.getClasses()}" name="${widget.getName(prefix, request)}" value="${value}"/>
+        </%block>
         ${lib.renderInline(widget, error)}
     </div>
 </div>

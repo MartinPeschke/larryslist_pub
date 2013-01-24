@@ -1,6 +1,6 @@
 from jsonclient.backend import DBException
 from larryslist.admin.apps.collector.models import CreateCollectorProc
-from larryslist.lib.formlib.formfields import REQUIRED, StringField, BaseForm, ChoiceField, configattr, ConfigChoiceField, DateField, MultipleFormField, IMPORTANT
+from larryslist.lib.formlib.formfields import REQUIRED, StringField, BaseForm, ChoiceField, configattr, ConfigChoiceField, DateField, MultipleFormField, IMPORTANT, TypeAheadField
 
 __author__ = 'Martin'
 
@@ -15,17 +15,25 @@ class EmbeddedForm(object):
 
 class AddressForm(MultipleFormField):
     fields = [
-        StringField('Country', 'Country', REQUIRED)
-        , StringField('Region', 'Region', REQUIRED)
-        , StringField('City', 'City', REQUIRED)
+        TypeAheadField('Country', 'Country', '/admin/search/address', REQUIRED)
+        , TypeAheadField('Region', 'Region', '/admin/search/address', REQUIRED)
+        , TypeAheadField('City', 'City', '/admin/search/address', REQUIRED)
         , StringField('postCode', 'Post Code')
         , StringField('line1', 'Street 1')
         , StringField('line2', 'Street 2')
         , StringField('line3', 'Street 3')
     ]
 
+class UniversityForm(MultipleFormField):
+    fields = [
+        StringField('name', 'Name of University')
+        , StringField('city', 'City')
+        ]
 
-
+class AreaOfInterestForm(MultipleFormField):
+    fields = [
+        ConfigChoiceField('areaOfInterest', 'Area of Interest')
+    ]
 
 
 class CollectorBaseForm(CollectorBaseForm):
@@ -41,6 +49,8 @@ class CollectorBaseForm(CollectorBaseForm):
         , ConfigChoiceField('Gender', IMPORTANT)
         , ConfigChoiceField('Nationality', IMPORTANT)
         , AddressForm('address', 'Location', REQUIRED)
+        , UniversityForm('University')
+        #, AreaOfInterestForm('Area of interest')
     ]
 
     @classmethod

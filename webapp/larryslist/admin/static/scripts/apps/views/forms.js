@@ -5,7 +5,7 @@
  * Time: 14:20
  * To change this template use File | Settings | File Templates.
  */
-define(['tools/ajax'], function(ajax){
+define(['tools/ajax', "libs/typeahead"], function(ajax, TypeAhead){
     var View = Backbone.View.extend({
         events: {
             "click .remove-link": "removeRow"
@@ -27,6 +27,13 @@ define(['tools/ajax'], function(ajax){
                     if(!required || idx)
                         $(elem).prepend(view.removeLink);
                 });
+            });
+
+
+
+            view.widgets = [];
+            this.$el.find(".typeahead-container").each(function(idx, elem){
+                view.widgets.push(new TypeAhead({el: elem}));
             });
         }
         , addRow : function(e){

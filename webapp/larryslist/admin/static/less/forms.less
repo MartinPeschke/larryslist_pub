@@ -113,3 +113,25 @@
 textarea.xxx-high{
   height:60em;
 }
+
+
+
+/* =================== TYPEAHEAD ================== */
+
+.typeahead-container {
+  position: relative;
+  float: left;
+}
+.typeahead-result {
+  position: absolute;
+  width: 100%;
+  z-index:2;
+}
+.typeahead-result-inner {
+  border: 1px solid #ddd;
+  border-top: none;
+  background-color: white;
+  .single-result {
+    cursor:pointer;
+  }
+}

@@ -51,7 +51,6 @@ class Field(object):
         self.label = label
         self.attrs = attrs
         self.input_classes = '{} {}'.format(self.input_classes, classes)
-
         self.validator = self._validator(**self.getValidatorArgs(attrs, validator_args))
 
     def getValidatorArgs(self, attrs, args):
@@ -87,7 +86,7 @@ class MultipleFormField(Field):
     fields = []
     classes = 'form-embedded-wrapper'
     add_more_link_label = 'add'
-    def __init__(self, name, label, attrs = NONE):
+    def __init__(self, name, label = None, attrs = NONE):
         self.name = name
         self.label = label
         self.attrs = attrs
@@ -151,10 +150,8 @@ class ConfigChoiceField(ChoiceField):
         self.attrs = attrs
         self.optionGetter = configattr(name)
 
-
-
-
-
-
-
-
+class TypeAheadField(StringField):
+    template = 'larryslist:lib/formlib/templates/typeahead.html'
+    def __init__(self, name, label, api_url, attrs = NONE, classes = 'typeahead', validator_args = None):
+        super(TypeAheadField, self).__init__(name, label, attrs, classes, validator_args)
+        self.api_url = api_url

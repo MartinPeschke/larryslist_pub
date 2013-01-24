@@ -263,10 +263,11 @@ define(['tools/messaging', "tools/hash"], function(messaging, hashlib){
               if(models){
                   options = options || {};
                   models = _.isArray(models) ? models.slice() : [models];
-                  var i= 0, len = models.length, tmp, tmpModel, allIds = this.pluck("id") ;
+                  var i= 0, len = models.length, tmp, id, tmpModel, allIds = this.pluck(this.idAttribute);
                   for(;i<len;i++){
                       tmp = models[i];
-                      tmpModel = this.get(tmp.id||hashlib.UUID());
+                      id = tmp[this.idAttribute]||hashlib.UUID();
+                      tmpModel = this.get(id);
                       if(tmpModel){
                           tmpModel.setRecursive(tmp, options);
                       } else {
@@ -274,7 +275,7 @@ define(['tools/messaging', "tools/hash"], function(messaging, hashlib){
                           tmpModel.setRecursive(tmp, options);
                           this.add(tmpModel, options);
                       }
-                      allIds = _.without(allIds, tmp.id);
+                      allIds = _.without(allIds, id);
                   }
                   if(!options.preserve){
                       for(i=0;i<allIds.length;i++){

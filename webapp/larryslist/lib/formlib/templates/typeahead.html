@@ -1,0 +1,9 @@
+<%inherit file="basefield.html"/>
+<%namespace name="lib" file="lib.html"/>
+
+<%block name="controls">
+    <div class="typeahead-container">
+        <input type="hidden" name="${widget.getName(prefix, request)}.token" value="${value}"/>
+        <input type="text" class="${widget.getClasses()}" name="${widget.getName(prefix, request)}.name" value="${value}" data-api-url="${widget.api_url}" data-api-type="${widget.name}"/>
+    </div>
+</%block>
