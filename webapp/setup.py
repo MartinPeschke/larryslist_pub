@@ -18,6 +18,7 @@ requires = [
     'beaker',
     'paste',
     'simplejson',
+    'dnspython',
     'turbomail',
     'uuid',
     'pyramid_beaker',

@@ -5,7 +5,7 @@
     </label>
     <div class="controls ${widget.control_classes}">
         <%block name="controls">
-            <input type="text" class="${widget.getClasses()}" name="${widget.getName(prefix, request)}" value="${widget.convertValue(value)}"/>
+            <input type="${widget.type}" class="${widget.getClasses()}" name="${widget.getName(prefix, request)}" value="${widget.convertValue(value)}"/>
         </%block>
         ${lib.renderInline(widget, error)}
     </div>

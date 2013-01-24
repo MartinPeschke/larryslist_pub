@@ -44,6 +44,7 @@ class BaseForm(object):
 class Field(object):
     template = 'larryslist:lib/formlib/templates/basefield.html'
     validator_args = {}
+    type = 'text'
     html_help = None
     group_classes = ''
     label_classes = ''
@@ -71,6 +72,8 @@ class Field(object):
 
     def getValidator(self, request):
         return self.validator
+    def hasLabel(self):
+        return bool(self.label)
     def getLabel(self, request):
         return self.label
     def getName(self, prefix, request):
@@ -88,7 +91,11 @@ class Field(object):
 class StringField(Field):
     input_classes = 'input-large'
     _validator = formencode.validators.String
-
+class EmailField(StringField):
+    input_classes = 'input-large email'
+    type = 'email'
+    validator_args = {'resolve_domain': True}
+    _validator = formencode.validators.Email
 
 class DateField(StringField):
     input_classes = 'input-large date-field'

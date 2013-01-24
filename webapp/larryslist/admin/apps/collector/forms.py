@@ -1,7 +1,7 @@
 from operator import itemgetter
 from jsonclient.backend import DBException
-from larryslist.admin.apps.collector.models import CreateCollectorProc, EditCollectorBaseProc
-from larryslist.lib.formlib.formfields import REQUIRED, StringField, BaseForm, ChoiceField, configattr, ConfigChoiceField, DateField, MultipleFormField, IMPORTANT, TypeAheadField
+from larryslist.admin.apps.collector.models import CreateCollectorProc, EditCollectorBaseProc, EditCollectorContactsProc
+from larryslist.lib.formlib.formfields import REQUIRED, StringField, BaseForm, ChoiceField, configattr, ConfigChoiceField, DateField, MultipleFormField, IMPORTANT, TypeAheadField, EmailField
 
 __author__ = 'Martin'
 
@@ -78,9 +78,26 @@ class CollectorEditForm(CollectorCreateForm):
             return {'success':False, 'message': e.message}
         return {'success': True, 'message':"Changes saved!"}
 
+
+
+class MultiEmailField(MultipleFormField):
+    fields = [EmailField('address', 'Email', IMPORTANT)]
+
+
 class CollectorContactsForm(CollectorBaseForm):
     id = "contacts"
     label = "Contacts"
+    fields = [
+        MultiEmailField('Email', None, IMPORTANT)
+    ]
+    @classmethod
+    def on_success(cls, request, values):
+        values['id'] = request.matchdict['collectorId']
+        try:
+            collector = EditCollectorContactsProc(request, {'Collector':values})
+        except DBException, e:
+            return {'success':False, 'message': e.message}
+        return {'success': True, 'message':"Changes saved!"}
 
 class CollectorBusinessForm(CollectorBaseForm):
     id = "business"
