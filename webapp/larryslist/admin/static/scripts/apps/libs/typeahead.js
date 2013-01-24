@@ -4,7 +4,7 @@ define(["tools/ajax"], function(ajax){
     , ResultView = Backbone.View.extend({
         template: _.template('{{ model.get("name") }}')
         , tagName : "div"
-        , classname: 'single-result'
+        , className: 'single-result'
         , events :{"click":"onSelected"}
         , initialize: function(){
             this.$el.html(this.template({model:this.model}));
@@ -26,8 +26,9 @@ define(["tools/ajax"], function(ajax){
         }
         , template: '<div class="typeahead-result hide"><div class="typeahead-result-inner"></div></div>'
         , initialize: function(opts){
-            this.url = this.$(".typeahead").data("apiUrl");
-            this.type = this.$(".typeahead").data("apiType");
+            this.url = opts.apiUrl;
+            this.type = opts.apiType;
+            this.$filter = this.$("input[type=text]");
             this.$results = this.$el.append(this.template).find(".typeahead-result-inner");
             this.model = new ResultCollection();
             this.model.on("add", this.addOne, this);
@@ -38,9 +39,13 @@ define(["tools/ajax"], function(ajax){
         }
         , onKeyUp: function(e){
             var view = this;
+            this.doSearch(e.target.value);
+        }
+        , doSearch: function(term){
+            var view = this;
             ajax.submitPrefixed({
                 url: this.url
-                , data: {'type':this.type, term: e.target.value}
+                , data: {'type':this.type, term: term}
                 , success: function(resp, xhr, status){
                     view.toggle(resp.AddressSearchResult.length>0);
                     view.model.addOrUpdate(resp.AddressSearchResult,{preserve: false});
@@ -51,10 +56,33 @@ define(["tools/ajax"], function(ajax){
             this.$(".typeahead-result")[show?'removeClass':'addClass']("hide");
         }
         , onSelected: function(model){
-            this.$("input[type=text]").val(model.get("name"));
+                this.$filter.val(model.get("name"));
             this.$("input[type=hidden]").val(model.id);
             this.toggle(false);
         }
+    })
+
+    , ViewWithDependency = View.extend({
+        initialize: function(opts){
+            var view = this;
+            View.prototype.initialize.apply(this, arguments);
+            this.dependency = opts.apiDependency;
+            this.$dependency = this.$el.closest(".form-validated").find('[data-api-type='+this.dependency+']');
+            this.$dependency.on({change:function(e){
+                view.$filter.val("");
+            }});
+        }
+        , doSearch: function(term){
+            var view = this;
+            ajax.submitPrefixed({
+                url: this.url
+                , data: {'type':this.type, term: term, filter: this.$dependency.find("input[type=hidden]").val()}
+                , success: function(resp, xhr, status){
+                    view.toggle(resp.AddressSearchResult.length>0);
+                    view.model.addOrUpdate(resp.AddressSearchResult,{preserve: false});
+                }
+            })
+        }
     });
-    return View;
+    return {View:View, ViewWithDependency: ViewWithDependency};
 });

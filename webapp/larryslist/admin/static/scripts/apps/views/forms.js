@@ -33,7 +33,13 @@ define(['tools/ajax', "libs/typeahead"], function(ajax, TypeAhead){
 
             view.widgets = [];
             this.$el.find(".typeahead-container").each(function(idx, elem){
-                view.widgets.push(new TypeAhead({el: elem}));
+                var opts = $(elem).data();
+                opts.el = elem;
+                if(opts.apiDependency){
+                    view.widgets.push(new TypeAhead.ViewWithDependency(opts));
+                } else {
+                    view.widgets.push(new TypeAhead.View(opts));
+                }
             });
         }
         , addRow : function(e){

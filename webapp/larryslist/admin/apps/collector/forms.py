@@ -1,3 +1,4 @@
+from operator import itemgetter
 from jsonclient.backend import DBException
 from larryslist.admin.apps.collector.models import CreateCollectorProc
 from larryslist.lib.formlib.formfields import REQUIRED, StringField, BaseForm, ChoiceField, configattr, ConfigChoiceField, DateField, MultipleFormField, IMPORTANT, TypeAheadField
@@ -15,9 +16,9 @@ class EmbeddedForm(object):
 
 class AddressForm(MultipleFormField):
     fields = [
-        TypeAheadField('Country', 'Country', '/admin/search/address', REQUIRED)
-        , TypeAheadField('Region', 'Region', '/admin/search/address', REQUIRED)
-        , TypeAheadField('City', 'City', '/admin/search/address', REQUIRED)
+        TypeAheadField('countryToken', 'Country', 'country', '/admin/search/address', None, REQUIRED)
+        , TypeAheadField('regionToken', 'Region', 'region', '/admin/search/address', 'country', REQUIRED)
+        , TypeAheadField('cityToken', 'City', 'city', '/admin/search/address', 'region', REQUIRED)
         , StringField('postCode', 'Post Code')
         , StringField('line1', 'Street 1')
         , StringField('line2', 'Street 2')
@@ -55,6 +56,7 @@ class CollectorBaseForm(CollectorBaseForm):
 
     @classmethod
     def on_success(cls, request, values):
+        values['University'] = filter(itemgetter("name"), values['University'])
         try:
             result = CreateCollectorProc(request, {'Collector':values})
         except DBException, e:

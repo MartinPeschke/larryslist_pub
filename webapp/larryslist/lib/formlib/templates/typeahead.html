@@ -2,8 +2,11 @@
 <%namespace name="lib" file="lib.html"/>
 
 <%block name="controls">
-    <div class="typeahead-container">
+    <div class="typeahead-container"
+         data-api-url="${widget.api_url}" data-api-type="${widget.api_term}"
+        ${'data-api-dependency="{}"'.format(widget.dependency) if widget.dependency else ''|n}
+    >
         <input type="hidden" name="${widget.getName(prefix, request)}.token" value="${value}"/>
-        <input type="text" class="${widget.getClasses()}" name="${widget.getName(prefix, request)}.name" value="${value}" data-api-url="${widget.api_url}" data-api-type="${widget.name}"/>
+        <input type="text" class="${widget.getClasses()}" name="${widget.getName(prefix, request)}.name" value="${value}"/>
     </div>
 </%block>

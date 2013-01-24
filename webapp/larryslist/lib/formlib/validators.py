@@ -290,3 +290,6 @@ class DecimalValidator(formencode.FancyValidator):
 
 
 
+class TypAheadValidator(formencode.FancyValidator):
+    def to_python(self, value, state):
+        return value['token']

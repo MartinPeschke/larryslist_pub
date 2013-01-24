@@ -2,7 +2,7 @@ from collections import namedtuple
 from operator import methodcaller, attrgetter
 import formencode
 from formencode.validators import OneOf
-from larryslist.lib.formlib.validators import DateValidator
+from larryslist.lib.formlib.validators import DateValidator, TypAheadValidator
 from pyramid.renderers import render
 
 class HtmlAttrs(object):
@@ -22,6 +22,10 @@ IMPORTANT = HtmlAttrs(False, True)
 
 
 
+class BaseSchema(formencode.Schema):
+    filter_extra_fields = True
+    allow_extra_fields=True
+
 
 class BaseForm(object):
     id = 'formdata'
@@ -34,7 +38,7 @@ class BaseForm(object):
     @classmethod
     def getSchema(cls, request):
         validators = {v.name:v.getValidator(request) for v in cls.fields}
-        return formencode.Schema(**validators)
+        return BaseSchema(**validators)
 
 
 class Field(object):
@@ -95,7 +99,7 @@ class MultipleFormField(Field):
         return  self.classes
 
     def getValidator(self, request):
-        return formencode.ForEach(formencode.Schema(**{v.name:v.getValidator(request) for v in self.fields}), not_empty = self.attrs.required)
+        return formencode.ForEach(BaseSchema(**{v.name:v.getValidator(request) for v in self.fields}), not_empty = self.attrs.required)
 
     def render(self, prefix, request, values, errors):
         name = self.name
@@ -150,8 +154,16 @@ class ConfigChoiceField(ChoiceField):
         self.attrs = attrs
         self.optionGetter = configattr(name)
 
+
+
+
 class TypeAheadField(StringField):
     template = 'larryslist:lib/formlib/templates/typeahead.html'
-    def __init__(self, name, label, api_url, attrs = NONE, classes = 'typeahead', validator_args = None):
+    def __init__(self, name, label, api_term, api_url, dependency = None, attrs = NONE, classes = 'typeahead', validator_args = None):
         super(TypeAheadField, self).__init__(name, label, attrs, classes, validator_args)
+        self.dependency = dependency
         self.api_url = api_url
+        self.api_term = api_term
+
+    def getValidator(self, request):
+        return TypAheadValidator(accept_iterator = True)
