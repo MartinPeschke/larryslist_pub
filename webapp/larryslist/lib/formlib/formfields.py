@@ -1,12 +1,27 @@
+from collections import namedtuple
 from operator import methodcaller, attrgetter
 import formencode
 from formencode.validators import OneOf
 from larryslist.lib.formlib.validators import DateValidator
 from pyramid.renderers import render
 
+class HtmlAttrs(object):
+    def __init__(self, required = False, important = False):
+        self.required = required
+        self.important = important
+
+    def getClasses(self):
+        classes = []
+        if self.required: classes.append('required')
+        if self.important: classes.append('important')
+        return ' '.join(classes)
+
+NONE = HtmlAttrs()
+REQUIRED = HtmlAttrs(True)
+IMPORTANT = HtmlAttrs(False, True)
 
 
-REQUIRED = True
+
 
 class BaseForm(object):
     id = 'formdata'
@@ -24,27 +39,28 @@ class BaseForm(object):
 
 class Field(object):
     template = 'larryslist:lib/formlib/templates/basefield.html'
-    validator_args = {'required':False, 'not_empty':False}
+    validator_args = {}
     html_help = None
     group_classes = ''
     label_classes = ''
     control_classes = ''
     input_classes = ''
-    required = False
-    important = False
-    def __init__(self, name, label, required = False, classes = '', validator_args = None):
+    attrs = NONE
+    def __init__(self, name, label, attrs = NONE, classes = '', validator_args = None):
         self.name = name
         self.label = label
-        self.required = required
+        self.attrs = attrs
         self.input_classes = '{} {}'.format(self.input_classes, classes)
 
-        self.validator = self._validator(**self.getValidatorArgs(required, validator_args))
+        self.validator = self._validator(**self.getValidatorArgs(attrs, validator_args))
 
-    def getValidatorArgs(self, required, args):
+    def getValidatorArgs(self, attrs, args):
         params = self.validator_args.copy()
         if args: params.update(args)
-        params['not_empty'] = required
-        if not required:
+
+        params['required'] = attrs.required
+        params['not_empty'] = attrs.required
+        if not attrs.required:
             params['if_missing'] = None
         return params
 
@@ -55,7 +71,7 @@ class Field(object):
     def getName(self, prefix, request):
         return '{}.{}'.format(prefix, self.name)
     def getClasses(self):
-        return  '{} {}'.format(self.input_classes, 'required' if self.required else '')
+        return  '{} {}'.format(self.input_classes, self.attrs.getClasses())
     def render(self, prefix, request, values, errors):
         name = self.name
         if isinstance(errors, formencode.Invalid):
@@ -71,16 +87,16 @@ class MultipleFormField(Field):
     fields = []
     classes = 'form-embedded-wrapper'
     add_more_link_label = 'add'
-    def __init__(self, name, label, required = False):
+    def __init__(self, name, label, attrs = NONE):
         self.name = name
         self.label = label
-        self.required = required
+        self.attrs = attrs
 
     def getClasses(self):
         return  self.classes
 
     def getValidator(self, request):
-        return formencode.ForEach(formencode.Schema(**{v.name:v.getValidator(request) for v in self.fields}), not_empty = self.required)
+        return formencode.ForEach(formencode.Schema(**{v.name:v.getValidator(request) for v in self.fields}), not_empty = self.attrs.required)
 
     def render(self, prefix, request, values, errors):
         name = self.name
@@ -97,10 +113,11 @@ class DateField(StringField):
     input_classes = 'input-large date-field'
     def html_help(self, request):
         return '(yyyy-mm-dd)'
-    def __init__(self, name, label, required = False, validator_args = None):
+    def __init__(self, name, label, attrs = NONE, validator_args = None):
         self.name = name
         self.label = label
-        args = self.getValidatorArgs(required, validator_args)
+        self.attrs = attrs
+        args = self.getValidatorArgs(attrs, validator_args)
         if 'format' not in args:
             args['format'] = "%Y-%m-%d"
         self.validator = DateValidator(**args)
@@ -114,9 +131,10 @@ def configattr(name):
 
 class ChoiceField(Field):
     template = 'larryslist:lib/formlib/templates/dropdown.html'
-    def __init__(self, name, label, optionGetter):
+    def __init__(self, name, label, optionGetter, attrs = NONE):
         self.name = name
         self.label = label
+        self.attrs = attrs
         self.optionGetter = optionGetter
 
     def getValidator(self, request):
@@ -127,9 +145,10 @@ class ChoiceField(Field):
         return option.getKey(request) == value
 
 class ConfigChoiceField(ChoiceField):
-    def __init__(self, name):
+    def __init__(self, name, attrs = NONE):
         self.name = name
         self.label = name
+        self.attrs = attrs
         self.optionGetter = configattr(name)
 
 

@@ -1,5 +1,6 @@
+from jsonclient.backend import DBException
 from larryslist.admin.apps.collector.models import CreateCollectorProc
-from larryslist.lib.formlib.formfields import REQUIRED, StringField, BaseForm, ChoiceField, configattr, ConfigChoiceField, DateField, MultipleFormField
+from larryslist.lib.formlib.formfields import REQUIRED, StringField, BaseForm, ChoiceField, configattr, ConfigChoiceField, DateField, MultipleFormField, IMPORTANT
 
 __author__ = 'Martin'
 
@@ -35,16 +36,19 @@ class CollectorBaseForm(CollectorBaseForm):
         StringField('firstName', 'First Name', REQUIRED)
         , StringField('lastName', 'Last Name', REQUIRED)
         , StringField('originalName', 'Name in orig. Language')
-        , ConfigChoiceField('Title')
-        , DateField('dob', 'Born', REQUIRED)
-        , ConfigChoiceField('Gender')
-        , ConfigChoiceField('Nationality')
+        , ConfigChoiceField('Title', IMPORTANT)
+        , DateField('dob', 'Born', IMPORTANT)
+        , ConfigChoiceField('Gender', IMPORTANT)
+        , ConfigChoiceField('Nationality', IMPORTANT)
         , AddressForm('address', 'Location', REQUIRED)
     ]
 
     @classmethod
     def on_success(cls, request, values):
-        result = CreateCollectorProc(request, {'Collector':values})
+        try:
+            result = CreateCollectorProc(request, {'Collector':values})
+        except DBException, e:
+            return {'success':False, 'message': e.message}
         return {}
 
 

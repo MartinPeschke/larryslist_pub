@@ -95,6 +95,20 @@
     top: 15px;
   }
 }
+.control-group.required, .control-group.important {
+  .control-label {
+    &:before {
+      content:"*";
+    }
+  }
+}
+.control-group.required .control-label{
+  font-weight:bold;
+  &:before{
+    content:"*";
+    color: @linkColor;
+  }
+}
 
 textarea.xxx-high{
   height:60em;
