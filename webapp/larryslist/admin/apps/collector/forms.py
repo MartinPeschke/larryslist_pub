@@ -39,7 +39,7 @@ class CollectorBaseForm(CollectorBaseForm):
         , DateField('dob', 'Born', REQUIRED)
         , ConfigChoiceField('Gender')
         , ConfigChoiceField('Nationality')
-        , AddressForm('address')
+        , AddressForm('address', 'Location', REQUIRED)
     ]
 
     @classmethod

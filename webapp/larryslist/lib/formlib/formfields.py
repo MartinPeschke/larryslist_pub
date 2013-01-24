@@ -18,12 +18,13 @@ class BaseForm(object):
 
     @classmethod
     def getSchema(cls, request):
-        validators = {v.name:v.getValidator(request)  for v in cls.fields}
+        validators = {v.name:v.getValidator(request) for v in cls.fields}
         return formencode.Schema(**validators)
 
 
 class Field(object):
     template = 'larryslist:lib/formlib/templates/basefield.html'
+    validator_args = {'required':False, 'not_empty':False}
     html_help = None
     group_classes = ''
     label_classes = ''
@@ -37,24 +38,29 @@ class Field(object):
         self.required = required
         self.input_classes = '{} {}'.format(self.input_classes, classes)
 
-        params = (validator_args or self.validator_args)
-        params['required'] = required
-        self.validator = self._validator(**params)
+        self.validator = self._validator(**self.getValidatorArgs(required, validator_args))
+
+    def getValidatorArgs(self, required, args):
+        params = self.validator_args.copy()
+        if args: params.update(args)
+        params['not_empty'] = required
+        if not required:
+            params['if_missing'] = None
+        return params
 
     def getValidator(self, request):
         return self.validator
     def getLabel(self, request):
         return self.label
-    def getName(self, request, prefix = None):
-        if prefix:
-            return '{}.{}'.format(prefix, self.name)
-        else:
-            return self.name
+    def getName(self, prefix, request):
+        return '{}.{}'.format(prefix, self.name)
     def getClasses(self):
         return  '{} {}'.format(self.input_classes, 'required' if self.required else '')
-    def render(self, form, request, values, errors):
-        name = self.getName(request)
-        return render(self.template, {'widget': self, 'prefix':form, 'value': values.get(name, ''), 'error':errors.get(name, '')}, request)
+    def render(self, prefix, request, values, errors):
+        name = self.name
+        if isinstance(errors, formencode.Invalid):
+            errors = errors.error_dict
+        return render(self.template, {'widget': self, 'prefix':prefix, 'value': values.get(name, ''), 'error':errors.get(name, '')}, request)
 
 
 
@@ -62,23 +68,27 @@ class Field(object):
 
 class MultipleFormField(Field):
     template = 'larryslist:lib/formlib/templates/repeatableform.html'
-    def __init__(self, name, form):
+    fields = []
+    classes = 'form-embedded-wrapper'
+    add_more_link_label = 'add'
+    def __init__(self, name, label, required = False):
         self.name = name
-        self.form = form
+        self.label = label
+        self.required = required
+
+    def getClasses(self):
+        return  self.classes
 
     def getValidator(self, request):
-        return formencode.ForEach(self.form.getSchema())
+        return formencode.ForEach(formencode.Schema(**{v.name:v.getValidator(request) for v in self.fields}), not_empty = self.required)
 
-    def render(self, form, request, values, errors):
-        name = self.getName(request)
-        return render(self.template, {'widget': self, 'form':[form, self.form], 'value': values.get(name, ''), 'error':errors.get(name, '')}, request)
-
-
+    def render(self, prefix, request, values, errors):
+        name = self.name
+        return render(self.template, {'widget': self, 'prefix':"{}.{}".format(prefix, self.name), 'value': values.get(name, ''), 'error':errors.get(name, '')}, request)
 
 
 
 class StringField(Field):
-    validator_args = {'required':True, 'not_empty':True, 'min':2}
     input_classes = 'input-large'
     _validator = formencode.validators.String
 
@@ -90,11 +100,10 @@ class DateField(StringField):
     def __init__(self, name, label, required = False, validator_args = None):
         self.name = name
         self.label = label
-        params = (validator_args or self.validator_args)
-        params['required'] = required
-        if 'format' not in params:
-            params['format'] = "%Y-%m-%d"
-        self.validator = DateValidator(**params)
+        args = self.getValidatorArgs(required, validator_args)
+        if 'format' not in args:
+            args['format'] = "%Y-%m-%d"
+        self.validator = DateValidator(**args)
 
 
 def configattr(name):

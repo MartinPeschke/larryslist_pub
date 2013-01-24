@@ -86,7 +86,7 @@ define(['tools/messaging', "tools/hash"], function(messaging, hashlib){
       }
       , ifyForm: function(params, validationParams){
           var form = params.form||params.root
-              , noop = function(){return false;}
+              , noop = function(e){e.preventDefault();e.stopPropagation();return false;}
               , baseFormsOnSubmit = function(form){
                   var $form = $(form), validator = $form.validate()
                       , data = ajax.serializeJSON($form);

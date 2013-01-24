@@ -84,7 +84,7 @@
             , validate : function(params){
                 var form = params.root.is("form.form-validated") ? params.root : params.root.find("form.form-validated")
                 var opts = _.extend({
-                        errorClass: "help-block"
+                        errorClass: "help-inline"
                         , errorElement: "span"
                         , validClass:"valid"
                         , onkeyup: false
@@ -244,6 +244,4 @@
                 });
             }
         });
-
-        require(["site"]);
     })(window);
