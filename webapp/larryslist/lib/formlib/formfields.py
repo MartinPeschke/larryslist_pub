@@ -86,8 +86,6 @@ class Field(object):
             errors = errors.error_dict
         return render(self.template, {'widget': self, 'prefix':prefix, 'value': values.get(name, ''), 'error':errors.get(name, '')}, request)
 
-
-
 class StringField(Field):
     input_classes = 'input-large'
     _validator = formencode.validators.String
@@ -177,3 +175,22 @@ class TypeAheadField(StringField):
     def getValidator(self, request):
         return TypeAheadValidator()
 
+
+
+
+
+class HeadingField(object):
+    tag = 'legend'
+    attrs = NONE
+    template = 'larryslist:lib/formlib/templates/heading.html'
+    def __init__(self, format_string, classes = ''):
+        self.format_string = format_string
+        self.classes = classes
+    def formatter(self, request, view):
+        return view.getAllValues()
+    def getHeading(self, request, view):
+        return self.format_string(**self.formatter(request, view))
+    def render(self, prefix, request, values, errors):
+        return render(self.template, {'widget': self}, request)
+    def getClasses(self):
+        return self.classes
