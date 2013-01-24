@@ -115,9 +115,10 @@ class FormHandler(object):
         try:
             ### determine actual form used in this submission
             schema_id = values['type']
-            schema = self.schemas[schema_id]()
+            schema = self.schemas[schema_id]
+            form = schema.getSchema(req)
         except KeyError, e:
             raise HTTPNotImplemented("Unexpected submission type!")
         else:
-            form_result = schema.to_python(values.get(schema_id), state=self.request)
+            form_result = form.to_python(values.get(schema_id), state=self.request)
             return schema.on_success(self.request, form_result)

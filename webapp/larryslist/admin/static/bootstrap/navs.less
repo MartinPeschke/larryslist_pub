@@ -13,17 +13,17 @@
 }
 
 // Make links block level
-.nav > li > .nav-entry-link {
+.nav > .nav-entry > .nav-entry-link {
   display: block;
 }
-.nav > li > a:hover {
+.nav > .nav-entry > a:hover {
   text-decoration: none;
   background-color: @grayLighter;
 }
 
 // Prevent IE8 from misplacing imgs
 // See https://github.com/h5bp/html5-boilerplate/issues/984#issuecomment-3985989
-.nav > li > .nav-entry-link > img {
+.nav > .nav-entry > .nav-entry-link > img {
   max-width: none;
 }
 
@@ -58,12 +58,12 @@
   padding-right: 15px;
   margin-bottom: 0;
 }
-.nav-list > li > .nav-entry-link,
+.nav-list > .nav-entry > .nav-entry-link,
 .nav-list .nav-header {
   margin-left:  -15px;
   text-shadow: 0 1px 0 rgba(255,255,255,.5);
 }
-.nav-list > li > .nav-entry-link {
+.nav-list > .nav-entry > .nav-entry-link {
   padding: 3px 15px;
 }
 .nav-list > .active > a,
@@ -95,8 +95,8 @@
 .nav-pills > li {
   float: left;
 }
-.nav-tabs > li > a,
-.nav-pills > li > a {
+.nav-tabs > li > .nav-entry-link,
+.nav-pills > li > .nav-entry-link {
   padding-right: 12px;
   padding-left: 12px;
   margin-right: 2px;
@@ -115,16 +115,18 @@
   margin-bottom: -1px;
 }
 // Actual tabs (as links)
-.nav-tabs > li > a {
+.nav-tabs > li > .nav-entry-link {
   padding-top: 8px;
   padding-bottom: 8px;
   line-height: @baseLineHeight;
   border: 1px solid transparent;
   .border-radius(4px 4px 0 0);
-  &:hover {
-    border-color: @grayLighter @grayLighter #ddd;
-  }
 }
+.nav-tabs > li > a.nav-entry-link:hover {
+  border-color: @grayLighter @grayLighter #ddd;
+}
+
+
 // Active state, and it's :hover to override normal :hover
 .nav-tabs > .active > a,
 .nav-tabs > .active > a:hover {

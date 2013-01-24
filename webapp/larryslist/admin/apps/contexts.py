@@ -6,7 +6,7 @@ from larryslist.models import ClientTokenProc
 
 from pyramid.decorator import reify
 
-GetAdminConfigProc = ClientTokenProc("/admin/config", root_key="Config", result_cls = AdminConfigModel)
+GetAdminConfigProc = ClientTokenProc("/config", root_key="Config", result_cls = AdminConfigModel)
 config_loader = CachedLoader(GetAdminConfigProc, "ADMIN_CONFIG_CACHE")
 
 

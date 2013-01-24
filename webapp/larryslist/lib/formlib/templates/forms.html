@@ -1,0 +1,553 @@
+﻿<%!
+  from itertools import izip_longest
+  from random import randint
+  import formencode
+%>
+
+
+<%def name="renderControl(id_name, value, props, default_classes = 'span3')" >
+  %if props.html_type == "checkboxselect":
+    %for item in props.getItems(request):
+      <label class="checkbox" ${props.extraAttrs()|n}>
+        <%
+            key = item.getKey(request)
+            value = value or []
+         %>
+        <input type="checkbox" value="${'' if key is None else key}" ${'checked=checked' if key in value else ''}
+            id="${id_name}" name="${id_name}"
+            ${"required" if props.required else ""} \
+            tabindex="${props.tabindex}"\
+            ${props.extractExtra(item)|n}/>
+          ${_(item.getValue(request))|n}
+        </label>
+    %endfor
+  %elif props.html_type == "simpleselect":
+    <%
+        if not value and props.default is not None:
+            value = props.default
+    %>
+    %if getattr(props, 'html_append', None):
+        <div class="input-append">
+    %endif
+        <select class="${props.classes}" \
+            id="${id_name}" name="${id_name}"
+            ${"required" if props.required else ""} \
+            tabindex="${props.tabindex}"\
+            ${props.extraAttrs()|n}>
+            %for item in props.getItems(request):
+                <% key = item.getKey(request) %>
+                <option value="${"" if key is None else key}" ${"selected=selected" if value == key else ""} \
+                ${props.extractExtra(item)|n}
+                >
+                  ${_(item.getValue(request))|n}
+                </option>
+            %endfor
+        </select>\
+        %if getattr(props, 'html_append', None):
+<span class="add-on">${_(props.html_append)|n}</span></div>
+        %endif
+  %elif props.html_type == "simpleradio":
+    <%
+        if not value and props.default is not None:
+            value = props.default
+    %>
+    %for item in props.getItems(request):
+      %if item.getKey(request):
+        <label class="radio ${props.classes} ${"selected" if value == item.getKey(request) else ""}">
+          <input type="radio" name="${id_name}" \
+                ${"required" if props.required else ""} \
+                tabindex="${props.tabindex}"
+                ${" ".join(('{}="{}"'.format(*extra) for extra in getattr(props, "extra_attrs", [])))|n} \
+                ${"checked=checked" if value == item.getKey(request) else ""}
+                value="${"" if item.getKey(request) is None else item.getKey(request)}"  \
+                ${props.extractExtra(item)|n}
+                >
+            ${_(item.getValue(request))|n}
+        </label>
+      %endif
+    %endfor
+  %elif props.html_type == "select":
+    <%
+      select_value = props.keyToPython(value.get("value") if isinstance(value, dict) else value, request)
+      custom = value.get("custom") if isinstance(value, dict) else ""
+    %>
+    %if hasattr(props, 'html_append'):
+      <div class="input-append">
+    %elif hasattr(props, 'html_prepend'):
+      <div class="input-prepend">
+      <span class="add-on">${_(props.html_prepend)|n}</span>\
+    %endif
+<select class="${getattr(props, 'classes', default_classes)} ${'focused' if i==0 else ""}" \
+          ${'tabindex="{}"'.format(props.tabindex) if hasattr(props, "tabindex") else ""|n} \
+          id="${id_name}" name="${id_name}.value"
+          ${" ".join(('{}="{}"'.format(*extra) for extra in getattr(props, "extra_attrs", [])))|n}>
+      %for item in props.getItems(request):
+        <option value="${props.getKey(item)}" \
+            ${'data-entity-custom=1' if getattr(item, props.custom_attribute, False) else ""} \
+            ${"selected=selected" if select_value == props.getKey(item) else ""} \
+            %if hasattr(props,'extractExtra'):
+              ${' '.join(['{}={}'.format(k, v) for k,v in props.extractExtra(item)])} \
+            %endif
+            >
+              ${_(props.getValue(item))|n}</option>
+      %endfor
+    </select>\
+      %if hasattr(props, 'html_append'):
+<span class="add-on">${_(props.html_append)|n}</span>
+      %endif
+      %if hasattr(props, 'html_append') or hasattr(props, 'html_prepend'):
+      </div>
+      %endif
+    %if props.hasCustom(request):
+      <input type="text" class="${getattr(props, 'classes', default_classes)} select-option-custom" \
+      ${"required" if getattr(props, "required", False) else ""} name="${id_name}.custom" value="${custom}"/>
+    %endif
+  %elif props.html_type == "checkbox":
+    <label class="checkbox">
+      ${_(props.html_extra_label)|n}
+      <input class="${getattr(props, 'classes', '')} ${'focused' if i==0 else ""}" \
+        type="checkbox" \
+        id="${id_name}" \
+        name="${id_name}" \
+        value="${props.html_default_value}" \
+        ${'checked' if value else ""}
+        ${'tabindex="{}"'.format(props.tabindex) if hasattr(props, "tabindex") else ""|n} \
+        ${"required" if getattr(props, "required", False) else ""} \
+        ${" ".join(('{}="{}"'.format(*extra) for extra in getattr(props, "extra_attrs", [])))|n}>
+    </label>
+  %elif props.html_type == "textarea":
+      <textarea class="${getattr(props, 'classes', default_classes)} ${'focused' if i==0 else ""}" \
+id="${id_name}" \
+name="${id_name}" \
+${"required" if getattr(props, "required", False) else ""} \
+${'tabindex="{}"'.format(props.tabindex) if hasattr(props, "tabindex") else ""|n} \
+${'minlength={}'.format(props.min) if getattr(props, 'min', False) else ""} \
+${'maxlength={}'.format(props.max) if getattr(props, 'max', False) else ""} \
+${" ".join(('{}="{}"'.format(*extra) for extra in getattr(props, "extra_attrs", [])))|n}>${value or ""}</textarea>
+  %else:
+      <%
+        html_type = props.html_type
+        classes = getattr(props, 'classes', default_classes)
+        if getattr(props, "is_number_validator", False):
+          html_type = 'text'
+          classes+= " number"
+          maxpropname = 'max'
+          minpropname = 'min'
+          extras = [("step", props.step)]
+        else:
+          maxpropname = 'maxlength'
+          minpropname = 'minlength'
+          extras = []
+      %>
+      %if hasattr(props, 'html_append'):
+        <div class="input-append">
+      %elif hasattr(props, 'html_prepend'):
+        <div class="input-prepend">
+        <span class="add-on">${_(props.html_prepend)|n}</span>\
+      %endif
+<input class="${classes} ${'focused' if i==0 else ""}" \
+id="${id_name}" \
+name="${id_name}" \
+type="${html_type}" \
+value="${"" if html_type == "password" and not getattr(props, "redisplay_password", False) else ("" if value is None else value)}" \
+autocomplete="off" \
+${"required" if getattr(props, "required", False) else ""} \
+${u'placeholder="{}"'.format(_(props.placeholder)) if getattr(props, "placeholder", False) else ""|n} \
+${'tabindex="{}"'.format(props.tabindex) if hasattr(props, "tabindex") else ""|n} \
+${'{}={}'.format(minpropname, props.min) if getattr(props, 'min', False) else ""} \
+${'{}={}'.format(maxpropname, props.max) if getattr(props, 'max', False) else ""} \
+${" ".join(('{}="{}"'.format(*extra) for extra in extras))|n} \
+${" ".join(('{}="{}"'.format(*extra) for extra in getattr(props, "extra_attrs", [])))|n} \
+        
+      %if hasattr(props, 'html_append'):
+><span class="add-on">${_(props.html_append)|n}</span>
+      %else:
+>
+      %endif
+      %if hasattr(props, 'html_append') or hasattr(props, 'html_prepend'):
+      </div>
+      %endif
+  %endif
+  %if getattr(props, 'html_help', False):
+    <p class="help-block">${_(props.html_help)|n}</p>
+  %endif
+</%def>
+
+
+<%def name="buildLabel(widget, classes = 'control-label', field_id_name = None)">
+  <% label = getattr(widget, "html_label", "&nbsp;") %>
+  %if callable(label):
+    <label class="${classes} ${getattr(widget, "label_classes", "")}" ${'for="{}"'.format(field_id_name) if field_id_name else ''|n} >${label(request, widget)|n}</label>
+  %else:
+    <label class="${classes} ${getattr(widget, "label_classes", "")}">${_(label)|n}</label>
+  %endif
+</%def>
+
+
+<%def name="renderFormLine(field_id_name, field, props, values, errors, default_classes = 'span3')">
+  %if props.html_type == 'hidden':
+      <input id="${field_id_name}" name="${field_id_name}" type="${props.html_type}" value="${values.get(field, getattr(props, 'default', ''))}">
+  %else:
+    <div class="control-group ${'required' if getattr(props, 'required', False) else ''} ${" error" if field in errors else ""} ${getattr(props,"parent_classes","")}">
+      %if not getattr(props, "suppress_label", False):
+        ${self.buildLabel(props, 'control-label', field_id_name)}
+       %endif
+      <div class="controls ${getattr(props, "controls_class", "")}">
+        %if hasattr(props, 'widget'):
+
+            <%doc> Try determine caller with the widget definition</%doc>
+            %for callItem in filter(None, caller):
+                %if hasattr(callItem, props.widget):
+                    ${getattr(callItem, props.widget)(field_id_name, values.get(field), props, values, errors, default_classes)|n}
+                    <% break %>
+                %endif
+            %endfor
+
+        %else:
+          ${self.renderControl(id_name = field_id_name, value=values.get(field), props = props, default_classes = default_classes)}
+        %endif
+        %if field in errors:
+          <span class="help-block" for="${field_id_name}" generated="true">${errors[field]}</span>
+        %endif
+      </div>
+    </div>
+  %endif
+</%def>
+
+<%def name="buildLayoutElement(field, values)">
+  <${field.tag} ${'class="{}"'.format(field.classes) if field.classes else ''|n}>${_(field.getLabel(values))|n}</${field.tag}>
+</%def>
+
+<%def name="buildCombinedFormLine(key, schema, widget, values, errors)">
+  <% 
+    fields, local_errors = widget.getFields(schema), widget.getErrors(errors)
+  %>
+
+  <div class="control-group combined ${'required' if widget.required(schema) else ''} ${" error" if len(local_errors) else ""} ${getattr(widget,"classes","")}">
+      %if widget.showOutsideLabel():
+          ${self.buildLabel(widget)}
+       %endif
+      <div class="controls ${getattr(widget, 'controls_class', '')}">
+        %if widget.inline_label:
+          ${self.buildLabel(widget, 'inline-label')}
+        %endif
+        %for i, field in enumerate(widget.elements):
+          <% 
+            props = schema.fields[field]
+            field_id_name = "{}.{}".format(key, field)
+          %>
+          ${self.renderControl(id_name = field_id_name, value=values.get(field), props = props, default_classes = getattr(schema, "default_classes", "span3"))}
+        %endfor
+        %for error in local_errors:
+          <span class="help-inline" generated="true">${error}</span>
+        %endfor
+      </div>
+    </div>
+</%def>
+
+
+
+<%def name="buildListItemSubform(key, position, schema, values, errors, id_key = None, default_classes = 'span3', props = None)">
+  <${schema.html_tag} class="form-embedded ${schema.html_classes}" ${'id="template-{}"'.format(key.replace(".","-")) if position == 0 else ""|n}>
+  %if position > 0:
+    checkbox
+  %endif
+  
+  <span class="control-number">${position+1}</span>
+  %if id_key:
+    <input type="hidden" name="${ '{}-{}.{}'.format(key, position, id_key) }" value="${values.get(id_key)}"/>
+  %endif
+
+  %for i, field in enumerate(schema.form_order):
+    <% 
+      props = schema.fields[field]
+      field_id_name = "{}-{}.{}".format(key, position, field) 
+    %>
+    ${self.renderFormLine(field_id_name, field, props, values, getattr(errors, "error_dict", dict()), default_classes = getattr(schema, "default_classes", default_classes))}
+  %endfor
+  </${schema.html_tag}>
+</%def>
+
+
+<%def name="buildListSubforms(field_id_name, field, props, values, errors, id_key = None)">
+  <div class="form-embedded-wrapper">
+      %for j, (values_, errors_) in enumerate(izip_longest(values.get(field) or [{}], getattr(errors.get(field), "error_list", []), fillvalue = {})):
+        %for subschema in props.validators:
+          ${self.buildListItemSubform(field_id_name, j, subschema, values_, errors_, id_key, props = props)}
+        %endfor
+      %endfor
+      <div class="add-more"><a class="link add-more-listitem" _field_position="${j}" _field_key="${field_id_name.replace(".","-")}" _template="template-${field_id_name}">${getattr(props, "add_more_link_label", "add one more")|n}</a></div>
+  </div>
+</%def>
+
+
+
+
+<%def name="buildSubform(key, schema, values, errors, default_classes = 'span3')">
+  <${schema.html_tag} class="${schema.html_classes}">
+  %for i, field in enumerate(schema.form_order):
+    %if schema.fields.get(field):
+      <%
+        props = schema.fields[field]
+        field_id_name = "{}.{}".format(key, field) 
+      %>
+      ${self.renderFormLine(field_id_name, field, props, values, getattr(errors, "error_dict", dict()), default_classes = default_classes)}
+    %elif hasattr(field, "elements"):
+        ${self.buildCombinedFormLine(key, schema, field, values, errors)}
+    %else:
+      ${self.buildLayoutElement(field, values)}
+    %endif
+  %endfor
+  </${schema.html_tag}>
+</%def>
+
+
+<%def name="prelims(schema)">
+  <input type="hidden" name="type" value="${schema.form_id}"/>
+  <input type="hidden" name="furl" value="${schema.getFURL(request)}"/>
+  <input type="hidden" name="token" value="${request.session.get_csrf_token()}"/>
+</%def>
+
+<%def name="buildFormFields(schema, form_order, values, errors)">
+    %for i, field in enumerate(form_order):
+      %if hasattr(field, "structure"):
+          %if hasattr(field, "form_order"):
+            <${field.tag} ${'class="{}"'.format(field.classes) if field.classes else ''|n}">
+              ${self.buildFormFields(schema, field.form_order, values, errors)}
+            </${field.tag}>
+          %elif hasattr(field, "widget"):
+            <%doc> Try determine caller with the widget definition</%doc>
+            %for callItem in filter(None, caller):
+                %if hasattr(callItem, field.widget):
+                    ${getattr(callItem, field.widget)()|n}
+                    <% break %>
+                %endif
+            %endfor
+          %elif hasattr(field, "elements"):
+            ${self.buildCombinedFormLine(schema.form_id, schema, field, values, errors)}
+          %else:
+            ${self.buildLayoutElement(field, values)}
+          %endif
+      %elif schema.fields.get(field):
+        <% 
+          props = schema.fields[field]
+          field_id_name = "{}.{}".format(schema.form_id, field)
+        %>
+        %if props.repeating == True and isinstance(props, formencode.ForEach) and not hasattr(props, "html_type"):
+            ${self.buildListSubforms(field_id_name, field, props, values, errors)}
+        %elif props.repeating == False and isinstance(props, formencode.Schema) and not hasattr(props, "html_type"):
+          ${self.buildSubform(field_id_name, props, values.get(field, dict()), errors.get(field, dict()))}
+        %else:
+          ${self.renderFormLine(field_id_name, field, props, values, errors, default_classes = getattr(schema, "default_classes", "span3"))}
+        %endif
+      %endif
+    %endfor
+    
+    <%doc> Try determine caller with the appendix definition</%doc>
+    %for callItem in caller:
+        %if callItem and hasattr(callItem, 'appendix'):
+            ${callItem.appendix()}
+            <% break %>
+        %endif
+    %endfor
+</%def>
+
+<%def name="buildFormContent(schema, values, errors)">
+    ${self.prelims(schema)}
+    <fieldset>
+      <div class="form-fields">
+        ${self.buildFormFields(schema, schema.form_order, values, errors)}
+      </div>
+    </fieldset>
+</%def>
+
+<%def name="buildform(schema, values, errors)">
+<%
+  values = values[schema.form_id]
+  errors = errors[schema.form_id]
+%>
+   <form method="post" class="${getattr(schema, "html_classes", "form-horizontal form-validated")}" id="${schema.form_id}">
+      ${self.prelims(schema)}
+      <fieldset>
+        <div class="form-fields">
+          %if hasattr(caller, "header"):
+            <legend>${caller.header()}</legend>
+          %endif
+          %if hasattr(caller, 'headparagraph'):
+            <div class="sublegend">${caller.headparagraph()}</div>
+          %endif
+          ${self.buildFormFields(schema, schema.form_order, values, errors)}
+        </div>
+        %if hasattr(caller, "footer"):
+            <div class="form-actions">
+              ${caller.footer()}
+            </div>
+        %endif
+      </fieldset>
+    </form>
+</%def>
+
+
+
+
+
+
+
+
+
+
+<%def name="buildValidators(root, success=True, expanding_list = False, with_custom_select = False)">
+  %if "de"  in request._LOCALE_.lower():
+    $.validator.methods.range = function (value, element, param) {
+      var globalizedValue = value.replace(",", ".");
+      return this.optional(element) || (globalizedValue >= param[0] && globalizedValue <= param[1]);
+    }
+    $.validator.methods.number = function (value, element) {
+      return this.optional(element) || /^-?(?:\d+|\d{1,3}(?:[\s\.,]\d{3})+)(?:[\.,]\d+)?$/.test(value);
+    }
+  %endif
+  
+  ${root}.find("form.form-validated").each(function(index, form){
+    var validator = $(form).validate({
+      errorClass: "help-inline"
+      ,errorElement: "span"
+      ,highlight: function (element, errorClass, validClass) {
+        $(element).closest(".control-group").addClass("error").removeClass(validClass);
+      }
+      , unhighlight: function (element, errorClass, validClass) {
+        $(element).closest(".control-group").removeClass("error").addClass(validClass);
+      }
+    });
+    $(form).find("input[type=reset], button[type=reset]").click(function(e) {
+        validator.resetForm();
+        $(form).find(".error").removeClass("error");
+    });
+  });
+  
+  %if with_custom_select:
+    <mako:text>
+    var checkSelectedOption = function(selectInput){
+        var selected = selectInput.find("option:selected")
+        if(selected.attr("data-entity-custom")){
+          selectInput.parent().find(".select-option-custom").show();
+        } else {
+          selectInput.parent().find(".select-option-custom").hide();
+          selectInput.closest(".control-group").removeClass("error").find("[generated]").remove();
+        }
+      };
+    </mako:text>
+    ${root}.find("form.form-validated").on({change:function(e){checkSelectedOption($(e.target));}}, "select");
+    ${root}.find("form.form-validated").find("select").each(function(idx, selectInput){checkSelectedOption($(selectInput))});
+  %endif
+  
+  
+  
+  %if expanding_list:
+    ${root}.on({click:function(e){
+        var $target = $(e.target)
+          , $embeddedForm = $target.closest(".form-embedded")
+          , refLink = $target.closest(".form-embedded-wrapper").find(".add-more-listitem")
+          , delLink = $target.remove();
+          refLink.attr("_field_position", parseInt(refLink.attr("_field_position"), 10) - 1);
+          if($embeddedForm.prevAll(".form-embedded").length>1){
+            $embeddedForm.prev().prepend(delLink);
+          }
+          $embeddedForm.remove();
+        }
+      }, ".add-more-delete-link");
+    ${root}.on({
+      click : function(e){
+        var $target = $(e.target)
+          , $form = $target.closest("form")
+          , templ = $("#template-"+$target.attr("_field_key"))
+          , new_node = templ.clone().removeAttr("id")
+          , new_position = parseInt($target.attr("_field_position"), 10) + 1
+          , inc = function(elem, attr){
+            elem.attr(attr, elem.attr(attr).replace(/-[0-9]+\./g, "-"+new_position+"."))
+         };
+        new_node.find("input[type=hidden]").remove();
+        new_node.find("label").each(function(index, elem){
+          elem = $(elem); inc(elem, "for");
+        });
+        new_node.find("input,select,textarea").each(function(index, elem){
+          elem = $(elem); 
+          inc(elem, "id"); 
+          inc(elem, "name");
+          elem.val("");
+        });    
+        new_node.find(".control-number").html(new_position+1);
+        $target.attr("_field_position", new_position);
+        $target.closest(".add-more").before(new_node);
+        var delete_link = $form.find(".add-more-delete-link").remove();
+        if(delete_link.length === 0){
+          delete_link = $('<a class="add-more-delete-link close">×</a>')
+        }
+        new_node.prepend(delete_link);
+        new_node.find("[generated]").remove();
+        new_node.find(".error").removeClass("error");
+        new_node.find(".valid").removeClass("valid");
+        
+      }
+    }, ".add-more-listitem");
+  %endif
+</%def>
+
+
+
+
+
+
+
+
+<mako:def name="formSubmitConfirm(root_id)">
+  <% modal_id = "confirmSubmit-{}".format(randint(0, 100000)) %>
+  <div class="modal" id="${modal_id}" style="display:none">
+    <div class="modal-header">
+      <a class="close" data-dismiss="modal">×</a>
+      <h3>${caller.title()}</h3>
+    </div>
+    <div class="modal-body">
+      ${caller.body()}
+    </div>
+    <div class="modal-footer">
+      ${caller.actions()}
+    </div>
+  </div>
+  <script>
+    $(function () {
+      var root = $("#${root_id}")
+      , modal = $("#${modal_id}")
+      , submit = function(form){form.submit();}
+      , confirm = function(form){
+        if(form.valid()){
+          modal.modal('show').find(".btn-submit").on({
+              click : function(e){
+                submit(form);
+              }
+              , keydown : function(e){
+                switch(e.keyCode){
+                  case 13:
+                  case 32:
+                    submit(form);
+                  break;
+                }
+              }
+            });
+        }
+      };
+      root.find(".btn-submit").on({
+            click : function(e){
+              confirm($(e.target).closest("form"));
+            }
+            , keydown : function(e){
+            switch(e.keyCode){
+              case 13:
+              case 32:
+                confirm($(e.target).closest("form"))
+              break;
+            }
+          }
+        });
+      });
+  </script>
+</mako:def>

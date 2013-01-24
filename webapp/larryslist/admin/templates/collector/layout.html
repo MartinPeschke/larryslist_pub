@@ -1,17 +1,47 @@
 <%inherit file="../layout.html"/>
 
+
+
+<%block name="contentbody">
+    <div class="padded-body">
+        <ul class="nav nav-tabs">
+            %for form in view.getForms():
+                <li class="nav-entry ${'active' if view.getActiveForm().id == form.id else ''}">
+                    %if view.isFormEnabled(form):
+                        <a class="nav-entry-link" href="#wrap-${form.id}" data-toggle="tab">${form.label}</a>
+                    %else:
+                        <span class="nav-entry-link">${form.label}</span>
+                    %endif
+
+                </li>
+            %endfor
+        </ul>
+        <div class="tab-content">
+            %for form in view.getForms():
+                %if view.isFormEnabled(form):
+                    <div class="tab-pane ${'active' if view.getActiveForm().id == form.id else ''}" id="wrap-${form.id}">
+                        ${self.buildForm(form, values.get(form.id), errors.get(form.id))}
+                    </div>
+                %endif
+            %endfor
+        </div>
+    </div>
+</%block>
+
+
+
+
 <%def name="contentStatusImpl()">
     <div class="content-status">
         <h4>Status</h4>
     </div>
 </%def>
 
-
 <%def name="contentMenuImpl()">
     <div class="menu-heading">Collector</div>
     <ul class="nav nav-list">
         ${self.menuLink("Personal Details", "icon-user", "admin_collector_create")}
-        ${self.menuLink("Collection", "icon-picture", "admin_collector_create")}
+        ${self.menuLink("Collection", "icon-picture")}
         ${self.menuLink("Art Engagement", "icon-calendar")}
         ${self.menuLink("Media Recognition", "icon-signal")}
         ${self.menuLink("Other Facts", "icon-arrow-right")}

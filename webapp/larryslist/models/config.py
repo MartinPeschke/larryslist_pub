@@ -1,5 +1,30 @@
-from jsonclient import Mapping
+from jsonclient import Mapping, TextField, DictField, ListField
 
 __author__ = 'Martin'
 
-class ConfigModel(Mapping): pass
+class NamedConfigModel(Mapping):
+    name = TextField()
+    def getKey(self, request):return self.name
+    def getLabel(self, request):return self.name
+
+class NationalityModel(NamedConfigModel): pass
+class TitleModel(NamedConfigModel): pass
+class IndustryModel(NamedConfigModel): pass
+class PositionModel(NamedConfigModel): pass
+
+class GenderModel(Mapping):
+    key = TextField()
+    label = TextField()
+    def getKey(self, request):return self.key
+    def getLabel(self, request):return self.label
+
+GENDER_CHOICES = [GenderModel(key = 'M', label = 'male'), GenderModel(key = 'F', label = 'female')]
+
+
+
+class ConfigModel(Mapping):
+    Nationality = ListField(DictField(NationalityModel))
+    Title = ListField(DictField(TitleModel))
+    Industry = ListField(DictField(IndustryModel))
+    Position = ListField(DictField(PositionModel))
+    Gender = GENDER_CHOICES
