@@ -42,8 +42,16 @@ class BaseForm(object):
 
     @classmethod
     def getSchema(cls, request):
-        validators = {v.name:v.getValidator(request) for v in cls.fields if v.is_validated}
+        validators = {}
+        for v in cls.fields:
+            if v.is_validated:
+                validators.update(v.getValidator(request))
         return BaseSchema(**validators)
+
+
+
+
+
 
 class BaseField(object):
     is_validated = False
@@ -104,7 +112,7 @@ class Field(BaseField):
             params['if_missing'] = None
         return params
     def getValidator(self, request):
-        return self._validator(**self.getValidatorArgs())
+        return {self.name: self._validator(**self.getValidatorArgs())}
 
     def valueToForm(self, value): return value
 
@@ -116,11 +124,49 @@ class Field(BaseField):
         return '{}.{}'.format(prefix, self.name)
     def getClasses(self):
         return  '{} {}'.format(self.input_classes, self.attrs.getClasses())
+
+    def getValues(self, name, request, values, errors, view):
+        return {'value': values.get(name, ''), 'error':errors.get(name, '')}
     def render(self, prefix, request, values, errors, view = None):
-        name = self.name
         if isinstance(errors, formencode.Invalid):
             errors = errors.error_dict
-        return render(self.template, {'widget': self, 'prefix':prefix, 'value': values.get(name, ''), 'error':errors.get(name, ''), 'view': view}, request)
+        params = self.getValues(self.name, request, values, errors, view)
+        params.update({'widget': self, 'prefix':prefix, 'view': view})
+        return render(self.template, params, request)
+
+
+class MultipleFormField(Field):
+    template = 'larryslist:lib/formlib/templates/repeatableform.html'
+    fields = []
+    add_more_link_label = 'add'
+    def __init__(self, name, label = None, attrs = NONE, classes = 'form-embedded-wrapper'):
+        self.name = name
+        self.label = label
+        self.attrs = attrs
+        self.classes = classes
+
+    def getClasses(self):
+        return  self.classes
+
+    def getValidator(self, request):
+        validators = {}
+        for v in self.fields:
+            if v.is_validated:
+                validators.update(v.getValidator(request))
+        return {self.name : formencode.ForEach(BaseSchema(**validators), not_empty = self.attrs.required)}
+
+    def render(self, prefix, request, values, errors, view = None):
+        name = self.name
+        return render(self.template, {'widget': self, 'prefix':"{}.{}".format(prefix, self.name), 'value': values.get(name, ''), 'error':errors.get(name, ''), 'view':view}, request)
+
+
+
+
+
+
+
+
+
 
 
 class StaticHiddenField(Field):
@@ -138,6 +184,8 @@ class HiddenField(Field):
     def render(self, prefix, request, values, errors, view = None):
         return '<input type="hidden" name="{}" value="{}"/>'.format(self.getName(prefix), values.get(self.name, ''))
 
+    def __init__(self, name):
+        self.name = name
 
 
 class StringField(Field):
@@ -146,6 +194,27 @@ class StringField(Field):
 class IntField(Field):
     input_classes = 'input-large digits'
     _validator = formencode.validators.Int
+
+class ApproxField(Field):
+    template = 'larryslist:lib/formlib/templates/approx_field.html'
+    input_classes = 'input-large digits'
+    _validator = formencode.validators.Int
+    aprxDefault = 'true'
+    type = 'text'
+    aprxLabel = "Greater than?"
+    def __init__(self, name, aprxName, label, attrs = NONE, classes = '', validator_args = {}, group_classes = '', label_classes = ''):
+        super(ApproxField, self).__init__(name, label, attrs, classes, validator_args, group_classes, label_classes)
+        self.aprxName = aprxName
+    def getName(self, prefix = None, aprx = False):
+        return '{}.{}'.format(prefix, self.aprxName if aprx else self.name)
+    def getValues(self, name, request, values, errors, view):
+        return {'value': values.get(name, ''), 'valueIsApprox':values.get(self.aprxName, False), 'error':errors.get(name, {})}
+    def getValidator(self, request):
+        result = {}
+        result[self.name] = formencode.validators.Int()
+        result[self.aprxName] = formencode.validators.StringBool(if_missing = False)
+        return result
+
 class CheckboxField(Field):
     template = 'larryslist:lib/formlib/templates/checkbox.html'
     input_classes = 'checkbox'
@@ -190,7 +259,7 @@ class ChoiceField(Field):
         self.optionGetter = optionGetter
 
     def getValidator(self, request):
-        return OneOf(map(methodcaller('getKey', request), self.optionGetter(request)))
+        return {self.name: OneOf(map(methodcaller('getKey', request), self.optionGetter(request)))}
     def getOptions(self, request):
         return self.optionGetter(request)
     def isSelected(self, option, value, request):
@@ -208,30 +277,6 @@ class ConfigChoiceField(ChoiceField):
         self.optionGetter = configattr(configAttr)
 
 
-class MultipleFormField(Field):
-    template = 'larryslist:lib/formlib/templates/repeatableform.html'
-    fields = []
-    add_more_link_label = 'add'
-    def __init__(self, name, label = None, attrs = NONE, classes = 'form-embedded-wrapper'):
-        self.name = name
-        self.label = label
-        self.attrs = attrs
-        self.classes = classes
-
-    def getClasses(self):
-        return  self.classes
-
-    def getValidator(self, request):
-        return formencode.ForEach(BaseSchema(**{v.name:v.getValidator(request) for v in self.fields if v.is_validated}), not_empty = self.attrs.required)
-
-    def render(self, prefix, request, values, errors, view = None):
-        name = self.name
-        return render(self.template, {'widget': self, 'prefix':"{}.{}".format(prefix, self.name), 'value': values.get(name, ''), 'error':errors.get(name, ''), 'view':view}, request)
-
-
-
-
-
 class TypeAheadField(StringField):
     template = 'larryslist:lib/formlib/templates/typeahead.html'
     def __init__(self, name, label, api_url, dependency = None, attrs = NONE, classes = 'typeahead', validator_args = {}):
@@ -240,12 +285,10 @@ class TypeAheadField(StringField):
         self.api_url = api_url
 
     def getValidator(self, request):
-        return TypeAheadValidator(self.attrs)
-    def render(self, prefix, request, values, errors, view = None):
-        name = self.name
-        if isinstance(errors, formencode.Invalid):
-            errors = errors.error_dict
-        return render(self.template, {'widget': self, 'prefix':prefix, 'value': values.get(name, {}), 'error':errors.get(name, ''), 'view': view}, request)
+        return {self.name: TypeAheadValidator(self.attrs)}
+
+    def getValues(self, name, request, values, errors, view):
+        return {'value': values.get(name, {}), 'error':errors.get(name, {})}
 
 
 

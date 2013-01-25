@@ -45,4 +45,4 @@ EditCollectorBusinessProc = ClientTokenProc("/admin/collector/businessedit", roo
 
 
 CreateCollectionProc = ClientTokenProc("/admin/collection/create", root_key = 'Collection', result_cls=CollectionModel)
-GetCollectionDetailsProc = ClientTokenProc("/admin/collection/create", root_key = 'Collection', result_cls=CollectionModel)
+EditCollectionBaseProc = ClientTokenProc("/admin/collection/basicedit", root_key = 'Collection', result_cls=CollectionModel)

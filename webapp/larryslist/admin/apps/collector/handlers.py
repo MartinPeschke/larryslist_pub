@@ -36,7 +36,7 @@ class BaseCollectorHandler(FormHandler):
         if not self.collector:
             return None
         elif self.collector.Collection:
-            return req.fwd_url("admin_collection_edit", collectionId = self.collector.Collection.id, stage = stage)
+            return req.fwd_url("admin_collection_edit", collectorId = self.collector.id, stage = stage)
         else:
             return req.fwd_url("admin_collection_create", collectorId = self.collector.id)
 
