@@ -8,7 +8,7 @@
             %for form in view.getForms():
                 <li class="nav-entry ${'active' if view.getActiveForm().id == form.id else ''}">
                     %if view.isFormEnabled(form):
-                        <a class="nav-entry-link" href="#wrap-${form.id}" data-toggle="tab">${form.label}</a>
+                        <a class="nav-entry-link" href="${request.fwd_url("admin_collector_edit", collectorId = view.collector.id, workflow = 'personal', stage = form.id)}">${form.label}</a>
                     %else:
                         <span class="nav-entry-link">${form.label}</span>
                     %endif

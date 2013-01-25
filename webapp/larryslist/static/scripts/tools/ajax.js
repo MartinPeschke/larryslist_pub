@@ -98,6 +98,7 @@ define(['tools/messaging', "tools/hash"], function(messaging, hashlib){
                       , success: function(resp, status, xhr, data){
                             if(resp.success === false && resp.errors) {
                               var formId = $form.find("[name=type]").val();
+                              for(var k in resp.errors) if(/--repetitions$/.test(k))delete resp.errors[k];
                               validator.showErrors(resp.errors);
                               for(var attr in resp.values){
                                   $form.find("#"+formId+"\\."+attr).val(resp.values[attr]);
@@ -109,6 +110,7 @@ define(['tools/messaging', "tools/hash"], function(messaging, hashlib){
                             if(resp.message){
                                 messaging[resp.success?'addSuccess':'addError']({message:resp.message});
                             }
+                            if(resp.success)$form.trigger('form:saved', resp, status, xhr, data);
                             params.success && params.success(resp, status, xhr, data);
                           }
                       }

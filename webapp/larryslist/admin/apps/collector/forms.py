@@ -1,13 +1,16 @@
 from operator import itemgetter
 from jsonclient.backend import DBException
 from larryslist.admin.apps.collector.models import CreateCollectorProc, EditCollectorBaseProc, EditCollectorContactsProc
-from larryslist.lib.formlib.formfields import REQUIRED, StringField, BaseForm, ChoiceField, configattr, ConfigChoiceField, DateField, MultipleFormField, IMPORTANT, TypeAheadField, EmailField, HeadingField
+from larryslist.lib.formlib.formfields import REQUIRED, StringField, BaseForm, ChoiceField, configattr, ConfigChoiceField, DateField, MultipleFormField, IMPORTANT, TypeAheadField, EmailField, HeadingField, URLField, PlainHeadingField, StaticHiddenField
 
 __author__ = 'Martin'
 
 class CollectorBaseForm(BaseForm):
     classes = "form-horizontal form-validated"
     fields = []
+    @classmethod
+    def toFormData(cls, values):
+        return values
 
 class EmbeddedForm(object):
     classes = "well"
@@ -26,7 +29,6 @@ class AddressForm(MultipleFormField):
     ]
 
 class UniversityForm(MultipleFormField):
-    classes = 'form-inline'
     fields = [
         StringField('name', 'Name of University')
         , StringField('city', 'City')
@@ -51,8 +53,8 @@ class CollectorCreateForm(CollectorBaseForm):
         , ConfigChoiceField('gender', 'Gender', 'Gender', IMPORTANT)
         , ConfigChoiceField('nationality', 'Nationality', 'Nationality', IMPORTANT)
         , AddressForm('Address', 'Location', REQUIRED)
-        , UniversityForm('University')
-        , MultiConfigChoiceField("Interest")
+        , UniversityForm('University', attrs = REQUIRED, classes = 'form-embedded-wrapper form-inline')
+        , MultiConfigChoiceField("Interest", attrs = REQUIRED)
     ]
 
     @classmethod
@@ -83,17 +85,28 @@ class CollectorEditForm(CollectorCreateForm):
 class MultiEmailField(MultipleFormField):
     fields = [EmailField('address', 'Email', IMPORTANT)]
 
+class NetworkField(MultipleFormField):
+    fields = [
+        ConfigChoiceField('name', "Network", 'Network'), URLField('url', '')
+    ]
+
 
 class CollectorContactsForm(CollectorBaseForm):
     id = "contacts"
     label = "Contacts"
     fields = [
-        HeadingField("{firstName} {lastName}")
-        , MultiEmailField('Email', None, IMPORTANT)
+        HeadingField('{view.collectorName}')
+        , MultiEmailField('Email', None, REQUIRED)
+        , PlainHeadingField("Social networks")
+        , NetworkField("Network", classes = 'form-embedded-wrapper form-inline')
+        , StringField('wikipedia', 'Wikipedia', REQUIRED)
     ]
     @classmethod
     def on_success(cls, request, values):
         values['id'] = request.matchdict['collectorId']
+        values['Network'] = filter(lambda s: s.get('url') and s.get('name'), values.get('Network', []))
+        for network in ['facebook', 'twitter', 'linkedin']:
+            values['Network'].extend([{'name':network, 'url':n['url']} for n in values.pop(network, [])])
         try:
             collector = EditCollectorContactsProc(request, {'Collector':values})
         except DBException, e:

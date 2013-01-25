@@ -6,8 +6,9 @@
         <input type="hidden" name="type" value="${form.id}"/>
         <input type="hidden" name="furl" value="${request.furl}"/>
         <input type="hidden" name="token" value="${request.session.get_csrf_token()}"/>
+
         %for field in form.fields:
-            ${field.render(form.id, request, values, errors)|n}
+            ${field.render(form.id, request, values, errors, view)|n}
         %endfor
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">Save</button>

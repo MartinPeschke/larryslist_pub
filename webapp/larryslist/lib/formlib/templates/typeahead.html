@@ -6,7 +6,7 @@
          data-api-url="${widget.api_url}" data-api-type="${widget.name}"
         ${'data-api-dependency="{}"'.format(widget.dependency) if widget.dependency else ''|n}
     >
-        <input type="hidden" name="${widget.getName(prefix, request)}.token" value="${value.get('token', '')}"/>
-        <input type="text" class="${widget.getClasses()}" name="${widget.getName(prefix, request)}.name" value="${value.get('name', '')}"/>
+        <input type="hidden" name="${widget.getName(prefix)}.token" value="${value.get('token', '')}"/>
+        <input type="text" class="${widget.getClasses()}" name="${widget.getName(prefix)}.name" value="${value.get('name', '')}"/>
     </div>
 </%block>

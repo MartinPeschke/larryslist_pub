@@ -37,24 +37,54 @@ class BaseForm(object):
 
     @classmethod
     def getSchema(cls, request):
-        validators = {v.name:v.getValidator(request) for v in cls.fields}
+        validators = {v.name:v.getValidator(request) for v in cls.fields if v.is_validated}
         return BaseSchema(**validators)
 
-
-class Field(object):
-    template = 'larryslist:lib/formlib/templates/basefield.html'
-    validator_args = {}
-    type = 'text'
+class BaseField(object):
+    is_validated = False
     html_help = None
     group_classes = ''
     label_classes = ''
     control_classes = ''
     input_classes = ''
     attrs = NONE
-    def __init__(self, name, label, attrs = NONE, classes = '', validator_args = None):
+
+
+
+class HeadingField(BaseField):
+    tag = 'legend'
+    template = 'larryslist:lib/formlib/templates/heading.html'
+    def __init__(self, format_string, classes = ''):
+        self.format_string = format_string
+        self.classes = classes
+    def getHeading(self, request, view):
+        return self.format_string.format(request = request, view = view)
+    def render(self, prefix, request, values, errors, view = None):
+        return render(self.template, {'widget': self, 'view':view}, request)
+    def getClasses(self):
+        return self.classes
+
+class PlainHeadingField(BaseField):
+    def __init__(self, label, tag = 'h4', classes = ''):
+        self.label = label
+        self.tag = tag
+        self.classes = classes
+    def render(self, prefix, request, values, errors, view = None):
+        return '<{0.tag} {0.classes}>{0.label}</{0.tag}>'.format(self)
+
+
+
+class Field(BaseField):
+    template = 'larryslist:lib/formlib/templates/basefield.html'
+    is_validated = True
+    validator_args = {}
+    type = 'text'
+    def __init__(self, name, label, attrs = NONE, classes = '', validator_args = None, group_classes = '', label_classes = ''):
         self.name = name
         self.label = label
         self.attrs = attrs
+        self.group_classes = group_classes
+        self.label_classes = label_classes
         self.input_classes = '{} {}'.format(self.input_classes, classes)
         self.validator = self._validator(**self.getValidatorArgs(attrs, validator_args))
 
@@ -76,19 +106,41 @@ class Field(object):
         return bool(self.label)
     def getLabel(self, request):
         return self.label
-    def getName(self, prefix, request):
+    def getName(self, prefix):
         return '{}.{}'.format(prefix, self.name)
     def getClasses(self):
         return  '{} {}'.format(self.input_classes, self.attrs.getClasses())
-    def render(self, prefix, request, values, errors):
+    def render(self, prefix, request, values, errors, view = None):
         name = self.name
         if isinstance(errors, formencode.Invalid):
             errors = errors.error_dict
-        return render(self.template, {'widget': self, 'prefix':prefix, 'value': values.get(name, ''), 'error':errors.get(name, '')}, request)
+        return render(self.template, {'widget': self, 'prefix':prefix, 'value': values.get(name, ''), 'error':errors.get(name, ''), 'view': view}, request)
+
+
+class StaticHiddenField(Field):
+    input_classes = 'input-large'
+    def __init__(self, name, value):
+        self.name = name
+        self.value = value
+        self.validator = formencode.validators.String
+    def render(self, prefix, request, values, errors, view = None):
+        return '<input type="hidden" name="{}" value="{}"/>'.format(self.getName(prefix), self.value)
+
+class HiddenField(Field):
+    input_classes = 'input-large'
+    _validator = formencode.validators.String
+    def render(self, prefix, request, values, errors, view = None):
+        return '<input type="hidden" name="{}" value="{}"/>'.format(self.getName(prefix), values.get(self.name, ''))
+
+
 
 class StringField(Field):
     input_classes = 'input-large'
     _validator = formencode.validators.String
+
+class URLField(Field):
+    input_classes = 'input-xlarge'
+    _validator = formencode.validators.URL
 class EmailField(StringField):
     input_classes = 'input-large email'
     type = 'email'
@@ -110,7 +162,7 @@ class DateField(StringField):
         self.validator = DateValidator(**args)
 
     def convertValue(self, value):
-        return datetime.strptime(value, "%Y-%m-%dT%H:%M:%S").strftime(self.format)
+        return datetime.strptime(value, "%Y-%m-%dT%H:%M:%S").strftime(self.format) if value else ''
 
 def configattr(name):
     def f(request):
@@ -144,12 +196,12 @@ class ConfigChoiceField(ChoiceField):
 class MultipleFormField(Field):
     template = 'larryslist:lib/formlib/templates/repeatableform.html'
     fields = []
-    classes = 'form-embedded-wrapper'
     add_more_link_label = 'add'
-    def __init__(self, name, label = None, attrs = NONE):
+    def __init__(self, name, label = None, attrs = NONE, classes = 'form-embedded-wrapper'):
         self.name = name
         self.label = label
         self.attrs = attrs
+        self.classes = classes
 
     def getClasses(self):
         return  self.classes
@@ -157,9 +209,9 @@ class MultipleFormField(Field):
     def getValidator(self, request):
         return formencode.ForEach(BaseSchema(**{v.name:v.getValidator(request) for v in self.fields}), not_empty = self.attrs.required)
 
-    def render(self, prefix, request, values, errors):
+    def render(self, prefix, request, values, errors, view = None):
         name = self.name
-        return render(self.template, {'widget': self, 'prefix':"{}.{}".format(prefix, self.name), 'value': values.get(name, ''), 'error':errors.get(name, '')}, request)
+        return render(self.template, {'widget': self, 'prefix':"{}.{}".format(prefix, self.name), 'value': values.get(name, ''), 'error':errors.get(name, ''), 'view':view}, request)
 
 
 
@@ -174,23 +226,15 @@ class TypeAheadField(StringField):
 
     def getValidator(self, request):
         return TypeAheadValidator()
+    def render(self, prefix, request, values, errors, view = None):
+        name = self.name
+        if isinstance(errors, formencode.Invalid):
+            errors = errors.error_dict
+        return render(self.template, {'widget': self, 'prefix':prefix, 'value': values.get(name, {}), 'error':errors.get(name, ''), 'view': view}, request)
 
 
 
 
 
-class HeadingField(object):
-    tag = 'legend'
-    attrs = NONE
-    template = 'larryslist:lib/formlib/templates/heading.html'
-    def __init__(self, format_string, classes = ''):
-        self.format_string = format_string
-        self.classes = classes
-    def formatter(self, request, view):
-        return view.getAllValues()
-    def getHeading(self, request, view):
-        return self.format_string(**self.formatter(request, view))
-    def render(self, prefix, request, values, errors):
-        return render(self.template, {'widget': self}, request)
-    def getClasses(self):
-        return self.classes
+
+
