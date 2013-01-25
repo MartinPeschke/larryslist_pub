@@ -84,29 +84,30 @@ class Field(BaseField):
     is_validated = True
     validator_args = {}
     type = 'text'
-    def __init__(self, name, label, attrs = NONE, classes = '', validator_args = None, group_classes = '', label_classes = ''):
+    def __init__(self, name, label, attrs = NONE, classes = '', validator_args = {}, group_classes = '', label_classes = ''):
         self.name = name
         self.label = label
         self.attrs = attrs
+        self.validator_args = validator_args
         self.group_classes = group_classes
         self.label_classes = label_classes
         self.input_classes = '{} {}'.format(self.input_classes, classes)
-        self.validator = self._validator(**self.getValidatorArgs(attrs, validator_args))
 
-    def getValidatorArgs(self, attrs, args):
+
+    def getValidatorArgs(self):
         params = self.validator_args.copy()
-        if args: params.update(args)
+        if self.validator_args: params.update(self.validator_args)
 
-        params['required'] = attrs.required
-        params['not_empty'] = attrs.required
-        if not attrs.required:
+        params['required'] = self.attrs.required
+        params['not_empty'] = self.attrs.required
+        if not self.attrs.required:
             params['if_missing'] = None
         return params
-
-    def convertValue(self, value): return value
-
     def getValidator(self, request):
-        return self.validator
+        return self._validator(**self.getValidatorArgs())
+
+    def valueToForm(self, value): return value
+
     def hasLabel(self):
         return bool(self.label)
     def getLabel(self, request):
@@ -124,10 +125,10 @@ class Field(BaseField):
 
 class StaticHiddenField(Field):
     input_classes = 'input-large'
+    _validator = formencode.validators.String
     def __init__(self, name, value):
         self.name = name
         self.value = value
-        self.validator = formencode.validators.String
     def render(self, prefix, request, values, errors, view = None):
         return '<input type="hidden" name="{}" value="{}"/>'.format(self.getName(prefix), self.value)
 
@@ -149,8 +150,11 @@ class CheckboxField(Field):
     template = 'larryslist:lib/formlib/templates/checkbox.html'
     input_classes = 'checkbox'
     value = 'true'
+    validator_args = {'if_missing': False}
     _validator = formencode.validators.StringBool
-
+class RadioBoolField(CheckboxField):
+    template = 'larryslist:lib/formlib/templates/radiobool.html'
+    input_classes = 'radio'
 class URLField(Field):
     input_classes = 'input-xlarge'
     _validator = formencode.validators.URL
@@ -165,22 +169,16 @@ class DateField(StringField):
     format = "%Y-%m-%d"
     def html_help(self, request):
         return '(yyyy-mm-dd)'
-    def __init__(self, name, label, attrs = NONE, validator_args = None):
+    def __init__(self, name, label, attrs = NONE, validator_args = {}):
         self.name = name
         self.label = label
         self.attrs = attrs
-        args = self.getValidatorArgs(attrs, validator_args)
-        if 'format' not in args:
-            args['format'] = self.format
-        self.validator = DateValidator(**args)
+        self.validator_args = validator_args
 
-    def convertValue(self, value):
+    def valueToForm(self, value):
         return datetime.strptime(value, "%Y-%m-%dT%H:%M:%S").strftime(self.format) if value else ''
 
-def configattr(name):
-    def f(request):
-        return getattr(request.context.config, name)
-    return f
+
 
 
 class ChoiceField(Field):
@@ -198,6 +196,10 @@ class ChoiceField(Field):
     def isSelected(self, option, value, request):
         return option.getKey(request) == value
 
+def configattr(name):
+    def f(request):
+        return getattr(request.context.config, name)
+    return f
 class ConfigChoiceField(ChoiceField):
     def __init__(self, name, label, configAttr, attrs = NONE):
         self.name = name
@@ -232,7 +234,7 @@ class MultipleFormField(Field):
 
 class TypeAheadField(StringField):
     template = 'larryslist:lib/formlib/templates/typeahead.html'
-    def __init__(self, name, label, api_url, dependency = None, attrs = NONE, classes = 'typeahead', validator_args = None):
+    def __init__(self, name, label, api_url, dependency = None, attrs = NONE, classes = 'typeahead', validator_args = {}):
         super(TypeAheadField, self).__init__(name, label, attrs, classes, validator_args)
         self.dependency = dependency
         self.api_url = api_url

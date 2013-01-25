@@ -24,13 +24,20 @@ class BaseCollectionForm(BaseForm):
 
     @classmethod
     def on_success(cls, request, values):
-        values['id'] = request.matchdict['collectorId']
+        values = {'id': request.matchdict['collectorId'], 'Collection':values}
         try:
-            collector = CreateCollectionProc(request, {'Collector':values})
+            collection = CreateCollectionProc(request, {'Collector':values})
         except DBException, e:
             return {'success':False, 'message': e.message}
-        return {'redirect': request.fwd_url("admin_collection_edit", collectionId = collector.Collection.id, stage='basic')}
+        return {'redirect': request.fwd_url("admin_collection_edit", collectionId = collection.id, stage='basic')}
 
 
-
-
+class CollectionEditForm(BaseCollectionForm):
+    @classmethod
+    def on_success(cls, request, values):
+        values = {'id': request.matchdict['collectorId'], 'Collection':values}
+        try:
+            collection = CreateCollectionProc(request, {'Collector':values})
+        except DBException, e:
+            return {'success':False, 'message': e.message}
+        return {'redirect': request.fwd_url("admin_collection_edit", collectionId = collection.id, stage='basic')}
