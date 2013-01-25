@@ -29,6 +29,7 @@ define(["tools/ajax"], function(ajax){
             this.url = opts.apiUrl;
             this.type = opts.apiType;
             this.$filter = this.$("input[type=text]");
+            this.$token = this.$('.typehead-token');
             this.$results = this.$el.append(this.template).find(".typeahead-result-inner");
             this.model = new ResultCollection();
             this.model.on("add", this.addOne, this);
@@ -38,8 +39,11 @@ define(["tools/ajax"], function(ajax){
             this.$results.append((new ResultView({model:model})).render());
         }
         , onKeyUp: function(e){
-            var view = this;
-            this.doSearch(e.target.value);
+            var val = e.target.value;
+            if(val) this.doSearch(val);
+            else {
+                this.$token.val("").trigger("change");
+            }
         }
         , doSearch: function(term){
             var view = this;
@@ -57,26 +61,42 @@ define(["tools/ajax"], function(ajax){
         }
         , onSelected: function(model){
                 this.$filter.val(model.get("name"));
-            this.$("input[type=hidden]").val(model.id);
+            if(this.$token.val() != model.id){
+                this.$token.val(model.id).trigger("change");
+            }
             this.toggle(false);
         }
     })
 
     , ViewWithDependency = View.extend({
         initialize: function(opts){
-            var view = this;
             View.prototype.initialize.apply(this, arguments);
             this.dependency = opts.apiDependency;
-            this.$dependency = this.$el.closest(".form-validated").find('[data-api-type='+this.dependency+']');
-            this.$dependency.on({change:function(e){
-                view.$filter.val("");
-            }});
+            this.$dependency = this.$el
+                                    .closest('[data-sequence], .form-validated')
+                                    .find('[data-api-type='+this.dependency+']')
+                                    .find('.typehead-token');
+            this.$dependency.on({change: _.bind(this.toggleEnabled, this)});
+            this.toggleEnabled(false);
+        }
+        , toggleEnabled: function(e){
+            var enabled = !!this.$dependency.val();
+            if(enabled){
+                this.$filter.removeAttr('disabled');
+                if(e){
+                    this.$filter.val("");
+                    this.$token.val("").trigger("change");
+                }
+            } else {
+                this.$filter.attr('disabled', 'disabled').val("");;
+                this.$token.val("").trigger("change");
+            }
         }
         , doSearch: function(term){
             var view = this;
             ajax.submitPrefixed({
                 url: this.url
-                , data: {'type':this.type, term: term, filter: this.$dependency.find("input[type=hidden]").val()}
+                , data: {'type':this.type, term: term, filter: this.$dependency.val()}
                 , success: function(resp, xhr, status){
                     view.toggle(resp.AddressSearchResult.length>0);
                     view.model.addOrUpdate(resp.AddressSearchResult,{preserve: false});

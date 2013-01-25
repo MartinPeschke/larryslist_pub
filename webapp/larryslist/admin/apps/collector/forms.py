@@ -1,6 +1,6 @@
 from operator import itemgetter
 from jsonclient.backend import DBException
-from larryslist.admin.apps.collector.models import CreateCollectorProc, EditCollectorBaseProc, EditCollectorContactsProc
+from larryslist.admin.apps.collector.models import CreateCollectorProc, EditCollectorBaseProc, EditCollectorContactsProc, EditCollectorBusinessProc
 from larryslist.lib.formlib.formfields import REQUIRED, StringField, BaseForm, ChoiceField, configattr, ConfigChoiceField, DateField, MultipleFormField, IMPORTANT, TypeAheadField, EmailField, HeadingField, URLField, PlainHeadingField, StaticHiddenField
 
 __author__ = 'Martin'
@@ -34,10 +34,12 @@ class UniversityForm(MultipleFormField):
         , StringField('city', 'City')
         ]
 
-class MultiConfigChoiceField(MultipleFormField):
-    fields = [
-        ConfigChoiceField('name', 'Area of interest', "Interest")
-    ]
+def MultiConfigChoiceField(name, label, configKey, *args, **kwargs):
+    class cls(MultipleFormField):
+        fields = [
+            ConfigChoiceField(name, label, configKey)
+        ]
+    return cls(*args, **kwargs)
 
 
 class CollectorCreateForm(CollectorBaseForm):
@@ -54,13 +56,12 @@ class CollectorCreateForm(CollectorBaseForm):
         , ConfigChoiceField('nationality', 'Nationality', 'Nationality', IMPORTANT)
         , AddressForm('Address', 'Location', REQUIRED)
         , UniversityForm('University', attrs = REQUIRED, classes = 'form-embedded-wrapper form-inline')
-        , MultiConfigChoiceField("Interest", attrs = REQUIRED)
+        , MultiConfigChoiceField('name', 'Area of interest', "Interest", "Interest", attrs = REQUIRED)
     ]
 
     @classmethod
     def on_success(cls, request, values):
         values['University'] = filter(itemgetter("name"), values.get('University', []))
-        values['Interest'] = [{'name':n} for n in values.get('Interest',[])]
         try:
             collector = CreateCollectorProc(request, {'Collector':values})
         except DBException, e:
@@ -98,21 +99,53 @@ class CollectorContactsForm(CollectorBaseForm):
         HeadingField('{view.collectorName}')
         , MultiEmailField('Email', None, REQUIRED)
         , PlainHeadingField("Social networks")
-        , NetworkField("Network", classes = 'form-embedded-wrapper form-inline')
-        , StringField('wikipedia', 'Wikipedia', REQUIRED)
+        , NetworkField("Network", classes = 'form-embedded-wrapper form-inline', attrs = REQUIRED)
+        , StringField('wikipedia', 'Wikipedia', IMPORTANT)
     ]
     @classmethod
     def on_success(cls, request, values):
         values['id'] = request.matchdict['collectorId']
-        values['Network'] = filter(lambda s: s.get('url') and s.get('name'), values.get('Network', []))
-        for network in ['facebook', 'twitter', 'linkedin']:
-            values['Network'].extend([{'name':network, 'url':n['url']} for n in values.pop(network, [])])
         try:
             collector = EditCollectorContactsProc(request, {'Collector':values})
         except DBException, e:
             return {'success':False, 'message': e.message}
         return {'success': True, 'message':"Changes saved!"}
 
+
+
+class CompanyForm(MultipleFormField):
+    """
+        "name": "ESSO", "position": "CEO and Founder", "industry": "Automotive", "url": "http://esso.com", "city": "Berlin", "postCode": "BN3 1BA", "line1": "1 the av" },
+    """
+    fields = [
+        StringField("name", "Namke of company")
+        , ConfigChoiceField("position", "Position", "Position")
+        , ConfigChoiceField("industry", "Industry", "Industry")
+        , URLField("url", "Link")
+        , PlainHeadingField("Location", tag="span", classes = "heading-absolute")
+        , TypeAheadField('Country', 'Country', '/admin/search/address', None)
+        , TypeAheadField('Region', 'Region', '/admin/search/address', 'Country')
+        , TypeAheadField('City', 'City', '/admin/search/address', 'Region')
+        , StringField('postCode', 'Post Code')
+        , StringField('line1', 'Street 1')
+        , StringField('line2', 'Street 2')
+        , StringField('line3', 'Street 3')
+    ]
+
 class CollectorBusinessForm(CollectorBaseForm):
     id = "business"
     label = "Business / Industry"
+    fields = [
+        HeadingField('{view.collectorName}')
+        , CompanyForm("Company")
+        , PlainHeadingField('', tag='hr')
+        , MultiConfigChoiceField('name', 'Further industries / type of businesses', "Industry", "Industry", attrs = REQUIRED)
+    ]
+    @classmethod
+    def on_success(cls, request, values):
+        values['id'] = request.matchdict['collectorId']
+        try:
+            collector = EditCollectorBusinessProc(request, {'Collector':values})
+        except DBException, e:
+            return {'success':False, 'message': e.message}
+        return {'success': True, 'message':"Changes saved!"}

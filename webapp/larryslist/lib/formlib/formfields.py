@@ -70,7 +70,7 @@ class PlainHeadingField(BaseField):
         self.tag = tag
         self.classes = classes
     def render(self, prefix, request, values, errors, view = None):
-        return '<{0.tag} {0.classes}>{0.label}</{0.tag}>'.format(self)
+        return '<{0.tag} class="{0.classes}">{0.label}</{0.tag}>'.format(self)
 
 
 
@@ -207,7 +207,7 @@ class MultipleFormField(Field):
         return  self.classes
 
     def getValidator(self, request):
-        return formencode.ForEach(BaseSchema(**{v.name:v.getValidator(request) for v in self.fields}), not_empty = self.attrs.required)
+        return formencode.ForEach(BaseSchema(**{v.name:v.getValidator(request) for v in self.fields if v.is_validated}), not_empty = self.attrs.required)
 
     def render(self, prefix, request, values, errors, view = None):
         name = self.name
