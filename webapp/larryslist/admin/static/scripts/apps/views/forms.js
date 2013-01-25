@@ -24,8 +24,7 @@ define(['tools/ajax', "libs/typeahead"], function(ajax, TypeAhead){
             this.$el.find(this.wrapperSelector).each(function(idx, elem){
                 var required = $(elem).data("required") === true;
                 $(elem).find(view.templateSelector).each(function(idx, elem){
-                    if(!required || idx)
-                        $(elem).prepend(view.removeLink);
+                    if(idx>0)$(elem).prepend(view.removeLink);
                 });
             });
 

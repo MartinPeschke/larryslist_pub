@@ -54,9 +54,9 @@ class CollectorCreateForm(CollectorBaseForm):
         , DateField('dob', 'Born', IMPORTANT)
         , ConfigChoiceField('gender', 'Gender', 'Gender', IMPORTANT)
         , ConfigChoiceField('nationality', 'Nationality', 'Nationality', IMPORTANT)
-        , AddressForm('Address', 'Location', REQUIRED)
-        , UniversityForm('University', attrs = REQUIRED, classes = 'form-embedded-wrapper form-inline')
-        , MultiConfigChoiceField('name', 'Area of interest', "Interest", "Interest", attrs = REQUIRED)
+        , AddressForm('Address', 'Location')
+        , UniversityForm('University', classes = 'form-embedded-wrapper form-inline')
+        , MultiConfigChoiceField('name', 'Area of interest', "Interest", "Interest")
     ]
 
     @classmethod
@@ -97,9 +97,9 @@ class CollectorContactsForm(CollectorBaseForm):
     label = "Contacts"
     fields = [
         HeadingField('{view.collectorName}')
-        , MultiEmailField('Email', None, REQUIRED)
+        , MultiEmailField('Email', None)
         , PlainHeadingField("Social networks")
-        , NetworkField("Network", classes = 'form-embedded-wrapper form-inline', attrs = REQUIRED)
+        , NetworkField("Network", classes = 'form-embedded-wrapper form-inline')
         , StringField('wikipedia', 'Wikipedia', IMPORTANT)
     ]
     @classmethod
