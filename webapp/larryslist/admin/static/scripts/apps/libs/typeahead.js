@@ -23,6 +23,7 @@ define(["tools/ajax"], function(ajax){
     , View = Backbone.View.extend({
         events: {
             "keyup .typeahead": "onKeyUp"
+            , "keydown .typeahead": "onKeyDown"
         }
         , template: '<div class="typeahead-result hide"><div class="typeahead-result-inner"></div></div>'
         , initialize: function(opts){
@@ -39,11 +40,23 @@ define(["tools/ajax"], function(ajax){
             this.$results.append((new ResultView({model:model})).render());
         }
         , onKeyUp: function(e){
-            var val = e.target.value;
-            if(val) this.doSearch(val);
-            else {
-                this.$token.val("").trigger("change");
+            if(e.which>47){
+                var val = e.target.value;
+                if(val) this.doSearch(val);
+                else {
+                    this.$token.val("").trigger("change");
+                }
             }
+        }
+        , onKeyDown: function(e){
+            switch(e.which){
+                case 13:
+                    this.onSelected(this.model.first());
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+            }
+
         }
         , doSearch: function(term){
             var view = this;

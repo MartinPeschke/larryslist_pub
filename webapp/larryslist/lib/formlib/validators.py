@@ -289,5 +289,9 @@ class DecimalValidator(formencode.FancyValidator):
     else: return value
 
 
-
-TypeAheadValidator = formencode.Schema(name = formencode.validators.String(), token = formencode.validators.String())
+def TypeAheadValidator(attrs):
+    if attrs.required:
+        validator = formencode.validators.String(required = True)
+    else:
+        validator = formencode.validators.String(required = False, not_empty = False, if_missing= None)
+    return formencode.Schema(name = validator, token = validator, filter_extra_fields = True)

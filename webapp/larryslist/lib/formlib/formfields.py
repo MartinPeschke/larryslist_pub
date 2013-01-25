@@ -225,7 +225,7 @@ class TypeAheadField(StringField):
         self.api_url = api_url
 
     def getValidator(self, request):
-        return TypeAheadValidator()
+        return TypeAheadValidator(self.attrs)
     def render(self, prefix, request, values, errors, view = None):
         name = self.name
         if isinstance(errors, formencode.Invalid):
