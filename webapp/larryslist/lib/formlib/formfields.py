@@ -201,7 +201,7 @@ class ApproxField(Field):
     _validator = formencode.validators.Int
     aprxDefault = 'true'
     type = 'text'
-    aprxLabel = "Greater than?"
+    aprxLabel = "More than"
     def __init__(self, name, aprxName, label, attrs = NONE, classes = '', validator_args = {}, group_classes = '', label_classes = ''):
         super(ApproxField, self).__init__(name, label, attrs, classes, validator_args, group_classes, label_classes)
         self.aprxName = aprxName

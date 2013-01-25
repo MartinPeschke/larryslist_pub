@@ -42,7 +42,7 @@ class BaseCollectorHandler(FormHandler):
 
 class CreateHandler(BaseCollectorHandler):
     forms = [CollectorCreateForm]
-    def getActiveForm(self): return self.forms[0]
+    def isFormActive(self, form): return self.forms[0].id == form.id
     def getForms(self): return self.forms
     def isFormEnabled(self, form): return self.forms[0].id == form.id
 
@@ -52,9 +52,9 @@ class EditHandler(CreateHandler):
         value = self.collector.unwrap(sparse = True)
         result['values'] = {form.id: form.toFormData(value) for form in self.forms}
         return result
-    def getActiveForm(self):
+    def isFormActive(self, form):
         stage = self.request.matchdict.get('stage', 'basic')
-        return self.schemas.get(stage)
+        return self.schemas.get(stage).id == form.id
     def isFormEnabled(self, form): return True
 
 class CollectionCreate(CreateHandler):
@@ -66,7 +66,7 @@ class CollectionEdit(CreateHandler):
         value = self.collector.Collection.unwrap(sparse = True)
         result['values'] = {form.id: form.toFormData(value) for form in self.forms}
         return result
-    def getActiveForm(self):
+    def isFormActive(self, form):
         stage = self.request.matchdict.get('stage', 'basic')
-        return self.schemas.get(stage)
+        return self.schemas.get(stage).id == form.id
     def isFormEnabled(self, form): return True

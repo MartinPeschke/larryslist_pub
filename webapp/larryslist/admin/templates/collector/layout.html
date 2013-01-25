@@ -2,31 +2,6 @@
 
 
 
-<%block name="contentbody">
-    <div class="padded-body">
-        <ul class="nav nav-tabs">
-            %for form in view.getForms():
-                <li class="nav-entry ${'active' if view.getActiveForm().id == form.id else ''}">
-                    %if view.isFormEnabled(form):
-                        <a class="nav-entry-link" href="${view.getCollectorLink(stage = form.id)}">${form.label}</a>
-                    %else:
-                        <span class="nav-entry-link">${form.label}</span>
-                    %endif
-
-                </li>
-            %endfor
-        </ul>
-        <div class="tab-content">
-            %for form in view.getForms():
-                %if view.isFormEnabled(form):
-                    <div class="tab-pane ${'active' if view.getActiveForm().id == form.id else ''}" id="wrap-${form.id}">
-                        ${self.buildForm(form, values.get(form.id), errors.get(form.id))}
-                    </div>
-                %endif
-            %endfor
-        </div>
-    </div>
-</%block>
 
 
 
