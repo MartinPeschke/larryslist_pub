@@ -15,8 +15,8 @@
 <%def name="contentMenuImpl()">
     <div class="menu-heading">Collector</div>
     <ul class="nav nav-list">
-        ${self.menuLink("Personal Details", "icon-user", view.getCollectorLink)}
-        ${self.menuLink("Collection", "icon-picture", view.getCollectionLink)}
+        ${self.menuLink("Personal Details", "icon-user", view.getCollectorLink, startswith="admin_collector_")}
+        ${self.menuLink("Collection", "icon-picture", view.getCollectionLink, startswith="admin_collection_")}
         ${self.menuLink("Art Engagement", "icon-calendar")}
         ${self.menuLink("Media Recognition", "icon-signal")}
         ${self.menuLink("Other Facts", "icon-arrow-right")}
