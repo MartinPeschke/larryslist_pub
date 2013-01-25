@@ -8,7 +8,7 @@
             %for form in view.getForms():
                 <li class="nav-entry ${'active' if view.getActiveForm().id == form.id else ''}">
                     %if view.isFormEnabled(form):
-                        <a class="nav-entry-link" href="${request.fwd_url("admin_collector_edit", collectorId = view.collector.id, workflow = 'personal', stage = form.id)}">${form.label}</a>
+                        <a class="nav-entry-link" href="${view.getCollectorLink(stage = form.id)}">${form.label}</a>
                     %else:
                         <span class="nav-entry-link">${form.label}</span>
                     %endif
@@ -40,8 +40,8 @@
 <%def name="contentMenuImpl()">
     <div class="menu-heading">Collector</div>
     <ul class="nav nav-list">
-        ${self.menuLink("Personal Details", "icon-user", "admin_collector_create")}
-        ${self.menuLink("Collection", "icon-picture")}
+        ${self.menuLink("Personal Details", "icon-user", view.getCollectorLink)}
+        ${self.menuLink("Collection", "icon-picture", view.getCollectionLink)}
         ${self.menuLink("Art Engagement", "icon-calendar")}
         ${self.menuLink("Media Recognition", "icon-signal")}
         ${self.menuLink("Other Facts", "icon-arrow-right")}

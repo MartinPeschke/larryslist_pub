@@ -1,20 +1,9 @@
 from operator import itemgetter
 from jsonclient.backend import DBException
 from larryslist.admin.apps.collector.models import CreateCollectorProc, EditCollectorBaseProc, EditCollectorContactsProc, EditCollectorBusinessProc
-from larryslist.lib.formlib.formfields import REQUIRED, StringField, BaseForm, ChoiceField, configattr, ConfigChoiceField, DateField, MultipleFormField, IMPORTANT, TypeAheadField, EmailField, HeadingField, URLField, PlainHeadingField, StaticHiddenField
+from larryslist.lib.formlib.formfields import REQUIRED, StringField, BaseForm, ChoiceField, configattr, ConfigChoiceField, DateField, MultipleFormField, IMPORTANT, TypeAheadField, EmailField, HeadingField, URLField, PlainHeadingField, StaticHiddenField, MultiConfigChoiceField
 
 __author__ = 'Martin'
-
-class CollectorBaseForm(BaseForm):
-    classes = "form-horizontal form-validated"
-    fields = []
-    @classmethod
-    def toFormData(cls, values):
-        return values
-
-class EmbeddedForm(object):
-    classes = "well"
-    fields = []
 
 
 class AddressForm(MultipleFormField):
@@ -34,15 +23,10 @@ class UniversityForm(MultipleFormField):
         , StringField('city', 'City')
         ]
 
-def MultiConfigChoiceField(name, label, configKey, *args, **kwargs):
-    class cls(MultipleFormField):
-        fields = [
-            ConfigChoiceField(name, label, configKey)
-        ]
-    return cls(*args, **kwargs)
 
 
-class CollectorCreateForm(CollectorBaseForm):
+
+class CollectorCreateForm(BaseForm):
     id = "create"
     label = "Basic"
 
@@ -66,7 +50,7 @@ class CollectorCreateForm(CollectorBaseForm):
             collector = CreateCollectorProc(request, {'Collector':values})
         except DBException, e:
             return {'success':False, 'message': e.message}
-        return {'redirect': request.fwd_url("admin_collector_edit", collectorId = collector.id, workflow='personal', stage='basic')}
+        return {'redirect': request.fwd_url("admin_collector_edit", collectorId = collector.id, stage='basic')}
 
 
 class CollectorEditForm(CollectorCreateForm):
@@ -83,6 +67,10 @@ class CollectorEditForm(CollectorCreateForm):
 
 
 
+
+
+
+
 class MultiEmailField(MultipleFormField):
     fields = [EmailField('address', 'Email', IMPORTANT)]
 
@@ -92,7 +80,7 @@ class NetworkField(MultipleFormField):
     ]
 
 
-class CollectorContactsForm(CollectorBaseForm):
+class CollectorContactsForm(BaseForm):
     id = "contacts"
     label = "Contacts"
     fields = [
@@ -132,7 +120,7 @@ class CompanyForm(MultipleFormField):
         , StringField('line3', 'Street 3')
     ]
 
-class CollectorBusinessForm(CollectorBaseForm):
+class CollectorBusinessForm(BaseForm):
     id = "business"
     label = "Business / Industry"
     fields = [

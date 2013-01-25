@@ -3,11 +3,14 @@ from larryslist.models import ClientTokenProc
 
 __author__ = 'Martin'
 
+class CollectionModel(Mapping):
+    id = IntegerField()
+
+
+
 class LocationModel(Mapping):
     name = TextField()
     token = TextField()
-
-
 
 class AddressModel(Mapping):
     line1 = TextField()
@@ -31,6 +34,7 @@ class CollectorModel(Mapping):
     Gender = TextField()
     Address = ListField(DictField(AddressModel))
     University = ListField(DictField(UniversityModel))
+    Collection = DictField(CollectionModel)
 
 CreateCollectorProc = ClientTokenProc("/admin/collector/create", root_key = 'Collector', result_cls=CollectorModel)
 GetCollectorDetailsProc = ClientTokenProc("/admin/collector", root_key = 'Collector', result_cls=CollectorModel)
@@ -38,3 +42,6 @@ GetCollectorDetailsProc = ClientTokenProc("/admin/collector", root_key = 'Collec
 EditCollectorBaseProc = ClientTokenProc("/admin/collector/basicedit", root_key = 'Collector', result_cls=CollectorModel)
 EditCollectorContactsProc = ClientTokenProc("/admin/collector/contactedit", root_key = 'Collector', result_cls=CollectorModel)
 EditCollectorBusinessProc = ClientTokenProc("/admin/collector/businessedit", root_key = 'Collector', result_cls=CollectorModel)
+
+
+CreateCollectionProc = ClientTokenProc("/admin/collection/create", root_key = 'Collector', result_cls=CollectorModel)

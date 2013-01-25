@@ -86,11 +86,14 @@
 </%def>
 
 <%def name="menuLink(label, icon, route = None, classes = 'nav-entry-link', startswith = None, *args, **kwargs)">
-%if route is not None:
+<%
+    url = route() if callable(route) else request.fwd_url(route, *args, **kwargs) if route else None
+%>
+%if url is not None :
     <%
-        active = request.matched_route.name.startswith(startswith) if startswith else request.matched_route.name == route
+        active = request.matched_route.name.startswith(startswith) if startswith else request.url.startswith(url)
     %>
-    <li class="nav-entry ${'active' if active else ''}"><a class="${classes}" href="${request.fwd_url(route, *args, **kwargs)}"><i class="${icon}"></i>${label|n}</a></li>
+    <li class="nav-entry ${'active' if active else ''}"><a class="${classes}" href="${url}"><i class="${icon}"></i>${label|n}</a></li>
 %else:
     <li class="nav-entry"><span class="${classes}"><i class="${icon}"></i>${label|n}</span></li>
 %endif

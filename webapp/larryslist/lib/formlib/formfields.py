@@ -29,7 +29,12 @@ class BaseSchema(formencode.Schema):
 
 class BaseForm(object):
     id = 'formdata'
+    classes = "form-horizontal form-validated"
     fields = []
+
+    @classmethod
+    def toFormData(cls, values):
+        return values
 
     template = 'larryslist:lib/formlib/templates/baseform.html'
     def render(self, request):
@@ -137,6 +142,14 @@ class HiddenField(Field):
 class StringField(Field):
     input_classes = 'input-large'
     _validator = formencode.validators.String
+class IntField(Field):
+    input_classes = 'input-large digits'
+    _validator = formencode.validators.Int
+class CheckboxField(Field):
+    template = 'larryslist:lib/formlib/templates/checkbox.html'
+    input_classes = 'checkbox'
+    value = 'true'
+    _validator = formencode.validators.StringBool
 
 class URLField(Field):
     input_classes = 'input-xlarge'
@@ -238,3 +251,11 @@ class TypeAheadField(StringField):
 
 
 
+# =========================== COMPOUNDS
+
+def MultiConfigChoiceField(name, label, configKey, *args, **kwargs):
+    class cls(MultipleFormField):
+        fields = [
+            ConfigChoiceField(name, label, configKey)
+        ]
+    return cls(*args, **kwargs)

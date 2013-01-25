@@ -13,6 +13,8 @@ class IndustryModel(NamedConfigModel): pass
 class PositionModel(NamedConfigModel): pass
 class InterestModel(NamedConfigModel): pass
 class SocNetModel(NamedConfigModel): pass
+class MediumModel(NamedConfigModel): pass
+class GenreModel(NamedConfigModel): pass
 
 class GenderModel(Mapping):
     key = TextField()
@@ -29,6 +31,8 @@ class ConfigModel(Mapping):
     Title = ListField(DictField(TitleModel))
     Industry = ListField(DictField(IndustryModel))
     Position = ListField(DictField(PositionModel))
+    Medium = ListField(DictField(MediumModel))
+    Genre = ListField(DictField(GenreModel))
     Interest = ListField(DictField(InterestModel))
     Network = SOCIAL_NETWORKS
     Gender = GENDER_CHOICES
