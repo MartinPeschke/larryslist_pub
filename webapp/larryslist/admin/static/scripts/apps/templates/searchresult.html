@@ -6,7 +6,7 @@
 {% if(models.length > 0){ %}
     <a class="dismiss">✖</a>
 {% } %}
-<ul class="collector-search" >
+<ul class="entity-search" >
 {% _(models).each(function(item, idx){ %}
     <li data-entity-id="{{ item.id }}" class="search-result-item" shortcut="{{ idx+1 }}">
         {{ item.getSearchLabel() }}
@@ -14,7 +14,7 @@
     </li>
 {% }); %}
 {% if(withExtra){ %}
-    <li data-entity-id="CREATE" shortcut="0" class="search-result-item create-new-collector">add new collector
+    <li data-entity-id="CREATE" shortcut="0" class="search-result-item create-new-entity">add new
         <span class="shortcut">strg/⌘+0</span>
     </li>
 {% } %}

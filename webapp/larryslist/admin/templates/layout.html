@@ -39,23 +39,9 @@
 <%block name="footer"></%block>
 <%block name="layoutscripts">
     <script>
-        require(["views/abstractsearch"], function(SearchView){
-            var
-                    search = new SearchView({el:$('#main-search-wrapper')})
-                    , onSpecialSelected = function(){
-                        window.location.href = '${request.fwd_url("admin_collector_create")}';
-                        search.hide();
-                        search.$searchBox.blur();
-                    }
-                    , onSelected = function(collector){
-                        var id = collector.id;
-                        window.location.href = "${request.ajax_url("admin_collector_edit", escaped = dict(collectorId = '"+id+"'), stage = 'basic')|n}";
-                        search.hide();
-                        search.$searchBox.val(collector.getSearchLabel()).blur();
-                    };
-            search.on("selected", onSelected, this);
-            search.on("specialItemSelected", onSpecialSelected, this);
-        })
+        require(["views/collectorsearch"], function(initSearch){
+            var search = initSearch($('#main-search-wrapper'), '${request.fwd_url("admin_collector_create")}', "${request.ajax_url("admin_collector_edit", escaped = dict(collectorId = '{{ model.id }}'), stage = 'basic')|n}");
+        });
     </script>
 </%block>
 

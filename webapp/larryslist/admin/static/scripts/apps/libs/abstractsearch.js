@@ -2,34 +2,14 @@ define(["tools/ajax", "text!templates/searchresult.html"]
     , function(ajax, search_result_template){
 
         var numberMap = {48:0,  49:1, 50:2, 51:3, 52:4, 53:5, 54:6, 55:7, 56:8, 57:9, 96:0, 97:1, 98:2, 99:3, 100:4, 101:5, 102:6, 103:7, 104:8, 105:9}
-
-        , getRec = hnc.getRecursive
-        , Collector = ajax.Model.extend({
-            getName: function(){
-                return this.get("firstName") +" " + this.get("lastName");
-            }
-            , getSearchLabel: function(){
-                var location = this.get("Address");
-                if(location.length)
-                    return this.getName() + ' ('+location[0].City.name+'/'+location[0].Country.name+')';
-               else
-                    return this.getName();
-            }
-        })
-
-        , SearchResult = ajax.Collection.extend({
-            model : Collector
-            , parse: function(response) {
-                return response.Collector;
-            }
-        })
-
         , AbstractSearch = Backbone.View.extend({
             shown : false
             , template:_.template(search_result_template)
-            , initialize: function(){
+            , initialize: function(opts){
                 this.template = this.options.template||this.template;
                 this.suppressExtra = this.options.suppressExtra;
+                this.searchUrl = opts.searchUrl;
+
                 var view = this;
                 this.$searchBox = this.$el.find(".query");
                 this.$searchBox
@@ -42,9 +22,9 @@ define(["tools/ajax", "text!templates/searchresult.html"]
                     this.$searchBox.on('keydown', $.proxy(this.keypress, this));
                 }
 
-                this.collection = new SearchResult();
-                this.collection.on("reset", _.bind(this.onSearchResult, this));
-                this.$resultNode = $('<div id="collector-search-result" class="hide"></div>').appendTo(this.$el);
+
+                this.model.on("reset", _.bind(this.onSearchResult, this));
+                this.$resultNode = $('<div class="entity-search-result hide"></div>').appendTo(this.$el);
                 this.$resultNode.on({'mouseenter' : $.proxy(this.mouseenter, this),
                         'click':_.bind(this.disAmbiguateEvent, this)}, '.search-result-item');
                 this.$resultNode.on({'click': _.bind(this.hide, this)}, ".dismiss");
@@ -157,32 +137,34 @@ define(["tools/ajax", "text!templates/searchresult.html"]
                 this.trigger("specialItemSelected");
             }
             , _metaSelect: function(item){
-                var id = item.attr("data-entity-id"), model = this.collection.get(id);
+                var id = item.attr("data-entity-id"), model = this.model.get(id);
                 if(model)this.trigger("metaSelected", model);
             }
             , _select: function(item){
-                if(item.hasClass("create-new-collector")){
+                if(item.hasClass("create-new-entity")){
                     this._specialItemSelected();
                 } else {
-                    var id = item.attr("data-entity-id"), model = this.collection.get(id);
+                    var id = item.attr("data-entity-id"), model = this.model.get(id);
                     if(model)this.trigger("selected", model);
                 }
             }
+            , buildQuery: function(query){
+                return {term:query};
+            }
             , doSearch : function(query){
-                var view = this, data;
-                if(query){
-                    data = {term:query};
-                    ajax.submitPrefixed({url:"/admin/search/collector"
+                var view = this, data, data = this.buildQuery(query);
+                if(data){
+                    ajax.submitPrefixed({url:this.searchUrl
                         , data: data
                         , success: function(resp, status, xhr){
                             if(resp.dbMessage){
-                                view.collection.reset([]);
+                                view.model.reset([]);
                             } else {
-                                view.collection.reset(getRec(resp, "Collectors.Collector", []));
+                                view.model.reset(view.model.parse(resp));
                             }
                         }});
                 } else {
-                    view.collection.reset([]);
+                    view.model.reset([]);
                 }
             }
             , onSearchResult: function(collection){

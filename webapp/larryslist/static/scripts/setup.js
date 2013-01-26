@@ -52,9 +52,7 @@
                     if(tmp.hasOwnProperty(keys[i])){
                         tmp = tmp[keys[i]];
                     } else {
-                        if(typeof tmp === 'undefined'){
-                            return defaults;
-                        }
+                        return defaults;
                     }
                 }
                 return tmp;
