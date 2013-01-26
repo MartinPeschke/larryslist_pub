@@ -14,7 +14,7 @@ ROUTE_LIST = [
     , ClassRoute    ("admin_collector_edit"          , "/collector/edit/:collectorId/:stage", contexts.AdminRootContext, collector.EditHandler, "collector/collector.html", view_attrs=JSON_FORM_ATTRS)
 
     , ClassRoute    ("admin_collection_create"       , "/collection/create/:collectorId", contexts.AdminRootContext, collector.CollectionCreate, "collector/collection.html", view_attrs=JSON_FORM_ATTRS)
-    , ClassRoute    ("admin_collection_add_collector", "/collection/add/:collectorId/collector", contexts.AdminRootContext, collector.AddCollectorHandler, "collector/collectoradd.html", view_attrs=JSON_FORM_ATTRS)
+    , ClassRoute    ("admin_collector_add_collector" , "/collection/add/:collectorId/collector", contexts.AdminRootContext, collector.AddCollectorHandler, "collector/collectoradd.html", view_attrs=JSON_FORM_ATTRS)
 
     , ClassRoute    ("admin_collection_edit"         , "/collection/edit/:collectorId/:stage", contexts.AdminRootContext, collector.CollectionEdit, "collector/collection.html", view_attrs=JSON_FORM_ATTRS)
     , FunctionRoute ("admin_sources_save"            , "/sources/save/:collectorId", contexts.AdminRootContext, collector.sources_save, "json", {'xhr': True, 'request_method':'POST'})

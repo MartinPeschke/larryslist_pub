@@ -59,7 +59,7 @@ class BaseCollectorHandler(FormHandler):
 
 
 class CreateCollectorHandler(BaseCollectorHandler):
-    forms = [CollectorCreateForm]
+    forms = [CollectorCreateForm, CollectorContactsForm, CollectorBusinessForm]
     def isFormActive(self, form): return self.forms[0].id == form.id
     def getForms(self): return self.forms
     def isFormEnabled(self, form): return self.forms[0].id == form.id
@@ -76,7 +76,7 @@ class EditHandler(CreateCollectorHandler):
     def isFormEnabled(self, form): return True
 
 class CollectionCreate(CreateCollectorHandler):
-    forms = [BaseCollectionForm]
+    forms = [BaseCollectionForm, CollectionArtistsForm, CollectionWebsiteForm]
 
 class CollectionEdit(CreateCollectorHandler):
     forms = [CollectionEditForm, CollectionArtistsForm, CollectionWebsiteForm]
@@ -91,7 +91,7 @@ class CollectionEdit(CreateCollectorHandler):
 
 
 class AddCollectorHandler(CreateCollectorHandler):
-    forms = [CollectionAddCollectorForm]
+    forms = [CollectionAddCollectorForm, CollectorContactsForm, CollectorBusinessForm]
     @reify
     def collector(self):
         return None

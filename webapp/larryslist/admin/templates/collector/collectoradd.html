@@ -2,9 +2,9 @@
 
 <%def name="switchCollectorLink(collector)">
     <legend class="page-title-collector">
-        <div class="pull-right">
+        <div class="pull-right linked-collector-link">
             <% lc = view.othercollector %>
-            <a class="linked-collector-link" href="${request.fwd_url("admin_collector_edit", collectorId = lc.id, stage = 'basic')}">${lc.getName()}</a>
+            Linked collector: <a href="${request.fwd_url("admin_collector_edit", collectorId = lc.id, stage = 'basic')}">${lc.getName()}</a>
         </div>
         Add linked collector
     </legend>

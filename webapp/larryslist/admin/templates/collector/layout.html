@@ -54,18 +54,18 @@
     %if collector:
         <legend class="page-title-collector">
             %if collector.Collection:
-            <div class="pull-right">
+            <div class="pull-right linked-collector-link">
                 <% lc = collector.LinkedCollector %>
                 %if lc:
-                    <a class="linked-collector-link" href="${request.fwd_url("admin_collector_edit", collectorId = lc.id, stage = 'basic')}">${lc.getName()}</a>
+                    Linked collector: <a href="${request.fwd_url("admin_collector_edit", collectorId = lc.id, stage = 'basic')}">${lc.getName()}</a>
                 %else:
-                    <a class="linked-collector-link" href="${request.fwd_url("admin_collection_add_collector", collectorId = collector.id)}">Add a linked collector</a>
+                    <a href="${request.fwd_url("admin_collector_add_collector", collectorId = collector.id)}">Add a linked collector</a>
                 %endif
             </div>
             %endif
             ${collector.getName()}
         </legend>
     %else:
-        <legend class="page-title-collector">Add Collector</legend>
+        <legend class="page-title-collector">Add collector</legend>
     %endif
 </%def>
