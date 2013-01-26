@@ -140,7 +140,7 @@
                 clickEvent : _isTouch?"touchstart":"click"
                 , touchStartEvent: _isTouch?"touchstart":"mousedown"
             }
-
+            , translate: function(s){return s;}
             // LOCALE AWARE
             , parseDate: function(input, format) {
                 format = format || 'yyyy-mm-ddTHH:MM:SS'; // default format
