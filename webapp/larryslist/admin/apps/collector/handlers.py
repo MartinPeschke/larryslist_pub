@@ -23,11 +23,7 @@ class BaseCollectorHandler(FormHandler):
             return None
     @reify
     def collectorName(self):
-        return '{0.firstName} {0.lastName}'.format(self.collector)
-
-    def getCollectionBaseLink(self):
-        if self.collector.Collection:
-            return ("admin")
+        return u'{0.firstName} {0.lastName}'.format(self.collector)
 
     def getCollectorLink(self, stage = 'basic'):
         req = self.request
