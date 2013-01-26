@@ -7,7 +7,7 @@ from larryslist.lib.formlib.handlers import FormHandler
 from pyramid.decorator import reify
 
 def sources_save(context, request):
-    
+
     return {'success': True, 'message':"Changes saved!"}
 
 
