@@ -93,6 +93,8 @@ class CollectorContactsForm(BaseForm):
     @classmethod
     def on_success(cls, request, values):
         values['id'] = request.matchdict['collectorId']
+        values['Email'] = filter(itemgetter("address"), values.get('Email', []))
+        values['Network'] = filter(itemgetter("url"), values.get('Network', []))
         try:
             collector = EditCollectorContactsProc(request, {'Collector':values})
         except DBException, e:
@@ -106,7 +108,7 @@ class CompanyForm(MultipleFormField):
         "name": "ESSO", "position": "CEO and Founder", "industry": "Automotive", "url": "http://esso.com", "city": "Berlin", "postCode": "BN3 1BA", "line1": "1 the av" },
     """
     fields = [
-        StringField("name", "Namke of company")
+        StringField("name", "Name of company")
         , ConfigChoiceField("position", "Position", "Position")
         , ConfigChoiceField("industry", "Industry", "Industry")
         , URLField("url", "Link")
@@ -132,6 +134,7 @@ class CollectorBusinessForm(BaseForm):
     @classmethod
     def on_success(cls, request, values):
         values['id'] = request.matchdict['collectorId']
+        values['Company'] = filter(itemgetter("name"), values.get('Company', []))
         try:
             collector = EditCollectorBusinessProc(request, {'Collector':values})
         except DBException, e:
