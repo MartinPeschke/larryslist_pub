@@ -178,15 +178,14 @@ define(["tools/ajax", "text!templates/searchresult.html"]
             , hideonBlur : function(e){
                 var view = this;
                 setTimeout(function(){
-                    if(!view.$searchBox.val())
-                        view.hide();
+                    view.hide();
                 }, 200);
             }
             , hide: function(){
-                    this.shown = false;
-                    this.$searchBox.val("");
-                    this.$el.removeClass("expanded");
-                    this.$resultNode.empty().hide();
+                this.shown = false;
+                this.$el.removeClass("expanded");
+                this.$resultNode.empty().hide();
+                this.trigger("hide");
             }
             , mouseenter: function(e){
                 this.$resultNode.find(".active").removeClass("active");

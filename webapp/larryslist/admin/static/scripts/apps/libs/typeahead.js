@@ -1,21 +1,73 @@
 define(["tools/ajax", "libs/abstractsearch"], function(ajax, AbstractSearch){
     var
-    View = Backbone.View.extend({
-        initialize: function(opts){
-            this.search = new AbstractSearch({el: this.$el});
 
+    Result = ajax.Model.extend({
+        idAttribute:'token'
+        , getSearchLabel: function(){
+            return this.get('name');
+        }
+    })
+    , SearchResult = ajax.Collection.extend({
+        model:Result
+        , idAttribute:'token'
+        , parse: function(resp){
+            return resp.AddressSearchResult;
+        }
+    })
+
+    , TypeAheadSearch = AbstractSearch.extend({
+        buildQuery: function(query){
+            if(this.options.$dependency)
+                return {filter: this.options.$dependency.val(), type: this.options.apiType, term:query};
+            else
+                return {type: this.options.apiType, term:query};
+        }
+    })
+
+    , View = Backbone.View.extend({
+        initialize: function(opts){
+            var view = this;
+            this.url = opts.apiUrl;
+            this.$token = this.$('.typehead-token');
+            this.$filter = this.$(".query");
+            this.current = null;
+            var searchParams = {
+                el:this.$el
+                , model: new SearchResult()
+                , searchUrl: this.url
+                , apiType: opts.apiType
+                , suppressExtra: true
+            };
+            this.search = new TypeAheadSearch(this.getSearchParams(searchParams));
+            this.search.on('selected', function(term){
+                view.search.hide();
+                view.$filter.val(term.getSearchLabel());
+                view.$token.val(term.id).trigger("change");
+                view.current = term;
+            });
+            this.search.on("hide", function(){
+                if(!view.current || view.$filter.val() != view.current.getSearchLabel())    {
+                    view.$filter.val("");
+                    view.$token.val("").trigger("change");
+                }
+            })
+        }
+        , getSearchParams: function(params){
+            return params;
         }
     })
 
     , ViewWithDependency = View.extend({
         initialize: function(opts){
-            View.prototype.initialize.apply(this, arguments);
             this.dependency = opts.apiDependency;
             this.$dependency = this.$el
                                     .closest('[data-sequence], .form-validated')
                                     .find('[data-api-type='+this.dependency+']')
                                     .find('.typehead-token');
             this.$dependency.on({change: _.bind(this.toggleEnabled, this)});
+
+            View.prototype.initialize.apply(this, arguments);
+
             this.toggleEnabled(false);
         }
         , toggleEnabled: function(e){
@@ -31,16 +83,9 @@ define(["tools/ajax", "libs/abstractsearch"], function(ajax, AbstractSearch){
                 this.$token.val("").trigger("change");
             }
         }
-        , doSearch: function(term){
-            var view = this;
-            ajax.submitPrefixed({
-                url: this.url
-                , data: {'type':this.type, term: term, filter: this.$dependency.val()}
-                , success: function(resp, xhr, status){
-                    view.toggle(resp.AddressSearchResult.length>0);
-                    view.model.addOrUpdate(resp.AddressSearchResult,{preserve: false});
-                }
-            })
+        , getSearchParams: function(params){
+            params['$dependency'] = this.$dependency;
+            return params;
         }
     });
     return {View:View, ViewWithDependency: ViewWithDependency};
