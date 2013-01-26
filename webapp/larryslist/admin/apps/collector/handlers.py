@@ -1,6 +1,6 @@
 from collections import namedtuple
-from larryslist.admin.apps.collector.collections_forms import BaseCollectionForm, CollectionEditForm
-from larryslist.admin.apps.collector.forms import CollectorContactsForm, CollectorBusinessForm, CollectorEditForm, CollectorCreateForm
+from larryslist.admin.apps.collector.collections_forms import BaseCollectionForm, CollectionEditForm, CollectionArtistsForm, CollectionWebsiteForm
+from larryslist.admin.apps.collector.collector_forms import CollectorContactsForm, CollectorBusinessForm, CollectorEditForm, CollectorCreateForm
 from larryslist.admin.apps.collector.models import GetCollectorDetailsProc
 from larryslist.lib.formlib.handlers import FormHandler
 from pyramid.decorator import reify
@@ -61,7 +61,7 @@ class CollectionCreate(CreateHandler):
     forms = [BaseCollectionForm]
 
 class CollectionEdit(CreateHandler):
-    forms = [CollectionEditForm]
+    forms = [CollectionEditForm, CollectionArtistsForm, CollectionWebsiteForm]
     def pre_fill_values(self, request, result):
         value = self.collector.Collection.unwrap(sparse = True)
         result['values'] = {form.id: form.toFormData(value) for form in self.forms}

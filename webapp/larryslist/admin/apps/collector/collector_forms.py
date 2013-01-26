@@ -1,16 +1,16 @@
 from operator import itemgetter
 from jsonclient.backend import DBException
 from larryslist.admin.apps.collector.models import CreateCollectorProc, EditCollectorBaseProc, EditCollectorContactsProc, EditCollectorBusinessProc
-from larryslist.lib.formlib.formfields import REQUIRED, StringField, BaseForm, ChoiceField, configattr, ConfigChoiceField, DateField, MultipleFormField, IMPORTANT, TypeAheadField, EmailField, HeadingField, URLField, PlainHeadingField, StaticHiddenField, MultiConfigChoiceField
+from larryslist.lib.formlib.formfields import REQUIRED, StringField, BaseForm, ChoiceField, configattr, ConfigChoiceField, DateField, MultipleFormField, IMPORTANT, TypeAheadField, EmailField, HeadingField, URLField, PlainHeadingField, StaticHiddenField, MultiConfigChoiceField, TokenTypeAheadField
 
 __author__ = 'Martin'
 
 
 class AddressForm(MultipleFormField):
     fields = [
-        TypeAheadField('Country', 'Country', '/admin/search/address', None, REQUIRED)
-        , TypeAheadField('Region', 'Region', '/admin/search/address', 'Country', REQUIRED)
-        , TypeAheadField('City', 'City', '/admin/search/address', 'Region', REQUIRED)
+        TokenTypeAheadField('Country', 'Country', '/admin/search/address', 'AddressSearchResult', None, REQUIRED)
+        , TokenTypeAheadField('Region', 'Region', '/admin/search/address', 'AddressSearchResult', 'Country', REQUIRED)
+        , TokenTypeAheadField('City', 'City', '/admin/search/address', 'AddressSearchResult', 'Region', REQUIRED)
         , StringField('postCode', 'Post Code')
         , StringField('line1', 'Street 1')
         , StringField('line2', 'Street 2')
@@ -111,9 +111,9 @@ class CompanyForm(MultipleFormField):
         , ConfigChoiceField("industry", "Industry", "Industry")
         , URLField("url", "Link")
         , PlainHeadingField("Location", tag="span", classes = "heading-absolute")
-        , TypeAheadField('Country', 'Country', '/admin/search/address', None)
-        , TypeAheadField('Region', 'Region', '/admin/search/address', 'Country')
-        , TypeAheadField('City', 'City', '/admin/search/address', 'Region')
+        , TokenTypeAheadField('Country', 'Country', '/admin/search/address', 'AddressSearchResult', None)
+        , TokenTypeAheadField('Region', 'Region', '/admin/search/address', 'AddressSearchResult', 'Country')
+        , TokenTypeAheadField('City', 'City', '/admin/search/address', 'AddressSearchResult', 'Region')
         , StringField('postCode', 'Post Code')
         , StringField('line1', 'Street 1')
         , StringField('line2', 'Street 2')

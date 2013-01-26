@@ -36,11 +36,7 @@ define(['tools/ajax', "libs/typeahead"], function(ajax, TypeAhead){
         , addTypeAhead: function(idx, elem){
             var opts = $(elem).data();
             opts.el = elem;
-            if(opts.apiDependency){
-                this.widgets.push(new TypeAhead.ViewWithDependency(opts));
-            } else {
-                this.widgets.push(new TypeAhead.View(opts));
-            }
+            TypeAhead.init(opts);
         }
 
         , addRow : function(e){

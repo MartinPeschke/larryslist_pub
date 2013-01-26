@@ -1,11 +1,31 @@
-from jsonclient import Mapping, TextField, DateField, ListField, DictField, IntegerField
+from jsonclient import Mapping, TextField, DateField, ListField, DictField, IntegerField, BooleanField
 from larryslist.models import ClientTokenProc
+from larryslist.models.config import GenreModel, MediumModel
 
 __author__ = 'Martin'
 
+
+class ArtistModel(Mapping):
+    name = TextField()
+
+class CollectionRegionModel(Mapping):
+    name = TextField()
+
+
+
 class CollectionModel(Mapping):
     id = IntegerField()
-
+    name = TextField()
+    totalWorks = IntegerField()
+    totalWorksAprx = BooleanField()
+    totalArtists = IntegerField()
+    totalArtistsAprx = BooleanField()
+    foundation = TextField()
+    started = TextField()
+    Genre = ListField(DictField(GenreModel))
+    Medium = ListField(DictField(MediumModel))
+    Artist = ListField(DictField(ArtistModel))
+    Region = ListField(DictField(CollectionRegionModel))
 
 
 class LocationModel(Mapping):
@@ -46,3 +66,5 @@ EditCollectorBusinessProc = ClientTokenProc("/admin/collector/businessedit", roo
 
 CreateCollectionProc = ClientTokenProc("/admin/collection/create", root_key = 'Collection', result_cls=CollectionModel)
 EditCollectionBaseProc = ClientTokenProc("/admin/collection/basicedit", root_key = 'Collection', result_cls=CollectionModel)
+EditCollectionArtistsProc = ClientTokenProc("/admin/collection/artistedit", root_key = 'Collection', result_cls=CollectionModel)
+EditCollectionPublicationsProc = ClientTokenProc("/admin/collection/artistedit", root_key = 'Collection', result_cls=CollectionModel)

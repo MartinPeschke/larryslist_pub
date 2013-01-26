@@ -15,6 +15,7 @@ class InterestModel(NamedConfigModel): pass
 class SocNetModel(NamedConfigModel): pass
 class MediumModel(NamedConfigModel): pass
 class GenreModel(NamedConfigModel): pass
+class PublisherModel(NamedConfigModel): pass
 
 class GenderModel(Mapping):
     key = TextField()
@@ -24,7 +25,7 @@ class GenderModel(Mapping):
 
 GENDER_CHOICES = [GenderModel(key = 'm', label = 'male'), GenderModel(key = 'f', label = 'female')]
 SOCIAL_NETWORKS = [SocNetModel(name = 'Facebook'), SocNetModel(name = 'Linkedin'), SocNetModel(name = 'Twitter'), SocNetModel(name = 'Other')]
-
+PUBLISHER_CHOICES = [PublisherModel(name= 'Pub %d'%i) for i in range(20)]
 
 class ConfigModel(Mapping):
     Nationality = ListField(DictField(NationalityModel))
@@ -36,3 +37,4 @@ class ConfigModel(Mapping):
     Interest = ListField(DictField(InterestModel))
     Network = SOCIAL_NETWORKS
     Gender = GENDER_CHOICES
+    Publisher = PUBLISHER_CHOICES

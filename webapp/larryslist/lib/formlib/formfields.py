@@ -192,7 +192,7 @@ class StringField(Field):
     input_classes = 'input-large'
     _validator = formencode.validators.String
 class IntField(Field):
-    input_classes = 'input-large digits'
+    input_classes = 'input-mini digits'
     _validator = formencode.validators.Int
 
 class ApproxField(Field):
@@ -225,7 +225,7 @@ class RadioBoolField(CheckboxField):
     template = 'larryslist:lib/formlib/templates/radiobool.html'
     input_classes = 'radio'
 class URLField(Field):
-    input_classes = 'input-xlarge'
+    input_classes = 'input-xxlarge'
     _validator = formencode.validators.URL
 class EmailField(StringField):
     input_classes = 'input-large email'
@@ -279,9 +279,24 @@ class ConfigChoiceField(ChoiceField):
 
 class TypeAheadField(StringField):
     template = 'larryslist:lib/formlib/templates/typeahead.html'
-    def __init__(self, name, label, api_url, dependency = None, attrs = NONE, classes = 'typeahead', validator_args = {}):
+    def __init__(self, name, label, api_url, api_result, dependency = None, attrs = NONE, classes = 'typeahead', validator_args = {}):
         super(TypeAheadField, self).__init__(name, label, attrs, classes, validator_args)
         self.dependency = dependency
+        self.api_result = api_result
+        self.api_type = None
+        self.api_url = api_url
+
+    def getValues(self, name, request, values, errors, view):
+        return {'value': values.get(name, ''), 'error':errors.get(name, '')}
+
+
+
+class TokenTypeAheadField(StringField):
+    template = 'larryslist:lib/formlib/templates/typeahead_token.html'
+    def __init__(self, name, label, api_url, api_result, dependency = None, attrs = NONE, classes = 'typeahead', validator_args = {}):
+        super(TokenTypeAheadField, self).__init__(name, label, attrs, classes, validator_args)
+        self.dependency = dependency
+        self.api_result = api_result
         self.api_url = api_url
 
     def getValidator(self, request):
