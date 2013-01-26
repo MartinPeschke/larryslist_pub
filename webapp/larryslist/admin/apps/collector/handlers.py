@@ -2,8 +2,13 @@ from collections import namedtuple
 from larryslist.admin.apps.collector.collections_forms import BaseCollectionForm, CollectionEditForm, CollectionArtistsForm, CollectionWebsiteForm
 from larryslist.admin.apps.collector.collector_forms import CollectorContactsForm, CollectorBusinessForm, CollectorEditForm, CollectorCreateForm
 from larryslist.admin.apps.collector.models import GetCollectorDetailsProc
+from larryslist.admin.apps.collector.sources_form import AddSourcesForm
 from larryslist.lib.formlib.handlers import FormHandler
 from pyramid.decorator import reify
+
+def sources_save(context, request):
+    
+    return {'success': True, 'message':"Changes saved!"}
 
 
 
@@ -39,6 +44,13 @@ class BaseCollectorHandler(FormHandler):
             return req.fwd_url("admin_collection_edit", collectorId = self.collector.id, stage = stage)
         else:
             return req.fwd_url("admin_collection_create", collectorId = self.collector.id)
+
+    def getSourcesForm(self):
+        if self.collector:
+            return AddSourcesForm()
+        else:
+            return None
+
 
 class CreateHandler(BaseCollectorHandler):
     forms = [CollectorCreateForm]
