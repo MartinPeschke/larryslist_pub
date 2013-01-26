@@ -9,6 +9,9 @@
         <div class="navbar-inner">
             <div class="container">
                 <a class="brand" href="${request.fwd_url("admin_index")}">${g.project_name} - Admin</a>
+                <div class="navbar-search search-field" id="main-search-wrapper">
+                    <input type="text" class="search-query query span5" placeholder="search for a collector" tabindex="5">
+                </div>
             </div>
         </div>
     </div>
@@ -34,7 +37,27 @@
 </%block>
 
 <%block name="footer"></%block>
-<%block name="scripts"></%block>
+<%block name="layoutscripts">
+    <script>
+        require(["views/abstractsearch"], function(SearchView){
+            var
+                    search = new SearchView({el:$('#main-search-wrapper')})
+                    , onSpecialSelected = function(){
+                        window.location.href = '${request.fwd_url("admin_collector_create")}';
+                        search.hide();
+                        search.$searchBox.blur();
+                    }
+                    , onSelected = function(collector){
+                        var id = collector.id;
+                        window.location.href = "${request.ajax_url("admin_collector_edit", escaped = dict(collectorId = '"+id+"'), stage = 'basic')|n}";
+                        search.hide();
+                        search.$searchBox.val(collector.getSearchLabel()).blur();
+                    };
+            search.on("selected", onSelected, this);
+            search.on("specialItemSelected", onSpecialSelected, this);
+        })
+    </script>
+</%block>
 
 
 <%def name="contentStatusImpl()"></%def>

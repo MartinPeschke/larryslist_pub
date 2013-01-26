@@ -1,4 +1,5 @@
 from string import Template
+import urllib
 from babel import Locale
 from .i18n import tsf
 from pyramid.httpexceptions import HTTPFound
@@ -24,6 +25,16 @@ def fwd_url(request, route_name, secure = False, *args, **kwargs):
         return request.route_url(route_name, _scheme = request.globals.secure_scheme, *args, **kwargs)
     else:
         return request.route_url(route_name, _scheme = "http", *args, **kwargs)
+
+def ajax_url(request, route_name, secure = False, escaped = {}, *args, **kwargs):
+    tokens = {k:"###{}###".format(k.upper()) for k in escaped}
+    params = tokens.copy()
+    params.update(kwargs)
+    url = request.fwd_url(route_name, secure = secure, *args, **params)
+    for key,token in tokens.items():
+        url = url.replace(urllib.quote(token), escaped[key])
+    return url
+
 
 def getStaticUrl(request, path):
     if not path or path.startswith("http"):
@@ -78,6 +89,7 @@ def extend_request(config):
     config.add_request_method(rld)
     config.add_request_method(fwd)
     config.add_request_method(fwd_url)
+    config.add_request_method(ajax_url)
     config.add_request_method(getStaticUrl)
     config.add_request_method(set_lang)
     config.add_request_method(getFullLocale)
