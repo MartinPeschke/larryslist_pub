@@ -7,6 +7,6 @@
         ${'data-api-dependency="{}"'.format(widget.dependency) if widget.dependency else ''|n}
     >
         <input type="hidden" class='typehead-token' name="${widget.getName(prefix)}.token" value="${value.get('token', '')}"/>
-        <input type="text" class="query ${widget.getClasses()}" name="${widget.getName(prefix)}.name" value="${value.get('name', '')}"/>
+        <input type="text" class="query ${widget.getClasses()}" name="${widget.getName(prefix)}.name" value="${value.get('name', '')}" autocomplete="off"/>
     </div>
 </%block>
