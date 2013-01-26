@@ -26,9 +26,6 @@ class GenderModel(Mapping):
 
 GENDER_CHOICES = [GenderModel(key = 'm', label = 'male'), GenderModel(key = 'f', label = 'female')]
 SOCIAL_NETWORKS = [SocNetModel(name = 'Facebook'), SocNetModel(name = 'Linkedin'), SocNetModel(name = 'Twitter'), SocNetModel(name = 'Other')]
-PUBLISHER_CHOICES = [PublisherModel(name= 'Pub %d'%i) for i in range(20)]
-
-SOURCE_TYPES = [SourceTypeModel(name='blog'), SourceTypeModel(name = 'book')]
 
 class ConfigModel(Mapping):
     Nationality = ListField(DictField(NationalityModel))
@@ -40,5 +37,5 @@ class ConfigModel(Mapping):
     Interest = ListField(DictField(InterestModel))
     Network = SOCIAL_NETWORKS
     Gender = GENDER_CHOICES
-    Publisher = PUBLISHER_CHOICES
-    SourceType = SOURCE_TYPES
+    Publisher = ListField(DictField(PublisherModel))
+    SourceType = ListField(DictField(SourceTypeModel))

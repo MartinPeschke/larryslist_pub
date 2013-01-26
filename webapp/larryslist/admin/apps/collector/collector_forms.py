@@ -1,7 +1,7 @@
 from operator import itemgetter
 from jsonclient.backend import DBException
 from larryslist.admin.apps.collector.models import CreateCollectorProc, EditCollectorBaseProc, EditCollectorContactsProc, EditCollectorBusinessProc
-from larryslist.lib.formlib.formfields import REQUIRED, StringField, BaseForm, ChoiceField, configattr, ConfigChoiceField, DateField, MultipleFormField, IMPORTANT, TypeAheadField, EmailField, HeadingField, URLField, PlainHeadingField, StaticHiddenField, MultiConfigChoiceField, TokenTypeAheadField
+from larryslist.lib.formlib.formfields import REQUIRED, StringField, BaseForm, ChoiceField, configattr, ConfigChoiceField, DateField, MultipleFormField, IMPORTANT, TypeAheadField, EmailField, HeadingField, URLField, PlainHeadingField, StaticHiddenField, MultiConfigChoiceField, TokenTypeAheadField, HiddenField
 
 __author__ = 'Martin'
 
@@ -44,8 +44,13 @@ class CollectorCreateForm(BaseForm):
     ]
 
     @classmethod
-    def on_success(cls, request, values):
+    def clean_data(cls, request, values):
         values['University'] = filter(itemgetter("name"), values.get('University', []))
+        return values
+
+    @classmethod
+    def on_success(cls, request, values):
+        cls.clean_data(request, values)
         try:
             collector = CreateCollectorProc(request, {'Collector':values})
         except DBException, e:
@@ -84,8 +89,7 @@ class CollectorContactsForm(BaseForm):
     id = "contacts"
     label = "Contacts"
     fields = [
-        HeadingField('{view.collectorName}')
-        , MultiEmailField('Email', None)
+        MultiEmailField('Email', None)
         , PlainHeadingField("Social networks")
         , NetworkField("Network", classes = 'form-embedded-wrapper form-inline')
         , StringField('wikipedia', 'Wikipedia', IMPORTANT)
@@ -126,8 +130,7 @@ class CollectorBusinessForm(BaseForm):
     id = "business"
     label = "Business / Industry"
     fields = [
-        HeadingField('{view.collectorName}')
-        , CompanyForm("Company")
+        CompanyForm("Company")
         , PlainHeadingField('', tag='hr')
         , MultiConfigChoiceField('name', 'Further industries / type of businesses', "Industry", "Industry", attrs = REQUIRED)
     ]
@@ -140,3 +143,14 @@ class CollectorBusinessForm(BaseForm):
         except DBException, e:
             return {'success':False, 'message': e.message}
         return {'success': True, 'message':"Changes saved!"}
+
+
+
+
+class CollectionAddCollectorForm(CollectorCreateForm):
+    fields = CollectorCreateForm.fields + [HiddenField('collectionId')]
+    @classmethod
+    def clean_data(cls, request, values):
+        values['University'] = filter(itemgetter("name"), values.get('University', []))
+        values['Collection'] = {'id':values.pop('collectionId')}
+        return values

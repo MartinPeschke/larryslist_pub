@@ -29,6 +29,7 @@
             <div class="content-body ${'has-status' if local.contentStatusImpl != self.contentStatusImpl else ''}">
                 <div style="width:100%;float:left;">
                     ${self.header_messages()}
+                    <%block name="contentbodyprefix"/>
                     <%block name="contentbody"/>
                     <%block name="contentbodyappendix"/>
                 </div>

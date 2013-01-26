@@ -3,7 +3,7 @@
 <%block name="contentbody">
     <div class="padded-body">
         <ul class="nav nav-tabs">
-                %for form in view.getForms():
+            %for form in view.getForms():
                 <li class="nav-entry ${'active' if view.isFormActive(form) else ''}">
                     %if view.isFormEnabled(form):
                         <a class="nav-entry-link" href="${view.getCollectorLink(stage = form.id)}">${form.label}</a>
@@ -12,7 +12,7 @@
                     %endif
 
                 </li>
-                %endfor
+            %endfor
         </ul>
         <div class="tab-content">
                 %for form in view.getForms():
@@ -50,3 +50,4 @@
     });
     </script>
 </%block>
+

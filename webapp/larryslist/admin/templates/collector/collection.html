@@ -1,9 +1,9 @@
 <%inherit file="layout.html"/>
 
 <%block name="contentbody">
-    <div class="padded-body">
+    <div class="padded-body" xmlns="http://www.w3.org/1999/html">
         <ul class="nav nav-tabs">
-                %for form in view.getForms():
+            %for form in view.getForms():
                 <li class="nav-entry ${'active' if view.isFormActive(form) else ''}">
                     %if view.isFormEnabled(form):
                         <a class="nav-entry-link" href="${view.getCollectionLink(stage = form.id)}">${form.label}</a>
@@ -12,7 +12,7 @@
                     %endif
 
                 </li>
-                %endfor
+            %endfor
         </ul>
         <div class="tab-content">
                 %for form in view.getForms():

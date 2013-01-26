@@ -89,14 +89,14 @@ class CollectionWebsiteForm(BaseForm):
     fields = [
         HiddenField('id')
         , PlainHeadingField("Website")
-        , URLField('website', "Webpage", attrs = IMPORTANT)
+        , URLField('url', "Webpage", attrs = IMPORTANT)
         , PlainHeadingField("Publications")
         , PublicationsForm('Publication', "", classes = "form-embedded-wrapper form-inline")
     ]
 
     @classmethod
     def on_success(cls, request, values):
-        values = {'id': request.matchdict['collectorId'], 'Collection':values}
+        values = {'id': request.matchdict['collectorId'], 'Collection': values}
         try:
             collection = EditCollectionPublicationsProc(request, {'Collector':values})
         except DBException, e:

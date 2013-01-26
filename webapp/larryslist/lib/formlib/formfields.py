@@ -71,7 +71,7 @@ class HeadingField(BaseField):
         self.format_string = format_string
         self.classes = classes
     def getHeading(self, request, view):
-        return self.format_string.format(request = request, view = view)
+        return unicode(self.format_string).format(request = request, view = view)
     def render(self, prefix, request, values, errors, view = None):
         return render(self.template, {'widget': self, 'view':view}, request)
     def getClasses(self):
@@ -92,13 +92,15 @@ class Field(BaseField):
     is_validated = True
     validator_args = {}
     type = 'text'
-    def __init__(self, name, label, attrs = NONE, classes = '', validator_args = {}, group_classes = '', label_classes = ''):
+    input_classes = 'input-large'
+    def __init__(self, name, label, attrs = NONE, classes = '', validator_args = {}, group_classes = '', label_classes = '', input_classes = ''):
         self.name = name
         self.label = label
         self.attrs = attrs
         self.validator_args = validator_args
         self.group_classes = group_classes
         self.label_classes = label_classes
+        self.input_classes = input_classes or self.input_classes
         self.input_classes = '{} {}'.format(self.input_classes, classes)
 
 
@@ -170,7 +172,6 @@ class MultipleFormField(Field):
 
 
 class StaticHiddenField(Field):
-    input_classes = 'input-large'
     _validator = formencode.validators.String
     def __init__(self, name, value):
         self.name = name
@@ -179,7 +180,6 @@ class StaticHiddenField(Field):
         return '<input type="hidden" name="{}" value="{}"/>'.format(self.getName(prefix), self.value)
 
 class HiddenField(Field):
-    input_classes = 'input-large'
     _validator = formencode.validators.String
     def render(self, prefix, request, values, errors, view = None):
         return '<input type="hidden" name="{}" value="{}"/>'.format(self.getName(prefix), values.get(self.name, ''))
@@ -189,7 +189,6 @@ class HiddenField(Field):
 
 
 class StringField(Field):
-    input_classes = 'input-large'
     _validator = formencode.validators.String
 class IntField(Field):
     input_classes = 'input-mini digits'
