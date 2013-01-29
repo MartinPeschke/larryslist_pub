@@ -7,9 +7,6 @@
 // --------------
 
 // Make all forms have space below them
-form {
-  margin: 0 0 @baseLineHeight;
-}
 
 fieldset {
   padding: 0;
@@ -22,7 +19,6 @@ legend {
   display: block;
   width: 100%;
   padding: 0;
-  margin-bottom: @baseLineHeight;
   font-size: @baseFontSize * 1.5;
   line-height: @baseLineHeight * 2;
   color: @grayDark;
@@ -384,8 +380,6 @@ select:focus:invalid {
 
 .form-actions {
   padding: (@baseLineHeight - 1) 20px @baseLineHeight;
-  margin-top: @baseLineHeight;
-  margin-bottom: @baseLineHeight;
   background-color: @formActionsBackground;
   border-top: 1px solid #e5e5e5;
   .clearfix(); // Adding clearfix to allow for .pull-right button containers
@@ -627,7 +621,7 @@ input.search-query {
 
 // Margin to space out fieldsets
 .control-group {
-  margin-bottom: @baseLineHeight / 2;
+  margin-bottom: @baseLineHeight / 4;
 }
 
 // Legend collapses margin, so next element is responsible for spacing
@@ -652,7 +646,8 @@ legend + .control-group {
     text-align: right;
     &.double {
       line-height:@baseFontSize;
-      padding-top: 2px;
+      padding-top: 0;
+      margin-bottom:0;
     }
   }
   // Move over all input controls and content
@@ -698,3 +693,9 @@ legend + .control-group {
 }
 
 .form-horizontal .form-inline {padding-top:@baseLineHeight /2;}
+.form-inline.form-controls-inline .control-group {
+  .control-label {
+    display: block;
+    margin-left:0;
+  }
+}

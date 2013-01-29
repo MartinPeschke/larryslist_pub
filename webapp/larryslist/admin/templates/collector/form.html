@@ -1,0 +1,69 @@
+<%inherit file="layout.html"/>
+
+
+<%block name="contentbody">
+    <ul class="nav nav-tabs">
+        %for form in view.getForms():
+            <li class="nav-entry ${'active' if view.isFormActive(form) else ''}">
+                %if view.isFormEnabled(form):
+                    <a class="nav-entry-link" href="${view.getFormLink(stage = form.id)}">${form.label}</a>
+                %else:
+                    <span class="nav-entry-link">${form.label}</span>
+                %endif
+            </li>
+        %endfor
+        <li class="nav-entry pull-right">
+            ${self.switchCollectorLink(view.collector)}
+        </li>
+    </ul>
+    ${self.buildTabContent(view.getActiveForm(), values, errors)}
+    ${self.sourcesForm(*view.getSourcesForm())}
+</%block>
+
+<%def name="sourcesForm(form, values, errors)">
+    <div class="fixed-appendix">
+        <div class="form-actions affixed">
+            <button type="submit" class="btn btn-primary btn-extra-wide">Save</button>
+        </div>
+        <div class="sources-form">
+            <legend>${form.label}</legend>
+            <form class="${form.classes}" id="${form.id}" method="post" action="${request.fwd_url("admin_sources_save", collectorId = view.collector.id)}">
+                <input type="hidden" name="type" value="${form.id}"/>
+                <input type="hidden" name="token" value="${request.session.get_csrf_token()}"/>
+                %for field in form.fields:
+                    ${field.render(form.id, request, values, errors, view)|n}
+                %endfor
+            </form>
+        </div>
+    </div>
+</%def>
+
+
+<%def name="buildTabContent(form, values, errors)">
+    <div class="tab-content fixed-height">
+        <div class="fixed-height-content tab-pane ${'active' if view.isFormActive(form) else ''}" id="wrap-${form.id}">
+            <form class="${form.classes}" id="${form.id}" method="post">
+                <input type="hidden" name="type" value="${form.id}"/>
+                <input type="hidden" name="furl" value="${request.furl}"/>
+                <input type="hidden" name="token" value="${request.session.get_csrf_token()}"/>
+                %for field in form.fields:
+                    ${field.render(form.id, request, values, errors, view)|n}
+                %endfor
+            </form>
+        </div>
+    </div>
+</%def>
+
+
+
+
+
+<%block name="scripts">
+    <script>
+        require(["views/forms"], function(View){
+            $(".content-body").find(".form-validated").each(function(idx, form){
+                new View({el:form})
+            });
+        });
+    </script>
+</%block>

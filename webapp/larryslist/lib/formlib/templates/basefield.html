@@ -1,11 +1,13 @@
 <%namespace name="lib" file="lib.html"/>
 <div class="control-group ${widget.group_classes} ${widget.attrs.getClasses()} ${'error' if error else ''}">
-    <label class="control-label ${widget.label_classes}">
-        ${widget.getLabel(request)}
-    </label>
+    %if widget.hasLabel():
+        <label class="control-label ${widget.label_classes}">
+            ${widget.getLabel(request)}
+        </label>
+    %endif
     <div class="controls ${widget.control_classes}">
         <%block name="controls">
-            <input type="${widget.type}" class="${widget.getClasses()}" name="${widget.getName(prefix)}" value="${widget.valueToForm(value)}"/>
+            <input type="${widget.type}" class="${widget.getClasses()}" name="${widget.getName(prefix)}" value="${widget.valueToForm(value)}" ${widget.attrs.getInputAttrs(request)|n}/>
         </%block>
         ${lib.renderInline(widget, error)}
     </div>

@@ -40,16 +40,41 @@
 .content-status {
   margin: 0 5px; border-top: 2px solid #ddd;
   > h4 {text-align: center;}
-
 }
 
 .padded-body {
-  padding: 25px;
-  .clearfix;
-  &.dimmed {
-    background-color: #f3f3f3;
-    border-bottom:1px solid #ddd;
-    border-top:1px solid #ddd;
+  padding: 10px 25px;
+}.reset-clearfix {
+   width:100%;
+   float:left;
+}.fixed-appendix {
+  background-color: #f3f3f3;
+  padding:  0 25px;
+  border-bottom:1px solid #ddd;
+  border-top:1px solid #ddd;
+  position: relative;
+  height: 178px;
+  overflow-y: scroll;
+  overflow-x: visible;
+  .form-actions.affixed {
+    position: absolute;
+    padding:  4px 30px;
+    right: 0;
+    top: -1px;
+    border-left: 1px solid #e5e5e5;
+    border-bottom: 1px solid #e5e5e5;
+  }
+}
+
+
+.fixed-height {
+  min-height:300px;
+  overflow-y: scroll;
+  overflow-x: visible;
+  position: relative;
+  padding: 0 25px;
+  .fixed-height-content {
+    margin-bottom:10px;
   }
 }
 

@@ -6,21 +6,29 @@ from larryslist.lib.formlib.validators import DateValidator, TypeAheadValidator
 from pyramid.renderers import render
 
 class HtmlAttrs(object):
-    def __init__(self, required = False, important = False):
+    def __init__(self, required = False, important = False, placeholder = ''):
         self.required = required
         self.important = important
+        self.placeholder = placeholder
 
     def getClasses(self):
         classes = []
         if self.required: classes.append('required')
         if self.important: classes.append('important')
         return ' '.join(classes)
-
+    def getInputAttrs(self, request):
+        attrs = []
+        if self.placeholder: attrs.append('placeholder="{}"'.format(self.placeholder))
+        return " ".join(attrs)
 NONE = HtmlAttrs()
 REQUIRED = HtmlAttrs(True)
 IMPORTANT = HtmlAttrs(False, True)
 
-
+class Placeholder(HtmlAttrs):
+    def __init__(self, placeholder = '', required = False, important = False):
+        self.placeholder = placeholder
+        self.required = required
+        self.important = important
 
 class BaseSchema(formencode.Schema):
     filter_extra_fields = True
@@ -78,7 +86,7 @@ class HeadingField(BaseField):
         return self.classes
 
 class PlainHeadingField(BaseField):
-    def __init__(self, label, tag = 'h4', classes = ''):
+    def __init__(self, label, tag = 'h5', classes = ''):
         self.label = label
         self.tag = tag
         self.classes = classes

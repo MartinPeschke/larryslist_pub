@@ -19,10 +19,10 @@ class BaseCollectionForm(BaseForm):
         , StringField("name", "Name of collection", IMPORTANT)
         , StringField("foundation", "Name of foundation")
         , IntField('started', "Started collecting in year")
-        , PlainHeadingField("Art Genre / Movemment")
-        , MultiConfigChoiceField('name', 'Genre', "Genre", "Genre")
+        , PlainHeadingField("Art Genre / Movement")
+        , MultiConfigChoiceField('name', 'Name', "Genre", "Genre")
         , PlainHeadingField("Medium of artworks")
-        , MultiConfigChoiceField('name', 'Medium', "Medium", "Medium")
+        , MultiConfigChoiceField('name', 'Name', "Medium", "Medium")
         , PlainHeadingField("Region of interest")
         , RegionOfInterest('Region', '')
     ]

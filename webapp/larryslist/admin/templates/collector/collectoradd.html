@@ -1,11 +1,8 @@
-<%inherit file="collector.html"/>
+<%inherit file="form.html"/>
 
 <%def name="switchCollectorLink(collector)">
-    <legend class="page-title-collector">
-        <div class="pull-right linked-collector-link">
-            <% lc = view.othercollector %>
-            Linked collector: <a href="${request.fwd_url("admin_collector_edit", collectorId = lc.id, stage = 'basic')}">${lc.getName()}</a>
-        </div>
-        Add linked collector
-    </legend>
+    <div class="nav-entry-link">
+        <% lc = view.othercollector %>
+        Linked collector: <a href="${request.fwd_url("admin_collector_edit", collectorId = lc.id, stage = 'basic')}">${lc.getName()}</a>
+    </div>
 </%def>

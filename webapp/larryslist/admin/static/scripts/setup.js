@@ -1,7 +1,10 @@
-/**
- * Created with PyCharm.
- * User: Martin
- * Date: 23.01.13
- * Time: 21:55
- * To change this template use File | Settings | File Templates.
- */
+$(function(){
+    var $el = $(".fixed-height"), $append = $(".fixed-appendix");
+    if($el.length && $append.length){
+        var res = function(e){
+            $el.css({height: ($(window).height() - $el.position().top - $append.height() - 2)+"px"});
+        };
+        $(window).on({resize:res});
+        res();
+    }
+});

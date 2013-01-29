@@ -1,6 +1,5 @@
 <%inherit file="../layout.html"/>
 
-
 <%def name="contentStatusImpl()">
     <div class="content-status">
         <h4>Status</h4>
@@ -8,7 +7,13 @@
 </%def>
 
 <%def name="contentMenuImpl()">
-    <div class="menu-heading">Collector</div>
+    <div class="menu-heading">
+        %if view.collector:
+            ${view.collector.getName()}
+        %else:
+            Collector
+        %endif
+    </div>
     <ul class="nav nav-list">
         ${self.menuLink("Personal Details", "icon-user", view.getCollectorLink, startswith="admin_collector_")}
         ${self.menuLink("Collection", "icon-picture", view.getCollectionLink, startswith="admin_collection_")}
@@ -21,40 +26,14 @@
         ${self.menuLink("Interaction", "icon-refresh")}
     </ul>
 </%def>
-<%block name="contentbodyprefix">
-    ${self.switchCollectorLink(view.collector)}
-</%block>
 
-<%block name="contentbodyappendix">
-    <% form, values, errors = view.getSourcesForm() %>
-    %if form:
-        <div class="padded-body dimmed">
-            <div class="sources-form">
-                <legend>${form.label}</legend>
-
-                <form class="${form.classes}" id="${form.id}" method="post" action="${request.fwd_url("admin_sources_save", collectorId = view.collector.id)}">
-                    <input type="hidden" name="type" value="${form.id}"/>
-                    <input type="hidden" name="token" value="${request.session.get_csrf_token()}"/>
-                    %for field in form.fields:
-                        ${field.render(form.id, request, values, errors, view)|n}
-                    %endfor
-                    <div class="form-actions">
-                        <button type="submit" class="btn btn-primary">Save</button>
-                    </div>
-                </form>
-
-            </div>
-        </div>
-    %endif
-</%block>
 
 
 
 <%def name="switchCollectorLink(collector)">
     %if collector:
-        <legend class="page-title-collector">
             %if collector.Collection:
-            <div class="pull-right linked-collector-link">
+            <div class="nav-entry-link">
                 <% lc = collector.LinkedCollector %>
                 %if lc:
                     Linked collector: <a href="${request.fwd_url("admin_collector_edit", collectorId = lc.id, stage = 'basic')}">${lc.getName()}</a>
@@ -63,9 +42,8 @@
                 %endif
             </div>
             %endif
-            ${collector.getName()}
-        </legend>
     %else:
-        <legend class="page-title-collector">Add collector</legend>
+        <div class="nav-entry-link">Add collector</div>
     %endif
 </%def>
+
