@@ -24,7 +24,12 @@ define(["tools/ajax", "text!templates/searchresult.html"]
 
 
                 this.model.on("reset", _.bind(this.onSearchResult, this));
-                this.$resultNode = $('<div class="entity-search-result hide"></div>').appendTo(this.$el);
+                this.$resultNode = $('<div class="entity-search-result hide"></div>').appendTo("body");
+                var css = this.$el.offset();
+                css.top = css.top + this.$el.height();
+                css.width =  this.$el.width();
+                this.$resultNode.css(css);
+
                 this.$resultNode.on({'mouseenter' : $.proxy(this.mouseenter, this),
                         'click':_.bind(this.disAmbiguateEvent, this)}, '.search-result-item');
                 this.$resultNode.on({'click': _.bind(this.hide, this)}, ".dismiss");

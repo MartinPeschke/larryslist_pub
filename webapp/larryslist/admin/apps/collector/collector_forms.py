@@ -1,9 +1,12 @@
 from operator import itemgetter
 from jsonclient.backend import DBException
 from larryslist.admin.apps.collector.models import CreateCollectorProc, EditCollectorBaseProc, EditCollectorContactsProc, EditCollectorBusinessProc
+from larryslist.admin.apps.collector.sources_form import SingleSourceForm, BaseAdminForm
 from larryslist.lib.formlib.formfields import REQUIRED, StringField, BaseForm, ChoiceField, configattr, ConfigChoiceField, DateField, MultipleFormField, IMPORTANT, TypeAheadField, EmailField, HeadingField, URLField, PlainHeadingField, StaticHiddenField, MultiConfigChoiceField, TokenTypeAheadField, HiddenField
 
 __author__ = 'Martin'
+
+
 
 
 class AddressForm(MultipleFormField):
@@ -17,6 +20,7 @@ class AddressForm(MultipleFormField):
         , StringField('line3', 'Street 3')
     ]
 
+
 class UniversityForm(MultipleFormField):
     fields = [
         StringField('name', 'Name of University')
@@ -26,8 +30,8 @@ class UniversityForm(MultipleFormField):
 
 
 
-class CollectorCreateForm(BaseForm):
-    id = "create"
+class CollectorCreateForm(BaseAdminForm):
+    id = "basic"
     label = "Basic"
 
     fields = [
@@ -49,7 +53,7 @@ class CollectorCreateForm(BaseForm):
         return values
 
     @classmethod
-    def on_success(cls, request, values):
+    def on_success(cls, request, values, **kwargs):
         cls.clean_data(request, values)
         try:
             collector = CreateCollectorProc(request, {'Collector':values})
@@ -61,7 +65,7 @@ class CollectorCreateForm(BaseForm):
 class CollectorEditForm(CollectorCreateForm):
     id = "basic"
     @classmethod
-    def on_success(cls, request, values):
+    def on_success(cls, request, values, **kwargs):
         values['University'] = filter(itemgetter("name"), values['University'])
         values['id'] = request.matchdict['collectorId']
         try:
@@ -85,7 +89,7 @@ class NetworkField(MultipleFormField):
     ]
 
 
-class CollectorContactsForm(BaseForm):
+class CollectorContactsForm(BaseAdminForm):
     id = "contacts"
     label = "Contacts"
     fields = [
@@ -95,7 +99,7 @@ class CollectorContactsForm(BaseForm):
         , StringField('wikipedia', 'Wikipedia', IMPORTANT)
     ]
     @classmethod
-    def on_success(cls, request, values):
+    def on_success(cls, request, values, **kwargs):
         values['id'] = request.matchdict['collectorId']
         values['Email'] = filter(itemgetter("address"), values.get('Email', []))
         values['Network'] = filter(itemgetter("url"), values.get('Network', []))
@@ -126,7 +130,7 @@ class CompanyForm(MultipleFormField):
         , StringField('line3', 'Street 3')
     ]
 
-class CollectorBusinessForm(BaseForm):
+class CollectorBusinessForm(BaseAdminForm):
     id = "business"
     label = "Business / Industry"
     fields = [
@@ -135,7 +139,7 @@ class CollectorBusinessForm(BaseForm):
         , MultiConfigChoiceField('name', 'Further industries / type of businesses', "Industry", "Industry", attrs = REQUIRED)
     ]
     @classmethod
-    def on_success(cls, request, values):
+    def on_success(cls, request, values, **kwargs):
         values['id'] = request.matchdict['collectorId']
         values['Company'] = filter(itemgetter("name"), values.get('Company', []))
         try:

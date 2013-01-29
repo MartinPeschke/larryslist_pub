@@ -16,24 +16,32 @@
             ${self.switchCollectorLink(view.collector)}
         </li>
     </ul>
-    ${self.buildTabContent(view.getActiveForm(), values, errors)}
-    ${self.sourcesForm(*view.getSourcesForm())}
+    ${self.buildBody(view.getActiveForm(), values, errors)}
 </%block>
 
+<%def name="buildBody(form, values, errors)">
+    <form class="${form.classes}" id="${form.id}" method="post">
+        <input type="hidden" name="type" value="${form.id}"/>
+        <input type="hidden" name="furl" value="${request.furl}"/>
+        <input type="hidden" name="token" value="${request.session.get_csrf_token()}"/>
+        ${self.buildTabContent(form, values, errors)}
+        ${self.sourcesForm(form, values, errors)}
+    </form>
+</%def>
 <%def name="sourcesForm(form, values, errors)">
     <div class="fixed-appendix">
         <div class="form-actions affixed">
             <button type="submit" class="btn btn-primary btn-extra-wide">Save</button>
         </div>
         <div class="sources-form">
-            <legend>${form.label}</legend>
-            <form class="${form.classes}" id="${form.id}" method="post" action="${request.fwd_url("admin_sources_save", collectorId = view.collector.id)}">
-                <input type="hidden" name="type" value="${form.id}"/>
-                <input type="hidden" name="token" value="${request.session.get_csrf_token()}"/>
-                %for field in form.fields:
-                    ${field.render(form.id, request, values, errors, view)|n}
-                %endfor
-            </form>
+            %for f in form.extra_forms:
+                <div class="${f.classes}">
+                    <legend>${f.label}</legend>
+                    %for field in f.fields:
+                        ${field.render("{}.{}".format(form.id, f.id), request, values, errors, view)|n}
+                    %endfor
+                </div>
+            %endfor
         </div>
     </div>
 </%def>
@@ -42,14 +50,9 @@
 <%def name="buildTabContent(form, values, errors)">
     <div class="tab-content fixed-height">
         <div class="fixed-height-content tab-pane ${'active' if view.isFormActive(form) else ''}" id="wrap-${form.id}">
-            <form class="${form.classes}" id="${form.id}" method="post">
-                <input type="hidden" name="type" value="${form.id}"/>
-                <input type="hidden" name="furl" value="${request.furl}"/>
-                <input type="hidden" name="token" value="${request.session.get_csrf_token()}"/>
-                %for field in form.fields:
-                    ${field.render(form.id, request, values, errors, view)|n}
-                %endfor
-            </form>
+            %for field in form.fields:
+                ${field.render(form.id, request, values, errors, view)|n}
+            %endfor
         </div>
     </div>
 </%def>

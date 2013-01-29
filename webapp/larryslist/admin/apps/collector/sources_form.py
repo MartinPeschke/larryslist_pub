@@ -14,7 +14,11 @@ class SingleSourceForm(MultipleFormField):
 class AddSourcesForm(BaseForm):
     id='sources'
     label = 'Sources'
-    classes = "form-validated form-controls-inline form-inline"
+    classes = "form-controls-inline form-inline"
     fields = [
         SingleSourceForm('Source', None)
     ]
+
+class BaseAdminForm(BaseForm):
+    extra_forms = [AddSourcesForm]
+

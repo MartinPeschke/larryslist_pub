@@ -1,5 +1,6 @@
 from jsonclient.backend import DBException
 from larryslist.admin.apps.collector.models import CreateCollectionProc, EditCollectionBaseProc, EditCollectionArtistsProc, EditCollectionPublicationsProc
+from larryslist.admin.apps.collector.sources_form import BaseAdminForm
 from larryslist.lib.formlib.formfields import BaseForm, IntField, CheckboxField, IMPORTANT, StringField, MultiConfigChoiceField, ApproxField, HiddenField, MultipleFormField, TypeAheadField, PlainHeadingField, ConfigChoiceField, URLField
 
 __author__ = 'Martin'
@@ -7,10 +8,10 @@ __author__ = 'Martin'
 
 class RegionOfInterest(MultipleFormField):
     fields = [
-        StringField('name', "Region")
+        StringField('name', "Name")
     ]
 
-class BaseCollectionForm(BaseForm):
+class BaseCollectionForm(BaseAdminForm):
     id = 'basic'
     label = 'Basic'
     fields = [
@@ -28,7 +29,7 @@ class BaseCollectionForm(BaseForm):
     ]
 
     @classmethod
-    def on_success(cls, request, values):
+    def on_success(cls, request, values, **kwargs):
         collectorId = request.matchdict['collectorId']
         values = {'id': request.matchdict['collectorId'], 'Collection':values}
         try:
@@ -43,7 +44,7 @@ class CollectionEditForm(BaseCollectionForm):
             HiddenField('id')
         ]
     @classmethod
-    def on_success(cls, request, values):
+    def on_success(cls, request, values, **kwargs):
         values = {'id': request.matchdict['collectorId'], 'Collection':values}
         try:
             collection = EditCollectionBaseProc(request, {'Collector':values})
@@ -57,7 +58,7 @@ class ArtistForm(MultipleFormField):
     ]
 
 
-class CollectionArtistsForm(BaseForm):
+class CollectionArtistsForm(BaseAdminForm):
     id = 'artist'
     label = 'Artists'
     fields = [
@@ -67,7 +68,7 @@ class CollectionArtistsForm(BaseForm):
     ]
 
     @classmethod
-    def on_success(cls, request, values):
+    def on_success(cls, request, values, **kwargs):
         values = {'id': request.matchdict['collectorId'], 'Collection':values}
         try:
             collection = EditCollectionArtistsProc(request, {'Collector':values})
@@ -83,7 +84,7 @@ class PublicationsForm(MultipleFormField):
     ]
 
 
-class CollectionWebsiteForm(BaseForm):
+class CollectionWebsiteForm(BaseAdminForm):
     id = 'website'
     label = 'Communication Platforms'
     fields = [
@@ -95,7 +96,7 @@ class CollectionWebsiteForm(BaseForm):
     ]
 
     @classmethod
-    def on_success(cls, request, values):
+    def on_success(cls, request, values, **kwargs):
         values = {'id': request.matchdict['collectorId'], 'Collection': values}
         try:
             collection = EditCollectionPublicationsProc(request, {'Collector':values})

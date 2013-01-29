@@ -39,6 +39,7 @@ class BaseForm(object):
     id = 'formdata'
     classes = "form-horizontal form-validated"
     fields = []
+    extra_forms = []
 
     @classmethod
     def toFormData(cls, values):
@@ -54,6 +55,8 @@ class BaseForm(object):
         for v in cls.fields:
             if v.is_validated:
                 validators.update(v.getValidator(request))
+        for form in cls.extra_forms:
+            validators[form.id] = form.getSchema(request)
         return BaseSchema(**validators)
 
 
