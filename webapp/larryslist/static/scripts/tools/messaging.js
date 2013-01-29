@@ -131,15 +131,6 @@ define(["tools/hash"], function(hashlib){
                 this.model.on('all', this.render, this);
                 this.model.fetch();
                 this.baseOffset = $("header").height();
-                $(document).on({scroll:_.bind(this.onScroll, this)});
-                this.onScroll();
-            }
-            , onScroll: function(){
-                if($(window).scrollTop()>this.baseOffset){
-                    this.$el.addClass("fixed");
-                } else {
-                    this.$el.removeClass("fixed");
-                }
             }
             , addAll: function(){
                 this.model.each(_.bind(this.addOne, this));

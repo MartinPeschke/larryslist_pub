@@ -64,20 +64,16 @@
 <%def name="html_class()"></%def>
 
 <%def name="header_messages()">
-    <div class="${self.containerClass()} message-container ${'' if len(request.session.peek_flash("generic_messages")) > 0 else 'hide'}">
-        <div class="${self.rowClass()}">
-            <div class="span12" id="message-container">
-                %for msg in request.session.pop_flash("generic_messages"):
-                    <div class="alert alert-${msg.type}">
-                        <a class="close" data-dismiss="alert">×</a>
-                        %if msg.heading:
-                            <h4 class="alert-heading">${msg.heading|n}</h4>
-                        %endif
-                        ${msg.body|n}
-                    </div>
-                %endfor
+    <div id="message-container" class="fixed message-container ${'' if len(request.session.peek_flash("generic_messages")) > 0 else 'hide'}">
+        %for msg in request.session.pop_flash("generic_messages"):
+            <div class="alert alert-${msg.type}">
+                <a class="close" data-dismiss="alert">×</a>
+                %if msg.heading:
+                    <h4 class="alert-heading">${msg.heading|n}</h4>
+                %endif
+                ${msg.body|n}
             </div>
-        </div>
+        %endfor
     </div>
 </%def>
 
