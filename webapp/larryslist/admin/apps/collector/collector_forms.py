@@ -2,7 +2,7 @@ from operator import itemgetter
 from jsonclient.backend import DBException
 from larryslist.admin.apps.collector.models import CreateCollectorProc, EditCollectorBaseProc, EditCollectorContactsProc, EditCollectorBusinessProc
 from larryslist.admin.apps.collector.sources_form import SingleSourceForm, BaseAdminForm
-from larryslist.lib.formlib.formfields import REQUIRED, StringField, BaseForm, ChoiceField, configattr, ConfigChoiceField, DateField, MultipleFormField, IMPORTANT, TypeAheadField, EmailField, HeadingField, URLField, PlainHeadingField, StaticHiddenField, MultiConfigChoiceField, TokenTypeAheadField, HiddenField
+from larryslist.lib.formlib.formfields import REQUIRED, StringField, BaseForm, ChoiceField, configattr, ConfigChoiceField, DateField, MultipleFormField, IMPORTANT, TypeAheadField, EmailField, HeadingField, URLField, PlainHeadingField, StaticHiddenField, MultiConfigChoiceField, TokenTypeAheadField, HiddenField, Placeholder
 
 __author__ = 'Martin'
 
@@ -48,24 +48,18 @@ class CollectorCreateForm(BaseAdminForm):
     ]
 
     @classmethod
-    def clean_data(cls, request, values):
-        values['University'] = filter(itemgetter("name"), values.get('University', []))
-        return values
-
-    @classmethod
-    def on_success(cls, request, values, **kwargs):
-        cls.clean_data(request, values)
+    def persist(cls, request, values):
         try:
             collector = CreateCollectorProc(request, {'Collector':values})
         except DBException, e:
             return {'success':False, 'message': e.message}
-        return {'redirect': request.fwd_url("admin_collector_edit", collectorId = collector.id, stage='basic')}
+        return {'success': True, 'redirect': request.fwd_url("admin_collector_edit", collectorId = collector.id, stage='basic')}
 
 
 class CollectorEditForm(CollectorCreateForm):
     id = "basic"
     @classmethod
-    def on_success(cls, request, values, **kwargs):
+    def persist(cls, request, values):
         values['University'] = filter(itemgetter("name"), values['University'])
         values['id'] = request.matchdict['collectorId']
         try:
@@ -85,7 +79,7 @@ class MultiEmailField(MultipleFormField):
 
 class NetworkField(MultipleFormField):
     fields = [
-        ConfigChoiceField('name', "Network", 'Network'), URLField('url', '')
+        ConfigChoiceField('name', None, 'Network'), URLField('url', '', attrs = Placeholder("link"))
     ]
 
 
@@ -95,11 +89,11 @@ class CollectorContactsForm(BaseAdminForm):
     fields = [
         MultiEmailField('Email', None)
         , PlainHeadingField("Social networks")
-        , NetworkField("Network", classes = 'form-embedded-wrapper form-inline')
+        , NetworkField("Network", classes = "form-controls-inline form-inline form-embedded-wrapper")
         , StringField('wikipedia', 'Wikipedia', IMPORTANT)
     ]
     @classmethod
-    def on_success(cls, request, values, **kwargs):
+    def persist(cls, request, values):
         values['id'] = request.matchdict['collectorId']
         values['Email'] = filter(itemgetter("address"), values.get('Email', []))
         values['Network'] = filter(itemgetter("url"), values.get('Network', []))
@@ -139,7 +133,7 @@ class CollectorBusinessForm(BaseAdminForm):
         , MultiConfigChoiceField('name', 'Further industries / type of businesses', "Industry", "Industry", attrs = REQUIRED)
     ]
     @classmethod
-    def on_success(cls, request, values, **kwargs):
+    def persist(cls, request, values):
         values['id'] = request.matchdict['collectorId']
         values['Company'] = filter(itemgetter("name"), values.get('Company', []))
         try:
@@ -153,8 +147,3 @@ class CollectorBusinessForm(BaseAdminForm):
 
 class CollectionAddCollectorForm(CollectorCreateForm):
     fields = CollectorCreateForm.fields + [HiddenField('collectionId')]
-    @classmethod
-    def clean_data(cls, request, values):
-        values['University'] = filter(itemgetter("name"), values.get('University', []))
-        values['Collection'] = {'id':values.pop('collectionId')}
-        return values

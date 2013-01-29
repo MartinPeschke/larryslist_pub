@@ -121,7 +121,4 @@ class FormHandler(object):
             raise HTTPNotImplemented("Unexpected submission type!")
         else:
             form_result = form.to_python(values.get(schema_id), state=self.request)
-            extra_forms = {}
-            for f in schema.extra_forms:
-                extra_forms[f.id] = form_result.pop(f.id, {})
-            return schema.on_success(self.request, form_result, **extra_forms)
+            return schema.on_success(self.request, form_result)

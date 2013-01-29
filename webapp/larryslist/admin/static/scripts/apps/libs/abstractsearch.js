@@ -29,6 +29,10 @@ define(["tools/ajax", "text!templates/searchresult.html"]
                 css.top = css.top + this.$el.height();
                 css.width =  this.$el.width();
                 this.$resultNode.css(css);
+                this.$el.closest(".fixed-height").on({scroll:function(e){
+                    view.$resultNode.css({marginTop: -1*$(e.target).scrollTop()});
+                }});
+
 
                 this.$resultNode.on({'mouseenter' : $.proxy(this.mouseenter, this),
                         'click':_.bind(this.disAmbiguateEvent, this)}, '.search-result-item');

@@ -29,14 +29,14 @@ class BaseCollectionForm(BaseAdminForm):
     ]
 
     @classmethod
-    def on_success(cls, request, values, **kwargs):
+    def persist(cls, request, values):
         collectorId = request.matchdict['collectorId']
         values = {'id': request.matchdict['collectorId'], 'Collection':values}
         try:
             collection = CreateCollectionProc(request, {'Collector':values})
         except DBException, e:
             return {'success':False, 'message': e.message}
-        return {'redirect': request.fwd_url("admin_collection_edit", collectorId = collectorId, stage='basic')}
+        return {'success': True, 'redirect': request.fwd_url("admin_collection_edit", collectorId = collectorId, stage='basic')}
 
 
 class CollectionEditForm(BaseCollectionForm):
@@ -44,7 +44,7 @@ class CollectionEditForm(BaseCollectionForm):
             HiddenField('id')
         ]
     @classmethod
-    def on_success(cls, request, values, **kwargs):
+    def persist(cls, request, values):
         values = {'id': request.matchdict['collectorId'], 'Collection':values}
         try:
             collection = EditCollectionBaseProc(request, {'Collector':values})
@@ -68,7 +68,7 @@ class CollectionArtistsForm(BaseAdminForm):
     ]
 
     @classmethod
-    def on_success(cls, request, values, **kwargs):
+    def persist(cls, request, values):
         values = {'id': request.matchdict['collectorId'], 'Collection':values}
         try:
             collection = EditCollectionArtistsProc(request, {'Collector':values})
@@ -96,7 +96,7 @@ class CollectionWebsiteForm(BaseAdminForm):
     ]
 
     @classmethod
-    def on_success(cls, request, values, **kwargs):
+    def persist(cls, request, values):
         values = {'id': request.matchdict['collectorId'], 'Collection': values}
         try:
             collection = EditCollectionPublicationsProc(request, {'Collector':values})

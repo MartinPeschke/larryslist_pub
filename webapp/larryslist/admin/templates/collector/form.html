@@ -24,8 +24,8 @@
         <input type="hidden" name="type" value="${form.id}"/>
         <input type="hidden" name="furl" value="${request.furl}"/>
         <input type="hidden" name="token" value="${request.session.get_csrf_token()}"/>
-        ${self.buildTabContent(form, values, errors)}
-        ${self.sourcesForm(form, values, errors)}
+        ${self.buildTabContent(form, values.get(form.id), errors.get(form.id))}
+        ${self.sourcesForm(form, values.get(form.id), errors.get(form.id))}
     </form>
 </%def>
 <%def name="sourcesForm(form, values, errors)">
