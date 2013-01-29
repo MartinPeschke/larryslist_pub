@@ -79,7 +79,7 @@ class MultiEmailField(MultipleFormField):
 
 class NetworkField(MultipleFormField):
     fields = [
-        ConfigChoiceField('name', None, 'Network'), URLField('url', '', attrs = Placeholder("link"))
+        ConfigChoiceField('name', None, 'Network', default_none = False), URLField('url', '', attrs = Placeholder("link"))
     ]
 
 
@@ -129,8 +129,8 @@ class CollectorBusinessForm(BaseAdminForm):
     label = "Business / Industry"
     fields = [
         CompanyForm("Company")
-        , PlainHeadingField('', tag='hr')
-        , MultiConfigChoiceField('name', 'Further industries / type of businesses', "Industry", "Industry", attrs = REQUIRED)
+        , PlainHeadingField('Further industries / type of businesses')
+        , MultiConfigChoiceField('name', 'Name', "Industry", "Industry", attrs = REQUIRED)
     ]
     @classmethod
     def persist(cls, request, values):

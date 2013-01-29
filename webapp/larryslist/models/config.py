@@ -2,6 +2,12 @@ from jsonclient import Mapping, TextField, DictField, ListField
 
 __author__ = 'Martin'
 
+class NullConfigModel(Mapping):
+    name = TextField()
+    def getKey(self, request):return ''
+    def getLabel(self, request):return '---'
+
+
 class NamedConfigModel(Mapping):
     name = TextField()
     def getKey(self, request):return self.name

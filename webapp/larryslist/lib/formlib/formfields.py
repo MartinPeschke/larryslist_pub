@@ -3,6 +3,7 @@ from operator import methodcaller
 import formencode
 from formencode.validators import OneOf
 from larryslist.lib.formlib.validators import DateValidator, TypeAheadValidator
+from larryslist.models.config import NullConfigModel
 from pyramid.renderers import render
 
 class HtmlAttrs(object):
@@ -269,22 +270,25 @@ class ChoiceField(Field):
         self.optionGetter = optionGetter
 
     def getValidator(self, request):
-        return {self.name: OneOf(map(methodcaller('getKey', request), self.optionGetter(request)))}
+        return {self.name: OneOf(map(methodcaller('getKey', request), self.optionGetter(request)), hideList = True)}
     def getOptions(self, request):
         return self.optionGetter(request)
     def isSelected(self, option, value, request):
         return option.getKey(request) == value
 
-def configattr(name):
+def configattr(name, default_none):
     def f(request):
-        return getattr(request.context.config, name)
+        values = getattr(request.context.config, name)
+        if default_none:
+            values = [NullConfigModel()] + list(values)
+        return values
     return f
 class ConfigChoiceField(ChoiceField):
-    def __init__(self, name, label, configAttr, attrs = NONE):
+    def __init__(self, name, label, configAttr, attrs = NONE, default_none = True):
         self.name = name
         self.label = label
         self.attrs = attrs
-        self.optionGetter = configattr(configAttr)
+        self.optionGetter = configattr(configAttr, default_none)
 
 
 class TypeAheadField(StringField):
