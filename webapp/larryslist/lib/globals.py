@@ -23,7 +23,7 @@ class Globals(object):
         self.is_debug = settings.get('pyramid.debug_templates', 'false') == 'true'
         self.VERSION_TOKEN = "v={}".format(VERSION_TOKEN)
 
-        backend_options = dict(location = settings['backend.api.url'], version = settings['backend.api.version'])
+        backend_options = dict(location = settings['deploy.api.url'], version = settings['deploy.api.version'])
         if 'backend.api.version' in settings:
             backend_options['http_options'] = dict( disable_ssl_certificate_validation = True )
         self.backend = VersionedBackend(**backend_options)
