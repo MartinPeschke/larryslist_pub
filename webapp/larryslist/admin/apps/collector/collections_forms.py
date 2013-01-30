@@ -1,7 +1,7 @@
 from jsonclient.backend import DBException
 from larryslist.admin.apps.collector.models import CreateCollectionProc, EditCollectionBaseProc, EditCollectionArtistsProc, EditCollectionPublicationsProc
 from larryslist.admin.apps.collector.sources_form import BaseAdminForm
-from larryslist.lib.formlib.formfields import BaseForm, IntField, CheckboxField, IMPORTANT, StringField, MultiConfigChoiceField, ApproxField, HiddenField, MultipleFormField, TypeAheadField, PlainHeadingField, ConfigChoiceField, URLField
+from larryslist.lib.formlib.formfields import BaseForm, IntField, CheckboxField, IMPORTANT, StringField, MultiConfigChoiceField, ApproxField, HiddenField, MultipleFormField, TypeAheadField, PlainHeadingField, ConfigChoiceField, URLField, TagSearchField
 
 __author__ = 'Martin'
 
@@ -20,6 +20,8 @@ class BaseCollectionForm(BaseAdminForm):
         , StringField("name", "Name of collection", IMPORTANT)
         , StringField("foundation", "Name of foundation")
         , IntField('started', "Started collecting in year")
+        , PlainHeadingField("Theme in collection")
+        , TagSearchField('theme', "Tags", "/admin/search/theme", "Theme", classes='tagsearch input-xxlarge')
         , PlainHeadingField("Art Genre / Movement")
         , MultiConfigChoiceField('name', 'Name', "Genre", "Genre")
         , PlainHeadingField("Medium of artworks")

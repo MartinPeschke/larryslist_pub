@@ -354,6 +354,17 @@ class TypeAheadField(StringField):
     def getValues(self, name, request, values, errors, view):
         return {'value': values.get(name, ''), 'error':errors.get(name, '')}
 
+class TagSearchField(StringField):
+    template = 'larryslist:lib/formlib/templates/tagsearch.html'
+    def __init__(self, name, label, api_url, api_result, attrs = NONE, classes = 'tagsearch', validator_args = {}):
+        super(TagSearchField, self).__init__(name, label, attrs, classes, validator_args)
+        self.api_result = api_result
+        self.api_type = None
+        self.api_url = api_url
+
+    def getValidator(self, request):
+        return {self.name: formencode.ForEach(name = formencode.validators.String(required=True))}
+
 
 
 class TokenTypeAheadField(StringField):

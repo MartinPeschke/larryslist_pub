@@ -25,19 +25,26 @@ define(["tools/ajax", "text!templates/searchresult.html"]
 
                 this.model.on("reset", _.bind(this.onSearchResult, this));
                 this.$resultNode = $('<div class="entity-search-result hide"></div>').appendTo("body");
-                var css = this.$el.offset();
-                css.top = css.top + this.$el.height();
-                css.width =  this.$el.width();
-                this.$resultNode.css(css);
-                this.$el.closest(".fixed-height").on({scroll:function(e){
-                    view.$resultNode.css({marginTop: -1*$(e.target).scrollTop()});
-                }});
 
+                this.rePosition = this.position();
+                this.rePosition();
 
                 this.$resultNode.on({'mouseenter' : $.proxy(this.mouseenter, this),
                         'click':_.bind(this.disAmbiguateEvent, this)}, '.search-result-item');
                 this.$resultNode.on({'click': _.bind(this.hide, this)}, ".dismiss");
                 this.deBouncedSearch = _.debounce(_.bind(this.doSearch, this), 50);
+            }
+            , position: function(){
+                var view = this;
+                this.$el.closest(".fixed-height").on({scroll:function(e){
+                    view.$resultNode.css({marginTop: -1*$(e.target).scrollTop()});
+                }});
+                return function(){
+                    var css = view.$el.offset();
+                    css.top = css.top + view.$el.height();
+                    css.width =  view.$el.width();
+                    this.$resultNode.css(css);
+                }
             }
             , prev: function(){
                 var curnode = this.$resultNode.find(".active");
@@ -143,7 +150,7 @@ define(["tools/ajax", "text!templates/searchresult.html"]
                 }
             }
             , _specialItemSelected: function(){
-                this.trigger("specialItemSelected");
+                this.trigger("specialItemSelected", this.$searchBox.val().trim());
             }
             , _metaSelect: function(item){
                 var id = item.attr("data-entity-id"), model = this.model.get(id);
@@ -154,11 +161,12 @@ define(["tools/ajax", "text!templates/searchresult.html"]
                     this._specialItemSelected();
                 } else {
                     var id = item.attr("data-entity-id"), model = this.model.get(id);
-                    if(model)this.trigger("selected", model);
+                    if(model)this.trigger("selected", model)
+                    else this.trigger("unknownterm", this.$searchBox.val().trim());
                 }
             }
             , buildQuery: function(query){
-                return {term:query};
+                return query?{term:query}:null;
             }
             , doSearch : function(query){
                 var view = this, data, data = this.buildQuery(query);

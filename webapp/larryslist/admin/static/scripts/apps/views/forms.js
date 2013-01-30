@@ -5,7 +5,7 @@
  * Time: 14:20
  * To change this template use File | Settings | File Templates.
  */
-define(['tools/ajax', "tools/fileupload", "libs/typeahead"], function(ajax, FileUploader, TypeAhead){
+define(['tools/ajax', "tools/fileupload", "libs/typeahead", "libs/tagsearch"], function(ajax, FileUploader, TypeAhead, TagSearch){
     var View = Backbone.View.extend({
         events: {
             "click .remove-link": "removeRow"
@@ -32,6 +32,7 @@ define(['tools/ajax', "tools/fileupload", "libs/typeahead"], function(ajax, File
 
             this.widgets = [];
             this.$el.find(".typeahead-container").each(_.bind(this.addTypeAhead, this));
+            this.$el.find(".tagsearch-container").each(_.bind(this.addTagSearch, this));
             this.$el.find(".dependent-control").each(_.bind(this.addDependent, this));
             this.$el.find(".picture-upload-control").each(_.bind(this.addPictureUpload, this));
         }
@@ -48,10 +49,11 @@ define(['tools/ajax', "tools/fileupload", "libs/typeahead"], function(ajax, File
             depSrc.on("change.dependent-fields", function(e){f($(e.target))});
             f(depSrc);
         }
+        , addTagSearch: function(idx, elem){
+            TagSearch.init(_.extend({el:elem}, $(elem).data()));
+        }
         , addTypeAhead: function(idx, elem){
-            var opts = $(elem).data();
-            opts.el = elem;
-            TypeAhead.init(opts);
+            TypeAhead.init(_.extend({el:elem}, $(elem).data()));
         }
         , addPictureUpload: function(idx, elem){
             var fpl = new FileUploader({el: elem});

@@ -43,7 +43,9 @@ define(["tools/ajax", "libs/abstractsearch"], function(ajax, AbstractSearch){
             return new TypeAheadSearch({
                 el:this.$el
                 , suppressExtra: true
-                , model: new PlainSearchResult([], {apiResult: opts.apiResult}), apiType: opts.apiType, searchUrl: opts.apiUrl
+                , model: new PlainSearchResult([], {apiResult: opts.apiResult})
+                , apiType: opts.apiType
+                , searchUrl: opts.apiUrl
             });
         }
     })
