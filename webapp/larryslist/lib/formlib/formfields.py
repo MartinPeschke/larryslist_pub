@@ -7,20 +7,24 @@ from larryslist.models.config import NullConfigModel
 from pyramid.renderers import render
 
 class HtmlAttrs(object):
+    classes = ''
     def __init__(self, required = False, important = False, placeholder = ''):
         self.required = required
         self.important = important
         self.placeholder = placeholder
 
     def getClasses(self):
-        classes = []
-        if self.required: classes.append('required')
-        if self.important: classes.append('important')
-        return ' '.join(classes)
+        classes = self.classes
+        if self.required: classes += ' required'
+        if self.important: classes += ' important'
+        return classes
     def getInputAttrs(self, request):
         attrs = []
         if self.placeholder: attrs.append('placeholder="{}"'.format(self.placeholder))
         return " ".join(attrs)
+    def getGroupAttrs(self): return ''
+    def getGroupClasses(self): return ''
+
 NONE = HtmlAttrs()
 REQUIRED = HtmlAttrs(True)
 IMPORTANT = HtmlAttrs(False, True)
@@ -30,6 +34,16 @@ class Placeholder(HtmlAttrs):
         self.placeholder = placeholder
         self.required = required
         self.important = important
+class DependentAttrs(HtmlAttrs):
+    def __init__(self, placeholder, dependency, dependencyValue, required = False, important = False):
+        self.placeholder = placeholder
+        self.required = required
+        self.important = important
+        self.dependency = dependency
+        self.dependencyValue = dependencyValue
+    def getGroupClasses(self): return 'dependent-control'
+    def getGroupAttrs(self):
+        return 'data-dependency="{}" data-dependency-value="{}"'.format(self.dependency, self.dependencyValue)
 
 class BaseSchema(formencode.Schema):
     filter_extra_fields = True

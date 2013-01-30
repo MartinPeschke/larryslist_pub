@@ -1,15 +1,22 @@
 from operator import itemgetter
 from jsonclient.backend import DBException
 from larryslist.admin.apps.collector.models import SetSourcesProc
-from larryslist.lib.formlib.formfields import BaseForm, ConfigChoiceField, StringField, MultipleFormField, Placeholder
+from larryslist.lib.formlib.formfields import BaseForm, ConfigChoiceField, StringField, MultipleFormField, Placeholder, DependentAttrs
 
 
 class SingleSourceForm(MultipleFormField):
     fields = [
         ConfigChoiceField('type', None, 'SourceType', attrs = Placeholder('Source type'))
-        , StringField('title', None, attrs = Placeholder('Source type'))
-        , StringField('author', None, input_classes="input-medium", attrs = Placeholder('Author'))
-        , StringField('year', None, input_classes="input-mini digits", attrs = Placeholder('Year'))
+
+        , StringField('url', None, input_classes='input-xxlarge', attrs = DependentAttrs('Internet / Blog / Online Mag url', dependency='type', dependencyValue= 'Internet/Blogs/Online Mag'))
+
+        , StringField('title', None, attrs = DependentAttrs('Book title/Newspaper name', dependency='type', dependencyValue= 'Book Magazine Newspaper'))
+        , StringField('publisher', None, attrs = DependentAttrs('Publisher', dependency='type', dependencyValue= 'Book'))
+        , StringField('author', None, attrs = DependentAttrs('Author', dependency='type', dependencyValue= 'Book'))
+        , StringField('year', None, attrs = DependentAttrs('Year published', dependency='type', dependencyValue= 'Book'))
+
+        , StringField('name', None, attrs = DependentAttrs('Article title', dependency='type', dependencyValue= 'Newspaper Magazine'))
+        , StringField('date', None, attrs = DependentAttrs('Date / Volume', dependency='type', dependencyValue= 'Newspaper Magazine'))
     ]
 
 class AddSourcesForm(BaseForm):
@@ -28,7 +35,7 @@ class BaseAdminForm(BaseForm):
         if 'University' in values:
             values['University'] = filter(itemgetter("name"), values.get('University', []))
         if 'sources' in values:
-            values['sources'] = filter(itemgetter("type"), values.get('Source', []))
+            values['sources'] = filter(itemgetter("type"), values['sources'].get('Source', []))
         if 'collectionId' in values:
             v = values.setdefault('Collection', {})
             v['id']  = values.pop('collectionId')
@@ -41,5 +48,13 @@ class BaseAdminForm(BaseForm):
         for f in cls.extra_forms:
             extra_forms[f.id] = values.pop(f.id, {})
         result = cls.persist(request, values)
-
-        return result
+        if result.get('success'):
+            sources = extra_forms[AddSourcesForm.id]
+            sources = {'id': request.matchdict['collectorId'], 'Source': sources}
+            try:
+                collection = SetSourcesProc(request, {'Collector':sources})
+            except DBException, e:
+                return {'success':False, 'message': e.message}
+            return {'success': True, 'message':"Changes saved!"}
+        else:
+            return result

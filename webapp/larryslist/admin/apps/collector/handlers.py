@@ -69,8 +69,7 @@ class CollectorCreate(BaseArtHandler):
 class CollectorEdit(BaseArtHandler):
     forms = [CollectorEditForm, CollectorContactsForm, CollectorBusinessForm]
     def pre_fill_values(self, request, result):
-        value = self.collector.unwrap(sparse = True)
-        form = self.getActiveForm()
+        value, form = self.collector.unwrap(sparse = True), self.getActiveForm()
         result['values'][form.id] = form.toFormData(value)
         return result
     def isFormEnabled(self, form): return True
@@ -85,7 +84,7 @@ class CollectionCreate(BaseArtHandler):
 class CollectionEdit(BaseArtHandler):
     forms = [CollectionEditForm, CollectionArtistsForm, CollectionWebsiteForm]
     def pre_fill_values(self, request, result):
-        value, form = self.collector.unwrap(sparse = True), self.getActiveForm()
+        value, form = self.collector.Collection.unwrap(sparse = True), self.getActiveForm()
         result['values'][form.id] = form.toFormData(value)
         return result
     def isFormEnabled(self, form): return True
@@ -101,7 +100,6 @@ class AddCollectorHandler(BaseArtHandler):
         return result
     def getActiveForm(self): return self.forms[0]
     def getFormLink(self, stage = 'basic'): return self.getCollectionLink(stage)
-
 
     @reify
     def collector(self): return None

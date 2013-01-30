@@ -18,8 +18,8 @@ define(['tools/ajax', "libs/typeahead"], function(ajax, TypeAhead){
             var view = this;
             ajax.ifyForm({form: this.$el});
 
-            this.wrapperSelector = opts.wrapperSelector || '[data-closure="form"]';
-            this.templateSelector = opts.templateSelector || "[data-sequence]";
+            this.wrapperSelector = opts.wrapperSelector || '[data-closure="form"], .form-validated';
+            this.templateSelector = opts.templateSelector || "[data-sequence], .form-validated";
 
             this.$el.find(this.wrapperSelector).each(function(idx, elem){
                 var required = $(elem).data("required") === true;
@@ -28,10 +28,23 @@ define(['tools/ajax', "libs/typeahead"], function(ajax, TypeAhead){
                 });
             });
 
-
-
             this.widgets = [];
             this.$el.find(".typeahead-container").each(_.bind(this.addTypeAhead, this));
+            this.$el.find(".dependent-control").each(_.bind(this.addDependent, this));
+
+        }
+        , addDependent: function(idx, elem){
+            var $target = $(elem), data = $target.data(), wrapper = $target.closest(this.templateSelector), depSrc = wrapper.find('[name$='+data.dependency+']')
+                , f = function(t){
+                    var val = new RegExp(t.find("option").filter(":selected").val()||'hide-at-all-costs');
+                    if(val.test(data.dependencyValue)){
+                        $target.show()
+                    } else {
+                        $target.hide();
+                    }
+                };
+            depSrc.on("change.dependent-fields", function(e){f($(e.target))});
+            f(depSrc);
         }
         , addTypeAhead: function(idx, elem){
             var opts = $(elem).data();
@@ -60,6 +73,7 @@ define(['tools/ajax', "libs/typeahead"], function(ajax, TypeAhead){
                 new_node.find(".numbering").html(new_position+1);
                 templ.after(new_node);
                 new_node.find(".typeahead-container").each(_.bind(this.addTypeAhead, this));
+                new_node.find(".dependent-control").each(_.bind(this.addDependent, this));
                 new_node.find("[generated]").remove();
                 new_node.find(".error").removeClass("error");
                 new_node.find(".valid").removeClass("valid");
