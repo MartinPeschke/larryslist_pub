@@ -21,6 +21,21 @@
                         <li class="nav-entry">
                             <span class="nav-entry-link">Logged in as ${vctxt.user.name}</span>
                         </li>
+                        <li class="nav-entry dropdown">
+                            <a class="nav-entry-link dropdown-toggle" data-toggle="dropdown" href="#">
+                                Settings
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                %for entry in vctxt.header_menu:
+                                %if entry.isAllowed(vctxt, request):
+                                        <li class="nav-entry">
+                                            <a class="nav-entry-link" href="${request.fwd_url(entry.route)}">${entry.label}</a>
+                                        </li>
+                                %endif
+                                %endfor
+                            </ul>
+                        </li>
                         <li class="nav-entry">
                             <a class="nav-entry-link" href="${request.fwd_url('admin_logout')}">Logout</a>
                         </li>

@@ -1,0 +1,40 @@
+<%inherit file="layout.html"/>
+
+
+
+<%block name="contentbody">
+    <div class="padded-body">
+        %for form in view.forms:
+            ${self.buildBody(form, values.get(form.id), errors.get(form.id))}
+        %endfor
+    </div>
+</%block>
+
+<%def name="buildBody(form, values, errors)">
+    <form class="${form.classes}" id="${form.id}" method="post">
+        <input type="hidden" name="type" value="${form.id}"/>
+        <input type="hidden" name="furl" value="${request.furl}"/>
+        <input type="hidden" name="token" value="${request.session.get_csrf_token()}"/>
+        <legend>Add a new feeder account</legend>
+        <div class="form-fields">
+            %for field in form.fields:
+                ${field.render(form.id, request, values, errors, view)|n}
+            %endfor
+        </div>
+        <div class="form-actions">
+            <button class="btn btn-primary" type="submit">Create User</button>
+        </div>
+    </form>
+</%def>
+
+
+
+<%block name="scripts">
+    <script>
+        require(["views/forms"], function(View){
+            $(".content-body").find(".form-validated").each(function(idx, form){
+                new View({el:form})
+            });
+        });
+    </script>
+</%block>

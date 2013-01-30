@@ -6,9 +6,23 @@ from larryslist.models import ClientTokenProc
 
 
 from pyramid.decorator import reify
+from pyramid.httpexceptions import HTTPForbidden
 
 GetAdminConfigProc = ClientTokenProc("/config", root_key="Config", result_cls = AdminConfigModel)
 config_loader = CachedLoader(GetAdminConfigProc, "ADMIN_CONFIG_CACHE")
+
+
+class MenuItem(object):
+    def __init__(self, onlyAdmin, route, label):
+        self.label = label
+        self.route = route
+        self.onlyAdmin = onlyAdmin
+    def isAllowed(self, context, request):
+        return (not self.onlyAdmin) or self.onlyAdmin and context.user.isAdmin()
+
+HEADER_MENU = [
+    MenuItem(True, "admin_settings_feeder_create", "Add Feeder")
+]
 
 
 class AdminRootContext(RootContext):
@@ -30,6 +44,9 @@ class AdminRootContext(RootContext):
     def user(self):
         return getUserFromSession(self.request)
 
+    header_menu = []
+
+
 
 class AdminAuthedContext(AdminRootContext):
     def is_allowed(self, request):
@@ -37,3 +54,14 @@ class AdminAuthedContext(AdminRootContext):
             request.fwd("admin_login")
         else:
             return True
+
+    header_menu = HEADER_MENU
+
+class AdminContext(AdminAuthedContext):
+    def is_allowed(self, request):
+        if self.user.isAdmin():
+            return True
+        else:
+            raise HTTPForbidden()
+
+    header_menu = HEADER_MENU

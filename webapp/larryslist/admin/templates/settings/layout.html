@@ -1,0 +1,12 @@
+<%inherit file="../layout.html"/>
+
+
+
+<%def name="contentMenuImpl()">
+    <div class="menu-heading">
+        Settings
+    </div>
+    <ul class="nav nav-list">
+        ${self.menuLink("Add Feeder", "icon-user", "admin_settings_feeder_create")}
+    </ul>
+</%def>

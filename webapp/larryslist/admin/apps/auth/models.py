@@ -15,7 +15,8 @@ class AdminUser(Mapping):
 
     def isAnon(self):
         return self.token is None
-
+    def isAdmin(self):
+        return self.token and self.type == 'REVIEWER'
 
 def LoggingInProc(path, db_messages = []):
     sproc = ClientTokenProc(path, root_key='Feeder', result_cls=AdminUser)
