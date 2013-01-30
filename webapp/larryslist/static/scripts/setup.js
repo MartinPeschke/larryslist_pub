@@ -61,7 +61,7 @@
                 return '/api/'+this.api_version+path;
             }
             , resUrl: function(path){
-                return this.options.resourceHost + path;
+                return '//'+this.options.resourceHost +'/'+ path;
             }
             , send: function (options) {
                 var params = _.extend({

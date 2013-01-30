@@ -46,9 +46,11 @@ class DependentAttrs(HtmlAttrs):
         return 'data-dependency="{}" data-dependency-value="{}"'.format(self.dependency, self.dependencyValue)
 
 class PictureUploadAttrs(HtmlAttrs):
-    def __init__(self, singleFile = True, types="jpg,gif,png"):
+    def __init__(self, singleFile = True, types="jpg,gif,png", required = False, important = False):
         self.singleFile = singleFile
         self.types = types
+        self.required = required
+        self.important = important
     def getClasses(self): return ''
     def getGroupClasses(self): return 'picture-upload-control'
     def getGroupAttrs(self):
@@ -187,7 +189,7 @@ class Field(BaseField):
 class MultipleFormField(Field):
     template = 'larryslist:lib/formlib/templates/repeatableform.html'
     fields = []
-    add_more_link_label = 'add'
+    add_more_link_label = '+'
     def __init__(self, name, label = None, attrs = NONE, classes = 'form-embedded-wrapper'):
         self.name = name
         self.label = label
@@ -257,7 +259,7 @@ class PictureUploadField(StringField):
     template = 'larryslist:lib/formlib/templates/picture_upload.html'
     group_classes = "widget-plupload"
     type = 'hidden'
-    _validator = formencode.validators.URL
+    _validator = formencode.validators.String
 
 
 class ApproxField(Field):

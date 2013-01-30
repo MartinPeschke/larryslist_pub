@@ -29,10 +29,7 @@ class AddSourcesForm(BaseForm):
 
 class BaseAdminForm(BaseForm):
     extra_forms = [AddSourcesForm]
-    fields_col1 = []
-    fields_col2 = []
-    fields_general = []
-    fields = fields_col1 + fields_col2 + fields_general
+    fields = []
 
     @classmethod
     def clean_data(cls, request, values):

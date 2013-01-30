@@ -24,8 +24,7 @@ class Globals(object):
         self.VERSION_TOKEN = "v={}".format(VERSION_TOKEN)
 
         backend_options = dict(location = settings['deploy.api.url'], version = settings['deploy.api.version'])
-        if 'backend.api.version' in settings:
-            backend_options['http_options'] = dict( disable_ssl_certificate_validation = True )
+        backend_options['http_options'] = dict( disable_ssl_certificate_validation = True )
         self.backend = VersionedBackend(**backend_options)
         self.project_name = settings['project.name']
         self.site_slogan = settings['project.site_slogan']

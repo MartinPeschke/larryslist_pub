@@ -33,20 +33,16 @@ class UniversityForm(MultipleFormField):
 class CollectorCreateForm(BaseAdminForm):
     id = "basic"
     label = "Basic"
-    fields_col1 = [
+    fields = [
         StringField('firstName', 'First Name', REQUIRED)
         , StringField('lastName', 'Last Name', REQUIRED)
         , StringField('origName', 'Name in orig. Language')
         , ConfigChoiceField('title', 'Title', 'Title', IMPORTANT)
         , DateField('dob', 'Born', IMPORTANT)
-    ]
-    fields_col2 = [
-        ConfigChoiceField('gender', 'Gender', 'Gender', IMPORTANT)
+        , ConfigChoiceField('gender', 'Gender', 'Gender', IMPORTANT)
         , ConfigChoiceField('nationality', 'Nationality', 'Nationality', IMPORTANT)
         , PictureUploadField('picture', 'Picture', attrs = PictureUploadAttrs())
-    ]
-    fields_general = [
-        AddressForm('Address', 'Location')
+        , AddressForm('Address', 'Location')
         , UniversityForm('University', classes = 'form-embedded-wrapper form-inline')
         , MultiConfigChoiceField('name', 'Area of interest', "Interest", "Interest")
     ]
@@ -65,7 +61,7 @@ class CollectorEditForm(CollectorCreateForm):
     id = "basic"
     @classmethod
     def persist(cls, request, values):
-        values['University'] = filter(itemgetter("name"), values['University'])
+        values['University'] = filter(itemgetter("name"), values.get('University', []))
         values['id'] = request.matchdict['collectorId']
         try:
             collector = EditCollectorBaseProc(request, {'Collector':values})
@@ -84,7 +80,7 @@ class NetworkField(MultipleFormField):
 class CollectorContactsForm(BaseAdminForm):
     id = "contacts"
     label = "Contacts"
-    fields_general = [
+    fields = [
         URLField('wikipedia', 'Wikipedia', IMPORTANT, input_classes="input-xlarge")
         , MultiEmailField('Email', None)
         , PlainHeadingField("Social networks")
@@ -125,7 +121,7 @@ class CompanyForm(MultipleFormField):
 class CollectorBusinessForm(BaseAdminForm):
     id = "business"
     label = "Business / Industry"
-    fields_general = [
+    fields = [
         CompanyForm("Company")
         , PlainHeadingField('Further industries / type of businesses')
         , MultiConfigChoiceField('name', 'Name', "Industry", "Industry", attrs = REQUIRED)
@@ -144,4 +140,4 @@ class CollectorBusinessForm(BaseAdminForm):
 
 
 class CollectionAddCollectorForm(CollectorCreateForm):
-    fields_general = CollectorCreateForm.fields + [HiddenField('collectionId')]
+    fields = CollectorCreateForm.fields + [HiddenField('collectionId')]

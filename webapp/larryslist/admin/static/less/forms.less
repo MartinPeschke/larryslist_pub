@@ -57,10 +57,11 @@
 }
 
 .form-embedded-wrapper {
-  border: 1px solid #ddd;
-  background: #f9f9f9;
+  border: 1px solid @frameBorder;
+  background: @dimmedBackground;
   padding-top:@baseLineHeight / 4;
   position: relative;
+  margin-right:20px;
   .embedded-from-label {
     position: absolute;
     left: 10px;
@@ -78,10 +79,18 @@
 .repeatable-form {
   position: relative;
   .add-more{
-      cursor:pointer;
+      cursor: pointer;
       position: absolute;
-      right: 35px;
-      bottom: 5px;
+      right: -10px;
+      bottom: 0px;
+      width: 30px;
+      height: 30px;
+      background: @dimmedBackground;
+      border: 1px solid @frameBorder;
+      border-left: none;
+      line-height: 30px;
+      text-align: center;
+      font-size: 2em;
   }
   .close {padding: 0 10px;}
   + .repeatable-form {margin-top:@baseLineHeight;}

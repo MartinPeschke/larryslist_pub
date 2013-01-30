@@ -39,7 +39,7 @@ def ajax_url(request, route_name, secure = False, escaped = {}, *args, **kwargs)
 def getStaticUrl(request, path):
     if not path or path.startswith("http"):
         return path
-    return '//{}{}{}'.format(request.globals.resourceHost, path.strip("/"))
+    return '//{}/{}'.format(request.globals.resourceHost, path.strip("/"))
 
 def set_lang(request, lang = None):
     if lang:
