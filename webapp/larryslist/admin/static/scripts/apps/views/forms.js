@@ -16,7 +16,9 @@ define(['tools/ajax', "libs/typeahead"], function(ajax, TypeAhead){
         , removeLink: '<a class="remove-link link close">&times;</a>'
         , initialize: function(opts){
             var view = this;
-            ajax.ifyForm({form: this.$el});
+            var valid_params = {form: this.$el};
+
+            ajax.ifyForm(_.extend(valid_params, opts.validatorOpts));
 
             this.wrapperSelector = opts.wrapperSelector || '[data-closure="form"], .form-validated';
             this.templateSelector = opts.templateSelector || "[data-sequence], .form-validated";
@@ -31,7 +33,6 @@ define(['tools/ajax', "libs/typeahead"], function(ajax, TypeAhead){
             this.widgets = [];
             this.$el.find(".typeahead-container").each(_.bind(this.addTypeAhead, this));
             this.$el.find(".dependent-control").each(_.bind(this.addDependent, this));
-
         }
         , addDependent: function(idx, elem){
             var $target = $(elem), data = $target.data(), wrapper = $target.closest(this.templateSelector), depSrc = wrapper.find('[name$='+data.dependency+']')

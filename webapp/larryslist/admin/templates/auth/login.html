@@ -29,6 +29,9 @@
         </div>
         <div class="form-actions">
             <button class="btn btn-primary" type="submit">Login</button>
+            %if form.id == 'pwdforgot':
+                <button type="submit" class="btn btn-warning resend-button hide">${_("WEBSITE_Resend")|n}</button>
+            %endif
         </div>
     </form>
 </%def>
@@ -38,7 +41,14 @@
     <script>
         require(["views/forms"], function(View){
             $(".content-body").find(".form-validated").each(function(idx, form){
-                new View({el:form});
+                new View({el:form, validatorOpts: {
+                    error: function(resp, status, xhr){
+                        if(resp.values && resp.values.isResend){
+                            $(form).find(".resend-button").fadeIn().attr("name", "isResend").attr("value", "true");
+                            $(form).find(".btn-primary").fadeOut();
+                        }
+                    }
+                }});
             });
         });
     </script>

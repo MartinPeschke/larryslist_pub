@@ -18,7 +18,7 @@ class AdminUser(Mapping):
 
 
 def LoggingInProc(path, db_messages = []):
-    sproc = ClientTokenProc(path, root_key='User', result_cls=AdminUser)
+    sproc = ClientTokenProc(path, root_key='Feeder', result_cls=AdminUser)
     def f(request, data):
         result = sproc(request, data)
         request.session[SESSION_KEY] = request.user = result
@@ -34,15 +34,9 @@ def logoutAdmin(request):
     request.fwd("admin_login")
 
 
-AdminLoginProc = LoggingInProc("/admin/user/login")
-AdminForgotPwdProc = LoggingInProc("/admin/user/forgotpwd")
 
-def AdminLoginProc(request, data):
-    if data['email'] == 'mapa@friendfund.com':
-        user = AdminUser(token="123", name="Mapa", country="US")
-        request.session[SESSION_KEY] = user
-        return user
-    else:
-        raise DBMessage("Login failed!")
-
-
+AdminLoginProc = LoggingInProc("/admin/feeder/login")
+PasswordRequestProc = LoggingInProc("/admin/feeder/forgotpwd")
+ResendRequestProc = ClientTokenProc("/admin/feeder/resendForgotPwd")
+UpdatePasswordProc = ClientTokenProc("/admin/feeder/updatePwd")
+PasswordTokenVerifyProc = ClientTokenProc("/admin/feeder/token", root_key = "Feeder", result_cls = AdminUser)
