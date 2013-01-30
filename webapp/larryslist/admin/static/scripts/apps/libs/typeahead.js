@@ -26,7 +26,7 @@ define(["tools/ajax", "libs/abstractsearch"], function(ajax, AbstractSearch){
         initialize: function(opts){
             var view = this;
             this.$filter = this.$(".query");
-            this.current = null;
+            this.current = new PlainResult({name: this.$filter.val()});
             this.search = this.getSearch(opts);
             this.search.on('selected', function(term){
                 view.search.hide();
@@ -76,12 +76,13 @@ define(["tools/ajax", "libs/abstractsearch"], function(ajax, AbstractSearch){
             this.url = opts.apiUrl;
             this.$token = this.$('.typehead-token');
             this.$filter = this.$(".query");
-            this.current = null;
+            this.current = new Result({name: this.$filter.val(), 'token':this.$token.val()});
             this.search = this.getSearch(opts);
             this.search.on('selected', function(term){
                 view.search.hide();
                 view.$filter.val(term.getSearchLabel());
-                view.$token.val(term.id).trigger("change");
+                if(view.$token.val() != term.id)
+                    view.$token.val(term.id).trigger("change");
                 view.current = term;
             });
             this.search.on("hide", function(){

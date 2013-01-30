@@ -45,6 +45,23 @@ class DependentAttrs(HtmlAttrs):
     def getGroupAttrs(self):
         return 'data-dependency="{}" data-dependency-value="{}"'.format(self.dependency, self.dependencyValue)
 
+class PictureUploadAttrs(HtmlAttrs):
+    def __init__(self, singleFile = True, types="jpg,gif,png"):
+        self.singleFile = singleFile
+        self.types = types
+    def getClasses(self): return ''
+    def getGroupClasses(self): return 'picture-upload-control'
+    def getGroupAttrs(self):
+        return 'data-upload-single="{}" data-upload-types="{}"'.format(self.singleFile, self.types)
+
+
+
+
+
+
+
+
+
 class BaseSchema(formencode.Schema):
     filter_extra_fields = True
     allow_extra_fields=True
@@ -223,6 +240,25 @@ class StringField(Field):
 class IntField(Field):
     input_classes = 'input-mini digits'
     _validator = formencode.validators.Int
+class URLField(Field):
+    input_classes = 'input-xxlarge'
+    _validator = formencode.validators.URL
+class EmailField(StringField):
+    input_classes = 'input-large email'
+    type = 'email'
+    validator_args = {'resolve_domain': True}
+    _validator = formencode.validators.Email
+class PasswordField(StringField):
+    input_classes = 'input-large'
+    type = 'password'
+    validator_args = {'min': 6}
+    _validator = formencode.validators.String
+class PictureUploadField(StringField):
+    template = 'larryslist:lib/formlib/templates/picture_upload.html'
+    group_classes = "widget-plupload"
+    type = 'hidden'
+    _validator = formencode.validators.URL
+
 
 class ApproxField(Field):
     template = 'larryslist:lib/formlib/templates/approx_field.html'
@@ -253,19 +289,8 @@ class CheckboxField(Field):
 class RadioBoolField(CheckboxField):
     template = 'larryslist:lib/formlib/templates/radiobool.html'
     input_classes = 'radio'
-class URLField(Field):
-    input_classes = 'input-xxlarge'
-    _validator = formencode.validators.URL
-class EmailField(StringField):
-    input_classes = 'input-large email'
-    type = 'email'
-    validator_args = {'resolve_domain': True}
-    _validator = formencode.validators.Email
-class PasswordField(StringField):
-    input_classes = 'input-large'
-    type = 'password'
-    validator_args = {'min': 6}
-    _validator = formencode.validators.String
+
+
 
 
 class DateField(StringField):

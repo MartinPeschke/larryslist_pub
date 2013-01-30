@@ -5,7 +5,7 @@
  * Time: 14:20
  * To change this template use File | Settings | File Templates.
  */
-define(['tools/ajax', "libs/typeahead"], function(ajax, TypeAhead){
+define(['tools/ajax', "tools/fileupload", "libs/typeahead"], function(ajax, FileUploader, TypeAhead){
     var View = Backbone.View.extend({
         events: {
             "click .remove-link": "removeRow"
@@ -33,6 +33,7 @@ define(['tools/ajax', "libs/typeahead"], function(ajax, TypeAhead){
             this.widgets = [];
             this.$el.find(".typeahead-container").each(_.bind(this.addTypeAhead, this));
             this.$el.find(".dependent-control").each(_.bind(this.addDependent, this));
+            this.$el.find(".picture-upload-control").each(_.bind(this.addPictureUpload, this));
         }
         , addDependent: function(idx, elem){
             var $target = $(elem), data = $target.data(), wrapper = $target.closest(this.templateSelector), depSrc = wrapper.find('[name$='+data.dependency+']')
@@ -52,7 +53,14 @@ define(['tools/ajax', "libs/typeahead"], function(ajax, TypeAhead){
             opts.el = elem;
             TypeAhead.init(opts);
         }
-
+        , addPictureUpload: function(idx, elem){
+            var fpl = new FileUploader({el: elem});
+            fpl.on("file:uploaded", function(file_path, file){
+                var path = hnc.resUrl(file_path);
+                $(elem).find(".img-wrap-inner").empty().html('<img src="'+path+'" class="picture"/>');
+                $(elem).find(".picture-holder").val(file_path);
+            })
+        }
         , addRow : function(e){
             if((!e.keyCode || e.keyCode == 13)){
                 var $target = $(e.target)

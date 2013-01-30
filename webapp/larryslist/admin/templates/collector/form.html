@@ -50,9 +50,26 @@
 <%def name="buildTabContent(form, values, errors)">
     <div class="tab-content fixed-height">
         <div class="fixed-height-content tab-pane ${'active' if view.isFormActive(form) else ''}" id="wrap-${form.id}">
-            %for field in form.fields:
-                ${field.render(form.id, request, values, errors, view)|n}
-            %endfor
+
+            <div class="row-fluid">
+                <div class="span6">
+                %for field in form.fields_col1:
+                    ${field.render(form.id, request, values, errors, view)|n}
+                %endfor
+                </div>
+                <div class="span6">
+                %for field in form.fields_col2:
+                   ${field.render(form.id, request, values, errors, view)|n}
+                %endfor
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span12">
+                %for field in form.fields_general:
+                   ${field.render(form.id, request, values, errors, view)|n}
+                %endfor
+                </div>
+            </div>
         </div>
     </div>
 </%def>

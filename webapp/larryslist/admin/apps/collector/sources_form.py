@@ -29,6 +29,10 @@ class AddSourcesForm(BaseForm):
 
 class BaseAdminForm(BaseForm):
     extra_forms = [AddSourcesForm]
+    fields_col1 = []
+    fields_col2 = []
+    fields_general = []
+    fields = fields_col1 + fields_col2 + fields_general
 
     @classmethod
     def clean_data(cls, request, values):
@@ -50,11 +54,11 @@ class BaseAdminForm(BaseForm):
         result = cls.persist(request, values)
         if result.get('success'):
             sources = extra_forms[AddSourcesForm.id]
-            sources = {'id': request.matchdict['collectorId'], 'Source': sources}
-            try:
-                collection = SetSourcesProc(request, {'Collector':sources})
-            except DBException, e:
-                return {'success':False, 'message': e.message}
-            return {'success': True, 'message':"Changes saved!"}
-        else:
-            return result
+            if sources:
+                sources = {'id': request.matchdict['collectorId'], 'Source': sources}
+                try:
+                    collection = SetSourcesProc(request, {'Collector':sources})
+                except DBException, e:
+                    return {'success':False, 'message': e.message}
+                return {'success': True, 'message':"Changes saved!"}
+        return result

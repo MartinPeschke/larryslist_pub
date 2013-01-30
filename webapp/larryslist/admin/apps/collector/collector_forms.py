@@ -2,7 +2,7 @@ from operator import itemgetter
 from jsonclient.backend import DBException
 from larryslist.admin.apps.collector.models import CreateCollectorProc, EditCollectorBaseProc, EditCollectorContactsProc, EditCollectorBusinessProc
 from larryslist.admin.apps.collector.sources_form import SingleSourceForm, BaseAdminForm
-from larryslist.lib.formlib.formfields import REQUIRED, StringField, BaseForm, ChoiceField, configattr, ConfigChoiceField, DateField, MultipleFormField, IMPORTANT, TypeAheadField, EmailField, HeadingField, URLField, PlainHeadingField, StaticHiddenField, MultiConfigChoiceField, TokenTypeAheadField, HiddenField, Placeholder
+from larryslist.lib.formlib.formfields import REQUIRED, StringField, BaseForm, ChoiceField, configattr, ConfigChoiceField, DateField, MultipleFormField, IMPORTANT, TypeAheadField, EmailField, HeadingField, URLField, PlainHeadingField, StaticHiddenField, MultiConfigChoiceField, TokenTypeAheadField, HiddenField, Placeholder, PictureUploadField, PictureUploadAttrs
 
 __author__ = 'Martin'
 
@@ -33,19 +33,24 @@ class UniversityForm(MultipleFormField):
 class CollectorCreateForm(BaseAdminForm):
     id = "basic"
     label = "Basic"
-
-    fields = [
+    fields_col1 = [
         StringField('firstName', 'First Name', REQUIRED)
         , StringField('lastName', 'Last Name', REQUIRED)
         , StringField('origName', 'Name in orig. Language')
         , ConfigChoiceField('title', 'Title', 'Title', IMPORTANT)
         , DateField('dob', 'Born', IMPORTANT)
-        , ConfigChoiceField('gender', 'Gender', 'Gender', IMPORTANT)
+    ]
+    fields_col2 = [
+        ConfigChoiceField('gender', 'Gender', 'Gender', IMPORTANT)
         , ConfigChoiceField('nationality', 'Nationality', 'Nationality', IMPORTANT)
-        , AddressForm('Address', 'Location')
+        , PictureUploadField('picture', 'Picture', attrs = PictureUploadAttrs())
+    ]
+    fields_general = [
+        AddressForm('Address', 'Location')
         , UniversityForm('University', classes = 'form-embedded-wrapper form-inline')
         , MultiConfigChoiceField('name', 'Area of interest', "Interest", "Interest")
     ]
+
 
     @classmethod
     def persist(cls, request, values):
@@ -72,25 +77,18 @@ class CollectorEditForm(CollectorCreateForm):
 
 
 
-
-
 class MultiEmailField(MultipleFormField):
-    fields = [EmailField('address', 'Email', IMPORTANT)]
-
+    fields = [EmailField('address', 'Email', IMPORTANT, input_classes="input-xlarge")]
 class NetworkField(MultipleFormField):
-    fields = [
-        ConfigChoiceField('name', None, 'Network', default_none = False), URLField('url', '', attrs = Placeholder("link"))
-    ]
-
-
+    fields = [ConfigChoiceField('name', None, 'Network', default_none = False), URLField('url', '', attrs = Placeholder("link"))]
 class CollectorContactsForm(BaseAdminForm):
     id = "contacts"
     label = "Contacts"
-    fields = [
-        MultiEmailField('Email', None)
+    fields_general = [
+        URLField('wikipedia', 'Wikipedia', IMPORTANT, input_classes="input-xlarge")
+        , MultiEmailField('Email', None)
         , PlainHeadingField("Social networks")
         , NetworkField("Network", classes = "form-controls-inline form-inline form-embedded-wrapper")
-        , StringField('wikipedia', 'Wikipedia', IMPORTANT)
     ]
     @classmethod
     def persist(cls, request, values):
@@ -127,7 +125,7 @@ class CompanyForm(MultipleFormField):
 class CollectorBusinessForm(BaseAdminForm):
     id = "business"
     label = "Business / Industry"
-    fields = [
+    fields_general = [
         CompanyForm("Company")
         , PlainHeadingField('Further industries / type of businesses')
         , MultiConfigChoiceField('name', 'Name', "Industry", "Industry", attrs = REQUIRED)
@@ -146,4 +144,4 @@ class CollectorBusinessForm(BaseAdminForm):
 
 
 class CollectionAddCollectorForm(CollectorCreateForm):
-    fields = CollectorCreateForm.fields + [HiddenField('collectionId')]
+    fields_general = CollectorCreateForm.fields + [HiddenField('collectionId')]

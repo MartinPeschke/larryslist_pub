@@ -30,6 +30,8 @@ class Globals(object):
         self.project_name = settings['project.name']
         self.site_slogan = settings['project.site_slogan']
         self.secure_scheme = settings['deploy.secure_scheme']
+        self.uploadUrl = settings['deploy.upload_url']
+        self.resourceHost = settings['deploy.resource_host']
 
         self.available_locales = settings['pyramid.available_locales'].split()
         self.default_locale_name = settings['pyramid.default_locale_name']

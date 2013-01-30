@@ -31,12 +31,17 @@
     window.__options__ = {clientToken: '${vctxt.settings.clientToken}'
                     , furl: "${request.furl}"
                     , brandName: "${g.project_name}"
-                    , $messagingContainer: $("#message-container")};
+                    , $messagingContainer: $("#message-container")
+                    , staticPrefix: '${ROOT_STATIC_URL}'
+                    , uploadUrl: '${request.globals.uploadUrl}'
+                    , resourceHost: '${request.globals.resourceHost}'
+                    };
     var require = {   urlArgs: "${VERSION_TOKEN}"
                     , baseUrl: "${STATIC_URL}scripts/apps"
                     , paths : {
-                        "tools":"${ROOT_STATIC_URL}scripts/tools"
-                        ,"text":"${ROOT_STATIC_URL}scripts/text"
+                        "tools"     :"${ROOT_STATIC_URL}scripts/tools"
+                        ,"text"     :"${ROOT_STATIC_URL}scripts/text"
+                        ,"plupload" :"${ROOT_STATIC_URL}scripts/plupload/js/plupload.full"
                     }};
   </script>
   <%block name="options"/>
