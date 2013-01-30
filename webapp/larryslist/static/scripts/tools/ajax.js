@@ -48,34 +48,36 @@ define(['tools/messaging', "tools/hash"], function(messaging, hashlib){
           var json = {}, len = list.length, i=0, elem, key, value, keys, k, v, pos, j, add_in_fields;
           for(;i<len;i++){
               key = list[i].name;
-              value = list[i].value;
-              elem = json;
-              keys = key.split(".");
-              for(j=0;j<keys.length - 1;j++){
-                  k = keys[j];
-                  //iterate through indexed list
-                  if(!!~k.indexOf("-")){
-                      pos = parseInt(k.split("-")[1], 10);
-                      k = k.split("-")[0];
-                      if(!elem[k]) elem[k] = []
-                      elem = elem[k];
-                      add_in_fields = pos-elem.length+1;
-                      for(var h=0; h<add_in_fields;h++)
-                          elem.push({});
-                      elem = elem[pos];
-                  } else {
-                      // this is just your average object
-                      if(!elem[k]) elem[k] = {}
-                      elem = elem[k];
+              if(key){
+                  value = list[i].value;
+                  elem = json;
+                  keys = key.split(".");
+                  for(j=0;j<keys.length - 1;j++){
+                      k = keys[j];
+                      //iterate through indexed list
+                      if(!!~k.indexOf("-")){
+                          pos = parseInt(k.split("-")[1], 10);
+                          k = k.split("-")[0];
+                          if(!elem[k]) elem[k] = []
+                          elem = elem[k];
+                          add_in_fields = pos-elem.length+1;
+                          for(var h=0; h<add_in_fields;h++)
+                              elem.push({});
+                          elem = elem[pos];
+                      } else {
+                          // this is just your average object
+                          if(!elem[k]) elem[k] = {}
+                          elem = elem[k];
+                      }
                   }
+                  //multi fields of same name submitted as array
+                  k = keys[keys.length-1];
+                  if(!_.isEmpty(elem[k])){
+                      if(_.isArray(elem[k]))elem[k].push(value)
+                      else elem[k] = [elem[k], value]
+                  } else
+                    elem[keys[keys.length-1]] = value;
               }
-              //multi fields of same name submitted as array
-              k = keys[keys.length-1];
-              if(!_.isEmpty(elem[k])){
-                  if(_.isArray(elem[k]))elem[k].push(value)
-                  else elem[k] = [elem[k], value]
-              } else
-                elem[keys[keys.length-1]] = value;
           }
           return json;
       }

@@ -51,7 +51,7 @@ define(["tools/ajax", "libs/abstractsearch"], function(ajax, AbstractSearch){
                     view.model.add(term);
                     view.$input.val("");
                 });
-                this.search.on('specialItemSelected', function(termname){
+                this.search.on('extraItemSelected unknownterm:selected unknownterm:metaSelected', function(termname){
                     if(termname){
                         view.search.hide();
                         view.model.add({name: termname});
@@ -60,14 +60,13 @@ define(["tools/ajax", "libs/abstractsearch"], function(ajax, AbstractSearch){
                 });
             }
             , addOne: function(model){
-                this.$result.append((new TagView({model: model, prefix: this.options.prefix, pos: this.model.length})).render());
+                this.$result.append((new TagView({model: model, prefix: this.options.prefix, pos: this.model.length - 1})).render());
                 this.search.rePosition();
             }
             , reIndex: function(){
-
-                this.$result.find("input").each(function(idx, elem){
+                this.$result.find("input[name]").each(function(idx, elem){
                     var elem = $(elem);
-                    elem.attr('name', elem.attr('name').replace(re, "-"+idx+"."));
+                    elem.attr('name', elem.attr('name').replace(re, "-"+(idx-1)+"."));
                 });
             }
             , getSearch: function(opts){

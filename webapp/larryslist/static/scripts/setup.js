@@ -93,7 +93,8 @@
                             $(element).closest(".control-group").addClass("error").removeClass(validClass).removeClass(validClass);
                         }
                         , unhighlight: function (element, errorClass, validClass) {
-                            if($(element).closest(".controls").find('[for='+$(element).attr("name").replace(/\./g,"\\.")+']').filter("[generated]").remove().length)
+                            var name = $(element).attr("name");
+                            if(name && $(element).closest(".controls").find('[for='+name.replace(/\./g,"\\.")+']').filter("[generated]").remove().length)
                                 $(element).closest(".control-group").removeClass("error").addClass(validClass);
                         }
                         , success: function(label, element){

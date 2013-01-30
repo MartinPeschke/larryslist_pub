@@ -24,7 +24,7 @@ define(["tools/ajax", "libs/abstractsearch"], function(ajax, AbstractSearch){
 
             var editUrl = _.template(editUrlTempl)
             , search = new AbstractSearch({el:el, model: new SearchResult(), searchUrl: "/admin/search/collector"})
-            , onSpecialSelected = function(){
+            , onExtraSelected = function(){
                 window.location.href = createUrl;
                 search.hide();
                 search.$searchBox.blur();
@@ -36,7 +36,7 @@ define(["tools/ajax", "libs/abstractsearch"], function(ajax, AbstractSearch){
                 search.$searchBox.val(collector.getSearchLabel()).blur();
             };
             search.on("selected", onSelected, this);
-            search.on("specialItemSelected", onSpecialSelected, this);
+            search.on("extraItemSelected", onExtraSelected, this);
         };
     return init;
 });

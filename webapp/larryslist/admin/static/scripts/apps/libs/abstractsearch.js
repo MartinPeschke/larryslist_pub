@@ -50,6 +50,8 @@ define(["tools/ajax", "text!templates/searchresult.html"]
                 var curnode = this.$resultNode.find(".active");
                 if(curnode.length){
                     curnode.prev().addClass("active").next().removeClass("active");
+                } else {
+                    this.$resultNode.find(".search-result-item").last().addClass("active");
                 }
             }
             , next: function(){
@@ -128,7 +130,7 @@ define(["tools/ajax", "text!templates/searchresult.html"]
                         this.$resultNode.find(".search-result-item.active").removeClass("active");
                         this.$resultNode.find(".search-result-item[shortcut="+number+"]").addClass("active");
                         if(number == 0){
-                            this._specialItemSelected();
+                            this._extraItemSelected();
                         } else {
                             this.disAmbiguateEvent(e);
                         }
@@ -149,20 +151,21 @@ define(["tools/ajax", "text!templates/searchresult.html"]
                     this._select(res);
                 }
             }
-            , _specialItemSelected: function(){
-                this.trigger("specialItemSelected", this.$searchBox.val().trim());
+            , _extraItemSelected: function(){
+                this.trigger("extraItemSelected", this.$searchBox.val().trim());
             }
             , _metaSelect: function(item){
                 var id = item.attr("data-entity-id"), model = this.model.get(id);
                 if(model)this.trigger("metaSelected", model);
+                else this.trigger("unknownterm:metaSelected", this.$searchBox.val().trim());
             }
             , _select: function(item){
                 if(item.hasClass("create-new-entity")){
-                    this._specialItemSelected();
+                    this._extraItemSelected();
                 } else {
                     var id = item.attr("data-entity-id"), model = this.model.get(id);
                     if(model)this.trigger("selected", model)
-                    else this.trigger("unknownterm", this.$searchBox.val().trim());
+                    else this.trigger("unknownterm:selected", this.$searchBox.val().trim());
                 }
             }
             , buildQuery: function(query){
@@ -196,7 +199,7 @@ define(["tools/ajax", "text!templates/searchresult.html"]
                 var view = this;
                 setTimeout(function(){
                     view.hide();
-                }, 200);
+                }, 20);
             }
             , hide: function(){
                 this.shown = false;
