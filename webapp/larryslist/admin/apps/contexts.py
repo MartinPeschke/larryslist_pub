@@ -1,5 +1,5 @@
 from jsonclient.cached import CachedLoader
-from larryslist.admin.apps.auth.models import getStandardUser
+from larryslist.admin.apps.auth.models import getUserFromSession
 from .models import AdminConfigModel
 from larryslist.lib.baseviews import RootContext
 from larryslist.models import ClientTokenProc
@@ -28,4 +28,12 @@ class AdminRootContext(RootContext):
 
     @reify
     def user(self):
-        return getStandardUser()
+        return getUserFromSession(self.request)
+
+
+class AdminAuthedContext(AdminRootContext):
+    def is_allowed(self, request):
+        if self.user.isAnon():
+            request.fwd("admin_login")
+        else:
+            return True

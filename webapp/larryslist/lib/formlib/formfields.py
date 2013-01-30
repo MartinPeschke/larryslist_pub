@@ -257,6 +257,12 @@ class EmailField(StringField):
     type = 'email'
     validator_args = {'resolve_domain': True}
     _validator = formencode.validators.Email
+class PasswordField(StringField):
+    input_classes = 'input-large'
+    type = 'password'
+    validator_args = {'min': 6}
+    _validator = formencode.validators.String
+
 
 class DateField(StringField):
     input_classes = 'input-large date-field'

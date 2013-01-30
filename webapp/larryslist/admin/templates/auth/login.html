@@ -1,0 +1,45 @@
+<%inherit file="layout.html"/>
+
+<ul class="nav nav-tabs">
+%for form in view.forms:
+    <li class="nav-entry ${'active' if view.isFormActive(form) else ''}">
+        <a class="nav-entry-link" data-toggle="tab" href="#tab-${form.id}">${form.label}</a>
+    </li>
+%endfor
+</ul>
+
+<div class="tab-content">
+    %for form in view.forms:
+        <div class="tab-pane ${'active' if view.isFormActive(form) else ''}" id="tab-${form.id}">
+            ${self.buildBody(form, values.get(form.id), errors.get(form.id))}
+        </div>
+    %endfor
+</div>
+
+
+<%def name="buildBody(form, values, errors)">
+    <form class="${form.classes}" id="${form.id}" method="post">
+        <input type="hidden" name="type" value="${form.id}"/>
+        <input type="hidden" name="furl" value="${request.furl}"/>
+        <input type="hidden" name="token" value="${request.session.get_csrf_token()}"/>
+        <div class="form-fields">
+            %for field in form.fields:
+                ${field.render(form.id, request, values, errors, view)|n}
+            %endfor
+        </div>
+        <div class="form-actions">
+            <button class="btn btn-primary" type="submit">Login</button>
+        </div>
+    </form>
+</%def>
+
+
+<%block name="scripts">
+    <script>
+        require(["views/forms"], function(View){
+            $(".content-body").find(".form-validated").each(function(idx, form){
+                new View({el:form});
+            });
+        });
+    </script>
+</%block>

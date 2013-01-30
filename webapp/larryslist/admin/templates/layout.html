@@ -9,9 +9,20 @@
         <div class="navbar-inner">
             <div class="container">
                 <a class="brand" href="${request.fwd_url("admin_index")}">${g.project_name} - Admin</a>
-                <div class="navbar-search search-field" id="main-search-wrapper">
-                    <input type="text" class="search-query query span5" placeholder="search for a collector" tabindex="5" autocomplete="off">
-                </div>
+
+                %if vctxt.user.isAnon():
+
+                %else:
+                    <div class="navbar-search search-field" id="main-search-wrapper">
+                        <input type="text" class="search-query query span5" placeholder="search for a collector" tabindex="5" autocomplete="off">
+                    </div>
+
+                    <ul class="nav pull-right">
+                        <li class="nav-entry">
+                            <a class="nav-entry-link" href="${request.fwd_url('admin_logout')}">Logout</a>
+                        </li>
+                    </ul>
+                %endif
             </div>
         </div>
     </div>
@@ -38,11 +49,15 @@
 
 <%block name="footer"></%block>
 <%block name="layoutscripts">
-    <script>
-        require(["views/collectorsearch"], function(initSearch){
-            var search = initSearch($('#main-search-wrapper'), '${request.fwd_url("admin_collector_create")}', "${request.ajax_url("admin_collector_edit", escaped = dict(collectorId = '{{ model.id }}'), stage = 'basic')|n}");
-        });
-    </script>
+    %if vctxt.user.isAnon():
+
+    %else:
+        <script>
+            require(["views/collectorsearch"], function(initSearch){
+                var search = initSearch($('#main-search-wrapper'), '${request.fwd_url("admin_collector_create")}', "${request.ajax_url("admin_collector_edit", escaped = dict(collectorId = '{{ model.id }}'), stage = 'basic')|n}");
+            });
+        </script>
+    %endif
 </%block>
 
 

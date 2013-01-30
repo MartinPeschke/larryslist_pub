@@ -1,0 +1,11 @@
+<%inherit file="../layout.html"/>
+
+
+<%block name="content">
+    ${self.header_messages()}
+    <div class="${self.containerClass()} ${self.contentClass()} body-wrapper">
+        <div class="content-body centered-form">
+            ${next.body()}
+        </div>
+    </div>
+</%block>
