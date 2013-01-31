@@ -141,3 +141,16 @@ class CollectorBusinessForm(BaseAdminForm):
 
 class CollectionAddCollectorForm(CollectorCreateForm):
     fields = CollectorCreateForm.fields + [HiddenField('collectionId')]
+
+
+class DocumentForm(MultipleFormField):
+    fields = [
+        ConfigChoiceField("type", "Type", "DocumentType")
+        , PictureUploadField('document', 'Document', attrs = PictureUploadAttrs())
+    ]
+
+class DocumentUploadForm(BaseAdminForm):
+    id = "uploads"
+    fields = [
+        DocumentForm("Documents")
+    ]

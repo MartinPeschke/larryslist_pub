@@ -23,6 +23,7 @@ class MediumModel(NamedConfigModel): pass
 class GenreModel(NamedConfigModel): pass
 class PublisherModel(NamedConfigModel): pass
 class SourceTypeModel(NamedConfigModel): pass
+class DocumentTypeModel(NamedConfigModel): pass
 
 class GenderModel(Mapping):
     key = TextField()
@@ -32,6 +33,7 @@ class GenderModel(Mapping):
 
 GENDER_CHOICES = [GenderModel(key = 'm', label = 'male'), GenderModel(key = 'f', label = 'female')]
 SOCIAL_NETWORKS = [SocNetModel(name = 'Facebook'), SocNetModel(name = 'Linkedin'), SocNetModel(name = 'Twitter'), SocNetModel(name = 'Other')]
+DOCUMENT_TYPES = [DocumentTypeModel(name = 'IMAGE'), DocumentTypeModel(name = 'OTHER')]
 
 class ConfigModel(Mapping):
     Nationality = ListField(DictField(NationalityModel))
@@ -45,3 +47,4 @@ class ConfigModel(Mapping):
     Gender = GENDER_CHOICES
     Publisher = ListField(DictField(PublisherModel))
     SourceType = ListField(DictField(SourceTypeModel))
+    DocumentType = DOCUMENT_TYPES

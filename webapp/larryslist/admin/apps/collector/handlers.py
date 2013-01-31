@@ -2,7 +2,7 @@ from collections import namedtuple
 from jsonclient.backend import DBException, DBMessage
 import formencode
 from larryslist.admin.apps.collector.collections_forms import BaseCollectionForm, CollectionEditForm, CollectionArtistsForm, CollectionWebsiteForm
-from larryslist.admin.apps.collector.collector_forms import CollectorContactsForm, CollectorBusinessForm, CollectorEditForm, CollectorCreateForm, CollectionAddCollectorForm
+from larryslist.admin.apps.collector.collector_forms import CollectorContactsForm, CollectorBusinessForm, CollectorEditForm, CollectorCreateForm, CollectionAddCollectorForm, DocumentUploadForm
 from larryslist.admin.apps.collector.models import GetCollectorDetailsProc, SetSourcesProc, CollectorModel
 from larryslist.admin.apps.collector.sources_form import AddSourcesForm
 from larryslist.lib.formlib.handlers import FormHandler
@@ -111,3 +111,14 @@ class AddCollectorHandler(BaseArtHandler):
             return AddSourcesForm(), self.othercollector.unwrap(sparse = True), {}
         else:
             return None, None, None
+
+
+
+class DocumentUpload(BaseArtHandler):
+    forms = [DocumentUploadForm]
+    def getActiveForm(self):
+        return self.forms[0]
+    def pre_fill_values(self, request, result):
+        value, form = self.collector.unwrap(sparse = True), self.getActiveForm()
+        result['values'][form.id] = form.toFormData(value)
+        return result

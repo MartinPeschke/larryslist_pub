@@ -21,9 +21,15 @@
         ${self.menuLink("Media Recognition", "icon-signal")}
         ${self.menuLink("Other Facts", "icon-arrow-right")}
         <div class="divider"></div>
-        ${self.menuLink("Uploads", "icon-paper-clip")}
-        ${self.menuLink("News", "icon-align-left")}
-        ${self.menuLink("Interaction", "icon-refresh")}
+        %if view.collector:
+            ${self.menuLink("Uploads", "icon-paper-clip", "admin_document_upload", collectorId = view.collector.id)}
+            ${self.menuLink("News", "icon-align-left")}
+            ${self.menuLink("Interaction", "icon-refresh")}
+        %else:
+            ${self.menuLink("Uploads", "icon-paper-clip")}
+            ${self.menuLink("News", "icon-align-left")}
+            ${self.menuLink("Interaction", "icon-refresh")}
+        %endif
     </ul>
 </%def>
 
