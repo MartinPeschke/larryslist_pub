@@ -108,24 +108,39 @@ define(["tools/ajax", "libs/abstractsearch"], function(ajax, AbstractSearch){
 
     , DependentTAS = AbstractSearch.extend({
         buildQuery: function(query){
-            return {filter: this.options.$dependency.val(), type: this.options.apiType, term:query};
+            var params = {}, dep, deps = this.options.dependencies, depMap = this.options.$dependencies, i=0; len=deps.length;
+            if(deps){
+                for(i;i<len;i++){
+                    dep = deps[i];
+                    if(depMap[dep].val()){
+                        params['filterType'] = dep;
+                        params['filter'] = depMap[dep].val();
+                        break;
+                    }
+                }
+            }
+            return _.extend(params, {type: this.options.apiType, term:query});
         }
     })
     , DependentTA = TokenTypeAhead.extend({
         initialize: function(opts){
-            this.dependency = opts.apiDependency;
-            this.$dependency = this.$el
-                                    .closest('[data-sequence], .form-validated')
-                                    .find('[data-api-type='+this.dependency+']')
-                                    .find('.typehead-token');
-            this.$dependency.on({change: _.bind(this.toggleEnabled, this)});
-
+            var view = this;
+            this.dependencies = opts.apiDependency.split(" ");
+            this.$dependencies = {};
+            _.each(this.dependencies, function(dep){
+                view.$dependencies[dep] = view.$el.closest('[data-sequence], .form-validated')
+                    .find('[data-api-type='+dep+']')
+                    .find('.typehead-token');
+                view.$dependencies[dep].on({change: _.bind(view.toggleEnabled, view)});
+            });
             TokenTypeAhead.prototype.initialize.apply(this, arguments);
-
-            this.toggleEnabled(false);
+            view.toggleEnabled(false);
         }
         , toggleEnabled: function(e){
-            var enabled = !!this.$dependency.val();
+            var val = _.filter(this.$dependencies, function(el){
+                return !!el.val();
+            });
+            var enabled = val.length;
             if(enabled){
                 this.$filter.removeAttr('disabled');
                 if(e){
@@ -144,7 +159,8 @@ define(["tools/ajax", "libs/abstractsearch"], function(ajax, AbstractSearch){
                 , model: new SearchResult([], {apiResult: opts.apiResult})
                 , apiType: opts.apiType
                 , searchUrl: opts.apiUrl
-                , '$dependency': this.$dependency
+                , '$dependencies': this.$dependencies
+                , 'dependencies': this.dependencies
             });
         }
     })

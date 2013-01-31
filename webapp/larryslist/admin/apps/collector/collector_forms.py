@@ -13,7 +13,7 @@ class AddressForm(MultipleFormField):
     fields = [
         TokenTypeAheadField('Country', 'Country', '/admin/search/address', 'AddressSearchResult', None, REQUIRED)
         , TokenTypeAheadField('Region', 'Region', '/admin/search/address', 'AddressSearchResult', 'Country', REQUIRED)
-        , TokenTypeAheadField('City', 'City', '/admin/search/address', 'AddressSearchResult', 'Region', REQUIRED)
+        , TokenTypeAheadField('City', 'City', '/admin/search/address', 'AddressSearchResult', 'Country Region', REQUIRED)
         , StringField('postCode', 'Post Code')
         , StringField('line1', 'Street 1')
         , StringField('line2', 'Street 2')
@@ -111,7 +111,7 @@ class CompanyForm(MultipleFormField):
         , PlainHeadingField("Location", tag="span", classes = "heading-absolute")
         , TokenTypeAheadField('Country', 'Country', '/admin/search/address', 'AddressSearchResult', None)
         , TokenTypeAheadField('Region', 'Region', '/admin/search/address', 'AddressSearchResult', 'Country')
-        , TokenTypeAheadField('City', 'City', '/admin/search/address', 'AddressSearchResult', 'Region')
+        , TokenTypeAheadField('City', 'City', '/admin/search/address', 'AddressSearchResult', 'Country Region')
         , StringField('postCode', 'Post Code')
         , StringField('line1', 'Street 1')
         , StringField('line2', 'Street 2')
