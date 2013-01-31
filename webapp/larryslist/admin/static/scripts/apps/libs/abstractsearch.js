@@ -200,7 +200,7 @@ define(["tools/ajax", "text!templates/searchresult.html"]
                 var view = this;
                 setTimeout(function(){
                     view.hide();
-                }, 20);
+                }, 200);
             }
             , hide: function(){
                 this.shown = false;
