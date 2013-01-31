@@ -13,7 +13,7 @@ class SingleSourceForm(MultipleFormField):
         , StringField('title', None, attrs = DependentAttrs('Book title/Newspaper name', dependency='type', dependencyValue= 'Book Magazine Newspaper'))
         , StringField('publisher', None, attrs = DependentAttrs('Publisher', dependency='type', dependencyValue= 'Book'))
         , StringField('author', None, attrs = DependentAttrs('Author', dependency='type', dependencyValue= 'Book'))
-        , StringField('year', None, attrs = DependentAttrs('Year published', dependency='type', dependencyValue= 'Book'))
+        , StringField('year', None, input_classes="input-mini", attrs = DependentAttrs('Year published', dependency='type', dependencyValue= 'Book'))
 
         , StringField('name', None, attrs = DependentAttrs('Article title', dependency='type', dependencyValue= 'Newspaper Magazine'))
         , StringField('date', None, attrs = DependentAttrs('Date / Volume', dependency='type', dependencyValue= 'Newspaper Magazine'))

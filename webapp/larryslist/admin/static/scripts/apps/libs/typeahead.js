@@ -108,18 +108,14 @@ define(["tools/ajax", "libs/abstractsearch"], function(ajax, AbstractSearch){
 
     , DependentTAS = AbstractSearch.extend({
         buildQuery: function(query){
-            var params = {}, dep, deps = this.options.dependencies, depMap = this.options.$dependencies, i=0; len=deps.length;
-            if(deps){
-                for(i;i<len;i++){
-                    dep = deps[i];
-                    if(depMap[dep].val()){
-                        params['filterType'] = dep;
-                        params['filter'] = depMap[dep].val();
-                        break;
-                    }
+            var params = {}, depMap = this.options.$dependencies;
+            _.each(depMap, function(el, dep){
+                if(el.val()){
+                    params['filterType'] = dep;
+                    params['filter'] = el.val();
                 }
-            }
-            return _.extend(params, {type: this.options.apiType, term:query});
+            });
+            return query?_.extend(params, {type: this.options.apiType, term:query}):null;
         }
     })
     , DependentTA = TokenTypeAhead.extend({

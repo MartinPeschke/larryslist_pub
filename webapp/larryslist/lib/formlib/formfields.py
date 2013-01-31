@@ -1,5 +1,6 @@
 from datetime import datetime
 from operator import methodcaller
+from xml.sax.saxutils import quoteattr
 import formencode
 from formencode.validators import OneOf
 from larryslist.lib.formlib.validators import DateValidator, TypeAheadValidator
@@ -358,18 +359,24 @@ class TypeAheadField(StringField):
 
 class TagSearchField(StringField):
     template = 'larryslist:lib/formlib/templates/tagsearch.html'
-    def __init__(self, name, label, api_url, api_result, api_allow_new = True, attrs = NONE, classes = 'tagsearch', validator_args = {}):
+    def __init__(self, name, label, api_url, api_result, api_allow_new = True, query_extra={}, attrs = NONE, classes = 'tagsearch', validator_args = {}):
         super(TagSearchField, self).__init__(name, label, attrs, classes, validator_args)
         self.api_result = api_result
-        self.api_allow_new = api_allow_new
+        self.api_allow_new = 'true' if api_allow_new else 'false'
         self.api_type = None
         self.api_url = api_url
+        if query_extra: self.query_extra = simplejson.dumps(query_extra).replace('"', '&quot;')
+        else: self.query_extra = None
 
     def getValidator(self, request):
         return {self.name: formencode.ForEach(name = formencode.validators.String(required=True))}
     def getValueData(self, name, request, value):
-        return simplejson.dumps(value)
-
+        return simplejson.dumps(value) if value else 'null'
+    def getQueryExtra(self):
+        if self.query_extra:
+            return 'data-query-extra="{}"'.format(self.query_extra)
+        else:
+            return ''
 
 
 class TokenTypeAheadField(StringField):

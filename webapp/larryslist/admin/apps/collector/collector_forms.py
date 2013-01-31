@@ -12,7 +12,7 @@ __author__ = 'Martin'
 class AddressForm(MultipleFormField):
     fields = [
         TokenTypeAheadField('Country', 'Country', '/admin/search/address', 'AddressSearchResult', None, REQUIRED)
-        , TokenTypeAheadField('Region', 'Region', '/admin/search/address', 'AddressSearchResult', 'Country', REQUIRED)
+        , TokenTypeAheadField('Region', 'Region', '/admin/search/address', 'AddressSearchResult', 'Country')
         , TokenTypeAheadField('City', 'City', '/admin/search/address', 'AddressSearchResult', 'Country Region', REQUIRED)
         , StringField('postCode', 'Post Code')
         , StringField('line1', 'Street 1')

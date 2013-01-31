@@ -1,16 +1,18 @@
-from jsonclient import Mapping, TextField
+from jsonclient import Mapping, TextField, DictField, ListField
 from jsonclient.backend import DBMessage
 from larryslist.models import ClientTokenProc
+from larryslist.models.config import NamedConfigModel
 
 __author__ = 'Martin'
 
+class CountryModel(NamedConfigModel): pass
 
 SESSION_KEY = 'ADMIN_USER'
 
 class AdminUser(Mapping):
     token = TextField()
     name = TextField()
-    country = TextField()
+    countries = ListField(DictField(CountryModel))
     type = TextField()
 
     def isAnon(self):

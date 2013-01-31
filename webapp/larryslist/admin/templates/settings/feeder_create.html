@@ -4,6 +4,21 @@
 
 <%block name="contentbody">
     <div class="padded-body">
+        <legend>Current Feeders</legend>
+        <table class="table">
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Countries</th>
+            </tr>
+            %for feeder in feeders:
+            <tr>
+                <td>${feeder.name}</td>
+                <td>${feeder.email}</td>
+                <td>${feeder.countries}</td>
+            </tr>
+            %endfor
+        </table>
         %for form in view.forms:
             ${self.buildBody(form, values.get(form.id), errors.get(form.id))}
         %endfor

@@ -198,6 +198,7 @@ define(["tools/ajax", "text!templates/searchresult.html"]
             }
             , hideonBlur : function(e){
                 var view = this;
+                // timeout to allow for clickevent to happen to select item
                 setTimeout(function(){
                     view.hide();
                 }, 200);

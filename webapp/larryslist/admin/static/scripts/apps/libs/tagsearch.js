@@ -35,6 +35,12 @@ define(["tools/ajax", "libs/abstractsearch"], function(ajax, AbstractSearch){
                 return this.$el;
             }
         })
+        , TagSearch = AbstractSearch.extend({
+            buildQuery: function(query){
+                var extra = this.options.queryExtra;
+                return query?_.extend({'term':query}, extra):null;
+            }
+        })
         , TagSearchView = Backbone.View.extend({
             initialize: function(opts){
                 this.$input = this.$(".query");
@@ -75,11 +81,12 @@ define(["tools/ajax", "libs/abstractsearch"], function(ajax, AbstractSearch){
                 });
             }
             , getSearch: function(opts){
-                return new AbstractSearch({
+                return new TagSearch({
                     el:this.$el
                     , suppressExtra: opts.apiAllowNew
                     , model: new PlainSearchResult([], {apiResult: opts.apiResult})
                     , searchUrl: opts.apiUrl
+                    , queryExtra: opts.queryExtra
                 });
             }
         })

@@ -1,7 +1,7 @@
 from jsonclient.backend import DBMessage
 from larryslist.admin.apps.settings.models import CreateUserProc
 from larryslist.lib.baseviews import GenericSuccessMessage
-from larryslist.lib.formlib.formfields import BaseForm, StringField, EmailField
+from larryslist.lib.formlib.formfields import BaseForm, StringField, EmailField, MultipleFormField, TokenTypeAheadField, TagSearchField
 
 
 class FeederCreateForm(BaseForm):
@@ -9,6 +9,7 @@ class FeederCreateForm(BaseForm):
         StringField("name", "Name")
         , EmailField("email", "Email")
         , StringField("pwd", "Password")
+        , TagSearchField('Country', "Country", "/admin/search/address", "AddressSearchResult", api_allow_new = False, query_extra={'type':'Country'}, classes='tagsearch input-xxlarge')
     ]
 
     @classmethod
