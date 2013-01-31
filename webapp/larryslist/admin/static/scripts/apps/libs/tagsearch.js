@@ -37,12 +37,13 @@ define(["tools/ajax", "libs/abstractsearch"], function(ajax, AbstractSearch){
         })
         , TagSearchView = Backbone.View.extend({
             initialize: function(opts){
-                var view = this;
                 this.$input = this.$(".query");
                 this.$result = this.$(".current-tags");
+                var view = this, seed = this.$result.data().value;
 
                 this.model = new TagModels();
                 this.model.on("add", this.addOne, this);
+                this.model.on("reset", this.addAll, this);
                 this.model.on("destroy", this.reIndex, this);
 
                 this.search = this.getSearch(opts);
@@ -58,10 +59,14 @@ define(["tools/ajax", "libs/abstractsearch"], function(ajax, AbstractSearch){
                         view.$input.val("");
                     }
                 });
+                if(seed)_.each(seed, this.model.add, this.model);
             }
             , addOne: function(model){
                 this.$result.append((new TagView({model: model, prefix: this.options.prefix, pos: this.model.length - 1})).render());
                 this.search.rePosition();
+            }
+            , addAll: function(models){
+                models.each(this.addOne, this);
             }
             , reIndex: function(){
                 this.$result.find("input[name]").each(function(idx, elem){
@@ -72,6 +77,7 @@ define(["tools/ajax", "libs/abstractsearch"], function(ajax, AbstractSearch){
             , getSearch: function(opts){
                 return new AbstractSearch({
                     el:this.$el
+                    , suppressExtra: opts.apiAllowNew
                     , model: new PlainSearchResult([], {apiResult: opts.apiResult})
                     , searchUrl: opts.apiUrl
                 });

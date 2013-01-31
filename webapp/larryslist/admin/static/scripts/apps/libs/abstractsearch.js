@@ -193,6 +193,7 @@ define(["tools/ajax", "text!templates/searchresult.html"]
                     this.$resultNode.show().html(this.template({models:models, withExtra:!this.suppressExtra, total : collection.models.length}));
                     this.shown = true;
                     this.$el.addClass("expanded");
+                    this.rePosition();
                 }
             }
             , hideonBlur : function(e){

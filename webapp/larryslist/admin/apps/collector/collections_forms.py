@@ -6,11 +6,6 @@ from larryslist.lib.formlib.formfields import BaseForm, IntField, CheckboxField,
 __author__ = 'Martin'
 
 
-class RegionOfInterest(MultipleFormField):
-    fields = [
-        StringField('name', "Name")
-    ]
-
 class BaseCollectionForm(BaseAdminForm):
     id = 'basic'
     label = 'Basic'
@@ -21,13 +16,13 @@ class BaseCollectionForm(BaseAdminForm):
         , StringField("foundation", "Name of foundation")
         , IntField('started', "Started collecting in year")
         , PlainHeadingField("Themes in collection")
-        , TagSearchField('Theme', "Tags", "/admin/search/theme", "Theme", classes='tagsearch input-xxlarge')
+        , TagSearchField('Theme', "Tags", "/admin/search/theme", "Theme", api_allow_new = True, classes='tagsearch input-xxlarge')
         , PlainHeadingField("Art Genre / Movement")
         , MultiConfigChoiceField('name', 'Name', "Genre", "Genre")
         , PlainHeadingField("Medium of artworks")
         , MultiConfigChoiceField('name', 'Name', "Medium", "Medium")
         , PlainHeadingField("Region of interest")
-        , RegionOfInterest('Region', '')
+        , TagSearchField('Origin', "Tags", "/admin/search/origin", "Theme", api_allow_new = True, classes='tagsearch input-xxlarge')
     ]
 
     @classmethod

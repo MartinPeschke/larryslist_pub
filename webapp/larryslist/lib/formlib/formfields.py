@@ -5,6 +5,8 @@ from formencode.validators import OneOf
 from larryslist.lib.formlib.validators import DateValidator, TypeAheadValidator
 from larryslist.models.config import NullConfigModel
 from pyramid.renderers import render
+import simplejson
+
 
 class HtmlAttrs(object):
     classes = ''
@@ -356,14 +358,17 @@ class TypeAheadField(StringField):
 
 class TagSearchField(StringField):
     template = 'larryslist:lib/formlib/templates/tagsearch.html'
-    def __init__(self, name, label, api_url, api_result, attrs = NONE, classes = 'tagsearch', validator_args = {}):
+    def __init__(self, name, label, api_url, api_result, api_allow_new = True, attrs = NONE, classes = 'tagsearch', validator_args = {}):
         super(TagSearchField, self).__init__(name, label, attrs, classes, validator_args)
         self.api_result = api_result
+        self.api_allow_new = api_allow_new
         self.api_type = None
         self.api_url = api_url
 
     def getValidator(self, request):
         return {self.name: formencode.ForEach(name = formencode.validators.String(required=True))}
+    def getValueData(self, name, request, value):
+        return simplejson.dumps(value)
 
 
 
