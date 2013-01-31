@@ -1,6 +1,6 @@
 from operator import itemgetter
 from jsonclient.backend import DBException
-from larryslist.admin.apps.collector.models import CreateCollectorProc, EditCollectorBaseProc, EditCollectorContactsProc, EditCollectorBusinessProc
+from larryslist.admin.apps.collector.models import CreateCollectorProc, EditCollectorBaseProc, EditCollectorContactsProc, EditCollectorBusinessProc, SaveCollectionDocumentsProc, SaveCollectorDocumentsProc
 from larryslist.admin.apps.collector.sources_form import SingleSourceForm, BaseAdminForm
 from larryslist.lib.formlib.formfields import REQUIRED, StringField, BaseForm, ChoiceField, configattr, ConfigChoiceField, DateField, MultipleFormField, IMPORTANT, TypeAheadField, EmailField, HeadingField, URLField, PlainHeadingField, StaticHiddenField, MultiConfigChoiceField, TokenTypeAheadField, HiddenField, Placeholder, PictureUploadField, PictureUploadAttrs
 
@@ -146,11 +146,39 @@ class CollectionAddCollectorForm(CollectorCreateForm):
 class DocumentForm(MultipleFormField):
     fields = [
         ConfigChoiceField("type", "Type", "DocumentType")
-        , PictureUploadField('document', 'Document', attrs = PictureUploadAttrs())
+        , PictureUploadField('file', 'Document', attrs = PictureUploadAttrs())
+        , StringField("name", "Name")
     ]
-
 class DocumentUploadForm(BaseAdminForm):
     id = "uploads"
     fields = [
-        DocumentForm("Documents")
+        PlainHeadingField("Collector Documents")
+        , DocumentForm("CollectorDocuments", classes = 'form-embedded-wrapper form-inline')
+        , PlainHeadingField("Collection Documents")
+        , DocumentForm("CollectionDocuments", classes = 'form-embedded-wrapper form-inline')
+        , HiddenField("collectionId")
     ]
+    @classmethod
+    def persist(cls, request, values):
+
+        docs = filter(itemgetter('type'), values.get('CollectorDocuments', []))
+        if docs:
+            try:
+                data = {'Documents':values.get('CollectorDocuments', [])}
+                data['id'] = request.matchdict['collectorId']
+                collector = SaveCollectorDocumentsProc(request, {'Collector':data})
+            except DBException, e:
+                return {'success':False, 'message': e.message}
+
+        docs = filter(itemgetter('type'), values.get('CollectionDocuments', []))
+        if docs:
+            try:
+                collection = values['Collection']
+                collection['Documents'] = values.get('CollectionDocuments', [])
+                data = {'id': request.matchdict['collectorId'], 'Collection': collection}
+                collector = SaveCollectionDocumentsProc(request, {'Collector':data})
+                pass
+            except DBException, e:
+                return {'success':False, 'message': e.message}
+
+        return {'success': True, 'message':"Changes saved!"}

@@ -121,4 +121,5 @@ class DocumentUpload(BaseArtHandler):
     def pre_fill_values(self, request, result):
         value, form = self.collector.unwrap(sparse = True), self.getActiveForm()
         result['values'][form.id] = form.toFormData(value)
+        result['values'][form.id]['collectionId'] = self.collector.Collection.id
         return result
