@@ -23,7 +23,7 @@ class BaseCollectionForm(BaseAdminForm):
         , PlainHeadingField("Medium of artworks")
         , MultiConfigChoiceField('name', 'Name', "Medium", "Medium")
         , PlainHeadingField("Region of interest")
-        , TagSearchField('Origin', "Tags", "/admin/search/address", "Country", api_allow_new = False, classes='tagsearch input-xxlarge')
+        , TagSearchField('Origin', "Tags", "/admin/search/origin", "Origin", api_allow_new = False, classes='tagsearch input-xxlarge')
     ]
 
     @classmethod

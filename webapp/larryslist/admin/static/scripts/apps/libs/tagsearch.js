@@ -22,16 +22,14 @@ define(["tools/ajax", "libs/abstractsearch"], function(ajax, AbstractSearch){
             model: PlainResult
         })
         , TagView = Backbone.View.extend({
-            template : _.template('<span class="tag">{{ model.getSearchLabel() }}<span class="close">×</span><input type="hidden" name="{{ prefix }}-{{ pos }}.name" value="{{ model.id }}"/></span>')
-            , events: {'click .close':"destroy"}
-            , initialize: function(opts){
-                this.setElement(this.template({model:this.model, prefix: opts.prefix, pos:opts.pos}));
-            }
+            events: {'click .close':"destroy"}
+            , initialize: function(){}
             , destroy: function(e){
+                this.remove();
                 this.model.destroy();
-                this.remove()
             }
-            , render: function(){
+            , render: function(opts){
+                this.setElement(opts.template({model:this.model, prefix: opts.prefix, pos:opts.pos}));
                 return this.$el;
             }
         })
@@ -45,11 +43,11 @@ define(["tools/ajax", "libs/abstractsearch"], function(ajax, AbstractSearch){
             initialize: function(opts){
                 this.$input = this.$(".query");
                 this.$result = this.$(".current-tags");
-                var view = this, seed = this.$result.data().value;
+                this.tagTemplate = _.template(this.$(".tag-template").html());
+                var view = this;
 
                 this.model = new TagModels();
                 this.model.on("add", this.addOne, this);
-                this.model.on("reset", this.addAll, this);
                 this.model.on("destroy", this.reIndex, this);
 
                 this.search = this.getSearch(opts);
@@ -65,19 +63,22 @@ define(["tools/ajax", "libs/abstractsearch"], function(ajax, AbstractSearch){
                         view.$input.val("");
                     }
                 });
-                if(seed)_.each(seed, this.model.add, this.model);
+                var seed = this.$result.find(".tag").find("input");
+                if(seed.length)
+                    this.$(".tag").each(function(idx, el){
+                        var model = new PlainResult({name: $(el).find("input[name]").val()});
+                        view.model.add(model, {silent:true});
+                        new TagView({model: model,el:el});
+                    });
             }
             , addOne: function(model){
-                this.$result.append((new TagView({model: model, prefix: this.options.prefix, pos: this.model.length - 1})).render());
+                this.$result.append((new TagView({model: model})).render({template: this.tagTemplate, prefix: this.options.prefix, pos: this.model.length - 1}));
                 this.search.rePosition();
-            }
-            , addAll: function(models){
-                models.each(this.addOne, this);
             }
             , reIndex: function(){
                 this.$result.find("input[name]").each(function(idx, elem){
                     var elem = $(elem);
-                    elem.attr('name', elem.attr('name').replace(re, "-"+(idx-1)+"."));
+                    elem.attr('name', elem.attr('name').replace(re, "-"+(idx)+"."));
                 });
             }
             , getSearch: function(opts){
