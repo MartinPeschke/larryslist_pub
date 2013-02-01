@@ -35,3 +35,21 @@
         </div>
     </form>
 </%def>
+
+
+<%block name="scripts">
+    <script>
+        require(["views/forms"], function(View){
+            $(".content-body").find(".form-validated").each(function(idx, form){
+                new View({el:form, validatorOpts: {
+                    error: function(resp, status, xhr){
+                        if(resp.values && resp.values.isResend){
+                            $(form).find(".resend-button").fadeIn().attr("name", "isResend").attr("value", "true");
+                            $(form).find(".btn-primary").fadeOut();
+                        }
+                    }
+                }});
+            });
+        });
+    </script>
+</%block>
