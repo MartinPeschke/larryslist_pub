@@ -24,7 +24,6 @@ class GenreModel(NamedConfigModel): pass
 class PublisherModel(NamedConfigModel): pass
 class SourceTypeModel(NamedConfigModel): pass
 class DocumentTypeModel(NamedConfigModel): pass
-
 class GenderModel(Mapping):
     key = TextField()
     label = TextField()

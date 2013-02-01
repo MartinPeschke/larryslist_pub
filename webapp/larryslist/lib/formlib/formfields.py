@@ -55,9 +55,9 @@ class PictureUploadAttrs(HtmlAttrs):
         self.required = required
         self.important = important
     def getClasses(self): return ''
-    def getGroupClasses(self): return 'picture-upload-control'
+    def getGroupClasses(self): return 'file-upload-control'
     def getGroupAttrs(self):
-        return 'data-upload-single="{}" data-upload-types="{}"'.format(self.singleFile, self.types)
+        return 'data-upload-single="{}" data-file-types="{}"'.format(self.singleFile, self.types)
 
 
 
@@ -143,6 +143,7 @@ class Field(BaseField):
     template = 'larryslist:lib/formlib/templates/basefield.html'
     is_validated = True
     validator_args = {}
+    if_empty = ''
     type = 'text'
     input_classes = 'input-large'
     def __init__(self, name, label, attrs = NONE, classes = '', validator_args = {}, group_classes = '', label_classes = '', input_classes = ''):
@@ -180,7 +181,7 @@ class Field(BaseField):
         return  '{} {}'.format(self.input_classes, self.attrs.getClasses())
 
     def getValues(self, name, request, values, errors, view):
-        return {'value': values.get(name, ''), 'error':errors.get(name, '')}
+        return {'value': values.get(name, self.if_empty), 'error':errors.get(name, self.if_empty)}
     def render(self, prefix, request, values, errors, view = None):
         if isinstance(errors, formencode.Invalid):
             errors = errors.error_dict
@@ -212,14 +213,6 @@ class MultipleFormField(Field):
     def render(self, prefix, request, values, errors, view = None):
         name = self.name
         return render(self.template, {'widget': self, 'prefix':"{}.{}".format(prefix, self.name), 'value': values.get(name, ''), 'error':errors.get(name, ''), 'view':view}, request)
-
-
-
-
-
-
-
-
 
 
 

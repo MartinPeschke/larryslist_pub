@@ -1,0 +1,55 @@
+<%namespace name="lib" file="../../../lib/formlib/templates/lib.html"/>
+
+<div class="typed-upload-control" data-upload-single="false" data-file-types="*">
+    <script type="template/text" class="file-template">
+        ${self.fileTempl(widget, prefix, "{{ pos }}", "{{ path }}", "{{ fullPath }}", "{{ name }}")}
+    </script>
+    <script type="template/text" class="image-template">
+        ${self.imageTempl(widget, prefix, "{{ pos }}", "{{ path }}", "{{ fullPath }}", "{{ name }}")}
+    </script>
+    <div class="control-group typed-upload-picker">
+        <div class="filelist"></div>
+        <div class="controls">
+            <label>Append files: <a class="btn btn-info btn-upload">Select Files</a></label>
+        </div>
+    </div>
+    %for pos, doc in enumerate(value):
+        %if doc['type'] == 'OTHER':
+            ${self.fileTempl(widget, prefix, str(pos), doc['file'], request.getStaticUrl(doc['file']), doc['name'])}
+        %else:
+            ${self.imageTempl(widget, prefix, str(pos), doc['file'], request.getStaticUrl(doc['file']), doc['name'])}
+        %endif
+    %endfor
+</div>
+
+
+<%def name="fileTempl(widget, prefix, pos, path, fullPath, name)">
+    <div class="typed-uploaded-file other">
+        <a class="close">×</a>
+        <div class="control-group">
+            <input type="hidden" name="${widget.getName(prefix)}-${pos|n}.type" value="OTHER"/>
+            <label class="control-label">File</label>
+            <div class="controls">
+                <a href="${fullPath|n}" class="file-path">Download File</a>
+                <input type="hidden" name="${widget.getName(prefix)}-${pos|n}.file" value="${path|n}"/>
+                <input type="text" class="input-xxlarge" name="${widget.getName(prefix)}-${pos|n}.name" placeholder="File name" value="${name|n}"/>
+            </div>
+        </div>
+    </div>
+</%def>
+<%def name="imageTempl(widget, prefix, pos, path, fullPath, name)">
+    <div class="typed-uploaded-file image">
+        <a class="close">×</a>
+        <div class="control-group">
+            <input type="hidden" name="${widget.getName(prefix)}-${pos|n}.type" value="IMAGE"/>
+            <label class="control-label">Image</label>
+            <div class="controls">
+                <div class="img-wrap img-polaroid"><div class="img-wrap-inner">
+                    <a href="${fullPath|n}" target="_blank"><img src="${fullPath|n}" class="picture" /></a>
+                </div></div>
+               <input type="hidden" name="${widget.getName(prefix)}-${pos|n}.file" value="${path|n}"/>
+               <input type="text" class="input-xxlarge" name="${widget.getName(prefix)}-${pos|n}.name" placeholder="Picture name" value="${name|n}"/>
+           </div>
+        </div>
+    </div>
+</%def>

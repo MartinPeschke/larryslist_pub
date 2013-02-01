@@ -5,7 +5,7 @@
  * Time: 14:20
  * To change this template use File | Settings | File Templates.
  */
-define(['tools/ajax', "tools/fileupload", "libs/typeahead", "libs/tagsearch"], function(ajax, FileUploader, TypeAhead, TagSearch){
+define(['tools/ajax', "libs/fileupload", "libs/typeahead", "libs/tagsearch"], function(ajax, FileUploader, TypeAhead, TagSearch){
     var View = Backbone.View.extend({
         events: {
             "click .remove-link": "removeRow"
@@ -34,7 +34,8 @@ define(['tools/ajax', "tools/fileupload", "libs/typeahead", "libs/tagsearch"], f
             this.$el.find(".typeahead-container").each(_.bind(this.addTypeAhead, this));
             this.$el.find(".tagsearch-container").each(_.bind(this.addTagSearch, this));
             this.$el.find(".dependent-control").each(_.bind(this.addDependent, this));
-            this.$el.find(".picture-upload-control").each(_.bind(this.addPictureUpload, this));
+            this.$el.find(".file-upload-control").each(_.bind(this.addFileUpload, this));
+            this.$el.find(".typed-upload-control").each(_.bind(this.addTypedFileUpload, this));
         }
         , addDependent: function(idx, elem){
             var $target = $(elem), data = $target.data(), wrapper = $target.closest(this.templateSelector), depSrc = wrapper.find('[name$='+data.dependency+']')
@@ -55,13 +56,28 @@ define(['tools/ajax', "tools/fileupload", "libs/typeahead", "libs/tagsearch"], f
         , addTypeAhead: function(idx, elem){
             TypeAhead.init(_.extend({el:elem}, $(elem).data()));
         }
-        , addPictureUpload: function(idx, elem){
+        , addFileUpload: function(idx, elem){
             var fpl = new FileUploader({el: elem});
             fpl.on("file:uploaded", function(file_path, file){
                 var path = hnc.resUrl(file_path);
-                $(elem).find(".img-wrap-inner").empty().html('<img src="'+path+'" class="picture"/>');
-                $(elem).find(".picture-holder").val(file_path);
+                $(elem).find(".profile-picture").remove();
+                $(elem).find(".picture-holder").val(file_path).after('<div class="img-wrap profile-picture img-polaroid"><div class="img-wrap-inner"><img src="'+path+'" class="picture"/></div></div>');
             })
+        }
+        , addTypedFileUpload: function(idx, elem){
+            var view = this
+                , fpl = new FileUploader({el: elem})
+                , $elem = $(elem)
+                , fileTemplate = _.template($elem.find(".file-template").html())
+                , imgTemplate = _.template($elem.find(".image-template").html());
+            fpl.on("file:uploaded", function(file_path, file){
+                var tmpl = (hnc.isPicturePath(file_path)?imgTemplate:fileTemplate)
+                    , pos = this.$(".typed-uploaded-file").length;
+                    this.$el.append(tmpl({name:file.name, fullPath:hnc.resUrl(file_path), path:file_path, pos:pos}));
+            });
+            $elem.on(hnc.support.clickEvent, ".close", function(e){
+                $(e.currentTarget).closest(".typed-uploaded-file").remove();
+            });
         }
         , addRow : function(e){
             if((!e.keyCode || e.keyCode == 13)){
@@ -83,8 +99,10 @@ define(['tools/ajax', "tools/fileupload", "libs/typeahead", "libs/tagsearch"], f
                 if(!new_node.find(".remove-link").length) new_node.prepend(this.removeLink);
                 new_node.find(".numbering").html(new_position+1);
                 templ.after(new_node);
+
                 new_node.find(".typeahead-container").each(_.bind(this.addTypeAhead, this));
                 new_node.find(".dependent-control").each(_.bind(this.addDependent, this));
+
                 new_node.find("[generated]").remove();
                 new_node.find(".error").removeClass("error");
                 new_node.find(".valid").removeClass("valid");

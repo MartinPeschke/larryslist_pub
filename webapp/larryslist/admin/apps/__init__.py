@@ -23,7 +23,6 @@ ROUTE_LIST = [
     , ClassRoute    ("admin_collector_add_collector" , "/collection/add/:collectorId/collector", contexts.AdminAuthedContext, collector.AddCollectorHandler, "collector/collectoradd.html", view_attrs=JSON_FORM_ATTRS)
     , ClassRoute    ("admin_collection_edit"         , "/collection/edit/:collectorId/:stage", contexts.AdminAuthedContext, collector.CollectionEdit, "collector/form.html", view_attrs=JSON_FORM_ATTRS)
     , FunctionRoute ("admin_sources_save"            , "/sources/save/:collectorId", contexts.AdminAuthedContext, collector.sources_save, "json", {'xhr': True, 'request_method':'POST'})
-    , ClassRoute    ("admin_document_upload"         , "/documents/upload/:collectorId", contexts.AdminAuthedContext, collector.DocumentUpload, "collector/documents.html", view_attrs=JSON_FORM_ATTRS)
 
     # =============================== ADMIN-SETTINGS ===============================
     , ClassRoute    ("admin_settings_feeder_create"  , "/settings/feeder/create", contexts.AdminContext, settings.FeederHandler, "settings/feeder_create.html", view_attrs=JSON_FORM_ATTRS)

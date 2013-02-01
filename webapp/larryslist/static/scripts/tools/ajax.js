@@ -79,7 +79,20 @@ define(['tools/messaging', "tools/hash"], function(messaging, hashlib){
                     elem[keys[keys.length-1]] = value;
               }
           }
-          return json;
+          // filter out holes in indexed arrays
+          var clean_empty = function(elem){
+              if(_.isArray(elem)){
+                  return _.filter(elem, function(e){return !_.isEmpty(e)});
+              } else if(_.isObject(elem)){
+                  _.each(elem, function(val, key){
+                      elem[key] = clean_empty(val);
+                  });
+                  return elem;
+              } else {
+                return elem;
+              }
+          };
+          return clean_empty(json);
       }
       , serializeJSON : function(form) {
           if($(form).is("form"))form = $(form)

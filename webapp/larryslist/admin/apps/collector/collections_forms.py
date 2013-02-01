@@ -1,5 +1,6 @@
 from jsonclient.backend import DBException
-from larryslist.admin.apps.collector.models import CreateCollectionProc, EditCollectionBaseProc, EditCollectionArtistsProc, EditCollectionPublicationsProc
+from larryslist.admin.apps.collector.collector_forms import TypedFileUploadField
+from larryslist.admin.apps.collector.models import CreateCollectionProc, EditCollectionBaseProc, EditCollectionArtistsProc, EditCollectionPublicationsProc, SaveCollectionDocumentsProc
 from larryslist.admin.apps.collector.sources_form import BaseAdminForm
 from larryslist.lib.formlib.formfields import BaseForm, IntField, CheckboxField, IMPORTANT, StringField, MultiConfigChoiceField, ApproxField, HiddenField, MultipleFormField, TypeAheadField, PlainHeadingField, ConfigChoiceField, URLField, TagSearchField
 
@@ -30,7 +31,7 @@ class BaseCollectionForm(BaseAdminForm):
         collectorId = request.matchdict['collectorId']
         values = {'id': request.matchdict['collectorId'], 'Collection':values}
         try:
-            collection = CreateCollectionProc(request, {'Collector':values})
+            collection = CreateCollectionProc(request, values)
         except DBException, e:
             return {'success':False, 'message': e.message}
         return {'success': True, 'redirect': request.fwd_url("admin_collection_edit", collectorId = collectorId, stage='basic')}
@@ -44,7 +45,7 @@ class CollectionEditForm(BaseCollectionForm):
     def persist(cls, request, values):
         values = {'id': request.matchdict['collectorId'], 'Collection':values}
         try:
-            collection = EditCollectionBaseProc(request, {'Collector':values})
+            collection = EditCollectionBaseProc(request, values)
         except DBException, e:
             return {'success':False, 'message': e.message}
         return {'success': True, 'message':"Changes saved!"}
@@ -68,7 +69,7 @@ class CollectionArtistsForm(BaseAdminForm):
     def persist(cls, request, values):
         values = {'id': request.matchdict['collectorId'], 'Collection':values}
         try:
-            collection = EditCollectionArtistsProc(request, {'Collector':values})
+            collection = EditCollectionArtistsProc(request, values)
         except DBException, e:
             return {'success':False, 'message': e.message}
         return {'success': True, 'message':"Changes saved!"}
@@ -96,7 +97,25 @@ class CollectionWebsiteForm(BaseAdminForm):
     def persist(cls, request, values):
         values = {'id': request.matchdict['collectorId'], 'Collection': values}
         try:
-            collection = EditCollectionPublicationsProc(request, {'Collector':values})
+            collection = EditCollectionPublicationsProc(request, values)
+        except DBException, e:
+            return {'success':False, 'message': e.message}
+        return {'success': True, 'message':"Changes saved!"}
+
+
+class CollectionUploadForm(BaseAdminForm):
+    id = "uploads"
+    label = "Uploads"
+    fields = [
+        PlainHeadingField("Collection Documents")
+        , TypedFileUploadField("Document", classes = 'form-embedded-wrapper form-inline')
+        , HiddenField('id')
+    ]
+    @classmethod
+    def persist(cls, request, values):
+        try:
+            data = {'id':request.matchdict['collectorId'], 'Collection': values}
+            collector = SaveCollectionDocumentsProc(request, {'Collection':data})
         except DBException, e:
             return {'success':False, 'message': e.message}
         return {'success': True, 'message':"Changes saved!"}

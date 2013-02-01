@@ -1,8 +1,9 @@
 from operator import itemgetter
 from jsonclient.backend import DBException
+import formencode
 from larryslist.admin.apps.collector.models import CreateCollectorProc, EditCollectorBaseProc, EditCollectorContactsProc, EditCollectorBusinessProc, SaveCollectionDocumentsProc, SaveCollectorDocumentsProc
 from larryslist.admin.apps.collector.sources_form import SingleSourceForm, BaseAdminForm
-from larryslist.lib.formlib.formfields import REQUIRED, StringField, BaseForm, ChoiceField, configattr, ConfigChoiceField, DateField, MultipleFormField, IMPORTANT, TypeAheadField, EmailField, HeadingField, URLField, PlainHeadingField, StaticHiddenField, MultiConfigChoiceField, TokenTypeAheadField, HiddenField, Placeholder, PictureUploadField, PictureUploadAttrs
+from larryslist.lib.formlib.formfields import REQUIRED, StringField, BaseForm, ChoiceField, configattr, ConfigChoiceField, DateField, MultipleFormField, IMPORTANT, TypeAheadField, EmailField, HeadingField, URLField, PlainHeadingField, StaticHiddenField, MultiConfigChoiceField, TokenTypeAheadField, HiddenField, Placeholder, PictureUploadField, PictureUploadAttrs, BaseSchema, Field
 
 __author__ = 'Martin'
 
@@ -143,42 +144,38 @@ class CollectionAddCollectorForm(CollectorCreateForm):
     fields = CollectorCreateForm.fields + [HiddenField('collectionId')]
 
 
-class DocumentForm(MultipleFormField):
-    fields = [
-        ConfigChoiceField("type", "Type", "DocumentType")
-        , PictureUploadField('file', 'Document', attrs = PictureUploadAttrs())
-        , StringField("name", "Name")
-    ]
-class DocumentUploadForm(BaseAdminForm):
+
+class TypedFileUploadField(Field):
+    template = 'larryslist:admin/templates/collector/typed_file_upload.html'
+    add_more_link_label = '+'
+    if_empty = {}
+    def __init__(self, name, classes = 'form-embedded-wrapper'):
+        self.name = name
+        self.classes = classes
+        self.optionGetter = configattr('DocumentType', default_none=True)
+    def getClasses(self):
+        return self.classes
+    def getValidator(self, request):
+        validators = {}
+        return {self.name : formencode.ForEach(BaseSchema(type = formencode.validators.String(), file = formencode.validators.String(), name=formencode.validators.String()), not_empty = self.attrs.required)}
+    def getOptions(self, request):
+        return self.optionGetter(request)
+    TYPES = {'IMAGE': "jpg,gif,png", 'OTHER': "*.*"}
+    def getFileTypes(self, dt):
+        return self.TYPES.get(dt.name, 'DISABLED')
+
+class CollectorUploadForm(BaseAdminForm):
     id = "uploads"
+    label = "Uploads"
     fields = [
         PlainHeadingField("Collector Documents")
-        , DocumentForm("CollectorDocuments", classes = 'form-embedded-wrapper form-inline')
-        , PlainHeadingField("Collection Documents")
-        , DocumentForm("CollectionDocuments", classes = 'form-embedded-wrapper form-inline')
-        , HiddenField("collectionId")
+        , TypedFileUploadField("Document", classes = 'form-embedded-wrapper form-inline')
     ]
     @classmethod
     def persist(cls, request, values):
-
-        docs = filter(itemgetter('type'), values.get('CollectorDocuments', []))
-        if docs:
-            try:
-                data = {'Documents':values.get('CollectorDocuments', [])}
-                data['id'] = request.matchdict['collectorId']
-                collector = SaveCollectorDocumentsProc(request, {'Collector':data})
-            except DBException, e:
-                return {'success':False, 'message': e.message}
-
-        docs = filter(itemgetter('type'), values.get('CollectionDocuments', []))
-        if docs:
-            try:
-                collection = values['Collection']
-                collection['Documents'] = values.get('CollectionDocuments', [])
-                data = {'id': request.matchdict['collectorId'], 'Collection': collection}
-                collector = SaveCollectionDocumentsProc(request, {'Collector':data})
-                pass
-            except DBException, e:
-                return {'success':False, 'message': e.message}
-
+        try:
+            values['id'] = request.matchdict['collectorId']
+            collector = SaveCollectorDocumentsProc(request, {'Collector':values})
+        except DBException, e:
+            return {'success':False, 'message': e.message}
         return {'success': True, 'message':"Changes saved!"}

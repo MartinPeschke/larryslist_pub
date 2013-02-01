@@ -129,7 +129,7 @@ label.radio.inline{
   .single-result {
     cursor:pointer;
     padding: 1px 10px;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid @frameBorder;
     &:hover {
       background: #f3f3f3;
     }
@@ -145,10 +145,10 @@ label.radio.inline{
 /* ========================== TAGS ================== */
 .tag {
   display: inline-block;
-  background: #f3f3f3;
+  background: darken(@dimmedBackground, 3%);
   padding: 2px 25px 2px 5px;
   margin: 2px;
-  border: 1px solid #ddd;
+  border: 1px solid @frameBorder;
   border-radius: 3px;
   position: relative;
   .close {
@@ -156,4 +156,42 @@ label.radio.inline{
     top: 3px;
     right: 3px;
   }
+}
+
+/* ======================= FILE UPLOAD ============== */
+
+.typed-upload-picker {
+  background: #f3f3f3;
+  padding: 10px 0 5px;
+  border: 1px solid @frameBorder;
+  .filelist {
+    float: right;
+    width: 33%;
+  }
+}
+
+.typed-uploaded-file {
+  background-color: @dimmedBackground;
+  padding: 10px 0;
+  margin: 2px;
+  .close {
+    padding: 0 10px;
+  }
+}
+.img-wrap {
+  width: 150px;
+  max-height:150px;
+  float: left;
+  margin-right: 20px;
+  overflow: hidden;
+}
+.profile-picture {
+  margin-bottom: 20px;
+  height: 150px;
+}
+.file-path {
+  padding-top: 5px;
+  width: 175px;
+  .text-overflow();
+  display: inline-block;
 }

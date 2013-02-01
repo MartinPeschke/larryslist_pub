@@ -2,6 +2,7 @@
 <%namespace name="lib" file="lib.html"/>
 
 <%block name="controls">
+    <div class="filelist"></div>
     <input type="hidden" name="${widget.getName(prefix)}" value="${value}" class="picture-holder"/>
     <div class="img-wrap profile-picture img-polaroid"><div class="img-wrap-inner">
     %if value:
@@ -9,5 +10,4 @@
     %endif
     </div></div>
     <a class="btn btn-info btn-upload">Select File</a>
-    <div class="filelist"></div>
 </%block>

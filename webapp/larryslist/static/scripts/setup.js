@@ -63,6 +63,9 @@
             , resUrl: function(path){
                 return '//'+this.options.resourceHost +'/'+ path;
             }
+            , isPicturePath: function(path){
+                return /(jpg|png|gif|bmp|tiff|tga)$/.test(path.toLowerCase())
+            }
             , send: function (options) {
                 var params = _.extend({
                     type: "POST"
