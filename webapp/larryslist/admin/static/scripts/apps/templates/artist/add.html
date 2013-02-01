@@ -1,0 +1,29 @@
+<div class="modal hide fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Add an artist</h3>
+    </div>
+    <form class="form-horizontal form-validated" action="post">
+    <div class="modal-body">
+        <div class="control-group">
+            <label class="control-label">
+                Artist name:
+            </label>
+            <div class="controls">
+                <input type="text" class="input-medium" name="name" value="{{ term }}" required>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">
+                Year of birth:
+            </label>
+            <div class="controls">
+                <input type="text" class="input-medium digits" name="yob" value="">
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Save Artist</button>
+    </div>
+    </form>
+</div>

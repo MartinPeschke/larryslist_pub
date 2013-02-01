@@ -56,13 +56,25 @@ define(["tools/ajax", "libs/abstractsearch"], function(ajax, AbstractSearch){
                     view.model.add(term);
                     view.$input.val("");
                 });
-                this.search.on('extraItemSelected unknownterm:selected unknownterm:metaSelected', function(termname){
-                    if(termname){
-                        view.search.hide();
-                        view.model.add({name: termname});
-                        view.$input.val("");
-                    }
-                });
+
+                if(opts.onCreate){
+                    require([opts.onCreate], function(View){
+                        var v = View.init(function(model){
+                            view.model.add(model);
+                            view.$input.val("");
+                        });
+                        view.search.on('extraItemSelected unknownterm:selected unknownterm:metaSelected', v.onCreate);
+                    });
+                } else {
+                    this.search.on('extraItemSelected unknownterm:selected unknownterm:metaSelected', function(termname){
+                        if(termname){
+                            view.search.hide();
+                            view.model.add({name: termname});
+                            view.$input.val("");
+                        }
+                    });
+                }
+
                 var seed = this.$result.find(".tag").find("input");
                 if(seed.length)
                     this.$(".tag").each(function(idx, el){

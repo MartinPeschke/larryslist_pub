@@ -1,8 +1,9 @@
 from jsonclient.backend import DBException
+import formencode
 from larryslist.admin.apps.collector.collector_forms import TypedFileUploadField
 from larryslist.admin.apps.collector.models import CreateCollectionProc, EditCollectionBaseProc, EditCollectionArtistsProc, EditCollectionPublicationsProc, SaveCollectionDocumentsProc
 from larryslist.admin.apps.collector.sources_form import BaseAdminForm
-from larryslist.lib.formlib.formfields import BaseForm, IntField, CheckboxField, IMPORTANT, StringField, MultiConfigChoiceField, ApproxField, HiddenField, MultipleFormField, TypeAheadField, PlainHeadingField, ConfigChoiceField, URLField, TagSearchField
+from larryslist.lib.formlib.formfields import BaseForm, IntField, CheckboxField, IMPORTANT, StringField, MultiConfigChoiceField, ApproxField, HiddenField, MultipleFormField, TypeAheadField, PlainHeadingField, ConfigChoiceField, URLField, TagSearchField, BaseSchema
 
 __author__ = 'Martin'
 
@@ -50,11 +51,16 @@ class CollectionEditForm(BaseCollectionForm):
             return {'success':False, 'message': e.message}
         return {'success': True, 'message':"Changes saved!"}
 
-class ArtistForm(MultipleFormField):
-    fields = [
-        TypeAheadField('name', "Artist", "/admin/search/artist", "Artist", classes='typeahead input-xxlarge')
-    ]
 
+class MultipleArtistField(TagSearchField):
+    if_empty = []
+    template = 'larryslist:admin/templates/collector/artist.html'
+    min_length = 10
+    def getValidator(self, request):
+        return {self.name : formencode.ForEach(BaseSchema(name = formencode.validators.String(if_missing = None)), not_empty = self.attrs.required)}
+
+    def getFillerFields(self, value):
+        return len(value) - self.min_length if value else self.min_length
 
 class CollectionArtistsForm(BaseAdminForm):
     id = 'artist'
@@ -62,7 +68,7 @@ class CollectionArtistsForm(BaseAdminForm):
     fields = [
         HiddenField('id')
         , PlainHeadingField("Artists in Collection")
-        , ArtistForm('Artist', "Artist")
+        , MultipleArtistField('Artist', "Artist", "/admin/search/artist", "Artist")
     ]
 
     @classmethod

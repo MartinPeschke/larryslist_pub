@@ -12,6 +12,7 @@ define(["tools/ajax", "text!templates/searchresult.html"]
 
                 var view = this;
                 this.$searchBox = this.$el.find(".query");
+                this.$searchBoxC = this.$el.find(".search-field");
                 this.$searchBox
                     .on('keypress', $.proxy(this.keypress, this))
                     .on('keyup',    $.proxy(this.keyup, this))
@@ -40,9 +41,9 @@ define(["tools/ajax", "text!templates/searchresult.html"]
                     view.$resultNode.css({marginTop: -1*$(e.target).scrollTop()});
                 }});
                 return function(){
-                    var css = view.$el.offset();
-                    css.top = css.top + view.$el.height();
-                    css.width =  view.$el.width();
+                    var css = view.$searchBoxC.offset();
+                    css.top = css.top + view.$searchBoxC.height();
+                    css.width =  view.$searchBoxC.width();
                     this.$resultNode.css(css);
                 }
             }

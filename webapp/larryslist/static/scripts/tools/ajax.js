@@ -2,7 +2,9 @@ define(['tools/messaging', "tools/hash"], function(messaging, hashlib){
   var opts = window.__options__
   , ajax = {
       submit: function(options){
-              var params = _.extend({
+              var
+              data = _.clone(options.data)
+              , params = _.extend({
                   type: "POST"
                   , dataType: "json"
                   , contentType: "application/json; charset=utf-8"
@@ -16,7 +18,7 @@ define(['tools/messaging', "tools/hash"], function(messaging, hashlib){
                         else {messaging.addError({message:hnc.translate(resp.dbMessage)})}
                   } else if (resp.errorMessage){
                       messaging.addError({message:hnc.translate(resp.errorMessage)});
-                  } else if (options.success) options.success.apply(this, arguments);
+                  } else if (options.success) options.success.apply(this, [resp, status, xhr, data]);
                   if(resp.message){
                       messaging[resp.success?'addSuccess':'addError']({message:resp.message})
                   }

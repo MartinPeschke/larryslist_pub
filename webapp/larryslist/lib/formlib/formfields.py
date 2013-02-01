@@ -340,6 +340,7 @@ class ConfigChoiceField(ChoiceField):
 
 class TypeAheadField(StringField):
     template = 'larryslist:lib/formlib/templates/typeahead.html'
+    if_empty = ''
     def __init__(self, name, label, api_url, api_result, dependency = None, attrs = NONE, classes = 'typeahead', validator_args = {}):
         super(TypeAheadField, self).__init__(name, label, attrs, classes, validator_args)
         self.dependency = dependency
@@ -347,8 +348,6 @@ class TypeAheadField(StringField):
         self.api_type = None
         self.api_url = api_url
 
-    def getValues(self, name, request, values, errors, view):
-        return {'value': values.get(name, ''), 'error':errors.get(name, '')}
 
 class TagSearchField(StringField):
     template = 'larryslist:lib/formlib/templates/tagsearch.html'
