@@ -23,7 +23,7 @@ PROCESS_GROUPS = ['p1']
 CLEAN_SESSIONS = False
 
 
-UPDATE_CMDS = {
+CREATE_CMDS = {
     'dev':"git clone git@github.com:HarryMcCarney/LarrysList.git ."
     , 'demo':"git clone git@github.com:HarryMcCarney/LarrysList.git ."
 }
@@ -65,7 +65,7 @@ def create_env(env):
     files.append("supervisor.cfg", cfg_template.render(env = env), escape=False)
     run("env/bin/supervisord -c supervisor.cfg")
     with cd("repo.git"):
-        run(UPDATE_CMDS[env])
+        run(CREATE_CMDS[env])
     for extra in EXTRA_SETUP:
         run(extra)
 
