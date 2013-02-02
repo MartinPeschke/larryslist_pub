@@ -5,10 +5,16 @@ define(["tools/ajax", "text!templates/artist/add.html"], function(ajax, templ){
                 var $el = $(template({term: term})).appendTo("body");
                 $el.modal("show");
                 $el.find("input").first().focus();
-                ajax.ifyForm({form: $el, url: "/api/0.0.1/admin/artist/create", success: function(resp, status, xhr, data){
-                    success(data);
-                    $el.modal("hide").off().remove();
-                }});
+                ajax.ifyForm({form: $el, url: "/api/0.0.1/admin/artist/create"
+                    , success: function(resp, status, xhr, data){
+                        success(data);
+                        $el.modal("hide").off().remove();
+                    }
+                    , error: function(msg, resp, data){
+                        if(msg == 'ARTIST_ALREADY_EXISTS')success(data);
+                        $el.modal("hide").off().remove();
+                    }
+                });
             }}
         };
     return {init: init};

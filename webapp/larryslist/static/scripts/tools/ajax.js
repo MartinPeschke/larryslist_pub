@@ -14,7 +14,7 @@ define(['tools/messaging', "tools/hash"], function(messaging, hashlib){
                       xhr.redirection = resp.redirect;
                       window.location.href = resp.redirect;
                   } else if (resp.dbMessage){
-                        if(options.error){options.error(resp.dbMessage, resp);}
+                        if(options.error){options.error(resp.dbMessage, resp, data);}
                         else {messaging.addError({message:hnc.translate(resp.dbMessage)})}
                   } else if (resp.errorMessage){
                       messaging.addError({message:hnc.translate(resp.errorMessage)});
@@ -23,9 +23,7 @@ define(['tools/messaging', "tools/hash"], function(messaging, hashlib){
                       messaging[resp.success?'addSuccess':'addError']({message:resp.message})
                   }
               };
-              params.error = function(xhr, status, msg){
-                  messaging.addError({message:msg});
-              };
+              params.error = params.error || function(xhr, status, msg){messaging.addError({message:msg});};
               if (typeof params.data != 'string') { params.data = JSON.stringify(params.data) }
               $.ajax(params);
       }
@@ -112,8 +110,9 @@ define(['tools/messaging', "tools/hash"], function(messaging, hashlib){
                   ajax.submit({
                       url: params.url||$form.attr("action")
                       , data: data
+                      , error: params.error
                       , success: function(resp, status, xhr, data){
-                            if(resp.success === false && resp.errors) {
+                          if(resp.success === false && resp.errors) {
                               var formId = $form.find("[name=type]").val();
                               for(var k in resp.errors) if(/--repetitions$/.test(k))delete resp.errors[k];
                               validator.showErrors(resp.errors);

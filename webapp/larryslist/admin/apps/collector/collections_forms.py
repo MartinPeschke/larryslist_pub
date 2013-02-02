@@ -66,7 +66,7 @@ class CollectionArtistsForm(BaseAdminForm):
     fields = [
         HiddenField('id')
         , PlainHeadingField("Artists in Collection")
-        , MultipleArtistField('Artist', "Artist", "/admin/search/artist", "Artist", attrs = Placeholder("Search for an Artist"), input_classes="input-large")
+        , MultipleArtistField('Artist', "Artist", "/admin/search/artist", "Artist", attrs = Placeholder("Search for an Artist"), input_classes="input-xxlarge")
     ]
 
     @classmethod
