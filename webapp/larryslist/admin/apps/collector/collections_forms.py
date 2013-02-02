@@ -153,12 +153,57 @@ class PositionForm(MultipleFormField):
 
 
 class CollectionMuseumForm(BaseAdminForm):
-    template = "larryslist:admin/templates/collector/museum.html"
+    template = "larryslist:admin/templates/collector/splitform.html"
     id = 'museum'
     label = 'Museum'
+    separateAfter = 2
     fields = [
         PlainHeadingField("Permanent museum or exhibition space")
         , MuseumForm('Museum')
         , PlainHeadingField("Director or curator or head of collection (internal)")
         , PositionForm("Director")
+    ]
+
+
+class LoanForm(MultipleFormField):
+    fields = [
+        StringField("name", "What donated / on loan")
+        , StringField("comment", "Comment")
+        , StringField("year", "Year")
+        , StringField("institution", "Name of institution")
+        , TokenTypeAheadField('Country', 'Country', '/admin/search/address', 'AddressSearchResult', None, REQUIRED)
+        , TokenTypeAheadField('Region', 'Region', '/admin/search/address', 'AddressSearchResult', 'Country')
+        , TokenTypeAheadField('City', 'City', '/admin/search/address', 'AddressSearchResult', 'Country Region', REQUIRED)
+        , StringField('postCode', 'Post Code')
+        , StringField('line1', 'Street 1')
+        , StringField('line2', 'Street 2')
+        , StringField('line3', 'Street 3')
+    ]
+class CooperationForm(MultipleFormField):
+    fields = [
+        ConfigChoiceField('type', "Type of Cooperation", "CooperationType")
+        , StringField("comment", "Name of cooperation / Comment")
+        , StringField("year", "Year")
+        , StringField("institution", "Name of institution")
+        , TokenTypeAheadField('Country', 'Country', '/admin/search/address', 'AddressSearchResult', None, REQUIRED)
+        , TokenTypeAheadField('Region', 'Region', '/admin/search/address', 'AddressSearchResult', 'Country')
+        , TokenTypeAheadField('City', 'City', '/admin/search/address', 'AddressSearchResult', 'Country Region', REQUIRED)
+        , StringField('postCode', 'Post Code')
+        , StringField('line1', 'Street 1')
+        , StringField('line2', 'Street 2')
+        , StringField('line3', 'Street 3')
+    ]
+
+
+class CollectionCooperationForm(BaseAdminForm):
+    template = "larryslist:admin/templates/collector/splitform.html"
+    id="cooperation"
+    label = "Cooperation"
+    separateAfter = 2
+    fields = [
+        PlainHeadingField("Permanent loan / donation of artworks to museum")
+        , LoanForm('Loan')
+        , PlainHeadingField("Cooperation with external museums / institutions")
+        , PlainHeadingField("(e.g. exhibition with part of the collector's private collection)", tag="p")
+        , CooperationForm("Cooperation")
     ]

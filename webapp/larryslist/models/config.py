@@ -18,7 +18,7 @@ class TitleModel(NamedConfigModel): pass
 class IndustryModel(NamedConfigModel): pass
 class PositionModel(NamedConfigModel): pass
 class CollectionPositionModel(NamedConfigModel): pass
-
+class CooperationTypeModel(NamedConfigModel): pass
 class InterestModel(NamedConfigModel): pass
 class SocNetModel(NamedConfigModel): pass
 class MediumModel(NamedConfigModel): pass
@@ -38,6 +38,10 @@ DOCUMENT_TYPES = [DocumentTypeModel(name = 'IMAGE'), DocumentTypeModel(name = 'O
 
 CPM = CollectionPositionModel
 COLLECTION_POSITIONS = [CPM(name = "Director"), CPM(name = "Curator"), CPM(name = "Head of Collection")]
+CTM = CooperationTypeModel
+COOPERATION_TYPES = [CTM(name = "Exhibition of own collection"), CTM(name = "Sponsoring"), CTM(name = "Funding of Award"), CTM(name = "Support of educational program")]
+
+
 
 class ConfigModel(Mapping):
     Nationality = ListField(DictField(NationalityModel))
@@ -53,3 +57,4 @@ class ConfigModel(Mapping):
     SourceType = ListField(DictField(SourceTypeModel))
     DocumentType = DOCUMENT_TYPES
     CollectionPosition = COLLECTION_POSITIONS
+    CooperationType = COOPERATION_TYPES

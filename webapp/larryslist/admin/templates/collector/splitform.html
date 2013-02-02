@@ -5,12 +5,12 @@
         <div class="fixed-height-content tab-pane ${'active' if view.isFormActive(form) else ''}" id="wrap-${form.id}">
             <div class="row-fluid">
                 <div class="span6">
-                    %for field in form.fields[:2]:
+                    %for field in form.fields[:form.separateAfter]:
                        ${field.render(form.id, request, values, errors, view)|n}
                     %endfor
                 </div>
                 <div class="span6">
-                    %for field in form.fields[2:]:
+                    %for field in form.fields[form.separateAfter:]:
                        ${field.render(form.id, request, values, errors, view)|n}
                     %endfor
                 </div>
