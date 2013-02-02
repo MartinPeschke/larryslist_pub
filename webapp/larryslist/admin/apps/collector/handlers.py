@@ -2,7 +2,7 @@ from collections import namedtuple
 from jsonclient.backend import DBException, DBMessage
 import formencode
 from larryslist.admin.apps.collector.collections_forms import BaseCollectionForm, CollectionEditForm, CollectionArtistsForm, CollectionWebsiteForm, CollectionUploadForm, CollectionMuseumForm, CollectionCooperationForm, CollectionArtAdvisor
-from larryslist.admin.apps.collector.collector_forms import CollectorContactsForm, CollectorBusinessForm, CollectorEditForm, CollectorCreateForm, CollectionAddCollectorForm, CollectorUploadForm
+from larryslist.admin.apps.collector.collector_forms import CollectorContactsForm, CollectorBusinessForm, CollectorEditForm, CollectorCreateForm, CollectionAddCollectorForm, CollectorUploadForm, CollectorArtAdvisoryForm, CollectorOtherFactsForm
 from larryslist.admin.apps.collector.models import GetCollectorDetailsProc, SetSourcesProc, CollectorModel
 from larryslist.admin.apps.collector.sources_form import AddSourcesForm
 from larryslist.lib.formlib.handlers import FormHandler
@@ -77,10 +77,10 @@ class BaseArtHandler(FormHandler):
 
 
 class CollectorCreate(BaseArtHandler):
-    forms = [CollectorCreateForm, CollectorContactsForm, CollectorBusinessForm, CollectorUploadForm]
+    forms = [CollectorCreateForm, CollectorContactsForm, CollectorBusinessForm, CollectorArtAdvisoryForm, CollectorOtherFactsForm, CollectorUploadForm]
     def getFormLink(self, stage = 'basic'): return self.getCollectorLink(stage)
 class CollectorEdit(BaseArtHandler):
-    forms = [CollectorEditForm, CollectorContactsForm, CollectorBusinessForm, CollectorUploadForm]
+    forms = [CollectorEditForm, CollectorContactsForm, CollectorBusinessForm, CollectorArtAdvisoryForm, CollectorOtherFactsForm, CollectorUploadForm]
     def pre_fill_values(self, request, result):
         value, form = self.collector.unwrap(sparse = True), self.getActiveForm()
         result['values'][form.id] = form.toFormData(value)

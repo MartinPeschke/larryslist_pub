@@ -235,6 +235,10 @@ class HiddenField(Field):
 
 class StringField(Field):
     _validator = formencode.validators.String
+class TextareaField(Field):
+    template = 'larryslist:lib/formlib/templates/textarea.html'
+    _validator = formencode.validators.String
+
 class IntField(Field):
     input_classes = 'input-mini digits'
     _validator = formencode.validators.Int

@@ -19,6 +19,7 @@ class IndustryModel(NamedConfigModel): pass
 class PositionModel(NamedConfigModel): pass
 class CollectionPositionModel(NamedConfigModel): pass
 class CooperationTypeModel(NamedConfigModel): pass
+class TopMuseumModel(NamedConfigModel): pass
 class InterestModel(NamedConfigModel): pass
 class SocNetModel(NamedConfigModel): pass
 class MediumModel(NamedConfigModel): pass
@@ -41,6 +42,7 @@ COLLECTION_POSITIONS = [CPM(name = "Director"), CPM(name = "Curator"), CPM(name 
 CTM = CooperationTypeModel
 COOPERATION_TYPES = [CTM(name = "Exhibition of own collection"), CTM(name = "Sponsoring"), CTM(name = "Funding of Award"), CTM(name = "Support of educational program")]
 
+TOP_MUSEUMS = [TopMuseumModel(name = "Museum-{}".format(i)) for i in range(100)]
 
 
 class ConfigModel(Mapping):
@@ -58,3 +60,4 @@ class ConfigModel(Mapping):
     DocumentType = DOCUMENT_TYPES
     CollectionPosition = COLLECTION_POSITIONS
     CooperationType = COOPERATION_TYPES
+    TopMuseum = TOP_MUSEUMS

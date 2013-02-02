@@ -67,6 +67,10 @@ class LinkedCollectorModel(Mapping):
     def getName(self):
         return u'{firstName} {lastName}'.format(firstName = self.firstName, lastName = self.lastName)
 
+class OtherFactModel(Mapping):
+    value = TextField()
+
+
 
 class CollectorModel(Mapping):
     id = IntegerField()
@@ -82,8 +86,12 @@ class CollectorModel(Mapping):
     Collection = DictField(CollectionModel)
     Source = DictField(SourceModel)
     LinkedCollector = DictField(LinkedCollectorModel)
+    Fact = ListField(DictField(OtherFactModel))
     def getName(self):
         return u'{firstName} {lastName}'.format(firstName = self.firstName, lastName = self.lastName)
+
+
+SetSourcesProc = ClientTokenProc("/admin/collector/sourceedit", root_key = 'Collector', result_cls=CollectorModel)
 
 CreateCollectorProc = ClientTokenProc("/admin/collector/create", root_key = 'Collector', result_cls=CollectorModel)
 GetCollectorDetailsProc = ClientTokenProc("/admin/collector", root_key = 'Collector', result_cls=CollectorModel)
@@ -91,13 +99,12 @@ GetCollectorDetailsProc = ClientTokenProc("/admin/collector", root_key = 'Collec
 EditCollectorBaseProc = ClientTokenProc("/admin/collector/basicedit", root_key = 'Collector', result_cls=CollectorModel)
 EditCollectorContactsProc = ClientTokenProc("/admin/collector/contactedit", root_key = 'Collector', result_cls=CollectorModel)
 EditCollectorBusinessProc = ClientTokenProc("/admin/collector/businessedit", root_key = 'Collector', result_cls=CollectorModel)
+SaveCollectorDocumentsProc = ClientTokenProc("/admin/collector/document", root_key = 'Collector', result_cls=CollectorModel)
+SaveCollectorOtherFactsProc = ClientTokenProc("/admin/collector/fact", root_key = 'Collector', result_cls=CollectorModel)
 
-SetSourcesProc = ClientTokenProc("/admin/collector/sourceedit", root_key = 'Collector', result_cls=CollectorModel)
 
 CreateCollectionProc = ClientTokenProc("/admin/collection/create", root_key = 'Collection', result_cls=CollectionModel)
 EditCollectionBaseProc = ClientTokenProc("/admin/collection/basicedit", root_key = 'Collection', result_cls=CollectionModel)
 EditCollectionArtistsProc = ClientTokenProc("/admin/collection/artistedit", root_key = 'Collection', result_cls=CollectionModel)
 EditCollectionPublicationsProc = ClientTokenProc("/admin/collection/communicationedit", root_key = 'Collection', result_cls=CollectionModel)
-
-SaveCollectorDocumentsProc = ClientTokenProc("/admin/collector/document", root_key = 'Collection', result_cls=CollectionModel)
 SaveCollectionDocumentsProc = ClientTokenProc("/admin/collection/document", root_key = 'Collection', result_cls=CollectionModel)

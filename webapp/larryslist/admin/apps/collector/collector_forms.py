@@ -1,9 +1,9 @@
 from operator import itemgetter
 from jsonclient.backend import DBException
 import formencode
-from larryslist.admin.apps.collector.models import CreateCollectorProc, EditCollectorBaseProc, EditCollectorContactsProc, EditCollectorBusinessProc, SaveCollectionDocumentsProc, SaveCollectorDocumentsProc
+from larryslist.admin.apps.collector.models import CreateCollectorProc, EditCollectorBaseProc, EditCollectorContactsProc, EditCollectorBusinessProc, SaveCollectionDocumentsProc, SaveCollectorDocumentsProc, SaveCollectorOtherFactsProc
 from larryslist.admin.apps.collector.sources_form import SingleSourceForm, BaseAdminForm
-from larryslist.lib.formlib.formfields import REQUIRED, StringField, BaseForm, ChoiceField, configattr, ConfigChoiceField, DateField, MultipleFormField, IMPORTANT, TypeAheadField, EmailField, HeadingField, URLField, PlainHeadingField, StaticHiddenField, MultiConfigChoiceField, TokenTypeAheadField, HiddenField, Placeholder, PictureUploadField, PictureUploadAttrs, BaseSchema, Field
+from larryslist.lib.formlib.formfields import REQUIRED, StringField, BaseForm, ChoiceField, configattr, ConfigChoiceField, DateField, MultipleFormField, IMPORTANT, TypeAheadField, EmailField, HeadingField, URLField, PlainHeadingField, StaticHiddenField, MultiConfigChoiceField, TokenTypeAheadField, HiddenField, Placeholder, PictureUploadField, PictureUploadAttrs, BaseSchema, Field, TextareaField
 
 __author__ = 'Martin'
 
@@ -179,3 +179,46 @@ class CollectorUploadForm(BaseAdminForm):
         except DBException, e:
             return {'success':False, 'message': e.message}
         return {'success': True, 'message':"Changes saved!"}
+
+
+class MuseumForm(MultipleFormField):
+    fields = [
+        ConfigChoiceField("museum", "Top 100 Museum", "TopMuseum")
+        , StringField("other_name", "Not Top 100 Museum, then name")
+        , ConfigChoiceField('position', 'Position', 'CollectionPosition')
+        , StringField("year", "Year")
+        , TokenTypeAheadField('Country', 'Country', '/admin/search/address', 'AddressSearchResult', None, REQUIRED)
+        , TokenTypeAheadField('Region', 'Region', '/admin/search/address', 'AddressSearchResult', 'Country')
+        , TokenTypeAheadField('City', 'City', '/admin/search/address', 'AddressSearchResult', 'Country Region', REQUIRED)
+        , StringField('postCode', 'Post Code')
+        , StringField('line1', 'Street 1')
+        , StringField('line2', 'Street 2')
+        , StringField('line3', 'Street 3')
+    ]
+
+class CollectorArtAdvisoryForm(BaseAdminForm):
+    id = "artadvisory"
+    label = "Art Engagement"
+    fields = [
+        MuseumForm("Museum")
+    ]
+
+
+class OtherFactForm(MultipleFormField):
+    fields=[TextareaField('value', "Fact", input_classes="span10")]
+class CollectorOtherFactsForm(BaseAdminForm):
+    id = "otherfacts"
+    label = "Other Facts"
+    fields = [
+        PlainHeadingField("Other Facts")
+        , OtherFactForm("Fact")
+    ]
+    @classmethod
+    def persist(cls, request, values):
+        try:
+            values['id'] = request.matchdict['collectorId']
+            collector = SaveCollectorOtherFactsProc(request, {'Collector':values})
+        except DBException, e:
+            return {'success':False, 'message': e.message}
+        return {'success': True, 'message':"Changes saved!"}
+
