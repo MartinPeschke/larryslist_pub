@@ -3,7 +3,7 @@ import formencode
 from larryslist.admin.apps.collector.collector_forms import TypedFileUploadField
 from larryslist.admin.apps.collector.models import CreateCollectionProc, EditCollectionBaseProc, EditCollectionArtistsProc, EditCollectionPublicationsProc, SaveCollectionDocumentsProc
 from larryslist.admin.apps.collector.sources_form import BaseAdminForm
-from larryslist.lib.formlib.formfields import BaseForm, IntField, CheckboxField, IMPORTANT, StringField, MultiConfigChoiceField, ApproxField, HiddenField, MultipleFormField, TypeAheadField, PlainHeadingField, ConfigChoiceField, URLField, TagSearchField, BaseSchema, Placeholder
+from larryslist.lib.formlib.formfields import BaseForm, IntField, CheckboxField, IMPORTANT, StringField, MultiConfigChoiceField, ApproxField, HiddenField, MultipleFormField, TypeAheadField, PlainHeadingField, ConfigChoiceField, URLField, TagSearchField, BaseSchema, Placeholder, TokenTypeAheadField, REQUIRED
 
 __author__ = 'Martin'
 
@@ -55,11 +55,8 @@ class CollectionEditForm(BaseCollectionForm):
 class MultipleArtistField(TagSearchField):
     if_empty = []
     template = 'larryslist:admin/templates/collector/artist.html'
-    min_length = 10
     def getValidator(self, request):
-        return {self.name : formencode.ForEach(BaseSchema(name = formencode.validators.String(if_missing = None)), not_empty = self.attrs.required)}
-    def getFillerFields(self, value):
-        return len(value) - self.min_length if value else self.min_length
+        return {self.name : formencode.ForEach(BaseSchema(id = formencode.validators.String(if_missing = None)), not_empty = self.attrs.required)}
 class CollectionArtistsForm(BaseAdminForm):
     id = 'artist'
     label = 'Artists'
@@ -123,3 +120,45 @@ class CollectionUploadForm(BaseAdminForm):
         except DBException, e:
             return {'success':False, 'message': e.message}
         return {'success': True, 'message':"Changes saved!"}
+
+
+
+class MuseumForm(MultipleFormField):
+    fields = [
+        CheckboxField("has_space", "Has permanent museum/space")
+        , StringField("name", "If yes, name")
+        , StringField("year", "Founded in year")
+        , StringField("website", "Webpage")
+        , TokenTypeAheadField('Country', 'Country', '/admin/search/address', 'AddressSearchResult', None, REQUIRED)
+        , TokenTypeAheadField('Region', 'Region', '/admin/search/address', 'AddressSearchResult', 'Country')
+        , TokenTypeAheadField('City', 'City', '/admin/search/address', 'AddressSearchResult', 'Country Region', REQUIRED)
+        , StringField('postCode', 'Post Code')
+        , StringField('line1', 'Street 1')
+        , StringField('line2', 'Street 2')
+        , StringField('line3', 'Street 3')
+        , StringField('phone', 'Telephone')
+    ]
+class PositionForm(MultipleFormField):
+    fields = [
+        ConfigChoiceField('position', 'Position', 'CollectionPosition')
+        , StringField("lastName", "Last Name")
+        , StringField("firstName", "First Name")
+        , StringField("origName", "Name in orig. Language")
+        , ConfigChoiceField('title', 'Title', 'Title')
+        , ConfigChoiceField('gender', 'Gender', 'Gender')
+        , StringField("email", "Contact Email")
+        , URLField("facebook", "Contact Facebook", input_classes = 'input-large')
+        , URLField("linkedin", "Contact Linked-in", input_classes = 'input-large')
+    ]
+
+
+class CollectionMuseumForm(BaseAdminForm):
+    template = "larryslist:admin/templates/collector/museum.html"
+    id = 'museum'
+    label = 'Museum'
+    fields = [
+        PlainHeadingField("Permanent museum or exhibition space")
+        , MuseumForm('Museum')
+        , PlainHeadingField("Director or curator or head of collection (internal)")
+        , PositionForm("Director")
+    ]

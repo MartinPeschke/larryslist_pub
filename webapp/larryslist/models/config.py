@@ -17,6 +17,8 @@ class NationalityModel(NamedConfigModel): pass
 class TitleModel(NamedConfigModel): pass
 class IndustryModel(NamedConfigModel): pass
 class PositionModel(NamedConfigModel): pass
+class CollectionPositionModel(NamedConfigModel): pass
+
 class InterestModel(NamedConfigModel): pass
 class SocNetModel(NamedConfigModel): pass
 class MediumModel(NamedConfigModel): pass
@@ -34,6 +36,9 @@ GENDER_CHOICES = [GenderModel(key = 'm', label = 'male'), GenderModel(key = 'f',
 SOCIAL_NETWORKS = [SocNetModel(name = 'Facebook'), SocNetModel(name = 'Linkedin'), SocNetModel(name = 'Twitter'), SocNetModel(name = 'Other')]
 DOCUMENT_TYPES = [DocumentTypeModel(name = 'IMAGE'), DocumentTypeModel(name = 'OTHER')]
 
+CPM = CollectionPositionModel
+COLLECTION_POSITIONS = [CPM(name = "Director"), CPM(name = "Curator"), CPM(name = "Head of Collection")]
+
 class ConfigModel(Mapping):
     Nationality = ListField(DictField(NationalityModel))
     Title = ListField(DictField(TitleModel))
@@ -47,3 +52,4 @@ class ConfigModel(Mapping):
     Publisher = ListField(DictField(PublisherModel))
     SourceType = ListField(DictField(SourceTypeModel))
     DocumentType = DOCUMENT_TYPES
+    CollectionPosition = COLLECTION_POSITIONS

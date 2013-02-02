@@ -28,6 +28,7 @@ class AddSourcesForm(BaseForm):
     ]
 
 class BaseAdminForm(BaseForm):
+    template = "larryslist:admin/templates/collector/form.html"
     extra_forms = [AddSourcesForm]
     fields = []
 

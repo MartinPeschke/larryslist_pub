@@ -1,12 +1,12 @@
 
 <div class="artist-embedded-form">
-    <div class="tagsearch-container " data-api-url="${widget.api_url}" data-api="${widget.api_allow_new}" data-api-result="${widget.api_result}" data-prefix="${widget.getName(prefix)}" ${widget.getQueryExtra()|n} data-on-create="views/artist/add">
+    <div class="tagsearch-container" data-custom-module="views/artist/search" data-api-url="${widget.api_url}" data-api="${widget.api_allow_new}" data-api-result="${widget.api_result}" data-api-result-id="name,yob" data-prefix="${widget.getName(prefix)}" ${widget.getQueryExtra()|n} data-on-create="views/artist/add">
         <script type="template/text" class="tag-template">
         ${self.tagTempl(widget, '{{ pos }}', '{{ model.getSearchLabel() }}', '{{ model.id }}')}
         </script>
         <div class="current-tags">
             %for i, tag in enumerate(value):
-                ${self.tagTempl(widget, str(i), tag['name'], tag['name'], True)}
+                ${self.tagTempl(widget, str(i), "{name} - {yob}".format(**tag) if tag.get('yob') else tag['name'], tag['id'], [], True)}
             %endfor
         </div>
         <div class="search-field">
@@ -15,11 +15,27 @@
     </div>
 </div>
 
-<%def name="tagTempl(widget, pos, label, id, saved = False)">
+<%def name="tagTempl(widget, pos, label, id, artworks = [], saved = False)">
     <div class="artists tag">
         %if not saved:
-                <div class="saved-warning">Not saved</div>
+            <div class="saved-warning">Not saved</div>
         %endif
-    ${label|n}
-    <span class="close">×</span><input type="hidden" name="${widget.getName(prefix)}-${pos|n}.name" value="${id|n}"/></div>
+        ${label|n}
+        <span class="close">×</span>
+        <input type="hidden" name="${widget.getName(prefix)}-${pos|n}.id" value="${id|n}"/>
+        <div class="artworks-form-handler">
+            <a class="link open-form" data-toggle-target=".artworks-form-handler" data-toggle-class="expanded">Add Artworks</a>
+        </div>
+    </div>
+</%def>
+
+<%def name="artworkForm()">
+    <div class="control-group">
+        <label class="control-label">
+            Title of artwork
+        </label>
+        <div class="controls">
+
+        </div>
+    </div>
 </%def>

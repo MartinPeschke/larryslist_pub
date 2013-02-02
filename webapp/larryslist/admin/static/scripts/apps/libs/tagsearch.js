@@ -40,13 +40,14 @@ define(["tools/ajax", "libs/abstractsearch"], function(ajax, AbstractSearch){
             }
         })
         , TagSearchView = Backbone.View.extend({
-            initialize: function(opts){
+            MODEL_CLS: TagModels
+            , initialize: function(opts){
                 this.$input = this.$(".query");
                 this.$result = this.$(".current-tags");
                 this.tagTemplate = _.template(this.$(".tag-template").html());
                 var view = this;
 
-                this.model = new TagModels();
+                this.model = new this.MODEL_CLS();
                 this.model.on("add", this.addOne, this);
                 this.model.on("destroy", this.reIndex, this);
 

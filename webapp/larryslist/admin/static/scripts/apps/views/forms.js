@@ -51,7 +51,12 @@ define(['tools/ajax', "libs/fileupload", "libs/typeahead", "libs/tagsearch"], fu
             f(depSrc);
         }
         , addTagSearch: function(idx, elem){
-            TagSearch.init(_.extend({el:elem}, $(elem).data()));
+            var data = _.extend({el:elem}, $(elem).data());
+            if(data.customModule)
+                require([data.customModule], function(V){
+                    V.init(data);
+                });
+            else TagSearch.init(data);
         }
         , addTypeAhead: function(idx, elem){
             TypeAhead.init(_.extend({el:elem}, $(elem).data()));

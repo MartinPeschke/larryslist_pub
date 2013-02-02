@@ -1,0 +1,20 @@
+<%inherit file="form.html"/>
+
+<%def name="buildTabContent(form, values, errors)">
+    <div class="tab-content fixed-height">
+        <div class="fixed-height-content tab-pane ${'active' if view.isFormActive(form) else ''}" id="wrap-${form.id}">
+            <div class="row-fluid">
+                <div class="span6">
+                    %for field in form.fields[:2]:
+                       ${field.render(form.id, request, values, errors, view)|n}
+                    %endfor
+                </div>
+                <div class="span6">
+                    %for field in form.fields[2:]:
+                       ${field.render(form.id, request, values, errors, view)|n}
+                    %endfor
+                </div>
+            </div>
+        </div>
+    </div>
+</%def>
