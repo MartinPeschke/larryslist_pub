@@ -3,7 +3,7 @@ import formencode
 from larryslist.admin.apps.collector.collector_forms import TypedFileUploadField
 from larryslist.admin.apps.collector.models import CreateCollectionProc, EditCollectionBaseProc, EditCollectionArtistsProc, EditCollectionPublicationsProc, SaveCollectionDocumentsProc
 from larryslist.admin.apps.collector.sources_form import BaseAdminForm
-from larryslist.lib.formlib.formfields import BaseForm, IntField, CheckboxField, IMPORTANT, StringField, MultiConfigChoiceField, ApproxField, HiddenField, MultipleFormField, TypeAheadField, PlainHeadingField, ConfigChoiceField, URLField, TagSearchField, BaseSchema
+from larryslist.lib.formlib.formfields import BaseForm, IntField, CheckboxField, IMPORTANT, StringField, MultiConfigChoiceField, ApproxField, HiddenField, MultipleFormField, TypeAheadField, PlainHeadingField, ConfigChoiceField, URLField, TagSearchField, BaseSchema, Placeholder
 
 __author__ = 'Martin'
 
@@ -58,17 +58,15 @@ class MultipleArtistField(TagSearchField):
     min_length = 10
     def getValidator(self, request):
         return {self.name : formencode.ForEach(BaseSchema(name = formencode.validators.String(if_missing = None)), not_empty = self.attrs.required)}
-
     def getFillerFields(self, value):
         return len(value) - self.min_length if value else self.min_length
-
 class CollectionArtistsForm(BaseAdminForm):
     id = 'artist'
     label = 'Artists'
     fields = [
         HiddenField('id')
         , PlainHeadingField("Artists in Collection")
-        , MultipleArtistField('Artist', "Artist", "/admin/search/artist", "Artist")
+        , MultipleArtistField('Artist', "Artist", "/admin/search/artist", "Artist", attrs = Placeholder("Search for an Artist"), input_classes="input-large")
     ]
 
     @classmethod
@@ -80,14 +78,14 @@ class CollectionArtistsForm(BaseAdminForm):
             return {'success':False, 'message': e.message}
         return {'success': True, 'message':"Changes saved!"}
 
+
+
 class PublicationsForm(MultipleFormField):
     fields = [
         StringField('title', "Title")
         , ConfigChoiceField('publisher', 'Publisher', 'Publisher')
         , IntField('year', "Year")
     ]
-
-
 class CollectionWebsiteForm(BaseAdminForm):
     id = 'website'
     label = 'Communication Platforms'

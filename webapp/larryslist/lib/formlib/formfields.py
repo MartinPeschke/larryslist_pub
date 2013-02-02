@@ -130,7 +130,7 @@ class HeadingField(BaseField):
         return self.classes
 
 class PlainHeadingField(BaseField):
-    def __init__(self, label, tag = 'h5', classes = ''):
+    def __init__(self, label, tag = 'h4', classes = ''):
         self.label = label
         self.tag = tag
         self.classes = classes
@@ -351,8 +351,8 @@ class TypeAheadField(StringField):
 
 class TagSearchField(StringField):
     template = 'larryslist:lib/formlib/templates/tagsearch.html'
-    def __init__(self, name, label, api_url, api_result, api_allow_new = True, query_extra={}, attrs = NONE, classes = 'tagsearch', validator_args = {}):
-        super(TagSearchField, self).__init__(name, label, attrs, classes, validator_args)
+    def __init__(self, name, label, api_url, api_result, api_allow_new = True, query_extra={}, attrs = NONE, classes = 'tagsearch', group_classes = '', label_classes = '', input_classes = ''):
+        super(TagSearchField, self).__init__(name, label, attrs, classes, group_classes = group_classes, label_classes = label_classes, input_classes=input_classes)
         self.api_result = api_result
         self.api_allow_new = 'true' if api_allow_new else 'false'
         self.api_type = None

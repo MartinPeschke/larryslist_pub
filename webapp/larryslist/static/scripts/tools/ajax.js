@@ -127,7 +127,10 @@ define(['tools/messaging', "tools/hash"], function(messaging, hashlib){
                             if(resp.message){
                                 messaging[resp.success?'addSuccess':'addError']({message:resp.message});
                             }
-                            if(resp.success)$form.trigger('form:saved', resp, status, xhr, data);
+                            if(resp.success){
+                                $form.find(".saved-warning").fadeOut();
+                                $form.trigger('form:saved', resp, status, xhr, data);
+                            }
                             params.success && params.success(resp, status, xhr, data);
                           }
                       }
