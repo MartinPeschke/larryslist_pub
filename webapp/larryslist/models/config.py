@@ -8,25 +8,25 @@ class NullConfigModel(Mapping):
     def getLabel(self, request):return '---'
 
 
-class NamedConfigModel(Mapping):
+class NamedModel(Mapping):
     name = TextField()
     def getKey(self, request):return self.name
     def getLabel(self, request):return self.name
 
-class NationalityModel(NamedConfigModel): pass
-class TitleModel(NamedConfigModel): pass
-class IndustryModel(NamedConfigModel): pass
-class PositionModel(NamedConfigModel): pass
-class CollectionPositionModel(NamedConfigModel): pass
-class CooperationTypeModel(NamedConfigModel): pass
-class TopMuseumModel(NamedConfigModel): pass
-class InterestModel(NamedConfigModel): pass
-class SocNetModel(NamedConfigModel): pass
-class MediumModel(NamedConfigModel): pass
-class GenreModel(NamedConfigModel): pass
-class PublisherModel(NamedConfigModel): pass
-class SourceTypeModel(NamedConfigModel): pass
-class DocumentTypeModel(NamedConfigModel): pass
+class NationalityModel(NamedModel): pass
+class TitleModel(NamedModel): pass
+class IndustryModel(NamedModel): pass
+class PositionModel(NamedModel): pass
+class CollectionPositionModel(NamedModel): pass
+class CooperationTypeModel(NamedModel): pass
+class TopMuseumModel(NamedModel): pass
+class InterestModel(NamedModel): pass
+class SocNetModel(NamedModel): pass
+class MediumModel(NamedModel): pass
+class GenreModel(NamedModel): pass
+class PublisherModel(NamedModel): pass
+class SourceTypeModel(NamedModel): pass
+class DocumentTypeModel(NamedModel): pass
 class GenderModel(Mapping):
     key = TextField()
     label = TextField()

@@ -108,3 +108,4 @@ EditCollectionBaseProc = ClientTokenProc("/admin/collection/basicedit", root_key
 EditCollectionArtistsProc = ClientTokenProc("/admin/collection/artistedit", root_key = 'Collection', result_cls=CollectionModel)
 EditCollectionPublicationsProc = ClientTokenProc("/admin/collection/communicationedit", root_key = 'Collection', result_cls=CollectionModel)
 SaveCollectionDocumentsProc = ClientTokenProc("/admin/collection/document", root_key = 'Collection', result_cls=CollectionModel)
+SaveCollectionMuseumProc = ClientTokenProc("/admin/collector/directorMuseum", root_key = 'Collection', result_cls=CollectionModel)

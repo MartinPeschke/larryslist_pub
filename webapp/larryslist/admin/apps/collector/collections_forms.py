@@ -1,9 +1,10 @@
 from jsonclient.backend import DBException
 import formencode
 from larryslist.admin.apps.collector.collector_forms import TypedFileUploadField
-from larryslist.admin.apps.collector.models import CreateCollectionProc, EditCollectionBaseProc, EditCollectionArtistsProc, EditCollectionPublicationsProc, SaveCollectionDocumentsProc
+from larryslist.admin.apps.collector.models import CreateCollectionProc, EditCollectionBaseProc, EditCollectionArtistsProc, EditCollectionPublicationsProc, SaveCollectionDocumentsProc, SaveCollectionMuseumProc
 from larryslist.admin.apps.collector.sources_form import BaseAdminForm
-from larryslist.lib.formlib.formfields import BaseForm, IntField, CheckboxField, IMPORTANT, StringField, MultiConfigChoiceField, ApproxField, HiddenField, MultipleFormField, TypeAheadField, PlainHeadingField, ConfigChoiceField, URLField, TagSearchField, BaseSchema, Placeholder, TokenTypeAheadField, REQUIRED, EmailField
+from larryslist.lib.formlib.formfields import BaseForm, IntField, CheckboxField, IMPORTANT, StringField, MultiConfigChoiceField, ApproxField, HiddenField, MultipleFormField, TypeAheadField, PlainHeadingField, ConfigChoiceField, URLField, TagSearchField, BaseSchema, Placeholder, TokenTypeAheadField, REQUIRED, EmailField, RadioChoice
+from larryslist.models.config import NamedModel
 
 __author__ = 'Martin'
 
@@ -122,23 +123,22 @@ class CollectionUploadForm(BaseAdminForm):
         return {'success': True, 'message':"Changes saved!"}
 
 
-
 class MuseumForm(MultipleFormField):
     fields = [
-        CheckboxField("has_space", "Has permanent museum/space")
+        RadioChoice("has_space", "Has permanent museum/space", lambda req: [NamedModel(name = 'true'), NamedModel(name = 'false')] )
         , StringField("name", "If yes, name")
         , StringField("year", "Founded in year")
-        , StringField("website", "Webpage")
-        , TokenTypeAheadField('Country', 'Country', '/admin/search/address', 'AddressSearchResult', None, REQUIRED)
+        , StringField("url", "Webpage")
+        , TokenTypeAheadField('Country', 'Country', '/admin/search/address', 'AddressSearchResult', None)
         , TokenTypeAheadField('Region', 'Region', '/admin/search/address', 'AddressSearchResult', 'Country')
-        , TokenTypeAheadField('City', 'City', '/admin/search/address', 'AddressSearchResult', 'Country Region', REQUIRED)
+        , TokenTypeAheadField('City', 'City', '/admin/search/address', 'AddressSearchResult', 'Country Region')
         , StringField('postCode', 'Post Code')
         , StringField('line1', 'Street 1')
         , StringField('line2', 'Street 2')
         , StringField('line3', 'Street 3')
-        , StringField('phone', 'Telephone')
+        , StringField('telephone', 'Telephone')
     ]
-class PositionForm(MultipleFormField):
+class DirectorForm(MultipleFormField):
     fields = [
         ConfigChoiceField('position', 'Position', 'CollectionPosition')
         , StringField("lastName", "Last Name")
@@ -151,6 +151,14 @@ class PositionForm(MultipleFormField):
         , URLField("linkedin", "Contact Linked-in", input_classes = 'input-large')
     ]
 
+    @classmethod
+    def persist(cls, request, values):
+        try:
+            data = {'id':request.matchdict['collectorId'], 'Collection': values}
+            collector = SaveCollectionMuseumProc(request, {'Collector':data})
+        except DBException, e:
+            return {'success':False, 'message': e.message}
+        return {'success': True, 'message':"Changes saved!"}
 
 class CollectionMuseumForm(BaseAdminForm):
     template = "larryslist:admin/templates/collector/splitform.html"
@@ -161,7 +169,7 @@ class CollectionMuseumForm(BaseAdminForm):
         PlainHeadingField("Permanent museum or exhibition space")
         , MuseumForm('Museum')
         , PlainHeadingField("Director or curator or head of collection (internal)")
-        , PositionForm("Director")
+        , DirectorForm("Director")
     ]
 
 
@@ -171,9 +179,9 @@ class LoanForm(MultipleFormField):
         , StringField("comment", "Comment")
         , StringField("year", "Year")
         , StringField("institution", "Name of institution")
-        , TokenTypeAheadField('Country', 'Country', '/admin/search/address', 'AddressSearchResult', None, REQUIRED)
+        , TokenTypeAheadField('Country', 'Country', '/admin/search/address', 'AddressSearchResult', None)
         , TokenTypeAheadField('Region', 'Region', '/admin/search/address', 'AddressSearchResult', 'Country')
-        , TokenTypeAheadField('City', 'City', '/admin/search/address', 'AddressSearchResult', 'Country Region', REQUIRED)
+        , TokenTypeAheadField('City', 'City', '/admin/search/address', 'AddressSearchResult', 'Country Region')
         , StringField('postCode', 'Post Code')
         , StringField('line1', 'Street 1')
         , StringField('line2', 'Street 2')
@@ -185,9 +193,9 @@ class CooperationForm(MultipleFormField):
         , StringField("comment", "Name of cooperation / Comment")
         , StringField("year", "Year")
         , StringField("institution", "Name of institution")
-        , TokenTypeAheadField('Country', 'Country', '/admin/search/address', 'AddressSearchResult', None, REQUIRED)
+        , TokenTypeAheadField('Country', 'Country', '/admin/search/address', 'AddressSearchResult', None)
         , TokenTypeAheadField('Region', 'Region', '/admin/search/address', 'AddressSearchResult', 'Country')
-        , TokenTypeAheadField('City', 'City', '/admin/search/address', 'AddressSearchResult', 'Country Region', REQUIRED)
+        , TokenTypeAheadField('City', 'City', '/admin/search/address', 'AddressSearchResult', 'Country Region')
         , StringField('postCode', 'Post Code')
         , StringField('line1', 'Street 1')
         , StringField('line2', 'Street 2')

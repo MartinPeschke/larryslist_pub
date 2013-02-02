@@ -327,6 +327,9 @@ class ChoiceField(Field):
     def isSelected(self, option, value, request):
         return option.getKey(request) == value
 
+class RadioChoice(ChoiceField):
+    template = 'larryslist:lib/formlib/templates/radioselect.html'
+    input_classes = 'radio inline'
 def configattr(name, default_none):
     def f(request):
         values = getattr(request.context.config, name)

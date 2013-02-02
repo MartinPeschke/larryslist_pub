@@ -1,11 +1,11 @@
 from jsonclient import Mapping, TextField, DictField, ListField
 from jsonclient.backend import DBMessage
 from larryslist.models import ClientTokenProc
-from larryslist.models.config import NamedConfigModel
+from larryslist.models.config import NamedModel
 
 __author__ = 'Martin'
 
-class CountryModel(NamedConfigModel): pass
+class CountryModel(NamedModel): pass
 
 SESSION_KEY = 'ADMIN_USER'
 
