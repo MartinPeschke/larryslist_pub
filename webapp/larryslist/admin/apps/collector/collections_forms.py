@@ -3,7 +3,7 @@ import formencode
 from larryslist.admin.apps.collector.collector_forms import TypedFileUploadField
 from larryslist.admin.apps.collector.models import CreateCollectionProc, EditCollectionBaseProc, EditCollectionArtistsProc, EditCollectionPublicationsProc, SaveCollectionDocumentsProc
 from larryslist.admin.apps.collector.sources_form import BaseAdminForm
-from larryslist.lib.formlib.formfields import BaseForm, IntField, CheckboxField, IMPORTANT, StringField, MultiConfigChoiceField, ApproxField, HiddenField, MultipleFormField, TypeAheadField, PlainHeadingField, ConfigChoiceField, URLField, TagSearchField, BaseSchema, Placeholder, TokenTypeAheadField, REQUIRED
+from larryslist.lib.formlib.formfields import BaseForm, IntField, CheckboxField, IMPORTANT, StringField, MultiConfigChoiceField, ApproxField, HiddenField, MultipleFormField, TypeAheadField, PlainHeadingField, ConfigChoiceField, URLField, TagSearchField, BaseSchema, Placeholder, TokenTypeAheadField, REQUIRED, EmailField
 
 __author__ = 'Martin'
 
@@ -146,7 +146,7 @@ class PositionForm(MultipleFormField):
         , StringField("origName", "Name in orig. Language")
         , ConfigChoiceField('title', 'Title', 'Title')
         , ConfigChoiceField('gender', 'Gender', 'Gender')
-        , StringField("email", "Contact Email")
+        , EmailField("email", "Contact Email")
         , URLField("facebook", "Contact Facebook", input_classes = 'input-large')
         , URLField("linkedin", "Contact Linked-in", input_classes = 'input-large')
     ]
@@ -193,8 +193,6 @@ class CooperationForm(MultipleFormField):
         , StringField('line2', 'Street 2')
         , StringField('line3', 'Street 3')
     ]
-
-
 class CollectionCooperationForm(BaseAdminForm):
     template = "larryslist:admin/templates/collector/splitform.html"
     id="cooperation"
@@ -206,4 +204,27 @@ class CollectionCooperationForm(BaseAdminForm):
         , PlainHeadingField("Cooperation with external museums / institutions")
         , PlainHeadingField("(e.g. exhibition with part of the collector's private collection)", tag="p")
         , CooperationForm("Cooperation")
+    ]
+
+
+
+class ArtAdvisorForm(MultipleFormField):
+    fields = [
+        StringField("lastName", "Last Name")
+        , StringField("firstName", "First Name")
+        , StringField("origName", "Name in orig. Language")
+        , ConfigChoiceField('title', 'Title', 'Title')
+        , ConfigChoiceField('gender', 'Gender', 'Gender')
+        , StringField("company", "Company")
+        , EmailField("email", "Contact Email")
+        , URLField("facebook", "Contact Facebook", input_classes = 'input-large')
+        , URLField("linkedin", "Contact Linked-in", input_classes = 'input-large')
+    ]
+class CollectionArtAdvisor(BaseAdminForm):
+    id="artadvisor"
+    label = "Art Advisor"
+    fields = [
+        PlainHeadingField("External Art Advisor")
+        , PlainHeadingField("(independent advisor; not employed at collector's museum)", tag="p")
+        , ArtAdvisorForm("ArtAdvisor")
     ]
