@@ -116,7 +116,7 @@ class CollectionUploadForm(BaseAdminForm):
     def persist(cls, request, values):
         try:
             data = {'id':request.matchdict['collectorId'], 'Collection': values}
-            collector = SaveCollectionDocumentsProc(request, {'Collection':data})
+            collector = SaveCollectionDocumentsProc(request, {'Collector':data})
         except DBException, e:
             return {'success':False, 'message': e.message}
         return {'success': True, 'message':"Changes saved!"}
