@@ -7,4 +7,12 @@ $(function(){
         $(window).on({resize:res});
         res();
     }
+
+
+    $(document).on({
+        "click": function(e){
+            var data=  $(e.currentTarget).data();
+            require([data.customModule], function(V){V.init({el:e.currentTarget, data: data})});
+        }
+    },".js-link")
 });

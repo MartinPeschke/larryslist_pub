@@ -7,12 +7,13 @@ define(["tools/ajax", "text!templates/artist/add.html"], function(ajax, templ){
                 $el.find("input").first().focus();
                 ajax.ifyForm({form: $el, url: "/api/0.0.1/admin/artist/create"
                     , success: function(resp, status, xhr, data){
-                        success(data);
+                        success(resp.Artist[0]);
                         $el.modal("hide").off().remove();
                     }
                     , error: function(msg, resp, data){
-                        if(msg == 'ARTIST_ALREADY_EXISTS')success(data);
-                        $el.modal("hide").off().remove();
+                        if(msg == 'ARTIST_ALREADY_EXISTS'){
+                            $el.validate().showErrors({'name':"Artist already exists"})
+                        }
                     }
                 });
             }}

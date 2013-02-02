@@ -5,25 +5,64 @@
     </div>
     <form class="form-horizontal form-validated" action="post">
     <div class="modal-body">
+        <input type="hidden" name="id" value="{{ collectionId }}"/>
+        <input type="hidden" name="Artist-0.id" value="{{ artistId }}"/>
+
         <div class="control-group">
             <label class="control-label">
-                Artist name:
+                Title of artwork:
             </label>
             <div class="controls">
-                <input type="text" class="input-medium" name="name" value="{{ term }}" required>
+                <input type="text" class="input-large" name="Artist-0.Artwork-0.title" required>
             </div>
         </div>
+
         <div class="control-group">
             <label class="control-label">
-                Year of birth:
+                Year of execution:
             </label>
             <div class="controls">
-                <input type="text" class="input-medium digits" name="yob" value="">
+                <input type="text" class="input-mini digits" name="Artist-0.Artwork-0.year">
             </div>
         </div>
+
+        <div class="control-group">
+            <label class="control-label">
+                Media:
+            </label>
+            <div class="controls">
+                <input type="text" class="input-large" name="Artist-0.Artwork-0.medium">
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label">
+                Size:
+            </label>
+            <div class="controls">
+                H <input type="text" class="input-mini digits" name="Artist-0.Artwork-0.height">
+                W <input type="text" class="input-mini digits" name="Artist-0.Artwork-0.width">
+                D <input type="text" class="input-mini digits" name="Artist-0.Artwork-0.depth">
+                <select name="Artist-0.Artwork-0.measurement">
+                    <option value="METRIC">cm</option>
+                    <option value="IMPERIAL">inch</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label">
+                Material:
+            </label>
+            <div class="controls">
+                <input type="text" class="input-large" name="Artist-0.Artwork-0.material">
+            </div>
+        </div>
+
     </div>
     <div class="modal-footer">
         <button type="submit" class="btn btn-primary">Save Artwork</button>
+        <button type="submit" class="btn btn-danger hide" name="Artist-0.Artwork-0.reassign" value="true">Reassign to this Artist</button>
     </div>
     </form>
 </div>

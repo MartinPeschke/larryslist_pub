@@ -1,12 +1,15 @@
 
 <div class="artist-embedded-form">
     <div class="tagsearch-container" data-custom-module="views/artist/search" data-api-url="${widget.api_url}" data-api="${widget.api_allow_new}" data-api-result="${widget.api_result}" data-api-result-id="name,yob" data-prefix="${widget.getName(prefix)}" ${widget.getQueryExtra()|n} data-on-create="views/artist/add">
+        <script type="template/text" class="artwork-template">
+            ${self.singleArtwork('{{ pos }}', '{{ title }}', '{{ year }}' )}
+        </script>
         <script type="template/text" class="tag-template">
-        ${self.tagTempl(widget, '{{ pos }}', '{{ model.getSearchLabel() }}', '{{ model.id }}')}
+            ${self.tagTempl(widget, view.collection.id,'{{ pos }}', '{{ model.getSearchLabel() }}', '{{ model.id }}')}
         </script>
         <div class="current-tags">
-            %for i, tag in enumerate(value):
-                ${self.tagTempl(widget, str(i), "{name} - {yob}".format(**tag) if tag.get('yob') else tag['name'], tag['id'], [], True)}
+            %for i, artist in enumerate(value):
+                ${self.tagTempl(widget, view.collection.id, str(i), "{name} - {yob}".format(**artist) if artist.get('yob') else artist['name'], artist['id'], artist.get("ArtWork", []), True)}
             %endfor
         </div>
         <div class="search-field">
@@ -15,27 +18,27 @@
     </div>
 </div>
 
-<%def name="tagTempl(widget, pos, label, id, artworks = [], saved = False)">
+<%def name="tagTempl(widget, collectionId, pos, label, id, artworks = [], saved = False)">
     <div class="artists tag">
         %if not saved:
             <div class="saved-warning">Not saved</div>
         %endif
-        ${label|n}
+        <div class="pull-left">${label|n}</div>
         <span class="close">×</span>
         <input type="hidden" name="${widget.getName(prefix)}-${pos|n}.id" value="${id|n}"/>
-        <div class="artworks-form-handler">
-            <a class="link open-form" data-toggle-target=".artworks-form-handler" data-toggle-class="expanded">Add Artworks</a>
+        <div class="artworks-form-handler" style="margin-left:20%">
+            <div class="artworks-list">
+                %for i, artwork in enumerate(artworks):
+                    ${self.singleArtwork(str(i+1), artwork['title'], '({year})'.format(**artwork) if artwork.get('year') else '')}
+                %endfor
+            </div>
+            <a class="js-link open-form" data-custom-module="views/artist/artwork" data-artist-id="${id|n}" data-collection-id="${collectionId}">Add Artworks</a>
         </div>
     </div>
 </%def>
 
-<%def name="artworkForm()">
-    <div class="control-group">
-        <label class="control-label">
-            Title of artwork
-        </label>
-        <div class="controls">
-
-        </div>
+<%def name="singleArtwork(pos, title, year = None)">
+    <div class="single-artwork">
+        Artwork <span class="list-position">${pos|n}</span>: ${title|n} ${year|n}
     </div>
 </%def>

@@ -103,6 +103,10 @@ class CollectionEdit(BaseArtHandler):
     def isFormEnabled(self, form): return True
     def getFormLink(self, stage = 'basic'): return self.getCollectionLink(stage)
 
+    @reify
+    def collection(self):
+        return self.collector.Collection
+
 class AddCollectorHandler(BaseArtHandler):
     forms = [CollectionAddCollectorForm, CollectorContactsForm, CollectorBusinessForm]
     def pre_fill_values(self, request, result):
