@@ -83,7 +83,7 @@ class CollectorModel(Mapping):
     firstName = TextField()
     lastName = TextField()
     origName = TextField()
-    dob = DateField()
+    dob = TextField()
     Nationality = TextField()
     Title = TextField()
     Gender = TextField()

@@ -47,7 +47,7 @@ class CollectorCreateForm(BaseAdminForm):
         , StringField('lastName', 'Last Name', REQUIRED)
         , StringField('origName', 'Name in orig. Language')
         , ConfigChoiceField('title', 'Title', 'Title', IMPORTANT)
-        , DateField('dob', 'Born', IMPORTANT)
+        , StringField('dob', 'Born', IMPORTANT)
         , ConfigChoiceField('gender', 'Gender', 'Gender', IMPORTANT)
         , ConfigChoiceField('nationality', 'Nationality', 'Nationality', IMPORTANT)
         , PictureUploadField('picture', 'Picture', attrs = PictureUploadAttrs())
