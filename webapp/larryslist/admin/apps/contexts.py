@@ -1,3 +1,4 @@
+from operator import methodcaller
 from jsonclient.cached import CachedLoader
 from larryslist.admin.apps.auth.models import getUserFromSession
 from .models import AdminConfigModel
@@ -55,7 +56,9 @@ class AdminAuthedContext(AdminRootContext):
         else:
             return True
 
-    header_menu = HEADER_MENU
+    @reify
+    def header_menu(self):
+        return filter(methodcaller("isAllowed", self, self.request), HEADER_MENU)
 
 class AdminContext(AdminAuthedContext):
     def is_allowed(self, request):

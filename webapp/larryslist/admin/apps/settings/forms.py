@@ -1,15 +1,19 @@
 from jsonclient.backend import DBMessage
 from larryslist.admin.apps.settings.models import CreateUserProc
 from larryslist.lib.baseviews import GenericSuccessMessage
-from larryslist.lib.formlib.formfields import BaseForm, StringField, EmailField, MultipleFormField, TokenTypeAheadField, TagSearchField
+from larryslist.lib.formlib.formfields import BaseForm, StringField, EmailField, MultipleFormField, TokenTypeAheadField, TagSearchField, ConfigChoiceField, REQUIRED
 
+
+class CountrySearchField(TagSearchField):
+    template = "larryslist:admin/templates/settings/country.html"
 
 class FeederCreateForm(BaseForm):
     fields = [
+        #ConfigChoiceField("type", "Role", "FeederRole", attrs = REQUIRED)
         StringField("name", "Name")
         , EmailField("email", "Email")
         , StringField("pwd", "Password")
-        , TagSearchField('Country', "Country", "/admin/search/address", "AddressSearchResult", api_allow_new = False, query_extra={'type':'Country'}, classes='tagsearch input-xxlarge')
+        , CountrySearchField('Country', "Country", "/admin/search/address", "AddressSearchResult", api_allow_new = False, query_extra={'type':'Country'}, classes='tagsearch input-xxlarge')
     ]
 
     @classmethod

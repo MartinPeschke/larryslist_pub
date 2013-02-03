@@ -27,6 +27,7 @@ class GenreModel(NamedModel): pass
 class PublisherModel(NamedModel): pass
 class SourceTypeModel(NamedModel): pass
 class DocumentTypeModel(NamedModel): pass
+class FeederRoleModel(NamedModel): pass
 class GenderModel(Mapping):
     key = TextField()
     label = TextField()
@@ -43,7 +44,7 @@ CTM = CooperationTypeModel
 COOPERATION_TYPES = [CTM(name = "Exhibition of own collection"), CTM(name = "Sponsoring"), CTM(name = "Funding of Award"), CTM(name = "Support of educational program")]
 
 TOP_MUSEUMS = [TopMuseumModel(name = "Museum-{}".format(i)) for i in range(100)]
-
+FEEDER_ROLES = [FeederRoleModel(name="REVIEWER"), FeederRoleModel(name="OPERATOR")]
 
 class ConfigModel(Mapping):
     Nationality = ListField(DictField(NationalityModel))
@@ -61,3 +62,4 @@ class ConfigModel(Mapping):
     CollectionPosition = COLLECTION_POSITIONS
     CooperationType = COOPERATION_TYPES
     TopMuseum = TOP_MUSEUMS
+    FeederRole = FEEDER_ROLES

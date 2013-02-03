@@ -11,7 +11,11 @@
                 <a class="brand" href="${request.fwd_url("admin_index")}">${g.project_name} - Admin</a>
 
                 %if vctxt.user.isAnon():
-
+                    <ul class="nav pull-right">
+                        <li class="nav-entry">
+                            <span class="nav-entry-link">Log in</span>
+                        </li>
+                    </ul>
                 %else:
                     <div class="navbar-search" id="main-search-wrapper"><div class="search-field">
                         <input type="text" class="search-query query span5" placeholder="search for a collector" tabindex="5" autocomplete="off">
@@ -21,6 +25,17 @@
                         <li class="nav-entry">
                             <span class="nav-entry-link">Logged in as ${vctxt.user.name}</span>
                         </li>
+                        %if vctxt.user.hasCountries():
+                            <li class="nav-entry">
+                                <span class="nav-entry-link">${vctxt.user.getCountryDisplay()}</span>
+                            </li>
+                        %else:
+                            <li class="nav-entry">
+                                <span class="nav-entry-link">All Countries</span>
+                            </li>
+                        %endif
+
+                        %if vctxt.header_menu:
                         <li class="nav-entry dropdown">
                             <a class="nav-entry-link dropdown-toggle" data-toggle="dropdown" href="#">
                                 Settings
@@ -28,14 +43,13 @@
                             </a>
                             <ul class="dropdown-menu">
                                 %for entry in vctxt.header_menu:
-                                %if entry.isAllowed(vctxt, request):
-                                        <li class="nav-entry">
-                                            <a class="nav-entry-link" href="${request.fwd_url(entry.route)}">${entry.label}</a>
-                                        </li>
-                                %endif
+                                    <li class="nav-entry">
+                                        <a class="nav-entry-link" href="${request.fwd_url(entry.route)}">${entry.label}</a>
+                                    </li>
                                 %endfor
                             </ul>
                         </li>
+                        %endif
                         <li class="nav-entry">
                             <a class="nav-entry-link" href="${request.fwd_url('admin_logout')}">Logout</a>
                         </li>

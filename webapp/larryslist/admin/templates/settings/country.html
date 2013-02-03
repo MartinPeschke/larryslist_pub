@@ -1,0 +1,10 @@
+<%inherit file="larryslist:lib/formlib/templates/tagsearch.html"/>
+
+
+
+<%def name="tagTempl(widget, pos, label, id, token = None)">
+    <%
+        token = '{{ model.get("token") }}' if token is None else ''
+    %>
+    <span class="tag">${label|n}<span class="close">×</span><input type="hidden" name="${widget.getName(prefix)}-${pos|n}.name" value="${id|n}"/><input type="hidden" name="${widget.getName(prefix)}-${pos|n}.token" value="${token|n}"/></span>
+</%def>
