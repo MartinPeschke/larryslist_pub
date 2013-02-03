@@ -151,9 +151,10 @@ class CollectorBusinessForm(BaseAdminForm):
 
 
 class CollectionAddCollectorForm(CollectorCreateForm):
-    fields = CollectorCreateForm.fields + [HiddenField('collectionId')]
-
-
+    fields = [ConfigChoiceField("relation", "Relationship", "Relation", attrs = REQUIRED)] + CollectorCreateForm.fields + [HiddenField('collectionId')]
+    @classmethod
+    def getFormValues(cls, view):
+        return {'collectionId': view.othercollector.Collection.id}
 
 class TypedFileUploadField(Field):
     template = 'larryslist:admin/templates/collector/typed_file_upload.html'

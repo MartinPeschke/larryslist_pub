@@ -19,6 +19,7 @@ class IndustryModel(NamedModel): pass
 class PositionModel(NamedModel): pass
 class CollectionPositionModel(NamedModel): pass
 class CooperationTypeModel(NamedModel): pass
+class RelationshipTypeModel(NamedModel): pass
 
 class InterestModel(NamedModel): pass
 class SocNetModel(NamedModel): pass
@@ -67,4 +68,5 @@ class ConfigModel(Mapping):
     CollectionPosition = COLLECTION_POSITIONS
     CooperationType = COOPERATION_TYPES
     TopMuseum = ListField(DictField(TopMuseumModel))
+    Relation = ListField(DictField(RelationshipTypeModel))
     FeederRole = FEEDER_ROLES

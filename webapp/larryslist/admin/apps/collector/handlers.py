@@ -123,7 +123,10 @@ class AddCollectorHandler(BaseArtHandler):
             return AddSourcesForm(), self.othercollector.unwrap(sparse = True), {}
         else:
             return None, None, None
-
+    def pre_fill_values(self, request, result):
+        form = self.getActiveForm()
+        result['values'][form.id] = form.getFormValues(self)
+        return result
 
 
 
