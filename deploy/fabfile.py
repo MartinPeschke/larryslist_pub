@@ -114,6 +114,7 @@ def build_statics(env, version):
             {project}/static/scripts/libs/jquery.validate.js \
             {project}/static/scripts/libs/jquery.placeholder.js \
             {project}/static/scripts/libs/require.js \
+            {project}/static/scripts/setup.js \
             --warning_level QUIET --js_output_file {project}/static/scripts/build/libs.js".format(project=PROJECTNAME))
 
         for subsite in SUBSITES:
