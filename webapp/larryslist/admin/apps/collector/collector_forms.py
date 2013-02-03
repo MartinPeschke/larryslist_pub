@@ -155,6 +155,16 @@ class CollectionAddCollectorForm(CollectorCreateForm):
     @classmethod
     def getFormValues(cls, view):
         return {'collectionId': view.othercollector.Collection.id}
+    @classmethod
+    def persist(cls, request, values):
+        try:
+            values['LinkedCollector'] = {'id': request.matchdict['collectorId'], 'relation':values.pop("relation")}
+            collector = CreateCollectorProc(request, {'Collector':values})
+        except DBException, e:
+            return {'success':False, 'message': e.message}
+        return {'success': True, 'redirect': request.fwd_url("admin_collector_edit", collectorId = collector.id, stage='basic')}
+
+
 
 class TypedFileUploadField(Field):
     template = 'larryslist:admin/templates/collector/typed_file_upload.html'
