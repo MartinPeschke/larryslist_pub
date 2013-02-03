@@ -310,10 +310,11 @@ class DateField(StringField):
 
 class ChoiceField(Field):
     template = 'larryslist:lib/formlib/templates/dropdown.html'
-    def __init__(self, name, label, optionGetter, attrs = NONE):
+    def __init__(self, name, label, optionGetter, attrs = NONE, input_classes = ''):
         self.name = name
         self.label = label
         self.attrs = attrs
+        self.input_classes = input_classes
         self.optionGetter = optionGetter
 
     def getValidator(self, request):
@@ -334,10 +335,11 @@ def configattr(name, default_none):
         return values
     return f
 class ConfigChoiceField(ChoiceField):
-    def __init__(self, name, label, configAttr, attrs = NONE, default_none = True):
+    def __init__(self, name, label, configAttr, attrs = NONE, default_none = True, input_classes=''):
         self.name = name
         self.label = label
         self.attrs = attrs
+        self.input_classes = input_classes
         self.optionGetter = configattr(configAttr, default_none)
 
 
