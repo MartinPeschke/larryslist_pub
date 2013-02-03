@@ -190,7 +190,7 @@ class LoanForm(MultipleFormField):
 class CooperationForm(MultipleFormField):
     fields = [
         ConfigChoiceField('type', "Type of Cooperation", "CooperationType")
-        , StringField("comment", "Name of cooperation / Comment")
+        , StringField("comment", "Name of cooperation / Comment", label_classes="double")
         , StringField("year", "Year")
         , StringField("institution", "Name of institution")
         , TokenTypeAheadField('Country', 'Country', '/admin/search/address', 'AddressSearchResult', None)

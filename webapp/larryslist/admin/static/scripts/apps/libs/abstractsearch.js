@@ -1,11 +1,12 @@
-define(["tools/ajax", "text!templates/searchresult.html"]
-    , function(ajax, search_result_template){
+define(["tools/hash", "tools/ajax", "text!templates/searchresult.html"]
+    , function(hashlib, ajax, search_result_template){
 
         var numberMap = {48:0,  49:1, 50:2, 51:3, 52:4, 53:5, 54:6, 55:7, 56:8, 57:9, 96:0, 97:1, 98:2, 99:3, 100:4, 101:5, 102:6, 103:7, 104:8, 105:9}
         , AbstractSearch = Backbone.View.extend({
             shown : false
             , template:_.template(search_result_template)
             , initialize: function(opts){
+                this.id = hashlib.UUID();
                 this.template = this.options.template||this.template;
                 this.suppressExtra = this.options.suppressExtra;
                 this.searchUrl = opts.searchUrl;
@@ -13,6 +14,7 @@ define(["tools/ajax", "text!templates/searchresult.html"]
                 var view = this;
                 this.$searchBox = this.$el.find(".query");
                 this.$searchBoxC = this.$el.find(".search-field");
+                this.$scrollWrap = this.$el.closest(".fixed-height");
                 this.$searchBox
                     .on('keypress', $.proxy(this.keypress, this))
                     .on('keyup',    $.proxy(this.keyup, this))
@@ -27,25 +29,24 @@ define(["tools/ajax", "text!templates/searchresult.html"]
                 this.model.on("reset", _.bind(this.onSearchResult, this));
                 this.$resultNode = $('<div class="entity-search-result hide"></div>').appendTo("body");
 
-                this.rePosition = this.position();
-                this.rePosition();
 
                 this.$resultNode.on({'mouseenter' : $.proxy(this.mouseenter, this),
                         'click':_.bind(this.disAmbiguateEvent, this)}, '.search-result-item');
                 this.$resultNode.on({'click': _.bind(this.hide, this)}, ".dismiss");
                 this.deBouncedSearch = _.debounce(_.bind(this.doSearch, this), 50);
             }
-            , position: function(){
-                var view = this;
-                this.$el.closest(".fixed-height").on({scroll:function(e){
-                    view.$resultNode.css({marginTop: -1*$(e.target).scrollTop()});
-                }});
-                return function(){
-                    var css = view.$searchBoxC.offset();
-                    css.top = css.top + view.$searchBoxC.height();
-                    css.width =  view.$searchBoxC.width();
-                    this.$resultNode.css(css);
+            , rePosition: function(){
+                var css = this.$searchBoxC.offset();
+                css.top = css.top + this.$searchBoxC.height();
+
+                if(this.$scrollWrap.length){
+                    var wrap = this.$scrollWrap.offset()
+                    if(css.top > this.$scrollWrap.height() + wrap.top || css.top < wrap.top)
+                         css.display="none";
+                    else css.display="block";
                 }
+                css.width =  this.$searchBoxC.width();
+                this.$resultNode.css(css);
             }
             , prev: function(){
                 var curnode = this.$resultNode.find(".active");
@@ -191,10 +192,8 @@ define(["tools/ajax", "text!templates/searchresult.html"]
             , onSearchResult: function(collection){
                 if(collection){
                     var models = collection.models.slice(0, 9);
-                    this.$resultNode.show().html(this.template({models:models, withExtra:!this.suppressExtra, total : collection.models.length}));
-                    this.shown = true;
-                    this.$el.addClass("expanded");
-                    this.rePosition();
+                    this.$resultNode.html(this.template({models:models, withExtra:!this.suppressExtra, total : collection.models.length}));
+                    this.show();
                 }
             }
             , hideonBlur : function(e){
@@ -204,10 +203,20 @@ define(["tools/ajax", "text!templates/searchresult.html"]
                     view.hide();
                 }, 200);
             }
+
+            , show: function(){
+                this.$resultNode.show();
+                this.shown = true;
+                this.$el.addClass("expanded");
+                this.rePosition();
+                if(this.$scrollWrap.length){this.$scrollWrap.on("scroll."+this.id, _.bind(this.rePosition, this));}
+                this.trigger("show");
+            }
             , hide: function(){
                 this.shown = false;
                 this.$el.removeClass("expanded");
                 this.$resultNode.empty().hide();
+                this.$scrollWrap.off("scroll."+this.id);
                 this.trigger("hide");
             }
             , mouseenter: function(e){

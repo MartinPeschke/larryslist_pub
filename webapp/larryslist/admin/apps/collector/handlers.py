@@ -51,11 +51,11 @@ class BaseArtHandler(FormHandler):
             return req.fwd_url("admin_collection_edit", collectorId = self.collector.id, stage = stage)
         else:
             return req.fwd_url("admin_collection_create", collectorId = self.collector.id)
-    def getSourcesForm(self):
+    def getSourceValues(self):
         if self.collector:
-            return AddSourcesForm(), self.collector.unwrap(sparse = True), {}
+            return self.collector.unwrap(sparse = True), {}
         else:
-            return None, None, None
+            return None, None
 
     def isFormEnabled(self, form): return self.forms[0].id == form.id
     def getForms(self): return self.forms
