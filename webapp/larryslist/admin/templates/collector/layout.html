@@ -46,7 +46,7 @@
             <div class="nav-entry-link">
                 <% lc = collector.LinkedCollector %>
                 %if lc:
-                    Linked collector: <a href="${request.fwd_url("admin_collector_edit", collectorId = lc.id, stage = 'basic')}">${lc.getName()}</a>
+                    Linked: <a href="${request.fwd_url("admin_collector_edit", collectorId = lc.id, stage = 'basic')}">${lc.getName()}</a>
                 %else:
                     <a href="${request.fwd_url("admin_collector_add_collector", collectorId = collector.id)}">Add a linked collector</a>
                 %endif
