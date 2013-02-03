@@ -80,10 +80,6 @@ class BaseForm(object):
     pre_validators = []
     chained_validators = []
 
-    @classmethod
-    def toFormData(cls, values):
-        return values
-
     template = 'larryslist:lib/formlib/templates/baseform.html'
     def render(self, request):
         return render(self.template, {'form': self}, request)
@@ -169,7 +165,7 @@ class Field(BaseField):
     def getValidator(self, request):
         return {self.name: self._validator(**self.getValidatorArgs())}
 
-    def valueToForm(self, value): return value
+    def valueToForm(self, value): return '' if value is None else value
 
     def hasLabel(self):
         return bool(self.label)

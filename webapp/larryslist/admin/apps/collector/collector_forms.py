@@ -1,11 +1,23 @@
 from operator import itemgetter
 from jsonclient.backend import DBException
 import formencode
-from larryslist.admin.apps.collector.models import CreateCollectorProc, EditCollectorBaseProc, EditCollectorContactsProc, EditCollectorBusinessProc, SaveCollectionDocumentsProc, SaveCollectorDocumentsProc, SaveCollectorOtherFactsProc
+from larryslist.admin.apps.collector.models import CreateCollectorProc, EditCollectorBaseProc, EditCollectorContactsProc, EditCollectorBusinessProc, SaveCollectionDocumentsProc, SaveCollectorDocumentsProc, SaveCollectorOtherFactsProc, GetCollectorMetaProc, GetCollectionMetaProc, CollectorModel
 from larryslist.admin.apps.collector.sources_form import SingleSourceForm, BaseAdminForm
 from larryslist.lib.formlib.formfields import REQUIRED, StringField, BaseForm, ChoiceField, configattr, ConfigChoiceField, DateField, MultipleFormField, IMPORTANT, TypeAheadField, EmailField, HeadingField, URLField, PlainHeadingField, StaticHiddenField, MultiConfigChoiceField, TokenTypeAheadField, HiddenField, Placeholder, PictureUploadField, PictureUploadAttrs, BaseSchema, Field, TextareaField
 
 __author__ = 'Martin'
+
+def collectorData(cls, view):
+    return view.collector.unwrap(sparse = True) if view.collector else {}
+def collectorMeta(cls, view):
+    collectorId = view.request.matchdict.get('collectorId')
+    if collectorId:
+        return GetCollectorMetaProc(view.request, collectorId)
+    else:
+        return {}
+def persistCollectorMeta(cls, request, values):
+    cls.setCollectorMeta(request, request.matchdict['collectorId'], values)
+    return {'success': True, 'message':"Changes saved!"}
 
 
 
@@ -20,20 +32,15 @@ class AddressForm(MultipleFormField):
         , StringField('line2', 'Street 2')
         , StringField('line3', 'Street 3')
     ]
-
-
 class UniversityForm(MultipleFormField):
     fields = [
         StringField('name', 'Name of University')
         , StringField('city', 'City')
         ]
-
-
-
-
 class CollectorCreateForm(BaseAdminForm):
     id = "basic"
     label = "Basic"
+    getFormValues = classmethod(collectorData)
     fields = [
         StringField('firstName', 'First Name', REQUIRED)
         , StringField('lastName', 'Last Name', REQUIRED)
@@ -81,6 +88,7 @@ class NetworkField(MultipleFormField):
 class CollectorContactsForm(BaseAdminForm):
     id = "contacts"
     label = "Contacts"
+    getFormValues = classmethod(collectorData)
     fields = [
         URLField('wikipedia', 'Wikipedia', IMPORTANT, input_classes="input-xlarge")
         , MultiEmailField('Email', None)
@@ -122,6 +130,7 @@ class CompanyForm(MultipleFormField):
 class CollectorBusinessForm(BaseAdminForm):
     id = "business"
     label = "Business / Industry"
+    getFormValues = classmethod(collectorData)
     fields = [
         CompanyForm("Company")
         , PlainHeadingField('Further industries / type of businesses')
@@ -167,6 +176,7 @@ class TypedFileUploadField(Field):
 class CollectorUploadForm(BaseAdminForm):
     id = "uploads"
     label = "Uploads"
+    getFormValues = classmethod(collectorData)
     fields = [
         PlainHeadingField("Collector Documents")
         , TypedFileUploadField("Document", classes = 'form-embedded-wrapper form-inline')
@@ -184,7 +194,7 @@ class CollectorUploadForm(BaseAdminForm):
 class MuseumForm(MultipleFormField):
     fields = [
         ConfigChoiceField("museum", "Top 100 Museum", "TopMuseum")
-        , StringField("other_name", "Not Top 100 Museum, then name")
+        , StringField("other_name", "Not Top 100 Museum, then name", label_classes='double')
         , ConfigChoiceField('position', 'Position', 'CollectionPosition')
         , StringField("year", "Year")
         , TokenTypeAheadField('Country', 'Country', '/admin/search/address', 'AddressSearchResult', None, REQUIRED)
@@ -199,9 +209,11 @@ class MuseumForm(MultipleFormField):
 class CollectorArtAdvisoryForm(BaseAdminForm):
     id = "artadvisory"
     label = "Art Engagement"
+    getFormValues = classmethod(collectorMeta)
     fields = [
         MuseumForm("Museum")
     ]
+    persist = classmethod(persistCollectorMeta)
 
 
 class OtherFactForm(MultipleFormField):
@@ -209,6 +221,7 @@ class OtherFactForm(MultipleFormField):
 class CollectorOtherFactsForm(BaseAdminForm):
     id = "otherfacts"
     label = "Other Facts"
+    getFormValues = classmethod(collectorData)
     fields = [
         PlainHeadingField("Other Facts")
         , OtherFactForm("Fact")

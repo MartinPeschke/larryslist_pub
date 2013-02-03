@@ -1,5 +1,5 @@
 from jsonclient import Mapping, TextField, DateField, ListField, DictField, IntegerField, BooleanField
-from larryslist.models import ClientTokenProc
+from larryslist.models import ClientTokenProc, MetaDataProc
 from larryslist.models.config import GenreModel, MediumModel
 
 __author__ = 'Martin'
@@ -101,6 +101,12 @@ EditCollectorContactsProc = ClientTokenProc("/admin/collector/contactedit", root
 EditCollectorBusinessProc = ClientTokenProc("/admin/collector/businessedit", root_key = 'Collector', result_cls=CollectorModel)
 SaveCollectorDocumentsProc = ClientTokenProc("/admin/collector/document", root_key = 'Collector', result_cls=CollectorModel)
 SaveCollectorOtherFactsProc = ClientTokenProc("/admin/collector/fact", root_key = 'Collector', result_cls=CollectorModel)
+
+GetCollectorMetaProc = MetaDataProc("/admin/collector/meta")
+SetCollectorMetaProc = MetaDataProc("/admin/collector/metaset")
+
+GetCollectionMetaProc = MetaDataProc("/admin/collection/meta")
+SetCollectionMetaProc = MetaDataProc("/admin/collection/metaset")
 
 
 CreateCollectionProc = ClientTokenProc("/admin/collection/create", root_key = 'Collection', result_cls=CollectionModel)

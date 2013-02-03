@@ -1,7 +1,7 @@
 from jsonclient.backend import DBException
 import formencode
 from larryslist.admin.apps.collector.collector_forms import TypedFileUploadField
-from larryslist.admin.apps.collector.models import CreateCollectionProc, EditCollectionBaseProc, EditCollectionArtistsProc, EditCollectionPublicationsProc, SaveCollectionDocumentsProc, SaveCollectionMuseumProc
+from larryslist.admin.apps.collector.models import CreateCollectionProc, EditCollectionBaseProc, EditCollectionArtistsProc, EditCollectionPublicationsProc, SaveCollectionDocumentsProc, SaveCollectionMuseumProc, GetCollectionMetaProc
 from larryslist.admin.apps.collector.sources_form import BaseAdminForm
 from larryslist.lib.formlib.formfields import BaseForm, IntField, CheckboxField, IMPORTANT, StringField, MultiConfigChoiceField, ApproxField, HiddenField, MultipleFormField, TypeAheadField, PlainHeadingField, ConfigChoiceField, URLField, TagSearchField, BaseSchema, Placeholder, TokenTypeAheadField, REQUIRED, EmailField, RadioChoice
 from larryslist.models.config import NamedModel
@@ -9,9 +9,26 @@ from larryslist.models.config import NamedModel
 __author__ = 'Martin'
 
 
+def collectionData(cls, view):
+    return view.collection.unwrap(sparse = True) if view.collection else {}
+def collectionMeta(cls, view):
+    if view.collection:
+        result = GetCollectionMetaProc(view.request, str(view.collection.id))
+        result['id'] = view.collection.id
+        return result
+    else:
+        return {}
+def persistCollectionMeta(cls, request, values):
+    id = values['id']
+    cls.setCollectionMeta(request, id, values)
+    return {'success': True, 'message':"Changes saved!"}
+
+
+
 class BaseCollectionForm(BaseAdminForm):
     id = 'basic'
     label = 'Basic'
+    getFormValues = classmethod(collectionData)
     fields = [
         ApproxField('totalWorks', 'totalWorksAprx', "Total number of artworks in collection", IMPORTANT, label_classes="double")
         , ApproxField('totalArtists', 'totalArtistsAprx', "Total number of artists in collection", IMPORTANT, label_classes="double")
@@ -61,6 +78,7 @@ class MultipleArtistField(TagSearchField):
 class CollectionArtistsForm(BaseAdminForm):
     id = 'artist'
     label = 'Artists'
+    getFormValues = classmethod(collectionData)
     fields = [
         HiddenField('id')
         , PlainHeadingField("Artists in Collection")
@@ -87,6 +105,7 @@ class PublicationsForm(MultipleFormField):
 class CollectionWebsiteForm(BaseAdminForm):
     id = 'website'
     label = 'Communication Platforms'
+    getFormValues = classmethod(collectionData)
     fields = [
         HiddenField('id')
         , PlainHeadingField("Website")
@@ -108,6 +127,7 @@ class CollectionWebsiteForm(BaseAdminForm):
 class CollectionUploadForm(BaseAdminForm):
     id = "uploads"
     label = "Uploads"
+    getFormValues = classmethod(collectionData)
     fields = [
         PlainHeadingField("Collection Documents")
         , TypedFileUploadField("Document", classes = 'form-embedded-wrapper form-inline')
@@ -125,10 +145,10 @@ class CollectionUploadForm(BaseAdminForm):
 
 class MuseumForm(MultipleFormField):
     fields = [
-        RadioChoice("has_space", "Has permanent museum/space", lambda req: [NamedModel(name = 'true'), NamedModel(name = 'false')] )
-        , StringField("name", "If yes, name")
+        StringField("Permanent museum/space name", "If yes, name", label_classes = 'double')
         , StringField("year", "Founded in year")
         , StringField("url", "Webpage")
+        , PlainHeadingField("Location", tag="h5", classes="controls")
         , TokenTypeAheadField('Country', 'Country', '/admin/search/address', 'AddressSearchResult', None)
         , TokenTypeAheadField('Region', 'Region', '/admin/search/address', 'AddressSearchResult', 'Country')
         , TokenTypeAheadField('City', 'City', '/admin/search/address', 'AddressSearchResult', 'Country Region')
@@ -146,9 +166,11 @@ class DirectorForm(MultipleFormField):
         , StringField("origName", "Name in orig. Language")
         , ConfigChoiceField('title', 'Title', 'Title')
         , ConfigChoiceField('gender', 'Gender', 'Gender')
-        , EmailField("email", "Contact Email")
-        , URLField("facebook", "Contact Facebook", input_classes = 'input-large')
-        , URLField("linkedin", "Contact Linked-in", input_classes = 'input-large')
+        , PlainHeadingField("Contact", tag="h5", classes="controls")
+        , EmailField("email", "Email")
+        , URLField("facebook", "Facebook", input_classes = 'input-large')
+        , URLField("linkedin", "Linked-in", input_classes = 'input-large')
+        , HiddenField('id')
     ]
 
     @classmethod
@@ -165,11 +187,14 @@ class CollectionMuseumForm(BaseAdminForm):
     id = 'museum'
     label = 'Museum'
     separateAfter = 2
+    getFormValues = classmethod(collectionMeta)
+    persist = classmethod(persistCollectionMeta)
     fields = [
         PlainHeadingField("Permanent museum or exhibition space")
         , MuseumForm('Museum')
         , PlainHeadingField("Director or curator or head of collection (internal)")
         , DirectorForm("Director")
+        , HiddenField('id')
     ]
 
 
@@ -179,6 +204,7 @@ class LoanForm(MultipleFormField):
         , StringField("comment", "Comment")
         , StringField("year", "Year")
         , StringField("institution", "Name of institution")
+        , PlainHeadingField("Location", tag="h5", classes="controls")
         , TokenTypeAheadField('Country', 'Country', '/admin/search/address', 'AddressSearchResult', None)
         , TokenTypeAheadField('Region', 'Region', '/admin/search/address', 'AddressSearchResult', 'Country')
         , TokenTypeAheadField('City', 'City', '/admin/search/address', 'AddressSearchResult', 'Country Region')
@@ -193,6 +219,7 @@ class CooperationForm(MultipleFormField):
         , StringField("comment", "Name of cooperation / Comment", label_classes="double")
         , StringField("year", "Year")
         , StringField("institution", "Name of institution")
+        , PlainHeadingField("Location", tag="h5", classes="controls")
         , TokenTypeAheadField('Country', 'Country', '/admin/search/address', 'AddressSearchResult', None)
         , TokenTypeAheadField('Region', 'Region', '/admin/search/address', 'AddressSearchResult', 'Country')
         , TokenTypeAheadField('City', 'City', '/admin/search/address', 'AddressSearchResult', 'Country Region')
@@ -206,12 +233,15 @@ class CollectionCooperationForm(BaseAdminForm):
     id="cooperation"
     label = "Cooperation"
     separateAfter = 2
+    getFormValues = classmethod(collectionMeta)
+    persist = classmethod(persistCollectionMeta)
     fields = [
         PlainHeadingField("Permanent loan / donation of artworks to museum")
         , LoanForm('Loan')
         , PlainHeadingField("Cooperation with external museums / institutions")
         , PlainHeadingField("(e.g. exhibition with part of the collector's private collection)", tag="p")
         , CooperationForm("Cooperation")
+        , HiddenField('id')
     ]
 
 
@@ -224,15 +254,19 @@ class ArtAdvisorForm(MultipleFormField):
         , ConfigChoiceField('title', 'Title', 'Title')
         , ConfigChoiceField('gender', 'Gender', 'Gender')
         , StringField("company", "Company")
-        , EmailField("email", "Contact Email")
-        , URLField("facebook", "Contact Facebook", input_classes = 'input-large')
-        , URLField("linkedin", "Contact Linked-in", input_classes = 'input-large')
+        , PlainHeadingField("Contact", tag="h5", classes="controls")
+        , EmailField("email", "Email")
+        , URLField("facebook", "Facebook", input_classes = 'input-large')
+        , URLField("linkedin", "Linked-in", input_classes = 'input-large')
     ]
 class CollectionArtAdvisor(BaseAdminForm):
     id="artadvisor"
     label = "Art Advisor"
+    getFormValues = classmethod(collectionMeta)
+    persist = classmethod(persistCollectionMeta)
     fields = [
         PlainHeadingField("External Art Advisor")
         , PlainHeadingField("(independent advisor; not employed at collector's museum)", tag="p")
         , ArtAdvisorForm("ArtAdvisor")
+        , HiddenField('id')
     ]

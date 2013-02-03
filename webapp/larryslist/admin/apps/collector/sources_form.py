@@ -1,6 +1,6 @@
 from operator import itemgetter
 from jsonclient.backend import DBException
-from larryslist.admin.apps.collector.models import SetSourcesProc
+from larryslist.admin.apps.collector.models import SetSourcesProc, GetCollectorMetaProc, SetCollectorMetaProc, SetCollectionMetaProc, GetCollectionMetaProc
 from larryslist.lib.formlib.formfields import BaseForm, ConfigChoiceField, StringField, MultipleFormField, Placeholder, DependentAttrs
 
 
@@ -60,3 +60,16 @@ class BaseAdminForm(BaseForm):
                     return {'success':False, 'message': e.message}
                 return {'success': True, 'message':"Changes saved!"}
         return result
+
+    @classmethod
+    def setCollectorMeta(cls, request, id, values):
+        data = GetCollectorMetaProc(request, id)
+        data.update(values)
+        SetCollectorMetaProc(request, id, data)
+        return data
+    @classmethod
+    def setCollectionMeta(cls, request, id, values):
+        data = GetCollectionMetaProc(request, id)
+        data.update(values)
+        SetCollectionMetaProc(request, id, data)
+        return data
