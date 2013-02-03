@@ -19,7 +19,7 @@ class IndustryModel(NamedModel): pass
 class PositionModel(NamedModel): pass
 class CollectionPositionModel(NamedModel): pass
 class CooperationTypeModel(NamedModel): pass
-class TopMuseumModel(NamedModel): pass
+
 class InterestModel(NamedModel): pass
 class SocNetModel(NamedModel): pass
 class MediumModel(NamedModel): pass
@@ -34,6 +34,11 @@ class GenderModel(Mapping):
     def getKey(self, request):return self.key
     def getLabel(self, request):return self.label
 
+
+class TopMuseumModel(NamedModel):
+    city = TextField()
+    def getLabel(self, request):return u"{0.name} ({0.city})".format(self)
+    def getKey(self, request):return u"{0.name} ({0.city})".format(self)
 GENDER_CHOICES = [GenderModel(key = 'm', label = 'male'), GenderModel(key = 'f', label = 'female')]
 SOCIAL_NETWORKS = [SocNetModel(name = 'Facebook'), SocNetModel(name = 'Linkedin'), SocNetModel(name = 'Twitter'), SocNetModel(name = 'Other')]
 DOCUMENT_TYPES = [DocumentTypeModel(name = 'IMAGE'), DocumentTypeModel(name = 'OTHER')]
@@ -43,7 +48,7 @@ COLLECTION_POSITIONS = [CPM(name = "Director"), CPM(name = "Curator"), CPM(name 
 CTM = CooperationTypeModel
 COOPERATION_TYPES = [CTM(name = "Exhibition of own collection"), CTM(name = "Sponsoring"), CTM(name = "Funding of Award"), CTM(name = "Support of educational program")]
 
-TOP_MUSEUMS = [TopMuseumModel(name = "Museum-{}".format(i)) for i in range(100)]
+
 FEEDER_ROLES = [FeederRoleModel(name="REVIEWER"), FeederRoleModel(name="OPERATOR")]
 
 class ConfigModel(Mapping):
@@ -61,5 +66,5 @@ class ConfigModel(Mapping):
     DocumentType = DOCUMENT_TYPES
     CollectionPosition = COLLECTION_POSITIONS
     CooperationType = COOPERATION_TYPES
-    TopMuseum = TOP_MUSEUMS
+    TopMuseum = ListField(DictField(TopMuseumModel))
     FeederRole = FEEDER_ROLES
