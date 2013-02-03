@@ -19,6 +19,7 @@ ROUTE_LIST = [
     # ============================== COLLECTOR/COLLECTIONS =========================
     , ClassRoute    ("admin_collector_create"        , "/collector/create", contexts.AdminAuthedContext, collector.CollectorCreate, "collector/form.html", view_attrs=JSON_FORM_ATTRS)
     , ClassRoute    ("admin_collector_edit"          , "/collector/edit/:collectorId/:stage", contexts.AdminAuthedContext, collector.CollectorEdit, "collector/form.html", view_attrs=JSON_FORM_ATTRS)
+    , FunctionRoute ("admin_collector_status"        , "/collector/status/:collectorId", contexts.AdminAuthedContext, collector.set_review_status, "collector/form.html", {'request_method':'POST'})
     , ClassRoute    ("admin_collection_create"       , "/collection/create/:collectorId", contexts.AdminAuthedContext, collector.CollectionCreate, "collector/form.html", view_attrs=JSON_FORM_ATTRS)
     , ClassRoute    ("admin_collector_add_collector" , "/collection/add/:collectorId/collector", contexts.AdminAuthedContext, collector.AddCollectorHandler, "collector/collectoradd.html", view_attrs=JSON_FORM_ATTRS)
     , ClassRoute    ("admin_collection_edit"         , "/collection/edit/:collectorId/:stage", contexts.AdminAuthedContext, collector.CollectionEdit, None, view_attrs=JSON_FORM_ATTRS)

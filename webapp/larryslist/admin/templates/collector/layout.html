@@ -3,6 +3,21 @@
 <%def name="contentStatusImpl()">
     <div class="content-status">
         <h4>Status</h4>
+        <hr/>
+        %if view.collector:
+            <b>${view.collector.getStatusLabel()}</b>
+            <br/>
+            <br/>
+            <form action="${request.fwd_url("admin_collector_status", collectorId = view.collector.id)}" method="post">
+                %if view.collector.canSubmitforReview(vctxt.user):
+                    <button type="submit" name="status" value="SUBMIT" class="btn btn-primary">Submit for Review</button>
+                %elif view.collector.canReview(vctxt.user):
+                    <button type="submit" name="status" value="APPROVE" class="btn btn-primary">Approve</button>
+                %endif
+            </form>
+        %else:
+            Not Created
+        %endif
     </div>
 </%def>
 

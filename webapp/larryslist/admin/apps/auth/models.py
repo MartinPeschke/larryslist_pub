@@ -6,7 +6,8 @@ from larryslist.models.config import NamedModel
 
 __author__ = 'Martin'
 
-class CountryModel(NamedModel): pass
+class CountryModel(NamedModel):
+    token = TextField()
 
 SESSION_KEY = 'ADMIN_USER'
 

@@ -70,10 +70,15 @@ class LinkedCollectorModel(Mapping):
 class OtherFactModel(Mapping):
     value = TextField()
 
-
+STATUS = {
+    'INPROGRESS':"In Progress"
+    ,'SUBMITTED':"Submitted"
+    ,'REVIEWED':"Reviewed"
+}
 
 class CollectorModel(Mapping):
     id = IntegerField()
+    status = TextField()
     firstName = TextField()
     lastName = TextField()
     origName = TextField()
@@ -89,9 +94,18 @@ class CollectorModel(Mapping):
     Fact = ListField(DictField(OtherFactModel))
     def getName(self):
         return u'{firstName} {lastName}'.format(firstName = self.firstName, lastName = self.lastName)
+    def getStatusLabel(self):
+        return STATUS[self.status]
+    def canSubmitforReview(self, user):
+        return self.status == 'INPROGRESS'
+    def canReview(self, user):
+        return self.status == 'SUBMITTED' and user.isAdmin()
+
 
 
 SetSourcesProc = ClientTokenProc("/admin/collector/sourceedit", root_key = 'Collector', result_cls=CollectorModel)
+SetCollectorStatusProc = ClientTokenProc("/admin/collector/status")
+
 
 CreateCollectorProc = ClientTokenProc("/admin/collector/create", root_key = 'Collector', result_cls=CollectorModel)
 GetCollectorDetailsProc = ClientTokenProc("/admin/collector", root_key = 'Collector', result_cls=CollectorModel)
@@ -101,6 +115,8 @@ EditCollectorContactsProc = ClientTokenProc("/admin/collector/contactedit", root
 EditCollectorBusinessProc = ClientTokenProc("/admin/collector/businessedit", root_key = 'Collector', result_cls=CollectorModel)
 SaveCollectorDocumentsProc = ClientTokenProc("/admin/collector/document", root_key = 'Collector', result_cls=CollectorModel)
 SaveCollectorOtherFactsProc = ClientTokenProc("/admin/collector/fact", root_key = 'Collector', result_cls=CollectorModel)
+
+
 
 GetCollectorMetaProc = MetaDataProc("/admin/collector/meta")
 SetCollectorMetaProc = MetaDataProc("/admin/collector/metaset")
@@ -115,3 +131,5 @@ EditCollectionArtistsProc = ClientTokenProc("/admin/collection/artistedit", root
 EditCollectionPublicationsProc = ClientTokenProc("/admin/collection/communicationedit", root_key = 'Collection', result_cls=CollectionModel)
 SaveCollectionDocumentsProc = ClientTokenProc("/admin/collection/document", root_key = 'Collection', result_cls=CollectionModel)
 SaveCollectionMuseumProc = ClientTokenProc("/admin/collector/directorMuseum", root_key = 'Collection', result_cls=CollectionModel)
+
+

@@ -20,11 +20,12 @@ def persistCollectorMeta(cls, request, values):
     return {'success': True, 'message':"Changes saved!"}
 
 
-
+class RestrictedCountryField(TokenTypeAheadField):
+    template = 'larryslist:admin/templates/collector/country.html'
 
 class AddressForm(MultipleFormField):
     fields = [
-        TokenTypeAheadField('Country', 'Country', '/admin/search/address', 'AddressSearchResult', None, REQUIRED)
+        RestrictedCountryField('Country', 'Country', '/admin/search/address', 'AddressSearchResult', None, REQUIRED)
         , TokenTypeAheadField('Region', 'Region', '/admin/search/address', 'AddressSearchResult', 'Country')
         , TokenTypeAheadField('City', 'City', '/admin/search/address', 'AddressSearchResult', 'Country Region', REQUIRED)
         , StringField('postCode', 'Post Code')

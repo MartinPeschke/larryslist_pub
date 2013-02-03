@@ -3,8 +3,9 @@ from jsonclient.backend import DBException, DBMessage
 import formencode
 from larryslist.admin.apps.collector.collections_forms import BaseCollectionForm, CollectionEditForm, CollectionArtistsForm, CollectionWebsiteForm, CollectionUploadForm, CollectionMuseumForm, CollectionCooperationForm, CollectionArtAdvisor
 from larryslist.admin.apps.collector.collector_forms import CollectorContactsForm, CollectorBusinessForm, CollectorEditForm, CollectorCreateForm, CollectionAddCollectorForm, CollectorUploadForm, CollectorArtAdvisoryForm, CollectorOtherFactsForm
-from larryslist.admin.apps.collector.models import GetCollectorDetailsProc, SetSourcesProc, CollectorModel, GetCollectorMetaProc
+from larryslist.admin.apps.collector.models import GetCollectorDetailsProc, SetSourcesProc, CollectorModel, GetCollectorMetaProc, SetCollectorStatusProc
 from larryslist.admin.apps.collector.sources_form import AddSourcesForm
+from larryslist.lib.baseviews import GenericErrorMessage, GenericSuccessMessage
 from larryslist.lib.formlib.handlers import FormHandler
 from pyramid.decorator import reify
 from pyramid.renderers import render_to_response
@@ -122,3 +123,22 @@ class AddCollectorHandler(BaseArtHandler):
             return AddSourcesForm(), self.othercollector.unwrap(sparse = True), {}
         else:
             return None, None, None
+
+
+
+
+def set_review_status(context, request):
+    status = request.params.get("status")
+    collectorId = request.matchdict['collectorId']
+    collector = GetCollectorDetailsProc(request, {'id': collectorId})
+
+    if status == 'SUBMIT' and collector.canSubmitforReview(context.user):
+        SetCollectorStatusProc(request, {'id': collectorId, 'status':"SUBMITTED"})
+        request.session.flash(GenericSuccessMessage("This collector has now been submitted for review!"), "generic_messages")
+    elif status == 'APPROVE' and collector.canReview(context.user):
+        SetCollectorStatusProc(request, {'id': collectorId, 'status':"REVIEWED"})
+        request.session.flash(GenericSuccessMessage("This collector has now been approved!"), "generic_messages")
+    else:
+        request.session.flash(GenericErrorMessage("Not allowed"), "generic_messages")
+
+    return request.fwd_raw(request.referer)

@@ -176,13 +176,17 @@ define(["tools/hash", "tools/ajax", "text!templates/searchresult.html"]
             , doSearch : function(query){
                 var view = this, data, data = this.buildQuery(query);
                 if(data){
+                    var queryId = view.queryId = hashlib.UUID();
+                    this.$resultNode.html('<div class="loading center"><img src="/static/img/ajax-loader.gif"/></div>');
                     ajax.submitPrefixed({url:this.searchUrl
                         , data: data
                         , success: function(resp, status, xhr){
-                            if(resp.dbMessage){
-                                view.model.reset([]);
-                            } else {
-                                view.model.reset(view.model.parse(resp));
+                            if(queryId == view.queryId){
+                                if(resp.dbMessage){
+                                    view.model.reset([]);
+                                } else {
+                                    view.model.reset(view.model.parse(resp));
+                                }
                             }
                         }});
                 } else {
