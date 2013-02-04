@@ -1,11 +1,14 @@
-.control-group.required, .control-group.important {
-  .control-label {
+.label-legend {
+  float: right;
+  > span {margin:0 10px;}
+}
+
+.control-group.important .control-label, .label-legend > .important{
     &:before {
       content:"*";
     }
-  }
 }
-.control-group.required .control-label{
+.control-group.required .control-label, .label-legend > .required{
   font-weight:bold;
   &:before{
     content:"*";

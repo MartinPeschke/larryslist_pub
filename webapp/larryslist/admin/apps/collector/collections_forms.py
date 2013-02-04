@@ -109,7 +109,7 @@ class CollectionWebsiteForm(BaseAdminForm):
     fields = [
         HiddenField('id')
         , PlainHeadingField("Website")
-        , URLField('url', "Webpage", attrs = IMPORTANT)
+        , URLField('url', "URL", attrs = IMPORTANT)
         , PlainHeadingField("Publications")
         , PublicationsForm('Publication', "", classes = "form-embedded-wrapper form-inline")
     ]
@@ -183,10 +183,8 @@ class DirectorForm(MultipleFormField):
         return {'success': True, 'message':"Changes saved!"}
 
 class CollectionMuseumForm(BaseAdminForm):
-    template = "larryslist:admin/templates/collector/splitform.html"
     id = 'museum'
     label = 'Museum'
-    separateAfter = 2
     getFormValues = classmethod(collectionMeta)
     persist = classmethod(persistCollectionMeta)
     fields = [
@@ -229,10 +227,8 @@ class CooperationForm(MultipleFormField):
         , StringField('line3', 'Street 3')
     ]
 class CollectionCooperationForm(BaseAdminForm):
-    template = "larryslist:admin/templates/collector/splitform.html"
     id="cooperation"
     label = "Cooperation"
-    separateAfter = 2
     getFormValues = classmethod(collectionMeta)
     persist = classmethod(persistCollectionMeta)
     fields = [

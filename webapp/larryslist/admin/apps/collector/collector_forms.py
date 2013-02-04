@@ -209,6 +209,23 @@ class MuseumForm(MultipleFormField):
         , StringField("other_name", "Not Top 100 Museum, then name", label_classes='double')
         , ConfigChoiceField('position', 'Position', 'CollectionPosition')
         , StringField("year", "Year")
+        , StringField("website", "Website")
+        , PlainHeadingField("Location", tag="h5", classes="controls")
+        , TokenTypeAheadField('Country', 'Country', '/admin/search/address', 'AddressSearchResult', None)
+        , TokenTypeAheadField('Region', 'Region', '/admin/search/address', 'AddressSearchResult', 'Country')
+        , TokenTypeAheadField('City', 'City', '/admin/search/address', 'AddressSearchResult', 'Country Region')
+        , StringField('postCode', 'Post Code')
+        , StringField('line1', 'Street 1')
+        , StringField('line2', 'Street 2')
+        , StringField('line3', 'Street 3')
+    ]
+
+class SocietyMemberForm(MultipleFormField):
+    fields = [
+        StringField("societyName", "Name of society at museum")
+        , StringField("museumName", "Name of museum")
+        , ConfigChoiceField("position", "Position", "Position")
+        , PlainHeadingField("Location", tag="h5", classes="controls")
         , TokenTypeAheadField('Country', 'Country', '/admin/search/address', 'AddressSearchResult', None)
         , TokenTypeAheadField('Region', 'Region', '/admin/search/address', 'AddressSearchResult', 'Country')
         , TokenTypeAheadField('City', 'City', '/admin/search/address', 'AddressSearchResult', 'Country Region')
@@ -222,10 +239,14 @@ class CollectorArtAdvisoryForm(BaseAdminForm):
     id = "artadvisory"
     label = "Art Engagement"
     getFormValues = classmethod(collectorMeta)
-    fields = [
-        MuseumForm("Museum")
-    ]
     persist = classmethod(persistCollectorMeta)
+    fields = [
+        PlainHeadingField("Collector is in Advisory board, a committee member, a trustee in art expert juries of a public art institution / museum")
+        , MuseumForm("Museum")
+        , PlainHeadingField("Collector is member of an art society, friends circle of museums etc.")
+        , SocietyMemberForm("SocietyMember")
+    ]
+
 
 
 class OtherFactForm(MultipleFormField):
