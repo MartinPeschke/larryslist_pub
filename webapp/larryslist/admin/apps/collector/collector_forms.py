@@ -1,11 +1,9 @@
 from operator import itemgetter
 from jsonclient.backend import DBException
-import formencode
-from larryslist.admin.apps.collector.models import CreateCollectorProc, EditCollectorBaseProc, EditCollectorContactsProc, EditCollectorBusinessProc, SaveCollectionDocumentsProc, SaveCollectorDocumentsProc, SaveCollectorOtherFactsProc, GetCollectorMetaProc, GetCollectionMetaProc, CollectorModel
-from larryslist.admin.apps.collector.sources_form import SingleSourceForm, BaseAdminForm
-from larryslist.lib.formlib.formfields import REQUIRED, StringField, BaseForm, ChoiceField, configattr, ConfigChoiceField, DateField, MultipleFormField, IMPORTANT, TypeAheadField, EmailField, HeadingField, URLField, PlainHeadingField, StaticHiddenField, MultiConfigChoiceField, TokenTypeAheadField, HiddenField, Placeholder, PictureUploadField, PictureUploadAttrs, BaseSchema, Field, TextareaField
+from larryslist.admin.apps.collector.collector_forms_fields import collectorCreateFields, collectorContactsFields, collectorBusinessFields, collectionAddCollectorForm, collectorUploadFields, collectorArtAdvisoryFields, collectorOtherFactsFields, collectorRankingFields, collectorArtFairFields
+from larryslist.admin.apps.collector.models import CreateCollectorProc, EditCollectorBaseProc, EditCollectorContactsProc, EditCollectorBusinessProc, SaveCollectorDocumentsProc, SaveCollectorOtherFactsProc, GetCollectorMetaProc, SetCollectorMetaProc
+from larryslist.admin.apps.collector.sources_form import BaseAdminForm
 
-__author__ = 'Martin'
 
 def collectorData(cls, view):
     return view.collector.unwrap(sparse = True) if view.collector else {}
@@ -16,47 +14,40 @@ def collectorMeta(cls, view):
     else:
         return {}
 def persistCollectorMeta(cls, request, values):
-    cls.setCollectorMeta(request, request.matchdict['collectorId'], values)
+    data = {}
+    collectorId = request.matchdict.get('collectorId')
+    if collectorId:
+        data = GetCollectorMetaProc(request, collectorId)
+    data.update(values)
+    SetCollectorMetaProc(request, collectorId, data)
     return {'success': True, 'message':"Changes saved!"}
 
+def always(cls, request, view, user): return True
+def isAllowedCreateForm(cls, request, view, user):
+    return view.collector is None
+def isAllowedEditForm(cls, request, view, user):
+    return view.collector is not None
+def isAllowedAdminForm(cls, request, view, user):
+    return user.isAdmin() and view.collector is not None
 
-class RestrictedCountryField(TokenTypeAheadField):
-    template = 'larryslist:admin/templates/collector/country.html'
+def getCreateLink(cls, request, view, user, forward = False):
+    f = request.fwd if forward else request.fwd_url
+    return f("admin_collector_create")
 
-class AddressForm(MultipleFormField):
-    fields = [
-        RestrictedCountryField('Country', 'Country', '/admin/search/address', 'AddressSearchResult', None, REQUIRED)
-        , TokenTypeAheadField('Region', 'Region', '/admin/search/address', 'AddressSearchResult', 'Country')
-        , TokenTypeAheadField('City', 'City', '/admin/search/address', 'AddressSearchResult', 'Country Region', REQUIRED)
-        , StringField('postCode', 'Post Code')
-        , StringField('line1', 'Street 1')
-        , StringField('line2', 'Street 2')
-        , StringField('line3', 'Street 3')
-    ]
-class UniversityForm(MultipleFormField):
-    fields = [
-        StringField('name', 'Name of University')
-        , StringField('city', 'City')
-        ]
+def getEditLink(cls, request, view, user, forward = False):
+    f = request.fwd if forward else request.fwd_url
+    return f("admin_collector_edit", collectorId = view.collector.id, stage = cls.id)
+
 class CollectorCreateForm(BaseAdminForm):
-    id = "basic"
+    id = "basecreate"
     label = "Basic"
+
     getFormValues = classmethod(collectorData)
-    fields = [
-        StringField('firstName', 'First Name', REQUIRED)
-        , StringField('lastName', 'Last Name', REQUIRED)
-        , StringField('origName', 'Name in orig. Language')
-        , ConfigChoiceField('title', 'Title', 'Title', IMPORTANT)
-        , StringField('dob', 'Born', IMPORTANT)
-        , ConfigChoiceField('gender', 'Gender', 'Gender', IMPORTANT)
-        , ConfigChoiceField('nationality', 'Nationality', 'Nationality', IMPORTANT)
-        , PictureUploadField('picture', 'Picture', attrs = PictureUploadAttrs())
-        , AddressForm('Address', 'Location')
-        , UniversityForm('University', classes = 'form-embedded-wrapper form-inline')
-        , MultiConfigChoiceField('name', 'Area of interest', "Interest", "Interest")
-    ]
+    isShown = classmethod(isAllowedCreateForm)
+    isEnabled = classmethod(isAllowedCreateForm)
+    getLink = classmethod(getCreateLink)
 
-
+    fields = collectorCreateFields
     @classmethod
     def persist(cls, request, values):
         try:
@@ -65,9 +56,16 @@ class CollectorCreateForm(BaseAdminForm):
             return {'success':False, 'message': e.message}
         return {'success': True, 'redirect': request.fwd_url("admin_collector_edit", collectorId = collector.id, stage='basic')}
 
+class CollectorEditForm(BaseAdminForm):
+    id = "base"
+    label = "Basic"
 
-class CollectorEditForm(CollectorCreateForm):
-    id = "basic"
+    getFormValues = classmethod(collectorData)
+    isShown = classmethod(isAllowedEditForm)
+    isEnabled = classmethod(isAllowedEditForm)
+    getLink = classmethod(getEditLink)
+
+    fields = collectorCreateFields
     @classmethod
     def persist(cls, request, values):
         values['University'] = filter(itemgetter("name"), values.get('University', []))
@@ -78,24 +76,16 @@ class CollectorEditForm(CollectorCreateForm):
             return {'success':False, 'message': e.message}
         return {'success': True, 'message':"Changes saved!"}
 
-
-
-
-
-class MultiEmailField(MultipleFormField):
-    fields = [EmailField('address', 'Email', IMPORTANT, input_classes="input-xlarge")]
-class NetworkField(MultipleFormField):
-    fields = [ConfigChoiceField('name', None, 'Network', default_none = False), URLField('url', '', attrs = Placeholder("link"))]
 class CollectorContactsForm(BaseAdminForm):
     id = "contacts"
     label = "Contacts"
+
     getFormValues = classmethod(collectorData)
-    fields = [
-        URLField('wikipedia', 'Wikipedia', IMPORTANT, input_classes="input-xlarge")
-        , MultiEmailField('Email', None)
-        , PlainHeadingField("Social networks")
-        , NetworkField("Network", classes = "form-controls-inline form-inline form-embedded-wrapper")
-    ]
+    isShown = classmethod(always)
+    isEnabled = classmethod(isAllowedEditForm)
+    getLink = classmethod(getEditLink)
+
+    fields = collectorContactsFields
     @classmethod
     def persist(cls, request, values):
         values['id'] = request.matchdict['collectorId']
@@ -107,36 +97,16 @@ class CollectorContactsForm(BaseAdminForm):
             return {'success':False, 'message': e.message}
         return {'success': True, 'message':"Changes saved!"}
 
-
-
-class CompanyForm(MultipleFormField):
-    """
-        "name": "ESSO", "position": "CEO and Founder", "industry": "Automotive", "url": "http://esso.com", "city": "Berlin", "postCode": "BN3 1BA", "line1": "1 the av" },
-    """
-    fields = [
-        StringField("name", "Name of company")
-        , ConfigChoiceField("position", "Position", "Position")
-        , ConfigChoiceField("industry", "Industry", "Industry")
-        , URLField("url", "Link")
-        , PlainHeadingField("Location", tag="span", classes = "heading-absolute")
-        , TokenTypeAheadField('Country', 'Country', '/admin/search/address', 'AddressSearchResult', None)
-        , TokenTypeAheadField('Region', 'Region', '/admin/search/address', 'AddressSearchResult', 'Country')
-        , TokenTypeAheadField('City', 'City', '/admin/search/address', 'AddressSearchResult', 'Country Region')
-        , StringField('postCode', 'Post Code')
-        , StringField('line1', 'Street 1')
-        , StringField('line2', 'Street 2')
-        , StringField('line3', 'Street 3')
-    ]
-
 class CollectorBusinessForm(BaseAdminForm):
     id = "business"
     label = "Business / Industry"
+
     getFormValues = classmethod(collectorData)
-    fields = [
-        CompanyForm("Company")
-        , PlainHeadingField('Further industries / type of businesses')
-        , MultiConfigChoiceField('name', 'Name', "Industry", "Industry", attrs = REQUIRED)
-    ]
+    isShown = classmethod(always)
+    isEnabled = classmethod(isAllowedEditForm)
+    getLink = classmethod(getEditLink)
+
+    fields = collectorBusinessFields
     @classmethod
     def persist(cls, request, values):
         values['id'] = request.matchdict['collectorId']
@@ -147,11 +117,119 @@ class CollectorBusinessForm(BaseAdminForm):
             return {'success':False, 'message': e.message}
         return {'success': True, 'message':"Changes saved!"}
 
+class CollectorUploadForm(BaseAdminForm):
+    id = "uploads"
+    label = "Uploads"
+
+    getFormValues = classmethod(collectorData)
+    isShown = classmethod(always)
+    isEnabled = classmethod(isAllowedEditForm)
+    getLink = classmethod(getEditLink)
+
+    fields = collectorUploadFields
+    @classmethod
+    def persist(cls, request, values):
+        try:
+            values['id'] = request.matchdict['collectorId']
+            collector = SaveCollectorDocumentsProc(request, {'Collector':values})
+        except DBException, e:
+            return {'success':False, 'message': e.message}
+        return {'success': True, 'message':"Changes saved!"}
+
+class CollectorArtAdvisoryForm(BaseAdminForm):
+    id = "artadvisory"
+    label = "Art Engagement"
+
+    getFormValues = classmethod(collectorMeta)
+    isShown = classmethod(always)
+    isEnabled = classmethod(isAllowedEditForm)
+    getLink = classmethod(getEditLink)
+
+    fields = collectorArtAdvisoryFields
+    persist = classmethod(persistCollectorMeta)
+
+class CollectorOtherFactsForm(BaseAdminForm):
+    id = "otherfacts"
+    label = "Other Facts"
+
+    getFormValues = classmethod(collectorData)
+    isShown = classmethod(always)
+    isEnabled = classmethod(isAllowedEditForm)
+    getLink = classmethod(getEditLink)
+
+    fields = collectorOtherFactsFields
+    @classmethod
+    def persist(cls, request, values):
+        try:
+            values['id'] = request.matchdict['collectorId']
+            collector = SaveCollectorOtherFactsProc(request, {'Collector':values})
+        except DBException, e:
+            return {'success':False, 'message': e.message}
+        return {'success': True, 'message':"Changes saved!"}
+
+
+class CollectorRankingForm(BaseAdminForm):
+    id = "ranking"
+    label = "Rankings"
+
+    getFormValues = classmethod(collectorMeta)
+    isShown = classmethod(always)
+    isEnabled = classmethod(isAllowedEditForm)
+    getLink = classmethod(getEditLink)
+
+    fields = collectorRankingFields
+    @classmethod
+    def persist(cls, request, values):
+        unique = set()
+        result = []
+        keyGet = itemgetter('name', 'year')
+        for map in sorted(values.get('Ranking', []), key=keyGet):
+            if keyGet(map) not in unique:
+                unique.add(keyGet(map))
+                result.append(map)
+        values['Ranking'] = result
+        return persistCollectorMeta(cls, request, values)
+
+class CollectorArtFairForm(BaseAdminForm):
+    id = "artfair"
+    label = "Art Fairs"
+
+    getFormValues = classmethod(collectorMeta)
+    isShown = classmethod(always)
+    isEnabled = classmethod(isAllowedEditForm)
+    getLink = classmethod(getEditLink)
+
+    fields = collectorArtFairFields
+    @classmethod
+    def persist(cls, request, values):
+        unique = set()
+        result = []
+        keyGet = itemgetter('name', 'year')
+        for map in sorted(values.get('ArtFair', []), key=keyGet):
+            if keyGet(map) not in unique:
+                unique.add(keyGet(map))
+                result.append(map)
+        values['ArtFair'] = result
+        return persistCollectorMeta(cls, request, values)
 
 
 
-class CollectionAddCollectorForm(CollectorCreateForm):
-    fields = [ConfigChoiceField("relation", "Relationship", "Relation", attrs = REQUIRED)] + CollectorCreateForm.fields + [HiddenField('collectionId')]
+
+
+
+
+class CollectionAddCollectorForm(BaseAdminForm):
+    id = "base"
+    label = "Basic"
+    template = "larryslist:admin/templates/collector/collectoradd.html"
+
+    isShown = classmethod(always)
+    isEnabled = classmethod(isAllowedEditForm)
+    @classmethod
+    def getLink(cls, request, view, user, forward = False):
+        f = request.fwd if forward else request.fwd_url
+        return f("admin_collector_add_collector", collectorId = view.othercollector.id)
+    fields = collectionAddCollectorForm
     @classmethod
     def getFormValues(cls, view):
         return {'collectionId': view.othercollector.Collection.id}
@@ -163,108 +241,3 @@ class CollectionAddCollectorForm(CollectorCreateForm):
         except DBException, e:
             return {'success':False, 'message': e.message}
         return {'success': True, 'redirect': request.fwd_url("admin_collector_edit", collectorId = collector.id, stage='basic')}
-
-
-
-class TypedFileUploadField(Field):
-    template = 'larryslist:admin/templates/collector/typed_file_upload.html'
-    add_more_link_label = '+'
-    if_empty = {}
-    def __init__(self, name, classes = 'form-embedded-wrapper'):
-        self.name = name
-        self.classes = classes
-        self.optionGetter = configattr('DocumentType', default_none=True)
-    def getClasses(self):
-        return self.classes
-    def getValidator(self, request):
-        validators = {}
-        return {self.name : formencode.ForEach(BaseSchema(type = formencode.validators.String(), file = formencode.validators.String(), name=formencode.validators.String()), not_empty = self.attrs.required)}
-    def getOptions(self, request):
-        return self.optionGetter(request)
-    TYPES = {'IMAGE': "jpg,gif,png", 'OTHER': "*.*"}
-    def getFileTypes(self, dt):
-        return self.TYPES.get(dt.name, 'DISABLED')
-
-class CollectorUploadForm(BaseAdminForm):
-    id = "uploads"
-    label = "Uploads"
-    getFormValues = classmethod(collectorData)
-    fields = [
-        PlainHeadingField("Collector Documents")
-        , TypedFileUploadField("Document", classes = 'form-embedded-wrapper form-inline')
-    ]
-    @classmethod
-    def persist(cls, request, values):
-        try:
-            values['id'] = request.matchdict['collectorId']
-            collector = SaveCollectorDocumentsProc(request, {'Collector':values})
-        except DBException, e:
-            return {'success':False, 'message': e.message}
-        return {'success': True, 'message':"Changes saved!"}
-
-
-class MuseumForm(MultipleFormField):
-    fields = [
-        ConfigChoiceField("museum", "Top 100 Museum", "TopMuseum")
-        , StringField("other_name", "Not Top 100 Museum, then name", label_classes='double')
-        , ConfigChoiceField('position', 'Position', 'CollectionPosition')
-        , StringField("year", "Year")
-        , StringField("website", "Website")
-        , PlainHeadingField("Location", tag="h5", classes="controls")
-        , TokenTypeAheadField('Country', 'Country', '/admin/search/address', 'AddressSearchResult', None)
-        , TokenTypeAheadField('Region', 'Region', '/admin/search/address', 'AddressSearchResult', 'Country')
-        , TokenTypeAheadField('City', 'City', '/admin/search/address', 'AddressSearchResult', 'Country Region')
-        , StringField('postCode', 'Post Code')
-        , StringField('line1', 'Street 1')
-        , StringField('line2', 'Street 2')
-        , StringField('line3', 'Street 3')
-    ]
-
-class SocietyMemberForm(MultipleFormField):
-    fields = [
-        StringField("societyName", "Name of society at museum")
-        , StringField("museumName", "Name of museum")
-        , ConfigChoiceField("position", "Position", "Position")
-        , PlainHeadingField("Location", tag="h5", classes="controls")
-        , TokenTypeAheadField('Country', 'Country', '/admin/search/address', 'AddressSearchResult', None)
-        , TokenTypeAheadField('Region', 'Region', '/admin/search/address', 'AddressSearchResult', 'Country')
-        , TokenTypeAheadField('City', 'City', '/admin/search/address', 'AddressSearchResult', 'Country Region')
-        , StringField('postCode', 'Post Code')
-        , StringField('line1', 'Street 1')
-        , StringField('line2', 'Street 2')
-        , StringField('line3', 'Street 3')
-    ]
-
-class CollectorArtAdvisoryForm(BaseAdminForm):
-    id = "artadvisory"
-    label = "Art Engagement"
-    getFormValues = classmethod(collectorMeta)
-    persist = classmethod(persistCollectorMeta)
-    fields = [
-        PlainHeadingField("Collector is in Advisory board, a committee member, a trustee in art expert juries of a public art institution / museum")
-        , MuseumForm("Museum")
-        , PlainHeadingField("Collector is member of an art society, friends circle of museums etc.")
-        , SocietyMemberForm("SocietyMember")
-    ]
-
-
-
-class OtherFactForm(MultipleFormField):
-    fields=[TextareaField('value', "Fact", input_classes="span10")]
-class CollectorOtherFactsForm(BaseAdminForm):
-    id = "otherfacts"
-    label = "Other Facts"
-    getFormValues = classmethod(collectorData)
-    fields = [
-        PlainHeadingField("Other Facts")
-        , OtherFactForm("Fact")
-    ]
-    @classmethod
-    def persist(cls, request, values):
-        try:
-            values['id'] = request.matchdict['collectorId']
-            collector = SaveCollectorOtherFactsProc(request, {'Collector':values})
-        except DBException, e:
-            return {'success':False, 'message': e.message}
-        return {'success': True, 'message':"Changes saved!"}
-

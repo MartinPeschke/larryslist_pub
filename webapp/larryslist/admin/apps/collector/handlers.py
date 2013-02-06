@@ -1,26 +1,18 @@
-from collections import namedtuple
-from jsonclient.backend import DBException, DBMessage
-import formencode
-from larryslist.admin.apps.collector.collections_forms import BaseCollectionForm, CollectionEditForm, CollectionArtistsForm, CollectionWebsiteForm, CollectionUploadForm, CollectionMuseumForm, CollectionCooperationForm, CollectionArtAdvisor
-from larryslist.admin.apps.collector.collector_forms import CollectorContactsForm, CollectorBusinessForm, CollectorEditForm, CollectorCreateForm, CollectionAddCollectorForm, CollectorUploadForm, CollectorArtAdvisoryForm, CollectorOtherFactsForm
-from larryslist.admin.apps.collector.models import GetCollectorDetailsProc, SetSourcesProc, CollectorModel, GetCollectorMetaProc, SetCollectorStatusProc
-from larryslist.admin.apps.collector.sources_form import AddSourcesForm
+from larryslist.admin.apps.collector.collections_forms import CollectionCreateForm, CollectionEditForm, CollectionArtistsForm, CollectionWebsiteForm, CollectionUploadForm, CollectionMuseumForm, CollectionCooperationForm, CollectionArtAdvisorForm
+from larryslist.admin.apps.collector.collector_forms import CollectorContactsForm, CollectorBusinessForm, CollectorEditForm, CollectorCreateForm, CollectionAddCollectorForm, CollectorUploadForm, CollectorArtAdvisoryForm, CollectorOtherFactsForm, CollectorRankingForm, CollectorArtFairForm
+from larryslist.admin.apps.collector.models import GetCollectorDetailsProc, SetCollectorStatusProc
 from larryslist.lib.baseviews import GenericErrorMessage, GenericSuccessMessage
 from larryslist.lib.formlib.handlers import FormHandler
 from pyramid.decorator import reify
 from pyramid.renderers import render_to_response
 
 
-def sources_save(context, request):
-    values = formencode.variabledecode.variable_decode(request.json_body)
-    data = values['sources']
-    data['id'] = request.matchdict['collectorId']
-    try:
-        collection = SetSourcesProc(request, {'Collector':data})
-    except (DBException, DBMessage), e:
-        return {'success':False, 'message': e.message}
-    return {'success': True, 'message':"Changes saved!"}
-
+def getCollector(self):
+    collectorId = self.request.matchdict.get('collectorId')
+    if collectorId:
+        return GetCollectorDetailsProc(self.request, {'id': collectorId})
+    else:
+        return None
 
 
 def getCollectorLink(self, stage = 'basic'):
@@ -41,15 +33,16 @@ def getCollectionLink(self, stage = 'basic'):
 
 
 class BaseArtHandler(FormHandler):
+    forms = []
+    admin_forms = []
+    activeForm = None
+
+
     @reify
-    def collector(self):
-        collectorId = self.request.matchdict.get('collectorId')
-        if collectorId:
-            return GetCollectorDetailsProc(self.request, {'id': collectorId})
-        else:
-            return None
+    def collector(self): return getCollector(self)
     @reify
-    def collection(self): return self.collector.Collection
+    def collection(self):
+        return self.collector.Collection if self.collector else None
 
     @reify
     def collectorName(self): return self.collector.getName()
@@ -63,71 +56,49 @@ class BaseArtHandler(FormHandler):
         else:
             return {}, {}
     def pre_fill_values(self, request, result):
-        form = self.getActiveForm()
-        result['values'][form.id] = form.getFormValues(self)
+        result['values'][self.activeForm.id] = self.activeForm.getFormValues(self)
         return result
-    def isFormEnabled(self, form): return self.forms[0].id == form.id
     def getForms(self): return self.forms
-    def getActiveForm(self):
-        stage = self.request.matchdict.get('stage', 'basic')
-        return self.schemas.get(stage)
-    def isFormActive(self, form):
-        return self.getActiveForm().id == form.id
-
+    def isActive(self, form): return self.activeForm.id == form.id
 
     def GET(self):
+        request, context = self.request, self.context
+        stage = self.request.matchdict.get('stage')
+        collectorId = self.request.matchdict.get('collectorId')
+        if not self.activeForm and collectorId and stage:
+            self.activeForm = self.schemas.get(stage)
+        if not self.activeForm:
+            for form in self.forms:
+                if form.isEnabled(request, self, context.user):
+                    self.activeForm = form
+                    break
+        if not self.activeForm:
+            self.forms[1].getLink(request, self, context.user, True)
+
+
         result = super(BaseArtHandler, self).GET()
-        form = self.getActiveForm()
-        if hasattr(form, 'template'):
-            result['view'] = self
-            return render_to_response(form.template, result, request = self.request)
-        else:
-            return result
 
+        result['view'] = self
+        return render_to_response(self.activeForm.template, result, request = self.request)
 
-class CollectorCreate(BaseArtHandler):
-    forms = [CollectorCreateForm, CollectorContactsForm, CollectorBusinessForm, CollectorArtAdvisoryForm, CollectorOtherFactsForm, CollectorUploadForm]
-    def getFormLink(self, stage = 'basic'): return self.getCollectorLink(stage)
-class CollectorEdit(BaseArtHandler):
-    forms = [CollectorEditForm, CollectorContactsForm, CollectorBusinessForm, CollectorArtAdvisoryForm, CollectorOtherFactsForm, CollectorUploadForm]
-    getFormLink = getCollectorLink
-    def isFormEnabled(self, form): return True
+class CollectorHandler(BaseArtHandler):
+    forms = [CollectorCreateForm, CollectorEditForm, CollectorContactsForm, CollectorBusinessForm, CollectorArtAdvisoryForm, CollectorOtherFactsForm, CollectorRankingForm, CollectorArtFairForm, CollectorUploadForm]
+class CollectionHandler(BaseArtHandler):
+    forms = [CollectionCreateForm, CollectionEditForm, CollectionArtistsForm, CollectionWebsiteForm, CollectionMuseumForm, CollectionCooperationForm, CollectionArtAdvisorForm, CollectionUploadForm]
 
 
 
-
-
-class CollectionCreate(BaseArtHandler):
-    forms = [BaseCollectionForm, CollectionArtistsForm, CollectionWebsiteForm, CollectionMuseumForm, CollectionCooperationForm, CollectionArtAdvisor, CollectionUploadForm]
-    def getFormLink(self, stage = 'basic'): return self.getCollectionLink(stage)
-class CollectionEdit(BaseArtHandler):
-    forms = [CollectionEditForm, CollectionArtistsForm, CollectionWebsiteForm, CollectionMuseumForm, CollectionCooperationForm, CollectionArtAdvisor, CollectionUploadForm]
-    getFormLink = getCollectionLink
-    def isFormEnabled(self, form): return True
 
 
 
 
 class AddCollectorHandler(BaseArtHandler):
-    forms = [CollectionAddCollectorForm, CollectorContactsForm, CollectorBusinessForm]
-    getFormLink = getCollectionLink
-    def getActiveForm(self): return self.forms[0]
+    forms = [CollectionAddCollectorForm, CollectorContactsForm, CollectorBusinessForm, CollectorArtAdvisoryForm, CollectorOtherFactsForm, CollectorRankingForm, CollectorArtFairForm, CollectorUploadForm]
+    activeForm = CollectionAddCollectorForm
 
+    collector = None
     @reify
-    def collector(self): return None
-    @reify
-    def othercollector(self):
-        return super(AddCollectorHandler, self).collector
-    def getSourcesForm(self):
-        if self.othercollector:
-            return AddSourcesForm(), self.othercollector.unwrap(sparse = True), {}
-        else:
-            return None, None, None
-    def pre_fill_values(self, request, result):
-        form = self.getActiveForm()
-        result['values'][form.id] = form.getFormValues(self)
-        return result
-
+    def othercollector(self): return getCollector(self)
 
 
 def set_review_status(context, request):

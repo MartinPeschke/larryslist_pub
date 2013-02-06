@@ -236,7 +236,11 @@
             };
             $.validator.autoCreateRanges = true;
         });
-        $(".goal-progress-bar").find(".progress-marker-pin").one({
+        jQuery.validator.addMethod("tagsearch-required", function (value, element) {
+            return $(element).closest(".tagsearch-container").find(".tag").length > 0;
+        }, hnc.translate("Please add at least one tag."));
+
+    $(".goal-progress-bar").find(".progress-marker-pin").one({
             mouseenter: function(e){
                 var data = $(e.target).data();
                 if(!data.workoutId)return;

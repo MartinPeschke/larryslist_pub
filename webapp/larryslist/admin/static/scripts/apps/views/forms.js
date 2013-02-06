@@ -102,6 +102,7 @@ define(['tools/ajax', "libs/fileupload", "libs/typeahead", "libs/tagsearch"], fu
                 });
                 new_node.removeAttr("data-sequence").attr("data-sequence", new_position);
                 if(!new_node.find(".remove-link").length) new_node.prepend(this.removeLink);
+                new_node.find(".remove-link").after('<div class="saved-warning">Not saved</div>');
                 new_node.find(".numbering").html(new_position+1);
                 templ.after(new_node);
 

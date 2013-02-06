@@ -106,6 +106,7 @@ def build_statics(env, version):
             run("mkdir -p {project}/static/scripts/build/".format(project=PROJECTNAME))
         run("java -jar ~/resources/compiler.jar --compilation_level SIMPLE_OPTIMIZATIONS \
             --js \
+            {project}/static/scripts/libs/modernizr.js \
             {project}/static/scripts/libs/bootstrap.js \
             {project}/static/scripts/libs/JSON.js \
             {project}/static/scripts/libs/store.js \

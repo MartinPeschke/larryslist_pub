@@ -79,7 +79,6 @@ class BaseForm(object):
     extra_forms = []
     pre_validators = []
     chained_validators = []
-
     template = 'larryslist:lib/formlib/templates/baseform.html'
     def render(self, request):
         return render(self.template, {'form': self}, request)

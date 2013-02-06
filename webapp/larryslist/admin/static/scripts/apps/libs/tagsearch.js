@@ -44,7 +44,7 @@ define(["tools/ajax", "libs/abstractsearch"], function(ajax, AbstractSearch){
             , initialize: function(opts){
                 this.$input = this.$(".query");
                 this.$result = this.$(".current-tags");
-                this.tagTemplate = _.template(this.$(".tag-template").html());
+                this.tagTemplate = _.template(this.$(".tag-template").html().trim());
                 var view = this;
 
                 this.model = new this.MODEL_CLS();

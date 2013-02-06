@@ -1,10 +1,11 @@
 from jsonclient.routing import FunctionRoute, App, ClassRoute, JSON_FORM_ATTRS, JSON_HANDLER_ATTRS, route_factory
 from pyramid.httpexceptions import HTTPFound
 
-from . import contexts, index
+from . import contexts, index, auth
 
 ROUTE_LIST = [
-    FunctionRoute ("website_index"             , "/", contexts.WebsiteRootContext, index.index, "index.html")
+    FunctionRoute   ("website_index"             , "/", contexts.WebsiteRootContext, index.index, "index.html")
+    , ClassRoute    ("website_login"             , "/login", contexts.WebsiteRootContext, auth.LoginHandler, "auth/login.html")
 ]
 
 

@@ -16,15 +16,10 @@ define(["tools/hash", "tools/ajax", "text!templates/searchresult.html"]
                 this.$searchBoxC = this.$el.find(".search-field");
                 this.$scrollWrap = this.$el.closest(".fixed-height");
                 this.$searchBox
-                    .on('keypress', $.proxy(this.keypress, this))
+                    .on('keydown', $.proxy(this.keypress, this))
                     .on('keyup',    $.proxy(this.keyup, this))
                     .on('focus', function(e){view.doSearch(e.target.value);})
                     .on('blur', $.proxy(this.hideonBlur, this));
-
-                if ($.browser.webkit || $.browser.msie) {
-                    this.$searchBox.on('keydown', $.proxy(this.keypress, this));
-                }
-
 
                 this.model.on("reset", _.bind(this.onSearchResult, this));
                 this.$resultNode = $('<div class="entity-search-result hide"></div>').appendTo("body");

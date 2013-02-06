@@ -1,7 +1,10 @@
-/**
- * Created with PyCharm.
- * User: Martin
- * Date: 23.01.13
- * Time: 21:56
- * To change this template use File | Settings | File Templates.
- */
+$(function(){
+    var
+        gF = $("#global-frame"), bW = parseInt(gF.css("border-width").replace(/[a-z]/g,''), 10)
+        , resizeFrame = function(e){
+            var wH = $(window).height();
+            if(gF.height() < wH){gF.css({height:(wH-2*bW)+"px"})}
+        };
+        $(window).on({resize: resizeFrame});
+        resizeFrame();
+});

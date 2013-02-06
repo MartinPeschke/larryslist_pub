@@ -1,11 +1,44 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title></title>
-</head>
-<body>
+<%inherit file="layout.html"/>
 
-nothing here yet
 
-</body>
-</html>
+<%def name="content()">
+<div class="container standard-box index-page">
+    <div class="row">
+        <div class="span12">
+            <h1 class="box-title">Find Art Collectors</h1>
+        </div>
+        <form class="form-validated">
+            <div class="span5">
+                <div class="control-group">
+                    <label class="control-label">
+                        What city is the Collector based in?
+                    </label>
+                    <div class="controls">
+                        <input class="text" name=""/>
+                    </div>
+                </div>
+            </div>
+            <div class="span5">
+                <div class="control-group">
+                    <label class="control-label">
+                        What type of art is (s)he collecting?
+                    </label>
+                    <div class="controls">
+                        <input class="text" name=""/>
+                    </div>
+                </div>
+            </div>
+            <div class="span2">
+                <div class="control-group">
+                    <label class="control-label">
+                        &nbsp;
+                    </label>
+                    <div class="controls">
+                        <button type="submit" class="btn btn-primary"><span data-icon="s" aria-hidden="true"></span> Search</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</%def>

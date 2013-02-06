@@ -60,16 +60,3 @@ class BaseAdminForm(BaseForm):
                     return {'success':False, 'message': e.message}
                 return {'success': True, 'message':"Changes saved!"}
         return result
-
-    @classmethod
-    def setCollectorMeta(cls, request, id, values):
-        data = GetCollectorMetaProc(request, id)
-        data.update(values)
-        SetCollectorMetaProc(request, id, data)
-        return data
-    @classmethod
-    def setCollectionMeta(cls, request, id, values):
-        data = GetCollectionMetaProc(request, id)
-        data.update(values)
-        SetCollectionMetaProc(request, id, data)
-        return data

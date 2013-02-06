@@ -5,7 +5,7 @@ __author__ = 'Martin'
 
 def ClientTokenProc(path, root_key = None, result_cls = None, method = "POST", result_list = False):
     def auth_extractor(request):
-        return {'Client-Token':request.root.client_token}
+        return {'Client-Token':request.root.settings.clientToken}
     return AuthenticatedRemoteProc(path, method, auth_extractor, root_key, result_cls, result_list)
 
 
@@ -20,7 +20,7 @@ class MetaRemoteProc(RemoteProc):
         return result if result else {}
 def MetaDataProc(path):
     def auth_extractor(request, id, data = {}):
-        return {'Client-Token':request.root.client_token, 'JsonObjectId':id}
+        return {'Client-Token':request.root.settings.clientToken, 'JsonObjectId':id}
     return MetaRemoteProc(path, auth_extractor)
 
 

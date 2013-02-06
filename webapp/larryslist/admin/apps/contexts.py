@@ -34,10 +34,6 @@ class AdminRootContext(RootContext):
     def config(self):
         return config_loader.get(self.request)
 
-    @reify
-    def client_token(self):
-        return self.request.globals.admin.clientToken
-
     def is_allowed(self, request):
         return True
 

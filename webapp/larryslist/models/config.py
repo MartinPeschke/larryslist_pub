@@ -1,3 +1,4 @@
+from datetime import datetime
 from jsonclient import Mapping, TextField, DictField, ListField
 
 __author__ = 'Martin'
@@ -25,10 +26,12 @@ class InterestModel(NamedModel): pass
 class SocNetModel(NamedModel): pass
 class MediumModel(NamedModel): pass
 class GenreModel(NamedModel): pass
+class RankingModel(NamedModel): pass
 class PublisherModel(NamedModel): pass
 class SourceTypeModel(NamedModel): pass
 class DocumentTypeModel(NamedModel): pass
 class FeederRoleModel(NamedModel): pass
+class ArtFairModel(NamedModel): pass
 class GenderModel(Mapping):
     key = TextField()
     label = TextField()
@@ -48,9 +51,12 @@ CPM = CollectionPositionModel
 COLLECTION_POSITIONS = [CPM(name = "Director"), CPM(name = "Curator"), CPM(name = "Head of Collection")]
 CTM = CooperationTypeModel
 COOPERATION_TYPES = [CTM(name = "Exhibition of own collection"), CTM(name = "Sponsoring"), CTM(name = "Funding of Award"), CTM(name = "Support of educational program")]
-
+RM = RankingModel
+RANKINGS = [RM(name="ARTnews"), RM(name="Art & Auction"), RM(name="Art Review")]
 
 FEEDER_ROLES = [FeederRoleModel(name="REVIEWER"), FeederRoleModel(name="OPERATOR")]
+
+YEARS = [NamedModel(name = yr) for yr in range(datetime.now().year, datetime.now().year - 50, -1)]
 
 class ConfigModel(Mapping):
     Nationality = ListField(DictField(NationalityModel))
@@ -60,13 +66,17 @@ class ConfigModel(Mapping):
     Medium = ListField(DictField(MediumModel))
     Genre = ListField(DictField(GenreModel))
     Interest = ListField(DictField(InterestModel))
-    Network = SOCIAL_NETWORKS
-    Gender = GENDER_CHOICES
     Publisher = ListField(DictField(PublisherModel))
     SourceType = ListField(DictField(SourceTypeModel))
+    TopMuseum = ListField(DictField(TopMuseumModel))
+    Relation = ListField(DictField(RelationshipTypeModel))
+    ArtFair = ListField(DictField(ArtFairModel))
+
+    Network = SOCIAL_NETWORKS
+    Gender = GENDER_CHOICES
     DocumentType = DOCUMENT_TYPES
     CollectionPosition = COLLECTION_POSITIONS
     CooperationType = COOPERATION_TYPES
-    TopMuseum = ListField(DictField(TopMuseumModel))
-    Relation = ListField(DictField(RelationshipTypeModel))
     FeederRole = FEEDER_ROLES
+    Ranking = RANKINGS
+    RankingYear = YEARS

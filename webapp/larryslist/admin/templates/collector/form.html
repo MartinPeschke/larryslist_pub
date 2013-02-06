@@ -4,19 +4,21 @@
 <%block name="contentbody">
     <ul class="nav nav-tabs">
         %for form in view.getForms():
-            <li class="nav-entry ${'active' if view.isFormActive(form) else ''}">
-                %if view.isFormEnabled(form):
-                    <a class="nav-entry-link" href="${view.getFormLink(stage = form.id)}">${form.label}</a>
-                %else:
-                    <span class="nav-entry-link">${form.label}</span>
-                %endif
-            </li>
+            %if form.isShown(request, view, vctxt.user):
+                <li class="nav-entry ${'active' if view.isActive(form) else ''}">
+                    %if form.isEnabled(request, view, vctxt.user):
+                        <a class="nav-entry-link" href="${form.getLink(request, view, vctxt.user)}">${form.label}</a>
+                    %else:
+                        <span class="nav-entry-link">${form.label}</span>
+                    %endif
+                </li>
+            %endif
         %endfor
         <li class="nav-entry pull-right">
             ${self.switchCollectorLink(view.collector)}
         </li>
     </ul>
-    ${self.buildBody(view.getActiveForm(), values, errors)}
+    ${self.buildBody(view.activeForm, values, errors)}
 </%block>
 
 <%def name="buildBody(form, values, errors)">
@@ -28,6 +30,7 @@
         ${self.sourcesForm(form, *view.getSourceValues())}
     </form>
 </%def>
+
 <%def name="sourcesForm(form, values, errors)">
     <div class="fixed-appendix">
         <div class="form-actions affixed">
@@ -46,10 +49,9 @@
     </div>
 </%def>
 
-
 <%def name="buildTabContent(form, values, errors)">
     <div class="tab-content fixed-height">
-        <div class="fixed-height-content tab-pane ${'active' if view.isFormActive(form) else ''}" id="wrap-${form.id}">
+        <div class="fixed-height-content tab-pane active" id="wrap-${form.id}">
             <div class="label-legend">
                 Fields:
                 <span class="required"> Mandatory</span>
