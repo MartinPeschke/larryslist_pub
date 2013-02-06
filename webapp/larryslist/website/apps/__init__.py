@@ -5,7 +5,8 @@ from . import contexts, index, auth
 
 ROUTE_LIST = [
     FunctionRoute   ("website_index"             , "/", contexts.WebsiteRootContext, index.index, "index.html")
-    , ClassRoute    ("website_login"             , "/login", contexts.WebsiteRootContext, auth.LoginHandler, "auth/login.html")
+    , ClassRoute    ("website_login"             , "/login", contexts.WebsiteRootContext, auth.LoginHandler, "auth.html", view_attrs=JSON_FORM_ATTRS)
+    , ClassRoute    ("website_signup"            , "/signup", contexts.WebsiteRootContext, auth.SignupHandler, "auth.html", view_attrs=JSON_FORM_ATTRS)
 ]
 
 

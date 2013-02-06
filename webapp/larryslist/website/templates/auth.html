@@ -1,0 +1,27 @@
+<%inherit file="layout.html"/>
+<%namespace file="larryslist:lib/formlib/templates/baseform.html" name="baseform"/>
+
+
+<%def name="content()">
+    <div class="container standard-box centered auth-page">
+        <div class="row">
+            <div class="span12">
+                <h1 class="box-title">${view.form.label}</h1>
+            </div>
+            <div class="span6">
+                ${self.buildForm(view.form)}
+            </div>
+            <div class="span6">
+                Side Bar with information about whats happening on larrys list
+            </div>
+        </div>
+    </div>
+</%def>
+<%def name="buildForm(form)">
+    <form class="${form.classes}" method="post" id="${form.id}">
+        ${baseform.prelims(view.form)}
+        %for field in form.fields:
+            ${field.render(form.id, request, values, errors, view)|n}
+        %endfor
+    </form>
+</%def>
