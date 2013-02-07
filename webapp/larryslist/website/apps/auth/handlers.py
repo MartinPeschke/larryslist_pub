@@ -41,7 +41,7 @@ class PasswordResetHandler(FormHandler):
         request = self.request
         try:
             user = PasswordTokenVerifyProc(request, request.matchdict)
-            request.user = user
+            self.context.user = user
         except DBMessage, e:
             request.session.flash(GenericErrorMessage("Invalid Link. Please check the link or request a new password forgot email."), "generic_messages")
             request.fwd("website_index")

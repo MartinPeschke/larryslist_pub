@@ -84,6 +84,7 @@ class PasswordResetForm(BaseForm):
         , PasswordField("pwdconfirm", "Confirm New Password", REQUIRED)
     ]
     chained_validators = [formencode.validators.FieldsMatch('pwd', 'pwdconfirm')]
+    @classmethod
     def on_success(self, request, values):
         try:
             UpdatePasswordProc(request, {'token':request.root.user.token, 'pwd':values['pwd']})
