@@ -1,4 +1,4 @@
-$(function(){
+(function (root, root_options) {
     var
         gF = $("#global-frame"), bW = parseInt(gF.css("border-width").replace(/[a-z]/g,''), 10)
         , resizeFrame = function(e){
@@ -7,4 +7,12 @@ $(function(){
         };
         $(window).on({resize: resizeFrame});
         resizeFrame();
-});
+
+    var login = $("#login-pull-down-form")
+    if(login.length){
+        require(["tools/ajax"], function(ajax){
+            ajax.ifyForm({root:login});
+        });
+    }
+    require(["site"]);
+})(hnc, window.__options__);

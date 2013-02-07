@@ -5,8 +5,12 @@ from . import contexts, index, auth
 
 ROUTE_LIST = [
     FunctionRoute   ("website_index"             , "/", contexts.WebsiteRootContext, index.index, "index.html")
-    , ClassRoute    ("website_login"             , "/login", contexts.WebsiteRootContext, auth.LoginHandler, "auth.html", view_attrs=JSON_FORM_ATTRS)
-    , ClassRoute    ("website_signup"            , "/signup", contexts.WebsiteRootContext, auth.SignupHandler, "auth.html", view_attrs=JSON_FORM_ATTRS)
+    , ClassRoute    ("website_login"             , "/login", contexts.WebsiteRootContext, auth.LoginHandler, "auth/form.html", view_attrs=JSON_FORM_ATTRS)
+    , FunctionRoute ("website_logout"            , "/logout", contexts.WebsiteRootContext, auth.logout, None)
+    , ClassRoute    ("website_signup"            , "/signup", contexts.WebsiteRootContext, auth.SignupHandler, "auth/form.html", view_attrs=JSON_FORM_ATTRS)
+    , ClassRoute    ("website_password"          , "/ajax/templates/password.html", contexts.WebsiteRootContext, auth.PasswordHandler, "auth/password.html", view_attrs=JSON_FORM_ATTRS)
+    , ClassRoute    ("website_password_reset"    , "/password/reset/:token", contexts.WebsiteRootContext, auth.PasswordResetHandler, "auth/form.html", view_attrs=JSON_FORM_ATTRS)
+    , FunctionRoute ("website_join_checkemail"   , "/signup/checkemail", contexts.WebsiteRootContext, auth.join_checkemail, "json", {'xhr':True})
 ]
 
 

@@ -5,12 +5,12 @@
         <div class="navbar">
         <div class="navbar-inner">
         <div class="container">
-            <a class="brand" href="${request.fwd_url("admin_index")}">${g.project_name}</a>
+            <a class="brand" href="${request.fwd_url("website_index")}">${g.project_name}</a>
             ${self.menu(vctxt.user)}
        </div>
        </div>
        </div>
-
+        ${self.header_messages()}
     </%block>
     <%block name="contentwrapper">
         ${next.content()}
@@ -19,8 +19,6 @@
     </%block>
 </div>
 
-<%block name="layoutscripts">
-</%block>
 
 <%def name="menu(user)">
     %if user.isAnon():
@@ -39,19 +37,30 @@
                 <ul class="dropdown-menu">
                     <li>
                         <% form, values, errors = request.root.getLoginForm() %>
-                        <form class="form form-validated" id="${form.id}" method="post" action="${request.fwd_url("website_login")}">
+                        <form class="form form-validated" id="login-pull-down-form" method="post" action="${request.fwd_url("website_login")}">
                             <input type="hidden" name="type" value="${form.id}"/>
                             <input type="hidden" name="furl" value="${request.furl}"/>
                             <input type="hidden" name="token" value="${request.session.get_csrf_token()}"/>
                             %for field in form.fields:
                                 ${field.render(form.id, request, values, errors, view)|n}
                             %endfor
-                            <button type="submit" class="btn btn-primary" tabindex="5">Login</button>
-                            <a class="link js-link" hnc-loader="standalone/password">Forgot password</a>
+                            <button type="submit" class="btn btn-primary">Login</button>
+                            <a class="link js-link" hnc-loader="views/password">Forgot password</a>
                         </form>
                     </li>
                 </ul>
             </li>
         </ul>
+    %else:
+        <ul class="nav pull-right">
+            <li class="nav-entry">
+                <a class="nav-entry-link" href="${request.fwd_url("website_logout")}">
+                    Logout
+                </a>
+            </li>
+        </ul>
     %endif
 </%def>
+
+
+<%block name="layoutscripts"/>

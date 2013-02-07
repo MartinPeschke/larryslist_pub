@@ -11,10 +11,11 @@ import simplejson
 
 class HtmlAttrs(object):
     classes = ''
-    def __init__(self, required = False, important = False, placeholder = ''):
+    def __init__(self, required = False, important = False, placeholder = '', **attrs):
         self.required = required
         self.important = important
-        self.placeholder = placeholder
+        self.attrs = attrs
+        self.attrs['placeholder'] = placeholder
 
     def getClasses(self):
         classes = self.classes
@@ -22,9 +23,7 @@ class HtmlAttrs(object):
         if self.important: classes += ' important'
         return classes
     def getInputAttrs(self, request):
-        attrs = []
-        if self.placeholder: attrs.append('placeholder="{}"'.format(self.placeholder))
-        return " ".join(attrs)
+        return " ".join(['{}="{}"'.format(k.replace("_", "-"),v) for k,v in self.attrs.items()])
     def getGroupAttrs(self): return ''
     def getGroupClasses(self): return ''
 
@@ -33,27 +32,35 @@ REQUIRED = HtmlAttrs(True)
 IMPORTANT = HtmlAttrs(False, True)
 
 class Placeholder(HtmlAttrs):
-    def __init__(self, placeholder = '', required = False, important = False):
+    def __init__(self, placeholder = '', required = False, important = False, **attrs):
         self.placeholder = placeholder
         self.required = required
         self.important = important
+        self.attrs = attrs
+        self.attrs['placeholder'] = placeholder
+
 class DependentAttrs(HtmlAttrs):
-    def __init__(self, placeholder, dependency, dependencyValue, required = False, important = False):
-        self.placeholder = placeholder
+    def __init__(self, placeholder, dependency, dependencyValue, required = False, important = False, **attrs):
         self.required = required
         self.important = important
         self.dependency = dependency
         self.dependencyValue = dependencyValue
+        self.attrs = attrs
+        self.attrs['placeholder'] = placeholder
+
+
     def getGroupClasses(self): return 'dependent-control'
     def getGroupAttrs(self):
         return 'data-dependency="{}" data-dependency-value="{}"'.format(self.dependency, self.dependencyValue)
 
 class PictureUploadAttrs(HtmlAttrs):
-    def __init__(self, singleFile = True, types="jpg,gif,png", required = False, important = False):
+    def __init__(self, singleFile = True, types="jpg,gif,png", required = False, important = False, **attrs):
         self.singleFile = singleFile
         self.types = types
         self.required = required
         self.important = important
+        self.attrs = attrs
+
     def getClasses(self): return ''
     def getGroupClasses(self): return 'file-upload-control'
     def getGroupAttrs(self):
@@ -68,7 +75,7 @@ class PictureUploadAttrs(HtmlAttrs):
 
 
 class BaseSchema(formencode.Schema):
-    filter_extra_fields = True
+    filter_extra_fields = False
     allow_extra_fields=True
 
 

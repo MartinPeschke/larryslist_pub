@@ -27,8 +27,11 @@ def logoutAdmin(request):
     request.fwd("website_index")
 
 
+SignupProc = LoggingInProc("/user/signup")
 LoginProc = LoggingInProc("/user/login")
 PasswordRequestProc = LoggingInProc("/user/forgotpwd")
 ResendRequestProc = ClientTokenProc("/user/resendForgotPwd")
 UpdatePasswordProc = ClientTokenProc("/user/updatePwd")
 PasswordTokenVerifyProc = ClientTokenProc("/user/token", root_key = "User", result_cls = UserModel)
+
+CheckEmailExistsProc = ClientTokenProc('/user/emailavailable')

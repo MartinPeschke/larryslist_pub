@@ -9,15 +9,10 @@
             return this.replace(/^\s+|\s+$/g, '');
         }
     }
-
-
-    var LOCALE = $('html').attr('lang'), THOUSEP = LOCALE=='de'?".":",", DECSEP = LOCALE=='de'?",":"."
-        , CURRENCY = {EUR:'&euro;'}
-        , _isTouch = !!('ontouchstart' in window && '__proto__' in {})
+    var _isTouch = !!('ontouchstart' in window && '__proto__' in {})
         , HNC = function(options){
             this.options = options;
             this.initialize.apply(this, arguments);
-
             var ctor = function(){}
                 , inherits = function(parent, protoProps, staticProps) {
                     var child;
@@ -100,16 +95,6 @@
                             if(name && $(element).closest(".controls").find('[for='+name.replace(/\./g,"\\.")+']').filter("[generated]").remove().length)
                                 $(element).closest(".control-group").removeClass("error").addClass(validClass);
                         }
-                        , success: function(label, element){
-                            $(element).closest(".control-group").removeClass("error").addClass(this.validClass);
-                        }
-                        , errorPlacement: function(error, element) {
-                            if(element.parent().find("."+this.errorClass+"[generated=true]").length)return;
-                            if (element.parent().is(".input-append"))
-                                error.insertAfter(element.parent());
-                            else
-                                error.appendTo(element.closest(".controls"));
-                        }
                     }, params)
                     , validator = $(form).validate(opts)
                     , view = this;
@@ -117,8 +102,12 @@
                 $(form).find("input[type=reset], button[type=reset]").click(function(e) {
                     view.resetForm(form);
                 });
-                var add = $(form).find(".timeShort");
-                if(add.length)add.rules("add", {timeShort:true});
+
+                $(form).find("[data-validation-url]").each(function(idx, elem){
+                    var $elem = $(elem);
+                    $elem.rules("add", {remote: $elem.data("validationUrl")});
+                });
+
                 if(params.focus){
                     form.find("input,select,textarea").filter(":visible").first().focus();
                 }
@@ -217,40 +206,7 @@
         _.extend(HNC, Backbone.Events);
         root.hnc = new HNC(window.__options__);
 
-        hnc.on("i18n:available", function(){
-            jQuery.validator.addMethod("phone-number", function (value, element) {
-                return this.optional(element) || /^[+]?([0-9]+[()/-]?)+$/gi.test(value.replace(/ /g, ""));
-            }, hnc.translate("Please enter a phone number."));
-            jQuery.validator.addMethod("timeShort", function (value, element) {
-                return this.optional(element) ||/^([0-1][0-9]+|2[0-3])(:[0-5][0-9]){1,2}$/gi.test(value.replace(/ /g, ""));
-            }, hnc.translate("Please enter a valid time, like HH:MM."));
-            jQuery.validator.addMethod("date-field", function (value, element) {
-                return this.optional(element) ||/^(19[0-9]{2}|20[0-9]{2}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01]))$/gi.test(value.replace(/ /g, ""));
-            }, hnc.translate("Please enter a valid date, like yyyy-mm-dd"));
-            jQuery.validator.methods.number = function (value, element) {
-                return this.optional(element) || /^-?(?:\d+|\d{1,3}(?:[\s\.]\d{3})+)(?:[,]\d+)?$/.test(value);
-            };
-            jQuery.validator.methods.range = function (value, element, param) {
-                var globalizedValue = parseFloat(value.replace(/\./g, "").replace(/\,/g, "."));
-                return this.optional(element) || (globalizedValue >= param[0] && globalizedValue <= param[1]);
-            };
-            $.validator.autoCreateRanges = true;
-        });
         jQuery.validator.addMethod("tagsearch-required", function (value, element) {
             return $(element).closest(".tagsearch-container").find(".tag").length > 0;
         }, hnc.translate("Please add at least one tag."));
-
-    $(".goal-progress-bar").find(".progress-marker-pin").one({
-            mouseenter: function(e){
-                var data = $(e.target).data();
-                if(!data.workoutId)return;
-                require(['/ajax/callback/workout/'+data.workoutId], function(card){
-                    if(card.html){
-                        $(e.target).append(card.html);
-                    } else if(card.redirect){
-                        window.location.href = card.redirect;
-                    }
-                });
-            }
-        });
     })(window);

@@ -24,23 +24,24 @@
 </head>
 <body class="<%block name='body_class'>${request.root.app_label}</%block>">
     ${next.body()}
-<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-<script>
-    window.__options__ = {clientToken: '${vctxt.settings.clientToken}'
-        , furl: "${request.furl}"
-        , brandName: "${g.project_name}"
-        , $messagingContainer: $("#message-container")
-        , staticPrefix: '${ROOT_STATIC_URL}'
-        , uploadUrl: '${request.globals.uploadUrl}'
-        , resourceHost: '${request.globals.resourceHost}'
-    };
-    var require = {   urlArgs: "${VERSION_TOKEN}"
-        , baseUrl: "${STATIC_URL}scripts/apps"
-        , paths : {
-            "tools"     :"${ROOT_STATIC_URL}scripts/tools"
-            ,"text"     :"${ROOT_STATIC_URL}scripts/text"
-        }};
-</script>
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script>
+        window.__options__ = {clientToken: '${vctxt.settings.clientToken}'
+            , furl: "${request.furl}"
+            , brandName: "${g.project_name}"
+            , $messagingContainer: $("#message-container")
+            , staticPrefix: '${ROOT_STATIC_URL}'
+            , uploadUrl: '${request.globals.uploadUrl}'
+            , resourceHost: '${request.globals.resourceHost}'
+        };
+        var require = {   urlArgs: "${VERSION_TOKEN}"
+            , baseUrl: "${STATIC_URL}scripts/apps"
+            , paths : {
+                "tools"     :"${ROOT_STATIC_URL}scripts/tools"
+                ,"text"     :"${ROOT_STATIC_URL}scripts/text"
+                ,"ajax/templates":"/ajax/templates"
+            }};
+    </script>
     <%block name="options"/>
     %if g.is_debug:
         <script src="${ROOT_STATIC_URL}scripts/libs/modernizr.js"></script>
