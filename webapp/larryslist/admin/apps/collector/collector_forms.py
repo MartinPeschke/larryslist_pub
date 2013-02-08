@@ -20,9 +20,10 @@ def persistCollectorMeta(cls, request, values):
         data = GetCollectorMetaProc(request, collectorId)
     data.update(values)
     SetCollectorMetaProc(request, collectorId, data)
-    return {'success': True, 'message':"Changes saved!"}
+    return {'success': True}
 
 def always(cls, request, view, user): return True
+def onlyAdmin(cls, request, view, user): return user.isAdmin()
 def isAllowedCreateForm(cls, request, view, user):
     return view.collector is None
 def isAllowedEditForm(cls, request, view, user):
@@ -51,6 +52,7 @@ class CollectorCreateForm(BaseAdminForm):
     @classmethod
     def persist(cls, request, values):
         try:
+            values['feederToken'] = request.root.user.token
             collector = CreateCollectorProc(request, {'Collector':values})
         except DBException, e:
             return {'success':False, 'message': e.message}
@@ -74,7 +76,7 @@ class CollectorEditForm(BaseAdminForm):
             collector = EditCollectorBaseProc(request, {'Collector':values})
         except DBException, e:
             return {'success':False, 'message': e.message}
-        return {'success': True, 'message':"Changes saved!"}
+        return {'success': True}
 
 class CollectorContactsForm(BaseAdminForm):
     id = "contacts"
@@ -95,7 +97,7 @@ class CollectorContactsForm(BaseAdminForm):
             collector = EditCollectorContactsProc(request, {'Collector':values})
         except DBException, e:
             return {'success':False, 'message': e.message}
-        return {'success': True, 'message':"Changes saved!"}
+        return {'success': True}
 
 class CollectorBusinessForm(BaseAdminForm):
     id = "business"
@@ -115,7 +117,7 @@ class CollectorBusinessForm(BaseAdminForm):
             collector = EditCollectorBusinessProc(request, {'Collector':values})
         except DBException, e:
             return {'success':False, 'message': e.message}
-        return {'success': True, 'message':"Changes saved!"}
+        return {'success': True}
 
 class CollectorUploadForm(BaseAdminForm):
     id = "uploads"
@@ -134,7 +136,7 @@ class CollectorUploadForm(BaseAdminForm):
             collector = SaveCollectorDocumentsProc(request, {'Collector':values})
         except DBException, e:
             return {'success':False, 'message': e.message}
-        return {'success': True, 'message':"Changes saved!"}
+        return {'success': True}
 
 class CollectorArtAdvisoryForm(BaseAdminForm):
     id = "artadvisory"
@@ -165,7 +167,7 @@ class CollectorOtherFactsForm(BaseAdminForm):
             collector = SaveCollectorOtherFactsProc(request, {'Collector':values})
         except DBException, e:
             return {'success':False, 'message': e.message}
-        return {'success': True, 'message':"Changes saved!"}
+        return {'success': True}
 
 
 class CollectorRankingForm(BaseAdminForm):
@@ -173,7 +175,7 @@ class CollectorRankingForm(BaseAdminForm):
     label = "Rankings"
 
     getFormValues = classmethod(collectorMeta)
-    isShown = classmethod(always)
+    isShown = classmethod(onlyAdmin)
     isEnabled = classmethod(isAllowedEditForm)
     getLink = classmethod(getEditLink)
 
@@ -195,7 +197,7 @@ class CollectorArtFairForm(BaseAdminForm):
     label = "Art Fairs"
 
     getFormValues = classmethod(collectorMeta)
-    isShown = classmethod(always)
+    isShown = classmethod(onlyAdmin)
     isEnabled = classmethod(isAllowedEditForm)
     getLink = classmethod(getEditLink)
 

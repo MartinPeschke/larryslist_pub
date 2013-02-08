@@ -1,6 +1,6 @@
 <%inherit file="base.html"/>
 
-<div id="global-frame">
+<div id="global-frame" class="${self.pageClass()}">
     <%block name="header">
         <div class="navbar">
         <div class="navbar-inner">
@@ -64,3 +64,4 @@
 
 
 <%block name="layoutscripts"/>
+<%def name="pageClass()"></%def>

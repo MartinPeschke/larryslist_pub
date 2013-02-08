@@ -22,7 +22,7 @@
 </%block>
 
 <%def name="buildBody(form, values, errors)">
-    <form class="${form.classes}" id="${form.id}" method="post">
+    <form class="${form.classes}" id="${form.id}" method="post">\
         <input type="hidden" name="type" value="${form.id}"/>
         <input type="hidden" name="furl" value="${request.furl}"/>
         <input type="hidden" name="token" value="${request.session.get_csrf_token()}"/>
@@ -34,7 +34,9 @@
 <%def name="sourcesForm(form, values, errors)">
     <div class="fixed-appendix">
         <div class="form-actions affixed">
-            <button type="submit" class="btn btn-primary btn-extra-wide">Save</button>
+            <div class="data-dirty-notice label-important"><span class="icon-exclamation-sign"></span> The form contains unsaved data!</div>
+            <div class="data-saved-notice label-success"><span>✔</span> Changes saved!</div>
+            <button type="submit" class="btn btn-primary">Save</button>
         </div>
         <div class="sources-form">
             %for f in form.extra_forms:

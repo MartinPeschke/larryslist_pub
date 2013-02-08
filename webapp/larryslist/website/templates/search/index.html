@@ -1,0 +1,76 @@
+<%inherit file="../layout.html"/>
+<%def name="pageClass()">search-page-container</%def>
+
+<%def name="content()">
+    <div class="container search-page">
+        <div class="row">
+            <div class="span3">
+            <form class="search-filters">
+                <div class="search-box">
+                    <input type="text" name="query" class="search-query" placeholder="Search"/><button type="submit" class="btn btn-primary"><span data-icon="s" aria-hidden="true"></span></button>
+                </div>
+                <div class="collector-filters">
+                    <h4>Personal</h4>
+                </div>
+                <div class="collection-filters">
+                    <h4>Collection</h4>
+                </div>
+            </form>
+            </div>
+            <div class="span9">
+                <div class="search-results-container">
+                    <div class="search-results-tags">
+                        <a href="/search/" class="js-link pull-right">Reset</a>
+                    </div>
+                    <div class="search-results-sorting form-inline">
+                        <i>Displaying <span class="result-count"></span> search results</i>
+                        <div class="control-group display">
+                            <label class="control-label">View</label>
+                            <select name="display">
+                                <option>List</option>
+                                <option>Grid</option>
+                            </select>
+                        </div>
+                        <div class="control-group sort-by">
+                            <label class="control-label">Sort By</label>
+                            <select name="sortby">
+                                <option>Ranking</option>
+                                <option>Followers</option>
+                                <option>Completion</option>
+                            </select>
+                        </div>
+                    </div>
+                    <hr/>
+                    <div class="search-results-header search-results-row">
+                        <div class="search-results-row">
+                            <div class="search-column picture">
+                                Collector
+                            </div><div class="search-column completion">
+                                Completion
+                            </div><div class="search-column subscribers">
+                                Followers
+                            </div><div class="search-column rank">
+                                Rank
+                            </div>
+                            <div class="search-column details">
+                                &nbsp;
+                            </div>
+                        </div>
+                    </div>
+                    <div class="search-results-body">
+                        <div class="search-results-row empty">
+                            No Results
+                        </div>
+                        <div class="show-loading">
+                            <img src="${ROOT_STATIC_URL}img/ajax-loader.gif"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</%def>
+
+<%block name="options">
+    options.pageconfig.SEARCH = {el: $(".search-page-container")};
+</%block>

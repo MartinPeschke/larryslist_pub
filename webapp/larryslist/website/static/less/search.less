@@ -1,0 +1,102 @@
+.search-page {
+  padding-bottom: 100px;
+}
+.search-box {
+  position: relative;
+  margin: 11px 0;
+  .search-query {
+    height: @baseLineHeight + 10px;
+    .box-sizing(border-box);
+  }
+}
+
+.tag.label {
+  margin-right:10px;
+  padding: 4px 6px;
+  .borderradius(3px);
+  font-weight:normal;
+  .close {
+    line-height: 14px;
+    color: #fff;
+    text-shadow: 0 1px 0 #000;
+    margin-left: 10px;
+  }
+}
+
+
+.search-results-container {
+  .box-shadow(0 0 3px rgba(0,0,0,.4));
+}
+
+.search-results-tags {
+  padding: 15px;
+  min-height: 22px;
+  border-bottom: 1px solid #ddd;
+  #gradient > .vertical(@navbarBackgroundHighlight, @navbarBackground);
+}
+.search-results-sorting {
+  padding: 20px 20px 0;
+  .control-group {
+    margin-left:15px;
+    float:right;
+  }
+  select {
+    margin-bottom: 0;
+    padding: 0;
+    height: 24px;
+  }
+}
+
+.search-column {
+  &.picture {
+    float:left;
+    text-align: center;
+    width: 80px;
+    margin: 0 35px;
+  }
+  &.completion, &.subscribers, &.rank {
+    width: 15%;
+    float:right;
+    text-align: center;
+    min-width:100px;
+  }
+  &.details {
+    margin-left:150px;
+    margin-right:45%;
+    min-width:150px;
+    min-height:100px;
+  }
+}
+
+
+.search-results-header .search-column {
+  font-weight:bold;
+  padding: 10px 0;
+  min-height:30px;
+  &.picture {
+    width: 150px;
+    margin: 0;
+  }
+}
+.search-results-body {
+  .search-results-row {clear:both;}
+  .show-loading {
+    display:none;
+    text-align: center;
+    line-height: 100px;
+  }
+  &.loading {
+    .search-results-row {
+      display:none;
+    }
+    .show-loading{
+      display:block;
+    }
+  }
+
+}
+
+.search-results-row.empty {
+  line-height: 150px;
+  text-align: center;
+}

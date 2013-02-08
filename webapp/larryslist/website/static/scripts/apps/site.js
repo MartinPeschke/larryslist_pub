@@ -1,7 +1,7 @@
 define(["router"], function (Router) {
     var
-    opts = window.__options__
-    , VIEW_MAP = {}
+    VIEW_MAP = {}
+    , opts = hnc.options
     , dodo = function(required, idx, action){
         return function(){
             var args = arguments;
@@ -14,12 +14,16 @@ define(["router"], function (Router) {
     Router.initialize(
         Backbone.Router.extend({
             routes: {
-                "*default": "default"
+                "search": "search"
+                , "search/": "search"
+                , "search/:query": "search"
+                , "*default": "default"
             }
             , initialize:function(){
                 this.on("route:default", function(path){
                     if(opts.default_route)window.app_router.navigate(opts.default_route, true);
                 });
+                this.on("route:search", dodo(["views/search"], 100));
             }
         })
     );

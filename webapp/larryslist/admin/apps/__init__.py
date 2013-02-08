@@ -1,7 +1,7 @@
 from jsonclient.routing import FunctionRoute, App, ClassRoute, RedirectRoute, JSON_FORM_ATTRS, route_factory
 from larryslist.admin.apps import collector, auth, settings
 
-from . import contexts, index
+from . import contexts, dashboard
 from pyramid.view import forbidden_view_config
 
 
@@ -11,7 +11,7 @@ class AdminSettings(object):
         self.clientToken = settings['backend.token']
 
 ROUTE_LIST = [
-    FunctionRoute   ("admin_index"                   , "/", contexts.AdminAuthedContext, index.index, "index.html")
+    FunctionRoute   ("admin_index"                   , "/", contexts.AdminAuthedContext, dashboard.index, "index.html")
     , ClassRoute    ("admin_login"                   , "/login", contexts.AdminRootContext, auth.LoginHandler, "auth/login.html", view_attrs=JSON_FORM_ATTRS)
     , FunctionRoute ("admin_logout"                  , "/logout", contexts.AdminRootContext, auth.logout, None)
     , ClassRoute    ('admin_reset_password'          , '/password/reset/:token', contexts.AdminRootContext, auth.PasswordResetHandler, "auth/password_reset.html", view_attrs = JSON_FORM_ATTRS)

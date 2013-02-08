@@ -2,7 +2,30 @@
 
 
 <%block name="contentbody">
-    <div class="padded-body">
-        <h2>Welcome to the feeder area!</h2>
+    <div class="padded-body dashboard">
+        %if vctxt.user.isAdmin():
+            <h4>Profiles pending approval</h4>
+            <div class="collector-list">
+            %for profile in submitted:
+                <div class="single-profile">
+                    <a class="profile-link" href="${request.fwd_url("admin_collector_edit", collectorId = profile.id, stage="base")}">${profile.firstName} ${profile.lastName}</a>
+                    ${profile.getStatusLabel()}
+
+                </div>
+            %endfor
+            </div>
+        %endif
+
+        <h4>My recent profiles</h4>
+        <div class="collector-list">
+        %for profile in profiles:
+            <div class="single-profile">
+                <a class="profile-link" href="${request.fwd_url("admin_collector_edit", collectorId = profile.id, stage="base")}">${profile.firstName} ${profile.lastName}</a>
+                ${profile.getStatusLabel()}
+            </div>
+        %endfor
+        </div>
+
+
     </div>
 </%block>

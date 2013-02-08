@@ -58,5 +58,5 @@ class BaseAdminForm(BaseForm):
                     collection = SetSourcesProc(request, {'Collector':sources})
                 except DBException, e:
                     return {'success':False, 'message': e.message}
-                return {'success': True, 'message':"Changes saved!"}
+                return {'success': True}
         return result

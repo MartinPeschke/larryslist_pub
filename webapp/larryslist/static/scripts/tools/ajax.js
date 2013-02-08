@@ -127,8 +127,8 @@ define(['tools/messaging', "tools/hash"], function(messaging, hashlib){
                                 messaging[resp.success?'addSuccess':'addError']({message:resp.message});
                             }
                             if(resp.success){
-                                $form.find(".saved-warning").fadeOut();
                                 $form.trigger('form:saved', resp, status, xhr, data);
+                                $form.removeClass("data-dirty");
                             }
                             params.success && params.success(resp, status, xhr, data);
                           }
@@ -144,7 +144,7 @@ define(['tools/messaging', "tools/hash"], function(messaging, hashlib){
               };
           if($(form).is("form.form-validated"))form = $(form)
           else form = $(form).find("form.form-validated");
-          form.on({submit: noop});
+          form.on({submit: noop, 'change':function(e, mod){ if(mod!='private')form.addClass("data-dirty")}});
           validationParams = validationParams||{};
           return hnc.validate(_.extend(validationParams, {root: form, submitHandler : baseFormsOnSubmit}));
       }
@@ -223,7 +223,8 @@ define(['tools/messaging', "tools/hash"], function(messaging, hashlib){
                   , newHash = hashlib.fast(JSON.stringify(attrs))
                   , transl = this.translation
                   , allKeys
-                  , deferreds;
+                  , deferreds
+                  , attr;
               // no need to parse deep, is all same anyways
               if(curHash && curHash == newHash)return;
               allKeys = this.removableKeys;
@@ -281,30 +282,30 @@ define(['tools/messaging', "tools/hash"], function(messaging, hashlib){
               }
           }
           , addOrUpdate: function(models, options){
-              if(models){
-                  options = options || {};
-                  models = _.isArray(models) ? models.slice() : [models];
-                  var i= 0, len = models.length, tmp, id, tmpModel, allIds = this.pluck(this.idAttribute);
-                  for(;i<len;i++){
-                      tmp = models[i];
-                      id = tmp[this.idAttribute]||hashlib.UUID();
-                      tmpModel = this.get(id);
-                      if(tmpModel){
-                          tmpModel.setRecursive(tmp, options);
-                      } else {
-                          tmpModel = new this.model();
-                          tmpModel.setRecursive(tmp, options);
-                          this.add(tmpModel, options);
-                      }
-                      allIds = _.without(allIds, id);
+              if(_.isEmpty(models)) models = [];
+              options = options || {};
+              models = _.isArray(models) ? models.slice() : [models];
+              var i= 0, len = models.length, tmp, id, tmpModel, idAttr = this.idAttribute||"id", allIds = this.pluck(idAttr);
+              for(;i<len;i++){
+                  tmp = models[i];
+                  id = tmp[idAttr]||hashlib.UUID();
+                  tmpModel = this.get(id);
+                  if(tmpModel){
+                      tmpModel.setRecursive(tmp, options);
+                  } else {
+                      tmpModel = new this.model();
+                      tmpModel.setRecursive(tmp, options);
+                      this.add(tmpModel, options);
                   }
-                  if(!options.preserve){
-                      for(i=0;i<allIds.length;i++){
-                          tmp = this.get(allIds[i]);
-                          if(tmp)tmp.destroy();
-                      }
+                  allIds = _.without(allIds, id);
+              }
+              if(!options.preserve){
+                  for(i=0;i<allIds.length;i++){
+                      tmp = this.get(allIds[i]);
+                      if(tmp)tmp.destroy();
                   }
               }
+              this.trigger("updated", this);
           }
           , fetch: function(options) {
               options.headers = options.headers || {};

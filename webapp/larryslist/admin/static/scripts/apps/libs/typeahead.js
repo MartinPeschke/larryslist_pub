@@ -84,13 +84,13 @@ define(["tools/ajax", "libs/abstractsearch"], function(ajax, AbstractSearch){
                 view.search.hide();
                 view.$filter.val(term.getSearchLabel());
                 if(view.$token.val() != term.id)
-                    view.$token.val(term.id).trigger("change");
+                    view.$token.val(term.id).trigger("change", "private");
                 view.current = term;
             });
             this.search.on("hide", function(){
                 if(!view.current || view.$filter.val() != view.current.getSearchLabel())    {
                     view.$filter.val("");
-                    view.$token.val("").trigger("change");
+                    view.$token.val("").trigger("change", "private");
                 }
             })
         }
@@ -141,11 +141,11 @@ define(["tools/ajax", "libs/abstractsearch"], function(ajax, AbstractSearch){
                 this.$filter.removeAttr('disabled');
                 if(e){
                     this.$filter.val("");
-                    this.$token.val("").trigger("change");
+                    this.$token.val("").trigger("change", "private");
                 }
             } else {
                 this.$filter.attr('disabled', 'disabled').val("");;
-                this.$token.val("").trigger("change");
+                this.$token.val("").trigger("change", "private");
             }
         }
         , getSearch: function(opts){

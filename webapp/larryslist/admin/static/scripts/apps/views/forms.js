@@ -36,6 +36,25 @@ define(['tools/ajax', "libs/fileupload", "libs/typeahead", "libs/tagsearch"], fu
             this.$el.find(".dependent-control").each(_.bind(this.addDependent, this));
             this.$el.find(".file-upload-control").each(_.bind(this.addFileUpload, this));
             this.$el.find(".typed-upload-control").each(_.bind(this.addTypedFileUpload, this));
+
+
+            this.saveTimeout = null;
+            this.$el.on({
+                change: function(){
+                    view.saveTimeout && clearTimeout(view.saveTimeout);
+                    view.saveTimeout = setTimeout(function(){
+                        view.$el.submit();
+                    }, 15000);
+                }
+                , "form:saved": function(){
+                    view.saveTimeout && clearTimeout(view.saveTimeout);
+                    view.$el.addClass("data-saved");
+                    setTimeout(function(){
+                        view.$el.removeClass("data-saved");
+                    }, 4000);
+
+                }
+            });
         }
         , addDependent: function(idx, elem){
             var $target = $(elem), data = $target.data(), wrapper = $target.closest(this.templateSelector), depSrc = wrapper.find('[name$='+data.dependency+']')
@@ -102,9 +121,9 @@ define(['tools/ajax', "libs/fileupload", "libs/typeahead", "libs/tagsearch"], fu
                 });
                 new_node.removeAttr("data-sequence").attr("data-sequence", new_position);
                 if(!new_node.find(".remove-link").length) new_node.prepend(this.removeLink);
-                new_node.find(".remove-link").after('<div class="saved-warning">Not saved</div>');
                 new_node.find(".numbering").html(new_position+1);
                 templ.after(new_node);
+                new_node.trigger("change");
 
                 new_node.find(".typeahead-container").each(_.bind(this.addTypeAhead, this));
                 new_node.find(".dependent-control").each(_.bind(this.addDependent, this));

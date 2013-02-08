@@ -65,6 +65,7 @@ define(["tools/ajax", "libs/abstractsearch"], function(ajax, AbstractSearch){
                             view.$input.val("");
                         });
                         view.search.on('extraItemSelected unknownterm:selected unknownterm:metaSelected', v.onCreate);
+                        view.$input.trigger("change");
                     });
                 } else {
                     this.search.on('extraItemSelected unknownterm:selected unknownterm:metaSelected', function(termname){
@@ -72,6 +73,7 @@ define(["tools/ajax", "libs/abstractsearch"], function(ajax, AbstractSearch){
                             view.search.hide();
                             view.model.add({name: termname});
                             view.$input.val("");
+                            view.$input.trigger("change");
                         }
                     });
                 }
@@ -93,6 +95,7 @@ define(["tools/ajax", "libs/abstractsearch"], function(ajax, AbstractSearch){
                     var elem = $(elem);
                     elem.attr('name', elem.attr('name').replace(re, "-"+(idx)+"."));
                 });
+                this.$input.trigger("change");
             }
             , getSearch: function(opts){
                 return new TagSearch({

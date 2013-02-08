@@ -19,3 +19,64 @@
   color: #f44;
   margin-right:30px;
 }
+
+
+.data-dirty-notice{
+  display: none;
+  padding: 3px 10px;
+  color: white;
+  line-height: 26px;
+  > .icon-exclamation-sign {
+    font-size: 1.6em;
+    line-height: 29px;
+    padding-top: 0px;
+    display: inline-block;
+    vertical-align: top;
+  }
+}
+.data-dirty .data-dirty-notice{
+  display: inline-block;
+}
+
+.data-saved-notice{
+  display: none;
+  color: white;
+  padding: 3px 10px;
+  line-height: 26px;
+  > .span {
+    font-size: 1.6em;
+    line-height: 29px;
+    padding-top: 0px;
+    display: inline-block;
+    vertical-align: top;
+  }
+}
+.data-saved .data-saved-notice{
+  display: inline-block;
+}
+
+
+
+
+.fixed-appendix {
+  background-color: #f3f3f3;
+  padding:  0 25px;
+  border-bottom:1px solid #ddd;
+  border-top:1px solid #ddd;
+  position: relative;
+  height: 178px;
+  overflow-y: scroll;
+  overflow-x: visible;
+  .form-actions.affixed {
+    position: absolute;
+    padding: 0;
+    right: 0;
+    top: -1px;
+    border-left: 1px solid #e5e5e5;
+    border-bottom: 1px solid #e5e5e5;
+    .btn {
+      margin: 3px 30px;
+      width: 120px;
+    }
+  }
+}

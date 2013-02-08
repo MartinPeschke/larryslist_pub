@@ -24,7 +24,7 @@ def persistCollectionMeta(cls, request, values):
     data = GetCollectionMetaProc(request, id)
     data.update(values)
     SetCollectionMetaProc(request, id, data)
-    return {'success': True, 'message':"Changes saved!"}
+    return {'success': True}
 
 def always(cls, request, view, user): return True
 def isAllowedCreateForm(cls, request, view, user):
@@ -84,7 +84,7 @@ class CollectionEditForm(CollectionCreateForm):
             collection = EditCollectionBaseProc(request, values)
         except DBException, e:
             return {'success':False, 'message': e.message}
-        return {'success': True, 'message':"Changes saved!"}
+        return {'success': True}
 
 class CollectionArtistsForm(BaseAdminForm):
     id = 'artist'
@@ -103,7 +103,7 @@ class CollectionArtistsForm(BaseAdminForm):
             collection = EditCollectionArtistsProc(request, values)
         except DBException, e:
             return {'success':False, 'message': e.message}
-        return {'success': True, 'message':"Changes saved!"}
+        return {'success': True}
 
 class CollectionWebsiteForm(BaseAdminForm):
     id = 'website'
@@ -122,7 +122,7 @@ class CollectionWebsiteForm(BaseAdminForm):
             collection = EditCollectionPublicationsProc(request, values)
         except DBException, e:
             return {'success':False, 'message': e.message}
-        return {'success': True, 'message':"Changes saved!"}
+        return {'success': True}
 
 
 class CollectionUploadForm(BaseAdminForm):
@@ -142,7 +142,7 @@ class CollectionUploadForm(BaseAdminForm):
             collector = SaveCollectionDocumentsProc(request, {'Collector':data})
         except DBException, e:
             return {'success':False, 'message': e.message}
-        return {'success': True, 'message':"Changes saved!"}
+        return {'success': True}
 
 
 class CollectionMuseumForm(BaseAdminForm):

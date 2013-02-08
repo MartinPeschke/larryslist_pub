@@ -61,25 +61,6 @@
             , isPicturePath: function(path){
                 return /(jpg|png|gif|bmp|tiff|tga)$/.test(path.toLowerCase())
             }
-            , send: function (options) {
-                var params = _.extend({
-                    type: "POST"
-                    , dataType: "json"
-                    , headers: {'Client-Token': this.options.clientToken}
-                    , contentType: "application/json; charset=utf-8"
-                }, options || {});
-                params.success = function (resp, status, xhr) {
-                    if (resp.redirect) {
-                        window.location.href = resp.redirect;
-                    } else if (options.success) options.success.apply(this, arguments);
-                };
-                if (typeof params.data != 'string') { params.data = JSON.stringify(params.data) }
-                $.ajax(params);
-            }
-            , sendAuthed : function(options){
-                options.headers = {'Client-Token': this.options.clientToken};
-                this.send(options);
-            }
             , validate : function(params){
                 var form = params.root.is("form.form-validated") ? params.root : params.root.find("form.form-validated")
                 var opts = _.extend({
@@ -118,11 +99,6 @@
                 $f.validate().resetForm();
                 $f.find(".error").removeClass("error");
                 $f.find("[generated]").remove();
-            }
-            , resolve_resource : function (path) {
-                if(!path||path.slice(0,4) == 'http')return path;
-                if(path[0] == '/') path = path.substr(1);
-                return window.location.protocol + '//' + this.reshost + path;
             }
             , zeroFill: function( number, width ) {
                 width -= number.toString().length;
