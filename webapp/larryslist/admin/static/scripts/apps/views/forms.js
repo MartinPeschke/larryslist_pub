@@ -39,6 +39,7 @@ define(['tools/ajax', "libs/fileupload", "libs/typeahead", "libs/tagsearch"], fu
 
 
             this.saveTimeout = null;
+            this.savedTimeout = null;
             this.$el.on({
                 change: function(){
                     view.saveTimeout && clearTimeout(view.saveTimeout);
@@ -48,8 +49,9 @@ define(['tools/ajax', "libs/fileupload", "libs/typeahead", "libs/tagsearch"], fu
                 }
                 , "form:saved": function(){
                     view.saveTimeout && clearTimeout(view.saveTimeout);
+                    view.savedTimeout && clearTimeout(view.savedTimeout);
                     view.$el.addClass("data-saved");
-                    setTimeout(function(){
+                    view.savedTimeout = setTimeout(function(){
                         view.$el.removeClass("data-saved");
                     }, 4000);
 
@@ -143,6 +145,7 @@ define(['tools/ajax', "libs/fileupload", "libs/typeahead", "libs/tagsearch"], fu
                                 elem.attr(attr, elem.attr(attr).replace(/-[0-9]+\./g, "-"+pos+"."))
                         });
                     };
+                $embeddedForm.trigger("change");
                 $embeddedForm.remove();
                 siblings.each(function(i, elem){
                     $(elem).attr('data-sequence', i).find("input,select,textarea").each(function(k, e){
