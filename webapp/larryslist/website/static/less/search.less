@@ -47,31 +47,10 @@
   }
 }
 
-.search-column {
-  &.picture {
-    float:left;
-    text-align: center;
-    width: 80px;
-    margin: 0 15px;
-  }
-  &.completion, &.subscribers, &.rank {
-    width: 15%;
-    float:right;
-    text-align: center;
-    min-width:100px;
-  }
-  &.details {
-    margin-left:150px;
-    margin-right:45%;
-    min-width:150px;
-  }
-}
-
-
 .search-results-header .search-column {
   font-weight:bold;
   padding: 10px 0;
-  margin:  0 30px;
+  margin:  0 0;
   min-height:30px;
   &.picture {
     width: 150px;
@@ -80,14 +59,7 @@
 }
 .search-results-body {
   list-style-type: none;
-  margin: 0 30px;
-  .search-results-row {
-    clear:both;
-    cursor:pointer;
-    padding:15px 0;
-    margin: 5px 0;
-    height:80px;
-  }
+  margin: 0 0;
   .show-loading {
     display:none;
     text-align: center;
@@ -107,9 +79,39 @@
   line-height: 150px;
   text-align: center;
 }
-.search-results-row.selected {
-  box-shadow: 0 0 5px rgba(0,0,0,.4);
-  background: #f9f9f9;
+
+.search-results-row {
+  clear:both;
+  cursor:pointer;
+  padding:10px 0;
+  margin: 5px 0;
+  height:80px;
+  border: 2px solid transparent;
+  &.selected {
+    border-color: @linkColor;
+    background: #f9f9f9;
+  }
+}
+.search-column {
+  &.picture {
+    float:left;
+    text-align: center;
+    width: 80px;
+    margin: 0 10px;
+  }
+  &.completion, &.subscribers, &.rank {
+    width: 15%;
+    float:right;
+    text-align: center;
+    min-width:100px;
+  }
+  &.details {
+    margin-left:120px;
+    margin-right:45%;
+    min-width:150px;
+    .name {color: @linkColor; font-weight:bold;}
+    .location {color: #999; font-size: .9em;}
+  }
 }
 
 

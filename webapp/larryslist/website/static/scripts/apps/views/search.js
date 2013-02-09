@@ -19,7 +19,7 @@ define(
             this.register({"Address" : new Addresses(), "Collection": new Collection()});
         }
         , getName: function(){
-            return this.get("name");
+            return this.get("initials");
         }
         , getAddress: function(){
             var a = this.get("Address");
@@ -27,7 +27,7 @@ define(
                 return ' ';
             else {
                 a = a.first();
-                return a.get("City").name + " " + a.get("Country").name;
+                return a.get("Region").name + ", " + a.get("Country").name;
             }
         }
         , getPicture: function(){
@@ -38,13 +38,12 @@ define(
             obj.rank = Math.floor(Math.random()*1000);
             obj.completion = Math.floor(Math.random()*100);
             obj.subscribers = Math.floor(Math.random()*1000);
-            obj.name = obj.firstName.substr(0,1) + ". " + obj.lastName.substr(0,1) +".";
             return obj;
         }
     })
     , SearchResults = ajax.Collection.extend({
         model: Collector
-        , compField: "name"
+        , compField: "initials"
         , comparator : function(model){
             return model.get(this.compField);
         }

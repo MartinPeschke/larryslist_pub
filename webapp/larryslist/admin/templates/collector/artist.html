@@ -20,9 +20,6 @@
 
 <%def name="tagTempl(widget, collectionId, pos, label, id, artworks = [], saved = False)">
     <div class="artists tag">
-        %if not saved:
-            <div class="saved-warning">Not saved</div>
-        %endif
         <div class="pull-left">${label|n}</div>
         <span class="close">×</span>
         <input type="hidden" name="${widget.getName(prefix)}-${pos|n}.id" value="${id|n}"/>

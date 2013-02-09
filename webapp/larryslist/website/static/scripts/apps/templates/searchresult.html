@@ -2,13 +2,14 @@
     <div class="search-column picture">
         <img src="{{ model.getPicture() }}"/>
     </div><div class="search-column completion">
-        {{ model.get("completion") }}%
+        <b>{{ model.get("completion") }}%</b>
     </div><div class="search-column subscribers">
-        {{ model.get("subscribers") }}
+        <b>{{ model.get("subscribers") }}</b>
     </div><div class="search-column rank">
-        {{ model.get("rank") }}
+        <b>{{ model.get("rank") }}</b>
     </div><div class="search-column details">
-        {{ model.getName() }}
-        <p>{{ model.getAddress() }}</p>
+        <div class="name">{{ model.getName() }}</div>
+        <p class="location">{{ model.getAddress() }}</p>
+        <a class="btn btn-primary">Select</a>
     </div>
 </li>

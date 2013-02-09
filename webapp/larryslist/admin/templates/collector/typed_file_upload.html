@@ -26,9 +26,6 @@
 <%def name="fileTempl(widget, prefix, pos, path, fullPath, name, saved = False)">
     <div class="typed-uploaded-file other">
         <a class="close">×</a>
-        %if not saved:
-            <div class="saved-warning">Not saved</div>
-        %endif
         <div class="control-group">
             <input type="hidden" name="${widget.getName(prefix)}-${pos|n}.type" value="OTHER"/>
             <label class="control-label">File</label>
@@ -43,9 +40,6 @@
 <%def name="imageTempl(widget, prefix, pos, path, fullPath, name, saved = False)">
     <div class="typed-uploaded-file image">
         <a class="close">×</a>
-        %if not saved:
-            <div class="saved-warning">Not saved</div>
-        %endif
         <div class="control-group">
             <input type="hidden" name="${widget.getName(prefix)}-${pos|n}.type" value="IMAGE"/>
             <label class="control-label">Image</label>
