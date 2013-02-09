@@ -233,7 +233,7 @@ define(
         , onSubmit: function(e){
             var val = this.$query.val().trim();
             if(val.length){
-                this.model.addTags(va.split(" "), {preserve:true});
+                this.model.addTags(val.split(" "), {preserve:true});
                 this.$query.val("");
             }
             e.stopPropagation();
