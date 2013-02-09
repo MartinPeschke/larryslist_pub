@@ -231,9 +231,9 @@ define(
             this.$tags.append(new TagView({model: filter}).$el);
         }
         , onSubmit: function(e){
-            var tags = this.$query.val().split(" ");
-            if(tags){
-                this.model.addTags(tags, {preserve:true});
+            var val = this.$query.val().trim();
+            if(val.length){
+                this.model.addTags(va.split(" "), {preserve:true});
                 this.$query.val("");
             }
             e.stopPropagation();
@@ -300,8 +300,11 @@ define(
                         view.$(".result-count").html(results.length);
 
                         var filters = hnc.getRecursive(resp, "Filters", []);
-                        if(resetFilters)
+                        if(resetFilters){
+                            view.filter.deepClear();
                             view.filter.setRecursive(filters);
+                        }
+
                     }
                     , complete: function(){
                         view.$results.removeClass("loading");
