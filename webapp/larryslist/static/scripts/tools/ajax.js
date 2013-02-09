@@ -306,7 +306,7 @@ define(['tools/messaging', "tools/hash"], function(messaging, hashlib){
               if(!options.preserve){
                   for(i=0;i<allIds.length;i++){
                       tmp = this.get(allIds[i]);
-                      if(tmp)tmp.destroy();
+                      if(tmp)tmp.destroy(options);
                   }
               }
               this.trigger(models.length?"updated":"emptied", this);

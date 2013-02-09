@@ -17,6 +17,12 @@
                         </li>
                     </ul>
                 %else:
+                    <ul class="nav">
+                        <li class="nav-entry">
+                            <a href="${request.fwd_url("admin_index")}" class="nav-entry-link">Dashoard</a>
+                        </li>
+                    </ul>
+
                     <div class="navbar-search" id="main-search-wrapper"><div class="search-field">
                         <input type="text" class="search-query query span5" placeholder="search for a collector" tabindex="5" autocomplete="off">
                     </div></div>

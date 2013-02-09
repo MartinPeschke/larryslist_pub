@@ -248,6 +248,7 @@ define(
     , View = ajax.View.extend({
         events: {
             'change .select-sort-by': "reSort"
+            , "click .dismiss": "emptyResults"
         }
         , initialize: function(opts){
             this.$sorting = this.$(".search-results-sorting");
@@ -261,8 +262,6 @@ define(
             this.searchQuery = new SearchQueryView({el:this.$el, model: this.query});
             this.listenTo(this.query, "updated", this.doSearch);
             this.listenTo(this.query, "remove", this.doSearch);
-
-
 
             this.results = new SearchResults();
             this.listenTo(this.results, "add", this.addResult);
@@ -286,6 +285,10 @@ define(
         }
         , doSearch: function(){
             this.search(true);
+        }
+        , emptyResults: function(){
+            this.query.addOrUpdate([], {'preserve':false, silent:true});
+            this.doSearch();
         }
         , search: function(resetFilters){
             var view = this, query = this.filter.getSearchQuery(this.query.getSearchTerm());

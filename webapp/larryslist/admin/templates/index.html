@@ -4,7 +4,7 @@
 <%block name="contentbody">
     <div class="padded-body dashboard">
         %if vctxt.user.isAdmin():
-            <h4>Profiles pending approval</h4>
+            <h4>Collectors pending approval</h4>
             <div class="collector-list">
             %for profile in submitted:
                 <div class="single-profile">
@@ -16,7 +16,7 @@
             </div>
         %endif
 
-        <h4>My recent profiles</h4>
+        <h4>My recent collectors</h4>
         <div class="collector-list">
         %for profile in profiles:
             <div class="single-profile">
@@ -25,7 +25,6 @@
             </div>
         %endfor
         </div>
-
 
     </div>
 </%block>
