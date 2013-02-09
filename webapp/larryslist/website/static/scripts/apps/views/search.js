@@ -233,7 +233,7 @@ define(
         , onSubmit: function(e){
             var val = this.$query.val().trim();
             if(val.length){
-                this.model.addTags(val.split(" "), {preserve:true});
+                this.model.addTags([val], {preserve:true});
                 this.$query.val("");
             }
             e.stopPropagation();
@@ -266,6 +266,8 @@ define(
             this.results = new SearchResults();
             this.listenTo(this.results, "add", this.addResult);
             this.listenTo(this.results, "updated", this.updatedResults);
+
+
         }
         , addResult: function(result){
             var t = this.$results.children(".sortable").eq(this.results.indexOf(result))
