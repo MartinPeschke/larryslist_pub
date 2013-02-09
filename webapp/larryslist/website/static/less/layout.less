@@ -32,3 +32,12 @@
   text-align: center;
   padding: 5px 10px 10px;
 }
+
+
+.show-contracted {display:block;}
+.show-expanded {display:none;}
+.expanded {
+  .show-contracted {display:none;}
+  .show-expanded {display:block;}
+  .show-expanded.inline {display:inline;}
+}

@@ -1,6 +1,4 @@
-<div class="control-group">
-    <label class="checkbox">
-        <input type="checkbox" value="{{ model.getValue() }}"/>
-        {{ model.getValue() }}
-    </label>
-</div>
+<label class="checkbox {{ isExtra?'show-expanded':'' }}">
+    <input type="checkbox" value="{{ model.getValue() }}"/>
+    {{ model.getValue() }}
+</label>

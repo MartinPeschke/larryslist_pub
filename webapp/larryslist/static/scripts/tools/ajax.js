@@ -158,6 +158,7 @@ define(['tools/messaging', "tools/hash"], function(messaging, hashlib){
                       clearance[attr] = null;
                   }
               }
+              this._hashValue = null;
               this.set(clearance, options);
           }
           , deepClear: function(){
@@ -168,8 +169,11 @@ define(['tools/messaging', "tools/hash"], function(messaging, hashlib){
                       clearance[attr] = null;
                   } else if(_.isFunction(this.get(attr).shallowClear)){
                       this.get(attr).shallowClear();
+                  } else if(_.isFunction(this.get(attr).addOrUpdate)){
+                      this.get(attr).addOrUpdate([], {'preserve':false});
                   }
               }
+              this._hashValue = null;
               this.set(clearance, options);
           }
           , save: function(options) {
@@ -305,7 +309,7 @@ define(['tools/messaging', "tools/hash"], function(messaging, hashlib){
                       if(tmp)tmp.destroy();
                   }
               }
-              this.trigger("updated", this);
+              this.trigger(models.length?"updated":"emptied", this);
           }
           , fetch: function(options) {
               options.headers = options.headers || {};
@@ -314,24 +318,25 @@ define(['tools/messaging', "tools/hash"], function(messaging, hashlib){
           }
       });
   ajax.View = Backbone.View.extend({
-          firedEvents: {}
-          , setupPage: function(html){
-              this.$el.html(html);
-              hnc.setupPage(this.$el);
+      sortedInsert: function(root, el, sortIndex){
+          var i=0
+              , tmp, data
+              , nodes = root.children()
+              , len = nodes.length
+              , inserted = false;
+          el.data("entitySort", sortIndex);
+          for(;i<len;i++){
+              tmp = nodes.eq(i);
+              if(tmp.data("entitySort")>sortIndex){
+                  tmp.before(el);
+                  inserted = true;
+                  break;
+              }
           }
-          , recordSingularEvents: function(events) {
-              this.on("all", function(event, model, collection, options){
-                  if(!!~events.indexOf(event))
-                      this.firedEvents[event] = true;
-              });
+          if(!inserted){
+              root.append(el);
           }
-          , onOrAfter: function(event, cb, context){
-              var c = this, args = Array.prototype.slice.call(arguments, 3);
-              if(c.firedEvents[event]) cb.apply(context, args);
-              else this.on(event, function(){
-                  cb.apply(context, args);
-              });
-          }
-      });
+      }
+  });
   return ajax;
 });

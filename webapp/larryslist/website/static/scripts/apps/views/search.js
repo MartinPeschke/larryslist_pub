@@ -48,16 +48,7 @@ define(
             this.model.destroy();
         }
     })
-    , SearchTag = ajax.Model.extend({
-        idAttribute:"label"
-        , getLabel: function(){
-            return this.get("label");
-        }
-    })
-    , SearchTags = ajax.Collection.extend({
-        model: SearchTag
-        , idAttribute: "label"
-    })
+
 
     , FilterTag = ajax.Model.extend({
         idAttribute: "name"
@@ -72,33 +63,34 @@ define(
         idAttribute: "name"
         , model: FilterTag
     })
-
-
     , FilterOptionView = Backbone.View.extend({
         template: _.template(foTempl)
         , events: {"change input": "onChange"}
         , initialize: function(opts){
-            this.setElement(this.template({model: this.model}));
+            this.setElement(this.template({model: this.model, isExtra:opts.isExtra}));
             this.listenTo(this.model, "destroy", this.remove);
         }
         , onChange: function(){
             this.model.set("selected", this.$("input").is(":checked"));
         }
     })
-
     , FilterSectionView = Backbone.View.extend({
         template: _.template(fsTempl)
+        , defaultShow: 5
         , initialize: function(opts){
             this.setElement(this.template({model: this.model, title:opts.title}));
+            if(this.model.length){this.onUpdate(this.model);}
             this.listenTo(this.model, "destroy", this.remove);
-            this.listenTo(this.model, "updated", this.onUpdate);
         }
         , onUpdate: function(models){
-            var $el = this.$(".filter-list");
-            models.each(function(model){
-                var v = new FilterOptionView({model:model});
+            var $el = this.$(".filter-list"), limit = this.defaultShow;
+            models.each(function(model, idx){
+                var v = new FilterOptionView({model:model, isExtra:idx>=limit});
                 $el.append(v.$el);
             });
+            if(models.length>limit){
+                $el.append('<a class="link show-more" data-toggle-text="▲ '+ (models.length - limit) +' less" data-toggle-target=".filter-section" data-toggle-class="expanded">▼ '+ (models.length - limit) +' more</a>')
+            }
         }
         , getTitle: function(){
             return this.options.title;
@@ -112,16 +104,13 @@ define(
                 filter[k] = new FilterTags();
                 model.listenTo(filter[k], "change:selected", function(){model.trigger("do:filter");})
             });
-            filter.tags = new SearchTags();
+
             this.register(filter);
         }
-        , addTags: function(label, options){
-            this.get("tags").addOrUpdate(_.map(label, function(l){return {label: l}}), options);
-        }
-        , getSearchQuery: function(){
-            var model = this, tags = this.get("tags"), term = tags.pluck("label").join(" ");
+        , getSearchQuery: function(term){
+            var model = this;
             if(term.length > 2){
-                var filters = {}
+                var filters = {};
                 _.each(this.FILTERS, function(k){
                     var l = [];
                     model.get(k).each(function(m){if(m.isSelected())l.push({name: m.getValue()})});
@@ -131,8 +120,61 @@ define(
             }
         }
     })
+    , FilterView = ajax.View.extend({
+        SECTIONS : {
+            Collection: {
+                root: ".collection-filters"
+                , elems: {
+                    "Artist": {title: "Artist"}
+                    , "Genre": {title: "Genre"}
+                    , "Medium": {title: "Medium"}
+                    , "Origin": {title: "Origin"}
+                }
+            }
+            , Collector: {
+                root: ".collector-filters"
+                , elems: {
+                    "Gender": {title: "Gender"}
+                }
+            }
+        }
+        , initialize: function(){
+            var view = this, collection_root = this.$();
+            _.each(this.SECTIONS, function(val){
+                view.setup(val.elems, view.$(val.root));
+            });
+        }
+        , setup: function(props, root){
+            var view = this;
+            _.each(props, function(v, k){
+                view.listenTo(view.model, k+":updated", view.addSection(k, v, root));
+            });
+        }
+        , addSection: function(key, opts, root){
+            var view = this;
+            return function(model){
+                var v = new FilterSectionView({model: model, title: opts.title});
+                view.sortedInsert(root, v.$el, key);
+            }
+        }
+    })
 
-
+    , SearchTag = ajax.Model.extend({
+        idAttribute:"label"
+        , getLabel: function(){
+            return this.get("label");
+        }
+    })
+    , SearchTags = ajax.Collection.extend({
+        model: SearchTag
+        , idAttribute: "label"
+        , addTags: function(label, options){
+            this.addOrUpdate(_.map(label, function(l){return {label: l}}), options);
+        }
+        , getSearchTerm: function(){
+            return this.pluck("label").join(" ");
+        }
+    })
     , TagView = Backbone.View.extend({
         template: _.template(tagTempl)
         , events: {'click .close': 'destroy'}
@@ -144,25 +186,12 @@ define(
             this.model.destroy();
         }
     })
-    , FilterView = Backbone.View.extend({
-        SECTIONS : {
-            "Artist": {title: "Artist"}
-            , "Genre": {title: "Genre"}
-            , "Medium": {title: "Medium"}
-            , "Origin": {title: "Origin"}
-        }
-        , events : {"submit":"onSubmit"}
-        , initialize: function(){
-            var view = this;
+    , SearchQueryView = Backbone.View.extend({
+        events : {"submit":"onSubmit"}
+        , initialize:function(opts){
             this.$query = this.$(".search-query");
             this.$tags = this.$(".search-results-tags");
-            this.listenTo(this.model, "tags:add", this.addTag);
-
-            _.each(this.SECTIONS, function(v, k, obj){
-                obj.view = new FilterSectionView({model: view.model.get(k), title: v.title});
-                view.$(".collection-filters").append(obj.view.$el);
-            });
-
+            this.listenTo(this.model, "add", this.addTag);
         }
         , addTag: function(filter){
             this.$tags.append(new TagView({model: filter}).$el);
@@ -181,16 +210,20 @@ define(
 
 
 
+
     , View = Backbone.View.extend({
         initialize: function(opts){
             this.$sorting = this.$(".search-results-sorting");
             this.$results = this.$(".search-results-body");
 
             this.filter = new FilterModel();
-            this.searchQuery = new FilterView({el:this.$el, model: this.filter});
-            this.listenTo(this.filter, "tags:updated", this.doSearch);
-            this.listenTo(this.filter, "tags:remove", this.doSearch);
+            this.filterView = new FilterView({el:this.$el, model: this.filter});
             this.listenTo(this.filter, "do:filter", this.doFilter);
+
+            this.query = new SearchTags();
+            this.searchQuery = new SearchQueryView({el:this.$el, model: this.query});
+            this.listenTo(this.query, "updated", this.doSearch);
+            this.listenTo(this.query, "remove", this.doSearch);
 
 
 
@@ -211,7 +244,7 @@ define(
             this.search(true);
         }
         , search: function(resetFilters){
-            var view = this, query = this.filter.getSearchQuery();
+            var view = this, query = this.filter.getSearchQuery(this.query.getSearchTerm());
             if(query){
                 this.$results.addClass("loading");
                 ajax.submitPrefixed({
@@ -220,6 +253,7 @@ define(
                     , success: function(resp, status, xhr){
                         var results = hnc.getRecursive(resp, "Collectors.Collector", []);
                         view.results.addOrUpdate(results, {'preserve':false});
+                        view.$(".result-count").html(results.length);
 
                         var filters = hnc.getRecursive(resp, "Filters", []);
                         if(resetFilters)
@@ -231,11 +265,12 @@ define(
                 });
             } else {
                 view.results.addOrUpdate([], {'preserve':false});
+                view.filter.deepClear();
             }
         }
         , render: function(query){
             var tags = query?decodeURIComponent(query).split(" "):[];
-            this.filter.addTags(tags);
+            this.query.addTags(tags);
         }
     })
     , init = function(opts){

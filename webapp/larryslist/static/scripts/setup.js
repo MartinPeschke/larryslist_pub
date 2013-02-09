@@ -149,14 +149,14 @@
 
         // TOGGLEABLE FLY OUTS
         $(document).on({click: function(e){
-            var $t = $(e.currentTarget), target = $t.attr("data-toggle-target"), toggle = $t.attr("data-toggle-class")
+            var $t = $(e.currentTarget), data = $t.data(), target = data.toggleTarget, toggle = data.toggleClass
                 , on = (target?$t.closest(target):$t).toggleClass(toggle).hasClass(toggle);
-            if($t.attr("data-toggle-text")){
+            if(data.toggleText){
                 if(on){
-                    $t.attr("data-backup-text", $t.html());
-                    $t.html($t.attr("data-toggle-text"));
+                    $t.data("backupText", $t.html());
+                    $t.html(data.toggleText);
                 } else {
-                    $t.html($t.attr("data-backup-text"));
+                    $t.html(data.backupText);
                 }
             }
         }}, "[data-toggle-class]");
