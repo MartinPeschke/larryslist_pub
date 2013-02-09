@@ -104,6 +104,16 @@ define(['tools/ajax', "libs/fileupload", "libs/typeahead", "libs/tagsearch"], fu
             $elem.on(hnc.support.clickEvent, ".close", function(e){
                 $(e.currentTarget).closest(".form-validated").trigger("change");
                 $(e.currentTarget).closest(".typed-uploaded-file").remove();
+
+                var reIdx = function(elem, pos){
+                    _.each(['id','name'], function(attr){
+                        if(elem.attr(attr))
+                            elem.attr(attr, elem.attr(attr).replace(/-[0-9]+\./g, "-"+pos+"."))
+                    });
+                };
+                $elem.find(".typed-uploaded-file").each(function(idx, row){
+                    $(row).find("input").each(function(i, input){reIdx($(input), idx)});
+                });
             });
         }
         , addRow : function(e){
