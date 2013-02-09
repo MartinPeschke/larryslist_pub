@@ -153,7 +153,10 @@ define(
             , Collector: {
                 root: ".collector-filters"
                 , elems: {
-                    "Gender": {title: "Gender"}
+                    "Country": {title: "Country"}
+                    , "Region": {title: "Region"}
+                    , "City": {title: "City"}
+                    , "Gender": {title: "Gender"}
                 }
             }
         }

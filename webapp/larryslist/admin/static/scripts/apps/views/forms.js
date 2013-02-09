@@ -102,6 +102,7 @@ define(['tools/ajax', "libs/fileupload", "libs/typeahead", "libs/tagsearch"], fu
                     this.$el.append(tmpl({name:file.name, fullPath:hnc.resUrl(file_path), path:file_path, pos:pos}));
             });
             $elem.on(hnc.support.clickEvent, ".close", function(e){
+                $(e.currentTarget).closest(".form-validated").trigger("change");
                 $(e.currentTarget).closest(".typed-uploaded-file").remove();
             });
         }
