@@ -63,9 +63,9 @@ define(['tools/ajax', "libs/fileupload", "libs/typeahead", "libs/tagsearch"], fu
                 , f = function(t){
                     var val = new RegExp(t.find("option").filter(":selected").val()||'hide-at-all-costs');
                     if(val.test(data.dependencyValue)){
-                        $target.show()
+                        $target.show();
                     } else {
-                        $target.hide();
+                        $target.hide().find("input").val("");
                     }
                 };
             depSrc.on("change.dependent-fields", function(e){f($(e.target))});

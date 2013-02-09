@@ -52,7 +52,7 @@
     float:left;
     text-align: center;
     width: 80px;
-    margin: 0 35px;
+    margin: 0 15px;
   }
   &.completion, &.subscribers, &.rank {
     width: 15%;
@@ -64,7 +64,6 @@
     margin-left:150px;
     margin-right:45%;
     min-width:150px;
-    min-height:100px;
   }
 }
 
@@ -72,6 +71,7 @@
 .search-results-header .search-column {
   font-weight:bold;
   padding: 10px 0;
+  margin:  0 30px;
   min-height:30px;
   &.picture {
     width: 150px;
@@ -79,26 +79,37 @@
   }
 }
 .search-results-body {
-  .search-results-row {clear:both;}
+  list-style-type: none;
+  margin: 0 30px;
+  .search-results-row {
+    clear:both;
+    cursor:pointer;
+    padding:15px 0;
+    margin: 5px 0;
+    height:80px;
+  }
   .show-loading {
     display:none;
     text-align: center;
-    line-height: 100px;
+    line-height: 80px;
   }
   &.loading {
-    .search-results-row {
+    .search-results-row,.search-placeholder {
       display:none;
     }
     .show-loading{
       display:block;
     }
   }
-
 }
 
-.search-results-row.empty {
+.search-placeholder.empty {
   line-height: 150px;
   text-align: center;
+}
+.search-results-row.selected {
+  box-shadow: 0 0 5px rgba(0,0,0,.4);
+  background: #f9f9f9;
 }
 
 

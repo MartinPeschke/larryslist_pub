@@ -19,10 +19,10 @@ define(
             this.register({"Address" : new Addresses(), "Collection": new Collection()});
         }
         , getName: function(){
-            return this.get("firstName") + " " + this.get("lastName");
+            return this.get("name");
         }
         , getAddress: function(){
-            var a = this.get("Address")
+            var a = this.get("Address");
             if(_.isEmpty(a))
                 return ' ';
             else {
@@ -34,15 +34,35 @@ define(
             var path = this.get("picture");
             return path?hnc.resUrl(path):"http://www.gravatar.com/avatar/00000000000000000000000000000000?d=mm";
         }
+        , parseLocal: function(obj){
+            obj.rank = Math.floor(Math.random()*1000);
+            obj.completion = Math.floor(Math.random()*100);
+            obj.subscribers = Math.floor(Math.random()*1000);
+            obj.name = obj.firstName.substr(0,1) + ". " + obj.lastName.substr(0,1) +".";
+            return obj;
+        }
     })
     , SearchResults = ajax.Collection.extend({
         model: Collector
+        , compField: "name"
+        , comparator : function(model){
+            return model.get(this.compField);
+        }
+        , reSort: function(field){
+            this.compField = field;
+            this.sort();
+        }
     })
     , ResultView = Backbone.View.extend({
-        template: _.template(resultTempl)
+    events: {click:"toggleSelected"}
+        , template: _.template(resultTempl)
         , initialize: function(){
             this.setElement(this.template({model: this.model}));
             this.listenTo(this.model, "destroy", this.remove);
+        }
+        , toggleSelected: function(){
+            var selected = this.$el.toggleClass("selected").hasClass("selected");
+            this.model.set("selected", selected);
         }
         , destroy: function(){
             this.model.destroy();
@@ -211,8 +231,11 @@ define(
 
 
 
-    , View = Backbone.View.extend({
-        initialize: function(opts){
+    , View = ajax.View.extend({
+        events: {
+            'change .select-sort-by': "reSort"
+        }
+        , initialize: function(opts){
             this.$sorting = this.$(".search-results-sorting");
             this.$results = this.$(".search-results-body");
 
@@ -232,7 +255,14 @@ define(
             this.listenTo(this.results, "updated", this.updatedResults);
         }
         , addResult: function(result){
-            this.$results.append(new ResultView({model: result}).$el);
+            var t = this.$results.children(".sortable").eq(this.results.indexOf(result))
+                , v = new ResultView({model: result}).$el;
+            if(t.length){
+                t.before(v);
+            } else {
+                this.$results.append(v);
+            }
+
         }
         , updatedResults: function(){
             this.$results.find(".empty")[this.results.length?"addClass":"removeClass"]("hide");
@@ -266,7 +296,16 @@ define(
             } else {
                 view.results.addOrUpdate([], {'preserve':false});
                 view.filter.deepClear();
+                view.$(".result-count").html("0");
             }
+        }
+        , reSortResults: function(){
+            this.$results.children(".sortable").off().remove();
+            this.results.each(this.addResult, this);
+        }
+        , reSort: function(e){
+            this.results.reSort($(e.target).val());
+            this.reSortResults();
         }
         , render: function(query){
             var tags = query?decodeURIComponent(query).split(" "):[];

@@ -10,7 +10,7 @@
                     <input type="text" name="query" class="search-query" placeholder="Search"/><button type="submit" class="btn btn-primary"><span data-icon="s" aria-hidden="true"></span></button>
                 </div>
                 <div class="collector-filters">
-                    <h4>Personal</h4>
+                    <h4>Collector</h4>
                 </div>
                 <div class="collection-filters">
                     <h4>Collection</h4>
@@ -23,20 +23,14 @@
                         <a href="/search/" class="js-link pull-right">Reset</a>
                     </div>
                     <div class="search-results-sorting form-inline">
-                        <i>Displaying <span class="result-count"></span> search results</i>
-                        <div class="control-group display">
-                            <label class="control-label">View</label>
-                            <select name="display">
-                                <option>List</option>
-                                <option>Grid</option>
-                            </select>
-                        </div>
+                        <i>Displaying <span class="result-count">0</span> search results</i>
                         <div class="control-group sort-by">
                             <label class="control-label">Sort By</label>
-                            <select name="sortby">
-                                <option>Ranking</option>
-                                <option>Followers</option>
-                                <option>Completion</option>
+                            <select class="select-sort-by" name="sortby">
+                                <option value="name">Name</option>
+                                <option value="rank">Rank</option>
+                                <option value="subscribers">Followers</option>
+                                <option value="completion">Completion</option>
                             </select>
                         </div>
                     </div>
@@ -57,14 +51,14 @@
                             </div>
                         </div>
                     </div>
-                    <div class="search-results-body">
-                        <div class="search-results-row empty">
+                    <ul class="search-results-body">
+                        <li class="search-placeholder empty">
                             No Results
-                        </div>
-                        <div class="show-loading">
+                        </li>
+                        <li class="show-loading">
                             <img src="${ROOT_STATIC_URL}img/ajax-loader.gif"/>
-                        </div>
-                    </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>

@@ -1,14 +1,14 @@
-<div class="search-results-row">
+<li class="search-results-row sortable">
     <div class="search-column picture">
         <img src="{{ model.getPicture() }}"/>
     </div><div class="search-column completion">
-        100%
+        {{ model.get("completion") }}%
     </div><div class="search-column subscribers">
-        20
+        {{ model.get("subscribers") }}
     </div><div class="search-column rank">
-        10
+        {{ model.get("rank") }}
     </div><div class="search-column details">
         {{ model.getName() }}
         <p>{{ model.getAddress() }}</p>
     </div>
-</div>
+</li>
