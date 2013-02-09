@@ -330,7 +330,7 @@ define(
             this.reSortResults();
         }
         , render: function(query){
-            var tags = query?decodeURIComponent(query).split(" "):[];
+            var tags = query?[decodeURIComponent(query)]:[];
             this.query.addTags(tags);
         }
     })
