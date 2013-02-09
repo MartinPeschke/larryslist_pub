@@ -71,17 +71,20 @@ define(
 
     , FilterTag = ajax.Model.extend({
         idAttribute: "name"
-        , getValue: function(){
-            return this.get("name");
-        }
-        , isSelected: function(){
-            return this.get("selected");
-        }
+        , getValue: function(){return this.get("name");}
+        , getLabel: function(){return this.get("name");}
+        , isSelected: function(){return this.get("selected");}
     })
-    , FilterTags = ajax.Collection.extend({
+    , FilterTags = ajax.Collection.extend({idAttribute: "name", model: FilterTag})
+
+    , TokenTag = ajax.Model.extend({
         idAttribute: "name"
-        , model: FilterTag
+        , getValue: function(){return this.get("token");}
+        , getLabel: function(){return this.get("name");}
+        , isSelected: function(){return this.get("selected");}
     })
+    , TokenTags = ajax.Collection.extend({idAttribute: "name", model: TokenTag})
+
     , FilterOptionView = Backbone.View.extend({
         template: _.template(foTempl)
         , events: {"change input": "onChange"}
@@ -116,12 +119,21 @@ define(
         }
     })
     , FilterModel = ajax.Model.extend({
-        FILTERS: ["Artist", "Gender", "Genre", "Medium", "Origin"]
+        FILTERS: [
+            {name: "Artist", cls:FilterTags}
+            , {name: "Gender", cls:FilterTags}
+            , {name: "Genre", cls:FilterTags}
+            , {name: "Medium", cls:FilterTags}
+            , {name: "Origin", cls:FilterTags}
+            , {name: "Country", cls:TokenTags}
+            , {name: "Region", cls:TokenTags}
+            , {name: "City", cls:TokenTags}
+        ]
         , initialize:function(opts){
             var model = this, filter = {};
-            _.each(this.FILTERS, function(k){
-                filter[k] = new FilterTags();
-                model.listenTo(filter[k], "change:selected", function(){model.trigger("do:filter");})
+            _.each(this.FILTERS, function(f){
+                filter[f.name] = new f.cls();
+                model.listenTo(filter[f.name], "change:selected", function(){model.trigger("do:filter");})
             });
 
             this.register(filter);
@@ -130,10 +142,10 @@ define(
             var model = this;
             if(term.length > 2){
                 var filters = {};
-                _.each(this.FILTERS, function(k){
+                _.each(this.FILTERS, function(f){
                     var l = [];
-                    model.get(k).each(function(m){if(m.isSelected())l.push({name: m.getValue()})});
-                    if(l.length)filters[k] = l;
+                    model.get(f.name).each(function(m){if(m.isSelected())l.push({name: m.getValue()})});
+                    if(l.length)filters[f.name] = l;
                 });
                 return {"term":term, "Filters": filters};
             }
@@ -144,19 +156,19 @@ define(
             Collection: {
                 root: ".collection-filters"
                 , elems: {
-                    "Artist": {title: "Artist"}
-                    , "Genre": {title: "Genre"}
-                    , "Medium": {title: "Medium"}
-                    , "Origin": {title: "Origin"}
+                    "Artist": {title: "Artist", sort:1}
+                    , "Genre": {title: "Genre", sort:2}
+                    , "Medium": {title: "Medium", sort:3}
+                    , "Origin": {title: "Origin", sort:4}
                 }
             }
             , Collector: {
                 root: ".collector-filters"
                 , elems: {
-                    "Country": {title: "Country"}
-                    , "Region": {title: "Region"}
-                    , "City": {title: "City"}
-                    , "Gender": {title: "Gender"}
+                    "Country": {title: "Country", sort:1}
+                    , "Region": {title: "Region", sort:2}
+                    , "City": {title: "City", sort:3}
+                    , "Gender": {title: "Gender", sort:4}
                 }
             }
         }
@@ -176,7 +188,7 @@ define(
             var view = this;
             return function(model){
                 var v = new FilterSectionView({model: model, title: opts.title});
-                view.sortedInsert(root, v.$el, key);
+                view.sortedInsert(root, v.$el, opts.sort);
             }
         }
     })

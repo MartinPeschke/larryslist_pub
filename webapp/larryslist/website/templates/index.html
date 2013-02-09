@@ -8,33 +8,23 @@
             <h1 class="box-title">Find Art Collectors</h1>
         </div>
         <form class="search-form form-validated" method="GET" action="${request.fwd_url("website_search", query='')}">
-            <div class="span5">
-                <div class="control-group">
+            <div class="span6">
+                <div class="control-group first">
                     <label class="control-label">
                         What city is the Collector based in?
                     </label>
                     <div class="controls">
-                        <input class="text" name="loc"/>
+                        <input type="text" name="loc" class="input-xlarge"/><button type="submit" class="btn btn-primary"><span data-icon="s" aria-hidden="true"></span> Search</button>
                     </div>
                 </div>
             </div>
-            <div class="span5">
-                <div class="control-group">
+            <div class="span6">
+                <div class="control-group last">
                     <label class="control-label">
                         What type of art is (s)he collecting?
                     </label>
                     <div class="controls">
-                        <input class="text" name="genre"/>
-                    </div>
-                </div>
-            </div>
-            <div class="span2">
-                <div class="control-group">
-                    <label class="control-label">
-                        &nbsp;
-                    </label>
-                    <div class="controls">
-                        <button type="submit" class="btn btn-primary"><span data-icon="s" aria-hidden="true"></span> Search</button>
+                        <input type="text" name="genre" class="input-xlarge"/><button type="submit" class="btn btn-primary"><span data-icon="s" aria-hidden="true"></span> Search</button>
                     </div>
                 </div>
             </div>

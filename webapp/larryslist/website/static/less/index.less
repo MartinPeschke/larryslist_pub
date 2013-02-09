@@ -1,5 +1,17 @@
 .index-page {
   .control-group {
-    padding: 15px 25px;
+    vertical-align: top;
+    &.first {padding: 15px 0px 15px 25px;}
+    &.last {padding: 15px 25px 15px 0px;}
+  }
+  input {
+    margin:0;
+    width: 80%;
+    height: 30px;
+    .box-sizing(border-box);
+  }
+  .btn {
+    width: 20%;
+    .box-sizing(border-box);
   }
 }

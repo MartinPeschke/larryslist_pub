@@ -45,7 +45,7 @@ define(['tools/ajax', "libs/fileupload", "libs/typeahead", "libs/tagsearch"], fu
                     view.saveTimeout && clearTimeout(view.saveTimeout);
                     view.saveTimeout = setTimeout(function(){
                         view.$el.submit();
-                    }, 15000);
+                    }, 90000);
                 }
                 , "form:saved": function(){
                     view.saveTimeout && clearTimeout(view.saveTimeout);
