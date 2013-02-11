@@ -10,6 +10,6 @@
     </div><div class="search-column details">
         <div class="name">{{ model.getName() }}</div>
         <p class="location">{{ model.getAddress() }}</p>
-        <a class="btn btn-primary">Select</a>
+        <a class="btn btn-primary" data-text-selected="Select" data-text-unselected="Deselect">{{ inCart?'Deselect':'Select' }}</a>
     </div>
 </li>

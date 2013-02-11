@@ -1,46 +1,15 @@
 define(
-    ["tools/ajax", "text!templates/tag.html", "text!templates/searchresult.html", "text!templates/filtersection.html", "text!templates/filteroption.html"]
-    , function(ajax, tagTempl, resultTempl, fsTempl, foTempl){
+    ["tools/ajax", "models/cart", "models/collector"
+            , "text!templates/tag.html"
+            , "text!templates/searchresult.html"
+            , "text!templates/filtersection.html"
+            , "text!templates/filteroption.html"
+            , "text!templates/flyout.html"]
+    , function(ajax, cart, Collector, tagTempl, resultTempl, fsTempl, foTempl, flyoutTempl){
     var
     MODULE_KEY = 'SEARCH'
     , instance
 
-    , Address = ajax.Model.extend({
-
-    })
-    , Addresses = ajax.Collection.extend({
-        model: Address
-    })
-    , Collection = ajax.Model.extend({
-
-    })
-    , Collector = ajax.Model.extend({
-        initialize:function(opts){
-            this.register({"Address" : new Addresses(), "Collection": new Collection()});
-        }
-        , getName: function(){
-            return this.get("initials");
-        }
-        , getAddress: function(){
-            var a = this.get("Address");
-            if(_.isEmpty(a))
-                return ' ';
-            else {
-                a = a.first();
-                return a.get("Region").name + ", " + a.get("Country").name;
-            }
-        }
-        , getPicture: function(){
-            var path = this.get("picture");
-            return path?hnc.resUrl(path):"http://www.gravatar.com/avatar/00000000000000000000000000000000?d=mm";
-        }
-        , parseLocal: function(obj){
-            obj.rank = Math.floor(Math.random()*1000);
-            obj.completion = Math.floor(Math.random()*100);
-            obj.subscribers = Math.floor(Math.random()*1000);
-            return obj;
-        }
-    })
     , SearchResults = ajax.Collection.extend({
         model: Collector
         , compField: "initials"
@@ -53,21 +22,49 @@ define(
         }
     })
     , ResultView = Backbone.View.extend({
-    events: {click:"toggleSelected"}
+        events: {click:"toggleSelected"}
         , template: _.template(resultTempl)
-        , initialize: function(){
-            this.setElement(this.template({model: this.model}));
+        , initialize: function(opts){
+            this.setElement(this.template({model: this.model, inCart:opts.inCart}));
             this.listenTo(this.model, "destroy", this.remove);
+            this.$button = this.$el.find(".btn");
+            if(opts.inCart)this.toggleSelected();
         }
         , toggleSelected: function(){
             var selected = this.$el.toggleClass("selected").hasClass("selected");
             this.model.set("selected", selected);
+            cart[selected?'addProfile':'removeProfile'](this.model);
+            var btnData = this.$button.data();
+            this.$button.html(btnData[selected?'textUnselected':'textSelected'])[selected?'removeClass':'addClass']("btn-primary");
+            this.$el.trigger("collector:"+(selected?"selected":"unselected"));
         }
         , destroy: function(){
             this.model.destroy();
         }
     })
+    , CartFlyout = Backbone.View.extend({
+        template: _.template(flyoutTempl)
+        , tagName: "div"
+        , className: "cart-flyout"
+        , initialize:function(opts){
+            this.model = cart;
+            this.listenTo(this.model, "item:changed", this.render);
+            this.render();
+            this.$el.appendTo(opts.root);
+            this.offset = opts.root.offset();
+            opts.root.on("collector:selected collector:unselected", _.bind(this.adjust, this));
 
+        }
+        , render: function(){
+            var show =  this.model.getItems().length>0;
+            this.$el.html(this.template({total:this.model.getItems().length}));
+            this.$el[show?'removeClass':'addClass']("invisi");
+        }
+        , adjust: function(e){
+            var pos = $(e.target).offset();
+            this.$el.css({top:pos.top - this.offset.top});
+        }
+    })
 
     , FilterTag = ajax.Model.extend({
         idAttribute: "name"
@@ -243,6 +240,7 @@ define(
         }
     })
 
+
     , View = ajax.View.extend({
         events: {
             'change .select-sort-by': "reSort"
@@ -251,6 +249,8 @@ define(
         , initialize: function(opts){
             this.$sorting = this.$(".search-results-sorting");
             this.$results = this.$(".search-results-body");
+            this.cartFlyout = new CartFlyout({root: this.$results});
+
 
             this.filter = new FilterModel();
             this.filterView = new FilterView({el:this.$el, model: this.filter});
@@ -260,18 +260,15 @@ define(
             this.results = new SearchResults();
             this.listenTo(this.results, "add", this.addResult);
             this.listenTo(this.results, "updated", this.updatedResults);
-
-
         }
         , addResult: function(result){
             var t = this.$results.children(".sortable").eq(this.results.indexOf(result))
-                , v = new ResultView({model: result}).$el;
+                , v = new ResultView({model: result, inCart: cart.contains(result)}).$el;
             if(t.length){
                 t.before(v);
             } else {
                 this.$results.append(v);
             }
-
         }
         , updatedResults: function(){
             this.$results.find(".empty")[this.results.length?"addClass":"removeClass"]("hide");
@@ -303,7 +300,6 @@ define(
                         if(resetFilters){
                             view.filter.reset(filters);
                         }
-
                     }
                     , complete: function(){
                         view.$results.removeClass("loading");

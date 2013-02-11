@@ -147,9 +147,9 @@ define(['tools/messaging', "tools/hash"], function(messaging, hashlib){
           form.on({submit: noop, 'change':function(e, mod){ if(mod!='private')form.addClass("data-dirty")}});
           validationParams = validationParams||{};
           return hnc.validate(_.extend(validationParams, {root: form, submitHandler : baseFormsOnSubmit}));
-      }
-  };
-  ajax.Model = Backbone.Model.extend({
+        }
+    };
+    ajax.Model = Backbone.Model.extend({
           shallowClear : function(options){
               var clearance = {}, options=options||{};
               options.unset = true;
@@ -263,21 +263,16 @@ define(['tools/messaging', "tools/hash"], function(messaging, hashlib){
               this._hashValue = newHash;
           }
           , toJSON: function(){
-              var json = {}, attr = this.attributes;
-              for(var k in attr){
-                    if(attr.hasOwnProperty(k))
-                        if(attr[k]['toJSON'])
-                            json[k] = attr[k].toJSON()
-                        else
-                            json[k] = attr[k]
-              }
-              return json;
+            var json = {}, attr = this.attributes;
+            for(var k in attr)if(attr.hasOwnProperty(k))
+                json[k] = _.isFunction(attr[k].toJSON)?attr[k].toJSON():attr[k]
+            return json;
           }
           , translation : {}
           , removableKeys : [] /*these will be removed if not present in refresh data */
           , parseLocal: function(model){return model}
-  });
-  ajax.Collection = Backbone.Collection.extend({
+    });
+    ajax.Collection = Backbone.Collection.extend({
             model: ajax.Model
           , clear: function(opts){
               var i= 0, models = _.clone(this.models), len = models.length, tmp;
@@ -316,27 +311,27 @@ define(['tools/messaging', "tools/hash"], function(messaging, hashlib){
               options.headers['Client-Token'] =  CLIENT_TOKEN;
               Backbone.Collection.prototype.fetch.call(this, options);
           }
-      });
-  ajax.View = Backbone.View.extend({
-      sortedInsert: function(root, el, sortIndex){
-          var i=0
-              , tmp, data
-              , nodes = root.children()
-              , len = nodes.length
-              , inserted = false;
-          el.data("entitySort", sortIndex);
-          for(;i<len;i++){
-              tmp = nodes.eq(i);
-              if(tmp.data("entitySort")>sortIndex){
-                  tmp.before(el);
-                  inserted = true;
-                  break;
-              }
-          }
-          if(!inserted){
-              root.append(el);
-          }
-      }
-  });
-  return ajax;
+    });
+    ajax.View = Backbone.View.extend({
+        sortedInsert: function(root, el, sortIndex){
+        var i=0
+            , tmp, data
+            , nodes = root.children()
+            , len = nodes.length
+            , inserted = false;
+        el.data("entitySort", sortIndex);
+        for(;i<len;i++){
+            tmp = nodes.eq(i);
+            if(tmp.data("entitySort")>sortIndex){
+                tmp.before(el);
+                inserted = true;
+                break;
+            }
+        }
+        if(!inserted){
+          root.append(el);
+        }
+        }
+    });
+    return ajax;
 });

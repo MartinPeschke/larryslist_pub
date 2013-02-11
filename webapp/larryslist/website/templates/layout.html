@@ -23,6 +23,28 @@
 <%def name="menu(user)">
     %if user.isAnon():
         <ul class="nav pull-right">
+            <li class="nav-entry dropdown cart-dropdown-section">
+                <a class="nav-entry-link" data-toggle="dropdown" href="${request.fwd_url("website_cart")}">
+                    Cart <span class="total">0</span>
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="nav-entry">
+                        <div class="nav-entry-spaced">
+                            <span class="total">0</span> collectors selected
+                        </div>
+                    </li>
+                    <li class="nav-entry">
+                        <div class="nav-entry-spaced">
+                            <a class="btn btn-primary" href="${request.fwd_url("website_index")}">Buy now</a>
+                        </div>
+                    </li>
+                    <li>
+                        <a href="/cart">See Cart Details</a>
+                    </li>
+                </ul>
+            </li>
+
             <li class="nav-entry">
                 <a class="nav-entry-link" href="${request.fwd_url("website_signup")}">
                     Signup

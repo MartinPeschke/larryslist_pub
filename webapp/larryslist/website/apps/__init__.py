@@ -1,5 +1,5 @@
 from jsonclient.routing import FunctionRoute, App, ClassRoute, JSON_FORM_ATTRS, JSON_HANDLER_ATTRS, route_factory
-from larryslist.website.apps import search
+from larryslist.website.apps import search, cart
 from pyramid.httpexceptions import HTTPFound
 
 from . import contexts, index, auth
@@ -13,6 +13,7 @@ ROUTE_LIST = [
     , ClassRoute    ("website_password_reset"    , "/password/reset/:token", contexts.WebsiteRootContext, auth.PasswordResetHandler, "auth/form.html", view_attrs=JSON_FORM_ATTRS)
     , FunctionRoute ("website_join_checkemail"   , "/signup/checkemail", contexts.WebsiteRootContext, auth.join_checkemail, "json", {'xhr':True})
     , FunctionRoute ("website_search"            , "/search", contexts.WebsiteRootContext, search.index, "search/index.html")
+    , FunctionRoute ("website_cart"              , "/cart", contexts.WebsiteRootContext, cart.index, "cart/index.html")
 ]
 
 
