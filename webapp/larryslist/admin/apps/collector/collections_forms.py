@@ -19,6 +19,12 @@ def collectionMeta(cls, view):
         return result
     else:
         return {}
+
+def getCombinedData(cls, view):
+    result = collectionMeta(cls, view)
+    result.update(collectionData(cls, view))
+    return result
+
 def persistCollectionMeta(cls, request, values):
     id = values['id']
     data = GetCollectionMetaProc(request, id)
@@ -129,7 +135,7 @@ class CollectionUploadForm(BaseAdminForm):
     id = "uploads"
     label = "Uploads"
 
-    getFormValues = classmethod(collectionData)
+    getFormValues = classmethod(getCombinedData)
     isShown = classmethod(always)
     isEnabled = classmethod(isAllowedEditForm)
     getLink = classmethod(getEditLink)
@@ -137,6 +143,10 @@ class CollectionUploadForm(BaseAdminForm):
     fields = collectionUploadFields
     @classmethod
     def persist(cls, request, values):
+        atts = values.pop('Attachments', None)
+        if atts is not None:
+            persistCollectionMeta(CollectionUploadForm, request, {'Attachments': atts, 'id': values.get('id')})
+
         try:
             data = {'id':request.matchdict['collectorId'], 'Collection': values}
             collector = SaveCollectionDocumentsProc(request, {'Collector':data})

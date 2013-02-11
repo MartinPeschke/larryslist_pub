@@ -12,7 +12,7 @@ ROUTE_LIST = [
     , ClassRoute    ("website_password"          , "/ajax/templates/password.html", contexts.WebsiteRootContext, auth.PasswordHandler, "auth/password.html", view_attrs=JSON_FORM_ATTRS)
     , ClassRoute    ("website_password_reset"    , "/password/reset/:token", contexts.WebsiteRootContext, auth.PasswordResetHandler, "auth/form.html", view_attrs=JSON_FORM_ATTRS)
     , FunctionRoute ("website_join_checkemail"   , "/signup/checkemail", contexts.WebsiteRootContext, auth.join_checkemail, "json", {'xhr':True})
-    , FunctionRoute ("website_search"            , "/search/{query:.*}", contexts.WebsiteRootContext, search.index, "search/index.html")
+    , FunctionRoute ("website_search"            , "/search", contexts.WebsiteRootContext, search.index, "search/index.html")
 ]
 
 

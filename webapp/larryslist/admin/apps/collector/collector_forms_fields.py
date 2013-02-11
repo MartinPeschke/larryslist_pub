@@ -108,9 +108,14 @@ class TypedFileUploadField(Field):
     def getFileTypes(self, dt):
         return self.TYPES.get(dt.name, 'DISABLED')
 
+class ArbitraryURLAttachmentsFields(MultipleFormField):
+    fields = [URLField("url", "URL")]
+
 collectorUploadFields = [
         PlainHeadingField("Collector Documents")
         , TypedFileUploadField("Document", classes = 'form-embedded-wrapper form-inline')
+        , PlainHeadingField("Collector relevant URLs")
+        , ArbitraryURLAttachmentsFields("Attachments")
     ]
 
 
@@ -123,7 +128,7 @@ class MuseumForm(MultipleFormField):
         , StringField("other_name", "Not Top 100 Museum, then name", label_classes='double')
         , ConfigChoiceField('position', 'Position', 'CollectionPosition')
         , StringField("year", "Year")
-        , StringField("website", "Website")
+        , URLField("website", "Website")
         , PlainHeadingField("Location", tag="h5", classes="controls")
         , TokenTypeAheadField('Country', 'Country', '/admin/search/address', 'AddressSearchResult', None)
         , TokenTypeAheadField('Region', 'Region', '/admin/search/address', 'AddressSearchResult', 'Country')
@@ -136,8 +141,8 @@ class MuseumForm(MultipleFormField):
 
 class SocietyMemberForm(MultipleFormField):
     fields = [
-        StringField("societyName", "Name of society at museum")
-        , StringField("museumName", "Name of museum")
+        StringField("societyName", "Name of society")
+        , URLField("website", "Website")
         , ConfigChoiceField("position", "Position", "Position")
         , PlainHeadingField("Location", tag="h5", classes="controls")
         , TokenTypeAheadField('Country', 'Country', '/admin/search/address', 'AddressSearchResult', None)

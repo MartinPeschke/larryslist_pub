@@ -59,7 +59,7 @@
                 return '//'+this.options.resourceHost +'/'+ path;
             }
             , isPicturePath: function(path){
-                return /(jpg|png|gif|bmp|tiff|tga)$/.test(path.toLowerCase())
+                return /(jpe?g|png|gif|bmp|tiff?|tga)$/.test(path.toLowerCase())
             }
             , validate : function(params){
                 var form = params.root.is("form.form-validated") ? params.root : params.root.find("form.form-validated")

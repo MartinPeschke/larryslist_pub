@@ -1,5 +1,5 @@
 import formencode
-from larryslist.admin.apps.collector.collector_forms_fields import TypedFileUploadField
+from larryslist.admin.apps.collector.collector_forms_fields import TypedFileUploadField, ArbitraryURLAttachmentsFields
 from larryslist.lib.formlib.formfields import IntField, IMPORTANT, StringField, ApproxField, HiddenField, MultipleFormField, PlainHeadingField, ConfigChoiceField, URLField, TagSearchField, BaseSchema, Placeholder, TokenTypeAheadField, EmailField
 
 __author__ = 'Martin'
@@ -49,9 +49,12 @@ collectionWebsiteFields = [
         , PublicationsForm('Publication', "", classes = "form-embedded-wrapper form-inline")
     ]
 
+
 collectionUploadFields = [
         PlainHeadingField("Collection Documents")
         , TypedFileUploadField("Document", classes = 'form-embedded-wrapper form-inline')
+        , PlainHeadingField("Collection relevant URLs")
+        , ArbitraryURLAttachmentsFields("Attachments")
         , HiddenField('id')
     ]
 
@@ -59,7 +62,7 @@ class MuseumForm(MultipleFormField):
     fields = [
         StringField("Permanent museum/space name", "If yes, name", label_classes = 'double')
         , StringField("year", "Founded in year")
-        , StringField("url", "Webpage")
+        , StringField("url", "Website")
         , PlainHeadingField("Location", tag="h5", classes="controls")
         , TokenTypeAheadField('Country', 'Country', '/admin/search/address', 'AddressSearchResult', None)
         , TokenTypeAheadField('Region', 'Region', '/admin/search/address', 'AddressSearchResult', 'Country')
@@ -100,6 +103,7 @@ class LoanForm(MultipleFormField):
         , StringField("comment", "Comment")
         , StringField("year", "Year")
         , StringField("institution", "Name of institution")
+        , URLField("website", "Website")
         , PlainHeadingField("Location", tag="h5", classes="controls")
         , TokenTypeAheadField('Country', 'Country', '/admin/search/address', 'AddressSearchResult', None)
         , TokenTypeAheadField('Region', 'Region', '/admin/search/address', 'AddressSearchResult', 'Country')
@@ -115,6 +119,7 @@ class CooperationForm(MultipleFormField):
         , StringField("comment", "Name of cooperation / Comment", label_classes="double")
         , StringField("year", "Year")
         , StringField("institution", "Name of institution")
+        , URLField("website", "Website")
         , PlainHeadingField("Location", tag="h5", classes="controls")
         , TokenTypeAheadField('Country', 'Country', '/admin/search/address', 'AddressSearchResult', None)
         , TokenTypeAheadField('Region', 'Region', '/admin/search/address', 'AddressSearchResult', 'Country')

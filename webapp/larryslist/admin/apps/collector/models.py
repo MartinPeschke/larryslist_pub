@@ -66,7 +66,10 @@ class LinkedCollectorModel(Mapping):
     lastName = TextField()
     relation = TextField()
     def getName(self):
-        return u'{0.firstName} {0.lastName} ({0.relation})'.format(self)
+        result = u'{0.firstName} {0.lastName}'.format(self)
+        if self.relation:
+            result += "({})".format(self.relation)
+        return result
 
 class OtherFactModel(Mapping):
     value = TextField()

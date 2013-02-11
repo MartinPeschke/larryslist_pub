@@ -15,8 +15,6 @@ define(["router"], function (Router) {
         Backbone.Router.extend({
             routes: {
                 "search": "search"
-                , "search/": "search"
-                , "search/:query": "search"
                 , "*default": "default"
             }
             , initialize:function(){

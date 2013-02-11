@@ -91,6 +91,10 @@ define(
         , initialize: function(opts){
             this.setElement(this.template({model: this.model, isExtra:opts.isExtra}));
             this.listenTo(this.model, "destroy", this.remove);
+            this.listenTo(this.model, "change:selected", this.change);
+        }
+        , change: function(model, selected){
+            this.$("input").prop("checked", selected);
         }
         , onChange: function(){
             this.model.set("selected", this.$("input").is(":checked"));
@@ -131,6 +135,7 @@ define(
         ]
         , initialize:function(opts){
             var model = this, filter = {};
+
             _.each(this.FILTERS, function(f){
                 filter[f.name] = new f.cls();
                 model.listenTo(filter[f.name], "change:selected", function(){model.trigger("do:filter");})
@@ -138,8 +143,8 @@ define(
 
             this.register(filter);
         }
-        , getSearchQuery: function(term){
-            var model = this;
+        , getSearchQuery: function(){
+            var model = this, term = this.get("term");
             if(term.length > 2){
                 var filters = {};
                 _.each(this.FILTERS, function(f){
@@ -150,39 +155,74 @@ define(
                 return {"term":term, "Filters": filters};
             }
         }
+        , reset: function(models){
+            var term = this.get("term");
+            this.deepClear();
+            if(models !== false){
+                this.setRecursive(models);
+                this.set("term", term);
+            }
+        }
     })
+    , TagView = Backbone.View.extend({
+        template: _.template(tagTempl)
+        , events: {'click .close': 'change'}
+        , initialize: function(){
+            this.setElement(this.template({model: this.model}));
+            this.listenTo(this.model, "destroy", this.remove);
+            this.listenTo(this.model, "change:selected", this.remove);
+        }
+        , change: function(){
+            this.model.set("selected", false);
+        }
+    })
+
     , FilterView = ajax.View.extend({
-        SECTIONS : {
-            Collection: {
-                root: ".collection-filters"
+        SECTIONS : { Collection: { root: ".collection-filters"
                 , elems: {
                     "Artist": {title: "Artist", sort:1}
                     , "Genre": {title: "Genre", sort:2}
                     , "Medium": {title: "Medium", sort:3}
                     , "Origin": {title: "Origin", sort:4}
-                }
-            }
-            , Collector: {
-                root: ".collector-filters"
+            }}
+            , Collector: { root: ".collector-filters"
                 , elems: {
                     "Country": {title: "Country", sort:1}
                     , "Region": {title: "Region", sort:2}
                     , "City": {title: "City", sort:3}
                     , "Gender": {title: "Gender", sort:4}
-                }
-            }
+            }}
+        }
+        , events : {
+            "submit .search-filters":"onSubmit"
         }
         , initialize: function(){
-            var view = this, collection_root = this.$();
+            var view = this, tagRoot = this.$(".search-results-tags");
+
+            this.$form = this.$(".search-filters");
+            this.$query = this.$form.find(".search-query");
+            this.model.set("term", this.$query.val());
+            this.model.listenTo(this.model, "change:term", function(e){
+                view.$query.val(view.model.get("term"));
+            });
+
             _.each(this.SECTIONS, function(val){
-                view.setup(val.elems, view.$(val.root));
+                view.setup(val.elems, view.$(val.root), tagRoot);
             });
         }
-        , setup: function(props, root){
+        , setup: function(props, root, tagRoot){
             var view = this;
             _.each(props, function(v, k){
                 view.listenTo(view.model, k+":updated", view.addSection(k, v, root));
+                view.listenTo(view.model, k+":change:selected", view.setTag(k, v, tagRoot));
             });
+        }
+        , setTag: function(key, opts, root){
+            return function(model, selected){
+                if(selected){
+                    root.append(new TagView({model:model}).$el);
+                }
+            }
         }
         , addSection: function(key, opts, root){
             var view = this;
@@ -191,59 +231,17 @@ define(
                 view.sortedInsert(root, v.$el, opts.sort);
             }
         }
-    })
-
-    , SearchTag = ajax.Model.extend({
-        idAttribute:"label"
-        , getLabel: function(){
-            return this.get("label");
-        }
-    })
-    , SearchTags = ajax.Collection.extend({
-        model: SearchTag
-        , idAttribute: "label"
-        , addTags: function(label, options){
-            this.addOrUpdate(_.map(label, function(l){return {label: l}}), options);
-        }
-        , getSearchTerm: function(){
-            return this.pluck("label").join(" ");
-        }
-    })
-    , TagView = Backbone.View.extend({
-        template: _.template(tagTempl)
-        , events: {'click .close': 'destroy'}
-        , initialize: function(){
-            this.setElement(this.template({model: this.model}));
-            this.listenTo(this.model, "destroy", this.remove);
-        }
-        , destroy: function(){
-            this.model.destroy();
-        }
-    })
-    , SearchQueryView = Backbone.View.extend({
-        events : {"submit":"onSubmit"}
-        , initialize:function(opts){
-            this.$query = this.$(".search-query");
-            this.$tags = this.$(".search-results-tags");
-            this.listenTo(this.model, "add", this.addTag);
-        }
-        , addTag: function(filter){
-            this.$tags.append(new TagView({model: filter}).$el);
-        }
         , onSubmit: function(e){
             var val = this.$query.val().trim();
             if(val.length){
-                this.model.addTags([val], {preserve:true});
-                this.$query.val("");
+                this.model.set("term", val);
+                this.model.trigger("do:search");
             }
             e.stopPropagation();
             e.preventDefault();
             return false;
         }
     })
-
-
-
 
     , View = ajax.View.extend({
         events: {
@@ -257,11 +255,7 @@ define(
             this.filter = new FilterModel();
             this.filterView = new FilterView({el:this.$el, model: this.filter});
             this.listenTo(this.filter, "do:filter", this.doFilter);
-
-            this.query = new SearchTags();
-            this.searchQuery = new SearchQueryView({el:this.$el, model: this.query});
-            this.listenTo(this.query, "updated", this.doSearch);
-            this.listenTo(this.query, "remove", this.doSearch);
+            this.listenTo(this.filter, "do:search", this.doSearch);
 
             this.results = new SearchResults();
             this.listenTo(this.results, "add", this.addResult);
@@ -289,11 +283,12 @@ define(
             this.search(true);
         }
         , emptyResults: function(){
-            this.query.addOrUpdate([], {'preserve':false, silent:true});
-            this.doSearch();
+            this.results.addOrUpdate([], {'preserve':false});
+            this.filter.reset(false);
+            this.$(".result-count").html("0");
         }
         , search: function(resetFilters){
-            var view = this, query = this.filter.getSearchQuery(this.query.getSearchTerm());
+            var view = this, query = this.filter.getSearchQuery();
             if(query){
                 this.$results.addClass("loading");
                 ajax.submitPrefixed({
@@ -306,8 +301,7 @@ define(
 
                         var filters = hnc.getRecursive(resp, "Filters", []);
                         if(resetFilters){
-                            view.filter.deepClear();
-                            view.filter.setRecursive(filters);
+                            view.filter.reset(filters);
                         }
 
                     }
@@ -316,9 +310,7 @@ define(
                     }
                 });
             } else {
-                view.results.addOrUpdate([], {'preserve':false});
-                view.filter.deepClear();
-                view.$(".result-count").html("0");
+                this.emptyResults();
             }
         }
         , reSortResults: function(){
@@ -329,9 +321,8 @@ define(
             this.results.reSort($(e.target).val());
             this.reSortResults();
         }
-        , render: function(query){
-            var tags = query?[decodeURIComponent(query)]:[];
-            this.query.addTags(tags);
+        , render: function(){
+            this.doSearch(true);
         }
     })
     , init = function(opts){

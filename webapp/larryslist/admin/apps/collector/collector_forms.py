@@ -13,6 +13,12 @@ def collectorMeta(cls, view):
         return GetCollectorMetaProc(view.request, collectorId)
     else:
         return {}
+def getCombinedData(cls, view):
+    result = collectorMeta(cls, view)
+    result.update(collectorData(cls, view))
+    return result
+
+
 def persistCollectorMeta(cls, request, values):
     data = {}
     collectorId = request.matchdict.get('collectorId')
@@ -123,7 +129,7 @@ class CollectorUploadForm(BaseAdminForm):
     id = "uploads"
     label = "Uploads"
 
-    getFormValues = classmethod(collectorData)
+    getFormValues = classmethod(getCombinedData)
     isShown = classmethod(always)
     isEnabled = classmethod(isAllowedEditForm)
     getLink = classmethod(getEditLink)
@@ -131,6 +137,10 @@ class CollectorUploadForm(BaseAdminForm):
     fields = collectorUploadFields
     @classmethod
     def persist(cls, request, values):
+        atts = values.pop('Attachments', None)
+        if atts is not None:
+            persistCollectorMeta(CollectorUploadForm, request, {'Attachments': atts})
+
         try:
             values['id'] = request.matchdict['collectorId']
             collector = SaveCollectorDocumentsProc(request, {'Collector':values})
