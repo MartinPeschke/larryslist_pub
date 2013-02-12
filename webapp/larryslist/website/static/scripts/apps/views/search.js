@@ -1,11 +1,11 @@
 define(
-    ["tools/ajax", "models/cart", "models/collector"
+    ["tools/ajax", "models/cart", "models/user", "models/collector"
             , "text!templates/tag.html"
             , "text!templates/searchresult.html"
             , "text!templates/filtersection.html"
             , "text!templates/filteroption.html"
             , "text!templates/flyout.html"]
-    , function(ajax, cart, Collector, tagTempl, resultTempl, fsTempl, foTempl, flyoutTempl){
+    , function(ajax, cart, user, Collector, tagTempl, resultTempl, fsTempl, foTempl, flyoutTempl){
     var
     MODULE_KEY = 'SEARCH'
     , instance
@@ -59,7 +59,7 @@ define(
             var view = this;
             this.model.getItems(function(items){
                 var show = items.length>0;
-                view.$el.html(view.template({total:items.length}));
+                view.$el.html(view.template({total:items.length, user: user}));
                 view.$el[show?'removeClass':'addClass']("invisi");
             });
         }
@@ -326,7 +326,7 @@ define(
     })
     , init = function(opts){
         if(!instance){
-            var opts = opts.pageconfig[MODULE_KEY];
+            var opts = opts.pageconfig[MODULE_KEY]||{};
             instance = new View(opts);
         }
         return instance;

@@ -1,6 +1,7 @@
 from jsonclient import Mapping, TextField, DateField, ListField, DictField, IntegerField, BooleanField
+from larryslist.models.config import MediumModel, GenreModel
 from larryslist.models import ClientTokenProc, MetaDataProc
-from larryslist.models.config import GenreModel, MediumModel
+
 
 __author__ = 'Martin'
 

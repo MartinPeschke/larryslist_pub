@@ -25,7 +25,7 @@ class LoginForm(BaseForm):
         return {'success':True, 'redirect': request.fwd_url("website_index")}
 
 
-class SignupHandler(BaseForm):
+class SignupForm(BaseForm):
     id="signup"
     label = "Signup"
     action_label = "Signup"

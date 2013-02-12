@@ -2,25 +2,28 @@
 <%namespace file="larryslist:lib/formlib/templates/baseform.html" name="baseform"/>
 
 
+
 <%def name="content()">
     <div class="container standard-box centered auth-page">
         <div class="row">
             <div class="span12">
-                <h1 class="box-title">${view.form.label}</h1>
+                <h1 class="box-title">Buy Now</h1>
             </div>
             <div class="span6">
-                ${self.buildForm(view.form, values.get(view.form.id, {}), errors.get(view.form.id, {}))}
+            ${self.buildForm(view.schemas['signup'], values.get(view.schemas['signup'].id, {}), errors.get(view.schemas['signup'].id, {}))}
             </div>
             <div class="span6">
-                Side Bar with information about whats happening on ${g.project_name}
+            ${self.buildForm(view.schemas['login'], values.get(view.schemas['login'].id, {}), errors.get(view.schemas['login'].id, {}))}
             </div>
         </div>
     </div>
 </%def>
 
+
 <%def name="buildForm(form, values, errors)">
     <form class="${form.classes}" method="post" id="${form.id}">
         ${baseform.prelims(form)}
+        <legend>${form.label}</legend>
         %for field in form.fields:
             ${field.render(form.id, request, values, errors, view)|n}
         %endfor

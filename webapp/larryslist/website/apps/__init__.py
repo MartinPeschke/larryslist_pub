@@ -15,7 +15,11 @@ ROUTE_LIST = [
     , FunctionRoute ("website_search"            , "/search", contexts.WebsiteRootContext, search.index, "search/index.html")
     , FunctionRoute ("website_cart"              , "/cart", contexts.WebsiteRootContext, cart.index, "cart/index.html")
     , FunctionRoute ("website_cart_save"         , "/cart/save", contexts.WebsiteRootContext, cart.save, "json", {'xhr':True})
-    , FunctionRoute ("website_checkout"          , "/checkout", contexts.WebsiteRootContext, cart.checkout, "cart/checkout.html")
+
+    , FunctionRoute ("website_checkout"             , "/checkout", contexts.WebsiteRootContext, cart.checkout, "cart/checkout.html")
+    , ClassRoute    ("website_checkout_join"        , "/checkout/join", contexts.WebsiteRootContext, cart.CheckoutLoginHandler, "cart/login.html", view_attrs=JSON_FORM_ATTRS)
+    , FunctionRoute ("website_checkout_options_ajax", "/ajax/templates/payment/options.html", contexts.WebsiteRootContext, cart.checkout_options, "cart/ajax/options.html")
+    , ClassRoute    ("website_checkout_set_option"  , "/checkout/option", contexts.WebsiteRootContext, cart.SetOptionsHandler, None, view_attrs=JSON_FORM_ATTRS)
 ]
 
 

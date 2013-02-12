@@ -2,7 +2,7 @@ from jsonclient.backend import DBMessage
 import formencode
 from larryslist.admin.apps.auth.models import AdminLoginProc, UpdatePasswordProc, ResendRequestProc, PasswordRequestProc
 from larryslist.lib.baseviews import GenericSuccessMessage
-from larryslist.lib.formlib.formfields import BaseForm, EmailField, StringField, PasswordField, REQUIRED
+from larryslist.lib.formlib.formfields import BaseForm, EmailField, PasswordField, REQUIRED
 
 __author__ = 'Martin'
 

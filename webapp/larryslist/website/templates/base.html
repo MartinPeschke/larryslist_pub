@@ -35,6 +35,7 @@
                 , uploadUrl: '${request.globals.uploadUrl}'
                 , resourceHost: '${request.globals.resourceHost}'
                 , pageconfig: {}
+                , user: ${vctxt.user.toJSON()|n}
                 , cart: ${vctxt.cart.getContent(True)|n}
             };
             <%block name="options"/>

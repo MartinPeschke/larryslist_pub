@@ -94,9 +94,24 @@
   margin: 5px 0;
   height:80px;
   border: 2px solid transparent;
+  position: relative;
+  .marked-checkbox {
+    position: absolute;
+    display: block;
+    top: 7px;
+    left: 3px;
+    height: 21px;
+    width: 21px;
+    .background-image("../img/checkbox.png");
+    background-position: 2px 4px;
+    background-repeat: no-repeat;
+  }
   &.selected {
     border-color: @linkColor;
     background: #f9f9f9;
+    .marked-checkbox {
+      background-position: 2px -26px;
+    }
   }
 }
 .search-column {
@@ -113,7 +128,7 @@
     min-width:100px;
   }
   &.details {
-    margin-left:120px;
+    margin-left:30px;
     margin-right:45%;
     min-width:150px;
     .name {color: @linkColor; font-weight:bold;}

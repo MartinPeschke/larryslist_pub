@@ -1,11 +1,7 @@
 from jsonclient.backend import DBException
-import formencode
 from larryslist.admin.apps.collector.collections_forms_fields import baseCollectionFields, collectionEditFields, collectionArtistsFields, collectionWebsiteFields, collectionUploadFields, collectionMuseumFields, collectionCooperationFields, collectionArtAdvisorFields
-from larryslist.admin.apps.collector.collector_forms_fields import TypedFileUploadField
-from larryslist.admin.apps.collector.models import CreateCollectionProc, EditCollectionBaseProc, EditCollectionArtistsProc, EditCollectionPublicationsProc, SaveCollectionDocumentsProc, SaveCollectionMuseumProc, GetCollectionMetaProc, SetCollectionMetaProc
+from larryslist.admin.apps.collector.models import CreateCollectionProc, EditCollectionBaseProc, EditCollectionArtistsProc, EditCollectionPublicationsProc, SaveCollectionDocumentsProc, GetCollectionMetaProc, SetCollectionMetaProc
 from larryslist.admin.apps.collector.sources_form import BaseAdminForm
-from larryslist.lib.formlib.formfields import BaseForm, IntField, CheckboxField, IMPORTANT, StringField, MultiConfigChoiceField, ApproxField, HiddenField, MultipleFormField, TypeAheadField, PlainHeadingField, ConfigChoiceField, URLField, TagSearchField, BaseSchema, Placeholder, TokenTypeAheadField, REQUIRED, EmailField, RadioChoice
-from larryslist.models.config import NamedModel
 
 __author__ = 'Martin'
 

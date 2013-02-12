@@ -1,12 +1,12 @@
 from datetime import datetime
 from operator import methodcaller
-from xml.sax.saxutils import quoteattr
 import formencode
 from formencode.validators import OneOf
-from larryslist.lib.formlib.validators import DateValidator, TypeAheadValidator
 from larryslist.models.config import NullConfigModel
+from larryslist.lib.formlib.validators import DateValidator, TypeAheadValidator
 from pyramid.renderers import render
 import simplejson
+
 
 
 class HtmlAttrs(object):

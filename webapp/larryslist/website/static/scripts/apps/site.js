@@ -16,6 +16,7 @@ define(["router"], function (Router) {
             routes: {
                 "search": "search"
                 , "cart": "cart"
+                , "checkout/option" : "selectoption"
                 , "*default": "default"
             }
             , initialize:function(){
@@ -24,6 +25,7 @@ define(["router"], function (Router) {
                 });
                 this.on("route:search", dodo(["views/search"], 100));
                 this.on("route:cart", dodo(["views/cartpage"], 100));
+                this.on("route:selectoption", dodo(["views/option"], 100));
             }
         })
     );

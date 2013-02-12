@@ -1,0 +1,49 @@
+<%namespace file="larryslist:lib/formlib/templates/baseform.html" name="baseform"/>
+<div class="modal popup-modal checkout-options-modal hide">
+    <form class="form-validated" method="post" action="${request.fwd_url("website_checkout_set_option")}">
+        ${baseform.prelims(form)}
+        <div class="modal-body">
+
+              <div class="checkbox-row">
+                  %for i, option in enumerate(options):
+<label class="checkbox-item inline ${'preferred' if option.preferred else ''}">\
+                        %if option.preferred:
+                            <img src="${STATIC_URL}img/preferred_tape.png" class="preferred-tape"/>
+                        %endif
+
+                        <span class="price">${option.getFormattedPrice(request)}</span><span class="period">/${option.PERIOD}</span>
+                        <span class="quantity">${option.getCredits()} profiles</span>
+                        <hr/>
+                        <span class="text">You save</span>
+                        <span class="saved-amount">${option.getSavedAmount(request)}</span>
+                        <span class="checkbox">
+                            <input type="radio" name="${form.id}.option" value="${option.token}"/>
+                        </span>
+</label>\
+                  %endfor
+              </div>
+
+              <div class="explanation-row">
+                  <h4 class="highlight">This is what you get</h4>
+                  <ul>
+                      <li>access to profile for 1 year (free updated included)</li>
+                      <li>all available information on profile (incl. address, collection, etc.)</li>
+                      <li>access from everywhere 24/7</li>
+                  </ul>
+                  <div class="modal-button">
+                      <button type="submit" class="btn btn-primary btn-large">Buy your plan now</button>
+                  </div>
+              </div>
+
+        </div>
+
+        <div class="modal-footer">
+            <ul class="recommendation-icons inline">
+                <li>${g.project_name} is known from:</li>
+                <li><img src="${STATIC_URL}img/adpartner_nyt.png"/></li>
+                <li><img src="${STATIC_URL}img/adpartner_cnn.png"/></li>
+                <li><img src="${STATIC_URL}img/adpartner_art.png"/></li>
+            </ul>
+        </div>
+    </form>
+</div>

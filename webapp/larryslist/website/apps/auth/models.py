@@ -1,5 +1,6 @@
-from jsonclient import Mapping, TextField
+from jsonclient import Mapping, TextField, IntegerField
 from larryslist.models import ClientTokenProc
+import simplejson
 
 SESSION_KEY = 'WEBSITE_USER'
 
@@ -7,8 +8,15 @@ class UserModel(Mapping):
     token = TextField()
     name = TextField()
     email = TextField()
+    credit = IntegerField(default = 300)
     def isAnon(self):
         return self.token is None
+    def getCredits(self):
+        return self.credit / 100
+
+    def toJSON(self, stringify = True):
+        return simplejson.dumps(self.unwrap(sparse = True))
+
 
 def LoggingInProc(path, db_messages = []):
     sproc = ClientTokenProc(path, root_key='User', result_cls=UserModel)

@@ -1,8 +1,9 @@
 from jsonclient.backend import DBMessage
 from larryslist.lib.baseviews import GenericErrorMessage
 from larryslist.lib.formlib.handlers import FormHandler
-from larryslist.website.apps.auth.forms import LoginForm, SignupHandler, PasswordForgotHandler, PasswordResetForm
+from larryslist.website.apps.auth.forms import LoginForm, PasswordForgotHandler, PasswordResetForm, SignupForm
 from larryslist.website.apps.auth.models import CheckEmailExistsProc, PasswordTokenVerifyProc, SESSION_KEY
+from pyramid.decorator import reify
 from pyramid.httpexceptions import HTTPFound
 
 __author__ = 'Martin'
@@ -31,9 +32,10 @@ def logout(context, request):
 class LoginHandler(FormHandler):
     form = LoginForm
 class SignupHandler(FormHandler):
-    form = SignupHandler
+    form = SignupForm
 class PasswordHandler(FormHandler):
     form = PasswordForgotHandler
+
 
 class PasswordResetHandler(FormHandler):
     form = PasswordResetForm

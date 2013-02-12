@@ -28,13 +28,15 @@ class CollectorModel(Mapping):
 
 
 class WebsiteCart(CollectorModel):
-    json = []
+    Collectors = []
     def setContent(self, json):
-        self.json = map(CollectorModel.wrap, json.get('Collectors', []))
+        self.Collectors = map(CollectorModel.wrap, json.get('Collectors', []))
     def getContent(self, stringify = False):
         try:
-            cart = map(methodcaller("unwrap", sparse = True), self.json)
+            cart = map(methodcaller("unwrap", sparse = True), self.Collectors)
         except AttributeError, e:
             cart = []
         return simplejson.dumps({'Collectors':cart})
 
+    def getItems(self):
+        return self.Collectors

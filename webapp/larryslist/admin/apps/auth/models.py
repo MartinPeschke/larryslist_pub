@@ -1,8 +1,10 @@
 from operator import attrgetter
 from jsonclient import Mapping, TextField, DictField, ListField
 from jsonclient.backend import DBMessage
+
 from larryslist.models import ClientTokenProc
 from larryslist.models.config import NamedModel
+
 
 __author__ = 'Martin'
 

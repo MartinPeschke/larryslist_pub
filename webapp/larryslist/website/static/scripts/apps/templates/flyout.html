@@ -1,9 +1,12 @@
 <div class="flyout-line">
-    {{ total }} collectors selected
+    <b>{{ user.getCredits() }} credit left</b>
 </div>
 <div class="flyout-line">
-    <a href="/cart">See Cart Details</a>
+    <b>{{ total }} collectors selected</b>
 </div>
 <div class="flyout-line">
-    <a href="/cart" class="btn btn-primary">Buy now</a>
+    <a href="/cart" class="link-style">view selection</a>
+</div>
+<div class="flyout-line">
+    <a href="/checkout/option" class="js-link btn btn-primary">Buy now</a>
 </div>
