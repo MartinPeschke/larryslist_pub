@@ -7,8 +7,12 @@
     %endif
     <div class="controls ${widget.control_classes}">
         <%block name="controls">
-            <input type="${widget.type}" class="${widget.getClasses()}" name="${widget.getName(prefix)}" value="${widget.valueToForm(value)}" ${widget.attrs.getInputAttrs(request)|n}/>
+            <input type="${widget.type}" class="${widget.getClasses()}" name="${widget.getName(prefix)}" value="${widget.valueToForm(value)}" ${widget.getInputAttrs(request)|n}/>
         </%block>
-        ${lib.renderInline(widget, error)}
+        ${self.renderInline(widget, error)}
     </div>
 </div>
+
+<%def name="renderInline(widget, error)">
+    ${lib.renderInline(widget, error)}
+</%def>

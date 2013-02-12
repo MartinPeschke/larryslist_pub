@@ -43,3 +43,6 @@ UpdatePasswordProc = ClientTokenProc("/user/updatePwd")
 PasswordTokenVerifyProc = ClientTokenProc("/user/token", root_key = "User", result_cls = UserModel)
 
 CheckEmailExistsProc = ClientTokenProc('/user/emailavailable')
+
+
+RefreshUserProfileProc = LoggingInProc("/user/profile")

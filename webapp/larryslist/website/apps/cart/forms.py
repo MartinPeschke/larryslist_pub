@@ -1,5 +1,8 @@
-from larryslist.lib.formlib.formfields import BaseForm, ConfigChoiceField, REQUIRED, EmailField, PasswordField, PlainHeadingField, StringField, CheckboxField, CheckboxPostField
+import formencode
+from larryslist.lib.formlib.formfields import BaseForm, ConfigChoiceField, REQUIRED, EmailField, PasswordField, PlainHeadingField, StringField, CheckboxField, CheckboxPostField, CombinedField, HtmlAttrs
 from larryslist.website.apps.auth import LoginForm, SignupForm
+from larryslist.website.apps.auth.models import RefreshUserProfileProc
+from larryslist.website.apps.cart.models import PurchaseCreditProc
 
 
 class PaymentOptionField(ConfigChoiceField):
@@ -39,25 +42,34 @@ class JoinSignupForm(SignupForm):
         else:
             return result
 
+
+
 class CheckoutForm(BaseForm):
     classes = 'form-horizontal form-validated'
     action_label = "Buy your plan now"
     fields = [
-        PaymentOptionField("option", None, "PaymentOption", default_none = False)
+        PaymentOptionField("paymentOptionToken", None, "PaymentOption", default_none = False)
         , PlainHeadingField("Credit Card")
-        , StringField("ccNumber", "Number", REQUIRED)
-        , StringField("CVC", "CVV", REQUIRED)
-        , StringField("expiryMonth", "Expiration", REQUIRED)
-        , StringField("expiryYear", None, REQUIRED)
+        , ConfigChoiceField("method", "Card Type", "CardType", default_none=False)
+        , StringField("holder", "Holder", REQUIRED)
+        , StringField("number", "Number", REQUIRED, min = 13, max = 16)
+        , StringField("cvs", "CVV", attrs = HtmlAttrs(required = True) , min = 3, max = 4)
+        , CombinedField([ConfigChoiceField("expiryMonth", None, "ExpiryMonth", default_none=False), ConfigChoiceField("expiryYear", None, "ExpiryYear", default_none=False)], "Expiration", REQUIRED)
         , PlainHeadingField("Billing address")
         , StringField("lastName", "Name", REQUIRED)
         , StringField("firstName", "Surname", REQUIRED)
         , StringField("line1", "Street", REQUIRED)
-        , StringField("postCode", "Zip Code", REQUIRED)
-        , StringField("city", "City", REQUIRED)
+        , CombinedField([StringField("postCode", "Zip Code", REQUIRED, input_classes="input-mini"), StringField("city", "City", REQUIRED, input_classes="input-medium")], "Post code / City", REQUIRED)
         , StringField("country", "Country", REQUIRED)
         , CheckboxPostField("agreeTOS", u"Yes, I have read the Terms and Conditions and Agree.")
     ]
     @classmethod
     def on_success(cls, request, values):
-        return {}
+        values['userToken'] = request.root.user.token
+        result = PurchaseCreditProc(request, values)
+        status = result.get('PaymentStatus')
+        if status and status.get('success') == True:
+            RefreshUserProfileProc(request, {'token':request.root.user.token})
+            return {'success':True, 'redirect':request.fwd_url("website_cart")}
+        else:
+            return {'success':False, "message":"Payment Failed"}

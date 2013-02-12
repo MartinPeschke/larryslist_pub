@@ -58,6 +58,16 @@ FEEDER_ROLES = [FeederRoleModel(name="REVIEWER"), FeederRoleModel(name="OPERATOR
 
 YEARS = [NamedModel(name = yr) for yr in range(datetime.now().year, datetime.now().year - 50, -1)]
 
+MONTHS = [NamedModel(name = mon) for mon in range(1, 13)]
+EXPIRY_YEARS = [NamedModel(name = yr) for yr in range(datetime.now().year, datetime.now().year + 50)]
+CARD_TYPES = [NamedModel(name = 'VISA'), NamedModel(name = 'MC'), NamedModel(name = 'AMEX')]
+
+
+
+
+
+
+
 class ConfigModel(Mapping):
     Nationality = ListField(DictField(NationalityModel))
     Title = ListField(DictField(TitleModel))
@@ -80,3 +90,8 @@ class ConfigModel(Mapping):
     FeederRole = FEEDER_ROLES
     Ranking = RANKINGS
     RankingYear = YEARS
+
+
+    ExpiryMonth = MONTHS
+    ExpiryYear = EXPIRY_YEARS
+    CardType = CARD_TYPES

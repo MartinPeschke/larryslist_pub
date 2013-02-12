@@ -5,7 +5,7 @@ from formencode.variabledecode import variable_decode
 
 
 import logging
-from larryslist.lib.baseviews import GenericSuccessMessage
+from larryslist.lib.baseviews import GenericSuccessMessage, GenericErrorMessage
 from paste.httpexceptions import HTTPNotImplemented
 from pyramid.httpexceptions import HTTPFound
 
@@ -80,15 +80,16 @@ class FormHandler(object):
             self.request.response.status_int = 401
         else:
             ### if validate_values/on_success returns anything else than a redirect, it must be some validation error
-            if resp.get('success', False):
-                if resp.get('redirect'):
-                    self.request.fwd_raw(resp.get('redirect'))
-                elif resp.get('message'):
+            if resp.get('message'):
+                if resp.get('success') == True:
                     self.request.session.flash(GenericSuccessMessage(resp.get('message')), 'generic_messages')
-                self.request.rld()
+                elif resp.get('success') == False:
+                    self.request.session.flash(GenericErrorMessage(resp.get('message')), 'generic_messages')
+            if resp.get('redirect'):
+                self.request.fwd_raw(resp.get('redirect'))
 
             self.result['values'][schema_id] = resp.get('values', values)
-            self.result['errors'][schema_id] = resp['errors']
+            self.result['errors'][schema_id] = resp.get('errors', {})
             self.request.response.status_int = 401
         self.result = self.add_globals(self.request, self.result)
         return self.result

@@ -148,7 +148,7 @@ class Field(BaseField):
     if_empty = ''
     type = 'text'
     input_classes = 'input-large'
-    def __init__(self, name, label, attrs = NONE, classes = '', validator_args = {}, group_classes = '', label_classes = '', input_classes = ''):
+    def __init__(self, name, label, attrs = NONE, classes = '', validator_args = {}, group_classes = '', label_classes = '', input_classes = '', min = None, max = None):
         self.name = name
         self.label = label
         self.attrs = attrs
@@ -157,7 +157,16 @@ class Field(BaseField):
         self.label_classes = label_classes
         self.input_classes = input_classes or self.input_classes
         self.input_classes = '{} {}'.format(self.input_classes, classes)
+        self.min = min
+        self.max = max
 
+    def getInputAttrs(self, request):
+        attrs = self.attrs.getInputAttrs(request)
+        if self.min:
+            attrs += ' minlength="{}"'.format(self.min)
+        if self.max:
+            attrs += ' maxlength="{}"'.format(self.max)
+        return attrs
 
     def getValidatorArgs(self):
         params = self.validator_args.copy()
@@ -165,6 +174,10 @@ class Field(BaseField):
 
         params['required'] = self.attrs.required
         params['not_empty'] = self.attrs.required
+        if self.min:
+            params['min'] =self.min
+        if self.max:
+            params['max'] =self.max
         if not self.attrs.required:
             params['if_missing'] = None
         return params
@@ -184,12 +197,22 @@ class Field(BaseField):
 
     def getValues(self, name, request, values, errors, view):
         return {'value': values.get(name, self.if_empty), 'error':errors.get(name, self.if_empty)}
+
     def render(self, prefix, request, values, errors, view = None):
         if isinstance(errors, formencode.Invalid):
             errors = errors.error_dict
         params = self.getValues(self.name, request, values, errors, view)
         params.update({'widget': self, 'prefix':prefix, 'view': view})
         return render(self.template, params, request)
+    def renderControl(self, prefix, request, values, errors, view = None):
+        if isinstance(errors, formencode.Invalid):
+            errors = errors.error_dict
+        params = self.getValues(self.name, request, values, errors, view)
+        params.update({'widget': self, 'prefix':prefix, 'view': view})
+
+        t = self.template.replace(".html", '#controls.html')
+        return render(t, params, request)
+
 
 
 class MultipleFormField(Field):
@@ -237,6 +260,8 @@ class HiddenField(Field):
 
 class StringField(Field):
     _validator = formencode.validators.String
+
+
 class TextareaField(Field):
     template = 'larryslist:lib/formlib/templates/textarea.html'
     _validator = formencode.validators.String
@@ -244,6 +269,15 @@ class TextareaField(Field):
 class IntField(Field):
     input_classes = 'input-mini digits'
     _validator = formencode.validators.Int
+    def getInputAttrs(self, request):
+        attrs = self.attrs.getInputAttrs(request)
+        if self.min:
+            attrs += ' min="{}"'.format(self.min)
+        if self.max:
+            attrs += ' max="{}"'.format(self.max)
+        return attrs
+
+
 class URLField(Field):
     input_classes = 'input-xxlarge'
     _validator = formencode.validators.URL
@@ -415,3 +449,20 @@ def MultiConfigChoiceField(name, label, configKey, *args, **kwargs):
             ConfigChoiceField(name, label, configKey)
         ]
     return cls(*args, **kwargs)
+
+
+
+
+
+class CombinedField(StringField):
+    template = 'larryslist:lib/formlib/templates/combined.html'
+    def __init__(self, fields, label, *args, **kwargs):
+        super(StringField, self).__init__(None, label, *args, **kwargs)
+        self.fields = fields
+    def getValidator(self, request):
+        validator = {}
+        for w in self.fields:
+            validator.update(w.getValidator(request))
+        return validator
+    def getValues(self, name, request, values, errors, view):
+        return {'value': values, 'error':{f.name: errors.get(f.name) for f in self.fields if errors.get(f.name)}}

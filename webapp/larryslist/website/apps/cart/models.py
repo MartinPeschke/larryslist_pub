@@ -1,5 +1,6 @@
 from operator import methodcaller
 from jsonclient import Mapping, IntegerField, TextField, ListField, DictField
+from larryslist.models import ClientTokenProc
 import simplejson
 
 
@@ -40,3 +41,7 @@ class WebsiteCart(CollectorModel):
 
     def getItems(self):
         return self.Collectors
+
+
+
+PurchaseCreditProc = ClientTokenProc("/web/credit/buy")
