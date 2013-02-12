@@ -1,0 +1,15 @@
+<li class="search-results-row sortable">
+    <div class="search-column picture">
+        <img src="{{ model.getPicture() }}"/>
+    </div><div class="search-column completion">
+        <b>{{ model.get("completion") }}%</b>
+    </div><div class="search-column subscribers">
+        <b>{{ model.get("subscribers") }}</b>
+    </div><div class="search-column rank">
+        <b>{{ model.get("rank") }}</b>
+    </div><div class="search-column details">
+        <div class="name">{{ model.getName() }}</div>
+        <p class="location">{{ model.getAddress() }}</p>
+        <a class="btn btn-primary dismiss" data-text-selected="Select" data-text-unselected="Remove">Remove</a>
+    </div>
+</li>

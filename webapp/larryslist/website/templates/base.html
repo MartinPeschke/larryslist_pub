@@ -35,6 +35,7 @@
                 , uploadUrl: '${request.globals.uploadUrl}'
                 , resourceHost: '${request.globals.resourceHost}'
                 , pageconfig: {}
+                , cart: ${vctxt.cart.getContent(True)|n}
             };
             <%block name="options"/>
             root.__options__ = options;

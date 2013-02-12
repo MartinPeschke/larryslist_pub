@@ -15,6 +15,7 @@ define(["router"], function (Router) {
         Backbone.Router.extend({
             routes: {
                 "search": "search"
+                , "cart": "cart"
                 , "*default": "default"
             }
             , initialize:function(){
@@ -22,6 +23,7 @@ define(["router"], function (Router) {
                     if(opts.default_route)window.app_router.navigate(opts.default_route, true);
                 });
                 this.on("route:search", dodo(["views/search"], 100));
+                this.on("route:cart", dodo(["views/cartpage"], 100));
             }
         })
     );

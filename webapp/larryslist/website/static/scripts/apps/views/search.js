@@ -56,9 +56,12 @@ define(
 
         }
         , render: function(){
-            var show =  this.model.getItems().length>0;
-            this.$el.html(this.template({total:this.model.getItems().length}));
-            this.$el[show?'removeClass':'addClass']("invisi");
+            var view = this;
+            this.model.getItems(function(items){
+                var show = items.length>0;
+                view.$el.html(view.template({total:items.length}));
+                view.$el[show?'removeClass':'addClass']("invisi");
+            });
         }
         , adjust: function(e){
             var pos = $(e.target).offset();

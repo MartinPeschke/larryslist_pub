@@ -29,7 +29,7 @@ def logoutAdmin(request):
 
 SignupProc = LoggingInProc("/user/signup")
 LoginProc = LoggingInProc("/user/login")
-PasswordRequestProc = LoggingInProc("/user/forgotpwd")
+PasswordRequestProc = ClientTokenProc("/user/forgotpwd")
 ResendRequestProc = ClientTokenProc("/user/resendForgotPwd")
 UpdatePasswordProc = ClientTokenProc("/user/updatePwd")
 PasswordTokenVerifyProc = ClientTokenProc("/user/token", root_key = "User", result_cls = UserModel)

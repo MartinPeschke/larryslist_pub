@@ -14,6 +14,8 @@ ROUTE_LIST = [
     , FunctionRoute ("website_join_checkemail"   , "/signup/checkemail", contexts.WebsiteRootContext, auth.join_checkemail, "json", {'xhr':True})
     , FunctionRoute ("website_search"            , "/search", contexts.WebsiteRootContext, search.index, "search/index.html")
     , FunctionRoute ("website_cart"              , "/cart", contexts.WebsiteRootContext, cart.index, "cart/index.html")
+    , FunctionRoute ("website_cart_save"         , "/cart/save", contexts.WebsiteRootContext, cart.save, "json", {'xhr':True})
+    , FunctionRoute ("website_checkout"          , "/checkout", contexts.WebsiteRootContext, cart.checkout, "cart/checkout.html")
 ]
 
 
