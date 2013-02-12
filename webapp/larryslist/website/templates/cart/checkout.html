@@ -3,31 +3,17 @@
 
 
 <%def name="content()">
-    <div class="container standard-box centered cart-page">
+    <div class="container cart-page">
         <div class="row">
-            <div class="span12">
-                <div class="search-results-container">
-                    <h1 class="box-title">Your selected profiles</h1>
-
+            <div class="span8">
+                <div class="payment-options">
+                    ${self.buildForm(view.form, values.get(view.form.id, {}), errors.get(view.form.id, {}))}
+                </div>
+            </div>
+            <div class="span4 cart-section">
+                <div class="search-results-container mini">
                     <div class="search-results-header">
-                        <div class="search-column picture">
-                            Collector
-                        </div><div class="search-column completion">
-                            Completion
-                        </div><div class="search-column subscribers">
-                            Followers
-                        </div><div class="search-column rank">
-                            Rank
-                        </div><div class="search-column rank">
-                            Remove
-                        </div>
-                        <div class="search-column details">
-                            &nbsp;
-                        </div>
-                    </div>
-                    <div>
-                        ${vctxt.config.PaymentOption}
-
+                        <h4 class="highlight">Your Selection</h4>
                     </div>
                     <ul class="search-results-body cart-items">
                         <li class="show-loading">
@@ -35,8 +21,23 @@
                         </li>
                     </ul>
                 </div>
-                <a href="${request.fwd_url("website_checkout")}" class="btn btn-primary">Buy Now</a>
-                <a href="${request.fwd_url("website_search")}" class="btn">Back to Search</a>
+                <div class="checkout-sidebar">
+                    <h4>${g.project_name} is known from:</h4>
+                    <div class="adpartner">
+                        <img src="${STATIC_URL}img/adpartner_color.png?v=${VERSION_TOKEN}"/>
+                    </div>
+
+                    <h4>More Questions?</h4>
+                    <div class="accordion" id="faq-accordion">
+                        ${self.renderExpander("what-do-i-get", u"What I get?", u"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?", True)}
+                        ${self.renderExpander("why-payment-data", u"Why Pay?", u"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?")}
+                        ${self.renderExpander("what-if-no-like", u"What if no like?", u"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?")}
+                        ${self.renderExpander("gymondo-is-safe", u"Is it safe?", u"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?")}
+                        ${self.renderExpander("what-do-i-need", u"What do I need?", u"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?")}
+                        ${self.renderExpander("how-do-icancel", u"How to cancel?", u"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?")}
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -44,5 +45,32 @@
 
 
 <%block name="options">
-    options.pageconfig.CART_PAGE = {el: $(".cart-page")};
+    options.pageconfig.CART_PAGE = {el: $(".cart-section"), mini: true};
 </%block>
+
+<%def name="buildForm(form, values, errors)">
+    <form class="${form.classes}" method="post" id="${form.id}">
+    ${baseform.prelims(form)}
+        %for field in form.fields:
+            ${field.render(form.id, request, values, errors, view)|n}
+        %endfor
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">${form.action_label}</button>
+        </div>
+    </form>
+</%def>
+
+<%def name="renderExpander(id, title, text, shown = False)">
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle ${'' if shown else 'collapsed'}" data-toggle="collapse" data-parent="#faq-accordion" href="#${id}">
+                <span class="faq-arrow"></span>${title|n}
+            </a>
+        </div>
+        <div id="${id}" class="accordion-body collapse ${'in' if shown else ''}">
+            <div class="accordion-inner">
+            ${text|n}
+            </div>
+        </div>
+    </div>
+</%def>

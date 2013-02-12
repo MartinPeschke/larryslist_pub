@@ -20,11 +20,11 @@ class logged_in(object):
             self.__doc__ = wrapped.__doc__
         except: # pragma: no cover
             pass
-        def wrapped_f(context, request):
+        def wrapped_f(obj, context, request):
             if context.user.isAnon():
                 request.fwd(self.auth_route)
             else:
-                return wrapped(context, request)
+                return wrapped(obj, context, request)
         return wrapped_f
 
 

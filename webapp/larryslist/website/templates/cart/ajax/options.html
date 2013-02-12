@@ -3,35 +3,19 @@
     <form class="form-validated" method="post" action="${request.fwd_url("website_checkout_set_option")}">
         ${baseform.prelims(form)}
         <div class="modal-body">
-
-              <div class="checkbox-row">
-                  %for i, option in enumerate(options):
-<label class="checkbox-item inline ${'preferred' if option.preferred else ''}">\
-                        %if option.preferred:
-                            <img src="${STATIC_URL}img/preferred_tape.png" class="preferred-tape"/>
-                        %endif
-
-                        <span class="price">${option.getFormattedPrice(request)}</span><span class="period">/${option.PERIOD}</span>
-                        <span class="quantity">${option.getCredits()} profiles</span>
-                        <hr/>
-                        <span class="text">You save</span>
-                        <span class="saved-amount">${option.getSavedAmount(request)}</span>
-                        <span class="checkbox">
-                            <input type="radio" name="${form.id}.option" value="${option.token}"/>
-                        </span>
-</label>\
-                  %endfor
-              </div>
+               %for field in form.fields:
+                   ${field.render(form.id, request, values, errors, view)|n}
+               %endfor
 
               <div class="explanation-row">
-                  <h4 class="highlight">This is what you get</h4>
+                  <h5 class="highlight">This is what you get</h5>
                   <ul>
                       <li>access to profile for 1 year (free updated included)</li>
                       <li>all available information on profile (incl. address, collection, etc.)</li>
                       <li>access from everywhere 24/7</li>
                   </ul>
                   <div class="modal-button">
-                      <button type="submit" class="btn btn-primary btn-large">Buy your plan now</button>
+                      <button type="submit" class="btn btn-primary btn-large">${form.action_label}</button>
                   </div>
               </div>
 
@@ -40,9 +24,9 @@
         <div class="modal-footer">
             <ul class="recommendation-icons inline">
                 <li>${g.project_name} is known from:</li>
-                <li><img src="${STATIC_URL}img/adpartner_nyt.png"/></li>
-                <li><img src="${STATIC_URL}img/adpartner_cnn.png"/></li>
-                <li><img src="${STATIC_URL}img/adpartner_art.png"/></li>
+                <li><img src="${STATIC_URL}img/adpartner_nyt.png?v=${VERSION_TOKEN}"/></li>
+                <li><img src="${STATIC_URL}img/adpartner_cnn.png?v=${VERSION_TOKEN}"/></li>
+                <li><img src="${STATIC_URL}img/adpartner_art.png?v=${VERSION_TOKEN}"/></li>
             </ul>
         </div>
     </form>

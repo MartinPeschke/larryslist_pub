@@ -290,6 +290,11 @@ class CheckboxField(Field):
     value = 'true'
     validator_args = {'if_missing': False}
     _validator = formencode.validators.StringBool
+
+class CheckboxPostField(CheckboxField):
+    template = 'larryslist:lib/formlib/templates/checkbox_post.html'
+    input_classes = ''
+
 class RadioBoolField(CheckboxField):
     template = 'larryslist:lib/formlib/templates/radiobool.html'
     input_classes = 'radio'

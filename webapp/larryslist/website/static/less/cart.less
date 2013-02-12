@@ -77,7 +77,18 @@
     top: -3px;
     right: -5px;
   }
+  .price {font-size: 2em;}
+  .period {font-size: 1.3em;}
+  .quantity {display: block; text-transform: uppercase;}
+  .text {display: block;font-size: .8em;}
+  .saved-amount {display: block; font-size: 1.5em;}
+  hr{
+    border-color: black;
+    border-bottom: 0px solid transparent;
+    margin: 10px 0;
+  }
 }
+
 .explanation-row {
   .standard-box;
   padding: 20px 20%;
@@ -91,21 +102,75 @@
   text-align: left;
 }
 
+// ====================== CHECKOUT ==========================
 
 .checkout-options-modal {
-  .price {font-size: 2em;}
-  .period {font-size: 1.3em;}
-  .quantity {display: block; text-transform: uppercase;}
-  .text {display: block;font-size: .8em;}
-  .saved-amount {display: block; font-size: 1.5em;}
   .highlight {
-    color: @linkColor;
-    font-size: 1em;
     margin: 0;
   }
-  hr{
-    border-color: black;
-    border-bottom: 0px solid transparent;
-    margin: 10px 0;
+}
+
+.checkout-sidebar {
+  padding: 10px;
+  box-shadow: 0 0 3px rgba(0,0,0,.4);
+  margin-top: 30px;
+  .accordion {
+    margin-bottom: @baseLineHeight;
+  }
+  .accordion-group {
+    margin-bottom: 2px;
+  }
+  .accordion-heading {
+    .accordion-toggle {display: block;padding:8px 15px 8px 50px;color:@textColor;}
+  }
+  .accordion-inner {padding: 0px 15px 15px 50px;}
+  .faq-arrow {
+    .background-image("../img/faqicons.png");
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    width: 25px;
+    height: 23px;
+    display: block;
+    float: left;
+    margin-left: -42px;
+  }
+  .collapsed .faq-arrow {
+    background-position: 0 -24px;
+  }
+}
+
+
+.search-results-container.mini{
+  .search-results-header{
+    padding: 1px 30px 0;
+    border-bottom: 1px solid #ddd;
+    #gradient > .vertical(@navbarBackgroundHighlight, @navbarBackground);
+  }
+}
+
+.search-results-row.mini{
+  height: auto;
+  cursor:default;
+  .right-col {
+    margin-left:40%;
+    width:60%;
+  }
+  .search-column {
+    &.completion, &.subscribers, &.rank {
+      width: auto;
+      float:None;
+      display: block;
+      text-align: right;
+      small {display: block;text-transform: uppercase;font-size: .7em;}
+      small, b{line-height:1em;font-weight:bold;}
+    }
+    &.details {
+      margin-left:0;
+      margin-right:0;
+      float:left;
+    }
+  }
+  + .search-results-row {
+    border-top: 1px solid #eee;
   }
 }

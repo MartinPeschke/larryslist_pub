@@ -1,13 +1,11 @@
-define(["tools/ajax", "models/cart", "text!templates/cartpage_item.html"], function(ajax, cart, cartItem){
-
+define(["tools/ajax", "models/cart", "text!templates/cartpage_item.html", "text!templates/cartpage_item_mini.html"], function(ajax, cart, cartItem, miniItem){
     var
         MODULE_KEY = 'CART_PAGE'
         , instance
         , CartItemView = Backbone.View.extend({
-            template: _.template(cartItem)
-            , events: {"click .dismiss": "destroy"}
+            events: {"click .dismiss": "destroy"}
             , initialize: function(opts){
-                this.setElement(this.template({model: this.model}));
+                this.setElement(opts.template({model: this.model}));
             }
             , destroy: function(e){
                 this.model.destroy();
@@ -16,12 +14,13 @@ define(["tools/ajax", "models/cart", "text!templates/cartpage_item.html"], funct
         })
         , View = Backbone.View.extend({
             initialize: function(opts){
-                var view = this;
+                var view = this, t = _.template(opts.mini?miniItem:cartItem);;
                 this.model = cart;
                 this.$body = this.$el.find(".cart-items");
+
                 cart.getItems(function(items){
                     items.each(function(item){
-                        var v = new CartItemView({model: item});
+                        var v = new CartItemView({model: item, template: t});
                         view.$body.append(v.$el);
                     });
                 });

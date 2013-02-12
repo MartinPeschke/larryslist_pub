@@ -1,0 +1,18 @@
+<div class="checkbox-row">
+%for option in widget.getOptions(request):
+<label class="checkbox-item inline ${'preferred' if option.preferred else ''}">\
+    %if option.preferred:
+        <img src="${STATIC_URL}img/preferred_tape.png" class="preferred-tape"/>
+    %endif
+
+    <span class="price">${option.getFormattedPrice(request)}</span><span class="period">/${option.PERIOD}</span>
+    <span class="quantity">${option.getCredits()} profiles</span>
+    <hr/>
+    <span class="text">You save</span>
+    <span class="saved-amount">${option.getSavedAmount(request)}</span>
+    <span class="checkbox">
+                    <input type="radio" name="${widget.getName(prefix)}" value="${option.getKey(request)}" ${'checked' if widget.isSelected(option, value, request) else ''}/>
+                </span>
+    </label>\
+%endfor
+</div>
