@@ -38,6 +38,7 @@
 
 
 <%def name="menu(user)">
+    ${self.searchField()}
     <ul class="nav pull-right">
         <li class="nav-entry dropdown cart-dropdown-section">
             <a class="nav-entry-link" data-toggle="dropdown" href="${request.fwd_url("website_cart")}">
@@ -45,9 +46,7 @@
                 <span class="caret"></span>
             </a>
             <ul class="dropdown-menu">
-                <li class="nav-entry cart-attach-dropdown">
-
-                </li>
+                <li class="nav-entry cart-attach-dropdown"></li>
             </ul>
         </li>
 
@@ -93,3 +92,14 @@
 
 <%block name="layoutscripts"/>
 <%def name="pageClass()"></%def>
+<%def name="searchField()">
+    <ul class="nav">
+        <li class="nav-entry">
+            <form action="${request.fwd_url("website_search")}">
+                <div class="search-box">
+                    <input type="text" name="l" class="search-query" placeholder="Search" value=""><button type="submit" class="btn"><span data-icon="s" aria-hidden="true"></span></button>
+                </div>
+            </form>
+        </li>
+    </ul>
+</%def>
