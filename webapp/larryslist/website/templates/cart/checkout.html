@@ -7,7 +7,7 @@
         <div class="row">
             <div class="span8">
                 <div class="payment-options">
-                    ${self.buildForm(view.form, values.get(view.form.id, {}), errors.get(view.form.id, {}))}
+                    ${self.buildForm(view.getForm(), values.get(view.getForm().id, {}), errors.get(view.getForm().id, {}))}
                 </div>
             </div>
             <div class="span4 cart-section">
@@ -50,7 +50,7 @@
 <%block name="scripts">
     <script>
         require(["tools/ajax"], function(ajax){
-            ajax.ifyForm({form: $("#${view.form.id}")});
+            ajax.ifyForm({form: $("#${view.getForm().id}")});
         });
     </script>
 </%block>
@@ -63,6 +63,9 @@
         %endfor
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">${form.action_label}</button>
+            %if form.has_discard:
+                <a href="${request.fwd_url("website_discard_saved_details")}" class="btn">Discard Saved Details</a>
+            %endif
         </div>
     </form>
 </%def>

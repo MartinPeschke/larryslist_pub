@@ -25,11 +25,10 @@ define(
         events: {click:"toggleSelected"}
         , template: _.template(resultTempl)
         , initialize: function(opts){
-            this.setElement(this.template({model: this.model, inCart:opts.inCart, owned: opts.owned}));
+            this.setElement(this.template({model: this.model, inCart:opts.inCart}));
             this.listenTo(this.model, "destroy", this.remove);
             this.$button = this.$el.find(".btn");
             if(opts.inCart)this.toggleSelected();
-            if(opts.owned)this.toggleOwned();
         }
         , toggleSelected: function(){
             var selected = this.$el.toggleClass("selected").hasClass("selected");
@@ -39,18 +38,28 @@ define(
             this.$button.html(btnData[selected?'textUnselected':'textSelected'])[selected?'removeClass':'addClass']("btn-primary");
             this.$el.trigger("collector:"+(selected?"selected":"unselected"));
         }
-        , toggleOwned: function(){
-            var owned = this.$el.removeClass("selectable").toggleClass("owned").hasClass("owned")
-                , selected = this.$el.toggleClass("selected").hasClass("selected");
+        , destroy: function(){
+            this.model.destroy();
+        }
+    })
+
+    , OwnedResultView = Backbone.View.extend({
+        template: _.template(resultTempl)
+        , initialize: function(opts){
+            this.setElement(this.template({model: this.model, inCart:opts.inCart, owned: opts.owned}));
+            this.listenTo(this.model, "destroy", this.remove);
+
+            var owned = this.$el.removeClass("selectable").addClass("owned");
             this.model.set("owned", owned);
             cart.removeProfile(this.model);
-            this.$button.html("Already subscribed").removeClass("btn-primary");
-            this.events = {};
+            this.$(".btn").replaceWith('<div class="label">Already subscribed</span>')
+            this.$(".marked-checkbox").remove();
         }
         , destroy: function(){
             this.model.destroy();
         }
     })
+
     , CartFlyout = Backbone.View.extend({
         template: _.template(flyoutTempl)
         , tagName: "div"
@@ -272,10 +281,13 @@ define(
             this.results = new SearchResults();
             this.listenTo(this.results, "add", this.addResult);
             this.listenTo(this.results, "updated", this.updatedResults);
+
+            require(["views/option"]);
         }
         , addResult: function(result){
-            var t = this.$results.children(".sortable").eq(this.results.indexOf(result))
-                , v = new ResultView({model: result, inCart: cart.contains(result), owned: user.ownsProfile(result)}).$el;
+            var cls = user.ownsProfile(result)?OwnedResultView:ResultView
+                , t = this.$results.children(".sortable").eq(this.results.indexOf(result))
+                , v = new cls({model: result, inCart: cart.contains(result)}).$el;
             if(t.length){
                 t.before(v);
             } else {

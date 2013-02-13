@@ -22,6 +22,7 @@ ROUTE_LIST = [
     , ClassRoute    ("website_checkout_join"        , "/checkout/join", contexts.WebsiteRootContext, cart.CheckoutLoginHandler, "cart/login.html", view_attrs=JSON_FORM_ATTRS)
     , FunctionRoute ("website_checkout_options_ajax", "/ajax/templates/payment/options.html", contexts.WebsiteRootContext, cart.checkout_options, "cart/ajax/options.html")
     , ClassRoute    ("website_checkout_set_option"  , "/checkout/option", contexts.WebsiteRootContext, cart.PaymentOptionsHandler, None, view_attrs=JSON_FORM_ATTRS)
+    , FunctionRoute ("website_discard_saved_details", "/checkout/discard", contexts.WebsiteRootContext, cart.discard_saved_details, None)
 ]
 
 

@@ -117,7 +117,8 @@ class UserModel(Mapping):
     token = TextField()
     name = TextField()
     email = TextField()
-    credit = IntegerField(default = 300)
+    credit = IntegerField(default = 0)
+    cardNumber = TextField()
     Collector = ListField(DictField(CollectorModel))
 
     def isAnon(self):
@@ -130,7 +131,12 @@ class UserModel(Mapping):
         json['Collector'] = [{'id': c['id']} for c in json.pop("Collector", []) if c.get('id')]
         return simplejson.dumps(json)
 
+    def hasSavedDetails(self):
+        return bool(self.cardNumber)
 
+    def discardSavedDetails(self):
+        self.cardNumber = None
+        return True
 
 
 

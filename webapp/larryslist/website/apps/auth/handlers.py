@@ -23,6 +23,7 @@ def logout(context, request):
     session = request.session
     if SESSION_KEY in session:
         del session[SESSION_KEY]
+    context.cart.empty()
     if request.params.get('furl'):
         request.fwd_raw(request.params.get('furl'))
     else:

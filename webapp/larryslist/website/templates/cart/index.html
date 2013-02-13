@@ -60,7 +60,7 @@
 
 <%def name="buildItem(form, pos, item)">
     <li class="search-results-row sortable">
-        <input type="hidden" name="${form.id}.Collector" value="${item.id}"/>
+        <input type="hidden" name="${form.id}.Collector-${pos}.id" value="${item.id}"/>
         <div class="search-column completion">
             <b>${item.completion}%</b>
         </div><div class="search-column subscribers">
@@ -77,4 +77,11 @@
 
 <%block name="options">
     options.pageconfig.CART_PAGE = {el: $("#${view.form.id}")};
+</%block>
+<%block name="scripts">
+    <script>
+        require(["tools/ajax"], function(ajax){
+            ajax.ifyForm({form: $("#${view.form.id}")});
+        });
+    </script>
 </%block>

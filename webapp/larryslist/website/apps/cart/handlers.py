@@ -1,5 +1,5 @@
 from larryslist.lib.formlib.handlers import FormHandler
-from larryslist.website.apps.cart.forms import PaymentOptionsForm, JoinLoginForm, JoinSignupForm, CheckoutForm, SpendCreditsForm
+from larryslist.website.apps.cart.forms import PaymentOptionsForm, JoinLoginForm, JoinSignupForm, CheckoutForm, SpendCreditsForm, SavedDetailsCheckoutForm
 from larryslist.website.apps.contexts import logged_in
 from pyramid.renderers import render_to_response
 
@@ -15,16 +15,23 @@ def checkout_arbiter(context, request):
         request.fwd("website_checkout")
 
 
+def discard_saved_details(context, request):
+    context.user.discardSavedDetails()
+    request.fwd("website_checkout")
+
 class CheckoutHandler(FormHandler):
-    form = CheckoutForm
+    forms = [CheckoutForm, SavedDetailsCheckoutForm]
     @logged_in("website_checkout_join")
     def __init__(self, context, request):
         super(CheckoutHandler, self).__init__(context, request)
 
     def pre_fill_values(self, request, result):
         result['options'] = self.context.config.getPaymentOptions()
+        result['values'][self.getForm().id] = {'number': request.root.user.cardNumber}
         return result
 
+    def getForm(self):
+        return self.forms[self.context.user.hasSavedDetails()]
 
 
 class CheckoutLoginHandler(FormHandler):
