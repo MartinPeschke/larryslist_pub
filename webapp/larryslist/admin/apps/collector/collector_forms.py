@@ -248,6 +248,7 @@ class CollectionAddCollectorForm(BaseAdminForm):
     @classmethod
     def persist(cls, request, values):
         try:
+            values['feederToken'] = request.root.user.token
             values['LinkedCollector'] = {'id': request.matchdict['collectorId'], 'relation':values.pop("relation")}
             collector = CreateCollectorProc(request, {'Collector':values})
         except DBException, e:
