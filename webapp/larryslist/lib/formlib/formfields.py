@@ -146,6 +146,8 @@ class Field(BaseField):
     is_validated = True
     validator_args = {}
     if_empty = ''
+    min = None
+    max = None
     type = 'text'
     input_classes = 'input-large'
     def __init__(self, name, label, attrs = NONE, classes = '', validator_args = {}, group_classes = '', label_classes = '', input_classes = '', min = None, max = None):

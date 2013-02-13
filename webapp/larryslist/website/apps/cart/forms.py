@@ -63,7 +63,7 @@ class CheckoutForm(BaseForm):
         , StringField("line1", "Street", REQUIRED)
         , CombinedField([StringField("postCode", "Zip Code", REQUIRED, input_classes="input-mini"), StringField("city", "City", REQUIRED, input_classes="input-medium")], "Post code / City", REQUIRED)
         , StringField("country", "Country", REQUIRED)
-        , CheckboxPostField("agreeTOS", u"Yes, I have read the Terms and Conditions and Agree.")
+        , CheckboxPostField("agreeTOS", u"Yes, I have read the Terms and Conditions and Agree.", REQUIRED)
     ]
     @classmethod
     def on_success(cls, request, values):
