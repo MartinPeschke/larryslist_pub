@@ -1,4 +1,4 @@
-from jsonclient import Mapping, TextField, DateField, ListField, DictField, IntegerField, BooleanField
+from jsonclient import Mapping, TextField, DateField, ListField, DictField, IntegerField, BooleanField, DateTimeField
 from larryslist.models.config import MediumModel, GenreModel
 from larryslist.models import ClientTokenProc, MetaDataProc
 
@@ -84,6 +84,8 @@ STATUS = {
 class CollectorModel(Mapping):
     id = IntegerField()
     status = TextField()
+    feederName = TextField()
+    updated = DateTimeField()
     firstName = TextField()
     lastName = TextField()
     origName = TextField()
@@ -105,7 +107,10 @@ class CollectorModel(Mapping):
         return self.status == 'INPROGRESS'
     def canReview(self, user):
         return self.status == 'SUBMITTED' and user.isAdmin()
-
+    def isSubmitted(self):
+        return self.status == 'SUBMITTED'
+    def isReviewed(self):
+        return self.status == 'REVIEWED'
 
 
 SetSourcesProc = ClientTokenProc("/admin/collector/sourceedit", root_key = 'Collector', result_cls=CollectorModel)

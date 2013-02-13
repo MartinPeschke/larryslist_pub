@@ -4,27 +4,62 @@
 <%block name="contentbody">
     <div class="padded-body dashboard">
         %if vctxt.user.isAdmin():
-            <h4>Collectors pending approval</h4>
-            <div class="collector-list">
-            %for profile in submitted:
-                <div class="single-profile">
-                    <a class="profile-link" href="${request.fwd_url("admin_collector_edit", collectorId = profile.id, stage="base")}">${profile.firstName} ${profile.lastName}</a>
-                    ${profile.getStatusLabel()}
-
+            <div class="row-fluid">
+                <div class="span6">
+                    <h4>Collectors pending approval</h4>
+                    <div class="collector-list">
+                    %for profile in submitted:
+                        %if profile.isSubmitted():
+                        <div class="single-profile">
+                            <a class="dashbord-col profile-link" href="${request.fwd_url("admin_collector_edit", collectorId = profile.id, stage="base")}">${profile.firstName} ${profile.lastName}
+                            </a><span class="dashbord-col creator">
+                                ${profile.feederName}
+                            </span><span class="dashbord-col last-updated">
+                                ${i18n.format_date(profile.updated, request)}
+                            </span><span class="dashbord-col status">
+                                ${profile.getStatusLabel()}</span>
+                        </div>
+                        %endif
+                    %endfor
+                    </div>
+                    <hr/>
+                    ${self.myProfiles(profiles)}
                 </div>
-            %endfor
+
+                <div class="span6">
+                    <h4>Approved Collectors</h4>
+                    <div class="collector-list">
+                        %for profile in submitted:
+                            %if profile.isReviewed():
+                            <div class="single-profile">
+                                <a class="dashbord-col profile-link" href="${request.fwd_url("admin_collector_edit", collectorId = profile.id, stage="base")}">${profile.firstName} ${profile.lastName}
+                                </a><span class="dashbord-col creator">
+                            ${profile.feederName}
+                            </span><span class="dashbord-col last-updated">
+                            ${i18n.format_date(profile.updated, request)}
+                            </span><span class="dashbord-col status">
+                            ${profile.getStatusLabel()}</span>
+                            </div>
+                            %endif
+                        %endfor
+                    </div>
+                </div>
             </div>
+        %else:
+            ${self.myProfiles(profiles)}
         %endif
-
-        <h4>My recent collectors</h4>
-        <div class="collector-list">
-        %for profile in profiles:
-            <div class="single-profile">
-                <a class="profile-link" href="${request.fwd_url("admin_collector_edit", collectorId = profile.id, stage="base")}">${profile.firstName} ${profile.lastName}</a>
-                ${profile.getStatusLabel()}
-            </div>
-        %endfor
-        </div>
-
     </div>
 </%block>
+
+
+<%def name="myProfiles(profiles)">
+    <h4>My recent collectors</h4>
+    <div class="collector-list">
+            %for profile in profiles:
+                <div class="single-profile">
+                    <a class="profile-link" href="${request.fwd_url("admin_collector_edit", collectorId = profile.id, stage="base")}">${profile.firstName} ${profile.lastName}</a>
+                ${profile.getStatusLabel()}
+                </div>
+            %endfor
+    </div>
+</%def>
