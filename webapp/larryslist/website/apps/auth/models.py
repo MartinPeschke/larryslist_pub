@@ -12,7 +12,7 @@ class UserModel(Mapping):
     def isAnon(self):
         return self.token is None
     def getCredits(self):
-        return self.credit / 100
+        return self.credit
 
     def toJSON(self, stringify = True):
         return simplejson.dumps(self.unwrap(sparse = True))

@@ -14,7 +14,7 @@ class PaymentOptionModel(Mapping):
     def getKey(self, request): return self.token
 
     def getCredits(self):
-        return self.credit / 100
+        return self.credit
     def getFormattedPrice(self, request):
         return i18n.format_currency(self.price / 100, 'EUR', request)
     def getSavedAmount(self, request):

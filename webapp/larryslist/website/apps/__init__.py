@@ -13,13 +13,15 @@ ROUTE_LIST = [
     , ClassRoute    ("website_password_reset"    , "/password/reset/:token", contexts.WebsiteRootContext, auth.PasswordResetHandler, "auth/form.html", view_attrs=JSON_FORM_ATTRS)
     , FunctionRoute ("website_join_checkemail"   , "/signup/checkemail", contexts.WebsiteRootContext, auth.join_checkemail, "json", {'xhr':True})
     , FunctionRoute ("website_search"            , "/search", contexts.WebsiteRootContext, search.index, "search/index.html")
-    , FunctionRoute ("website_cart"              , "/cart", contexts.WebsiteRootContext, cart.index, "cart/index.html")
-    , FunctionRoute ("website_cart_save"         , "/cart/save", contexts.WebsiteRootContext, cart.save, "json", {'xhr':True})
+
+    , ClassRoute    ("website_cart"              , "/cart", contexts.WebsiteRootContext, cart.SpendCreditsHandler, "cart/index.html", view_attrs=JSON_FORM_ATTRS)
+    , FunctionRoute ("website_cart_save"         , "/cart/save", contexts.WebsiteRootContext, cart.save_cart, "json", {'xhr':True})
 
     , ClassRoute    ("website_checkout"             , "/checkout", contexts.WebsiteRootContext, cart.CheckoutHandler, "cart/checkout.html", view_attrs=JSON_FORM_ATTRS)
+    , FunctionRoute ("website_checkout_arbiter"     , "/checkout/arbiter", contexts.WebsiteRootContext, cart.checkout_arbiter, None)
     , ClassRoute    ("website_checkout_join"        , "/checkout/join", contexts.WebsiteRootContext, cart.CheckoutLoginHandler, "cart/login.html", view_attrs=JSON_FORM_ATTRS)
     , FunctionRoute ("website_checkout_options_ajax", "/ajax/templates/payment/options.html", contexts.WebsiteRootContext, cart.checkout_options, "cart/ajax/options.html")
-    , ClassRoute    ("website_checkout_set_option"  , "/checkout/option", contexts.WebsiteRootContext, cart.SetOptionsHandler, None, view_attrs=JSON_FORM_ATTRS)
+    , ClassRoute    ("website_checkout_set_option"  , "/checkout/option", contexts.WebsiteRootContext, cart.PaymentOptionsHandler, None, view_attrs=JSON_FORM_ATTRS)
 ]
 
 

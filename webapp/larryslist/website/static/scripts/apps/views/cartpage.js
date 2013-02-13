@@ -1,30 +1,27 @@
-define(["tools/ajax", "models/cart", "text!templates/cartpage_item.html", "text!templates/cartpage_item_mini.html"], function(ajax, cart, cartItem, miniItem){
+define(["tools/ajax", "models/cart", "models/user", "text!templates/cartpage_item.html", "text!templates/cartpage_item_mini.html"], function(ajax, cart, user, cartItem, miniItem){
     var
         MODULE_KEY = 'CART_PAGE'
         , instance
-        , CartItemView = Backbone.View.extend({
-            events: {"click .dismiss": "destroy"}
-            , initialize: function(opts){
-                this.setElement(opts.template({model: this.model}));
-            }
-            , destroy: function(e){
-                this.model.destroy();
-                this.remove();
-            }
-        })
-        , View = Backbone.View.extend({
-            initialize: function(opts){
-                var view = this, t = _.template(opts.mini?miniItem:cartItem);;
-                this.model = cart;
-                this.$body = this.$el.find(".cart-items");
 
-                cart.getItems(function(items){
-                    items.each(function(item){
-                        var v = new CartItemView({model: item, template: t});
-                        view.$body.append(v.$el);
-                    });
+        , View = Backbone.View.extend({
+            events : {'click .dismiss': "remove"}
+            , initialize: function(opts){
+                var view = this;
+                this.model = cart;
+            }
+            , remove: function(e){
+                var view = this, id = $(e.target).data("entityId");
+                this.model.removeProfile({id: id});
+                $(e.target).closest(".search-results-row").remove();
+                var btn = this.$el.find(".js-spend-credit");
+                cart.canSpend(user, function(canSpend){
+                    btn.prop("disabled", !canSpend);
+                    if(canSpend){
+                        view.$(".insufficient-credits").fadeOut();
+                    } else {
+                        view.$(".insufficient-credits").fadeIn();
+                    }
                 });
-                this.listenTo(this.model, "Collectors:remove", function(){console.log(arguments)})
             }
         })
         , init = function(opts){

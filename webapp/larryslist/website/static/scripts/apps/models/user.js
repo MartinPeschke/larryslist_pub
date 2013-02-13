@@ -4,7 +4,7 @@ define([], function(){
             return _.isEmpty(this.get("token"));
         }
         , getCredits: function(){
-            return this.get("credit")/100||0;
+            return this.get("credit")||0;
         }
     });
     return new UserModel(hnc.options.user);

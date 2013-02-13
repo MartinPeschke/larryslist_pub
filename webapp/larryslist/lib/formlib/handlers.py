@@ -70,7 +70,8 @@ class FormHandler(object):
 
     def validate_form(self):
         values = variable_decode(self.request.params)
-        schema_id = values['type']
+        schema_id = values.get('type')
+        if not schema_id: raise HTTPNotImplemented()
         try:
             resp = self.validate_values(values)
         except Invalid, error:

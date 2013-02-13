@@ -45,7 +45,14 @@
 
 
 <%block name="options">
-    options.pageconfig.CART_PAGE = {el: $(".cart-section"), mini: true};
+    options.pageconfig.COLLECTORS = {el: $(".cart-section"), mini: true};
+</%block>
+<%block name="scripts">
+    <script>
+        require(["tools/ajax"], function(ajax){
+            ajax.ifyForm({form: $("#${view.form.id}")});
+        });
+    </script>
 </%block>
 
 <%def name="buildForm(form, values, errors)">

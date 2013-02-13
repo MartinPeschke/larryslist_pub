@@ -31,6 +31,11 @@ define(["tools/ajax", "models/collector"], function(ajax, Collector){
         , getItems: function(cb, ctxt){
             cb.call(ctxt, this.get("Collectors")||[]);
         }
+        , canSpend: function(user, cb, ctxt){
+            this.getItems(function(items){
+                 cb.call(ctxt, items.length>0 && user.getCredits() >= items.length);
+            })
+        }
     })
 
     , cart = new Cart();

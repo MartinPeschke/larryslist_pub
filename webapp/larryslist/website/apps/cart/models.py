@@ -1,6 +1,7 @@
 from operator import methodcaller
 from jsonclient import Mapping, IntegerField, TextField, ListField, DictField
 from larryslist.models import ClientTokenProc
+from larryslist.website.apps.auth.models import LoggingInProc
 import simplejson
 
 
@@ -26,6 +27,12 @@ class CollectorModel(Mapping):
     def getName(self):
         return self.initials
 
+    def getAddress(self):
+        if not len(self.Address): return ''
+        addr = self.Address[0]
+        if not addr.Region or not addr.Country: return ''
+        return u"{region}, {country}".format(region = addr.Region.name, country = addr.Country.name)
+
 
 
 class WebsiteCart(CollectorModel):
@@ -42,6 +49,10 @@ class WebsiteCart(CollectorModel):
     def getItems(self):
         return self.Collectors
 
-
+    def canSpend(self, user):
+        return user.getCredits() >= len(self.getItems()) > 0
+    def empty(self):
+        self.Collectors = []
 
 PurchaseCreditProc = ClientTokenProc("/web/credit/buy")
+SpendCreditProc = LoggingInProc("/web/credit/spend")

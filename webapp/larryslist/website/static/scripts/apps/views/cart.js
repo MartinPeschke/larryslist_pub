@@ -15,7 +15,8 @@ define(["tools/ajax", "models/cart", "models/user", "text!templates/flyout.html"
         , onCartChange: function(collector){
             var view = this;
             cart.getItems(function(items){
-                view.$dropdown.html(view.template({total: items.length, credit: 0}));
+                view.$dropdown.html(view.template({total: items.length, user: user}));
+                view.$(".cart-total").html(items.length);
             });
         }
     });

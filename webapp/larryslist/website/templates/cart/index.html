@@ -6,39 +6,65 @@
     <div class="container centered cart-page">
         <div class="row">
             <div class="span12">
-                <div class="search-results-container standard-box">
-                    <h1 class="box-title">Your selected profiles</h1>
+                <form class="${view.form.classes}" id="${view.form.id}" method="POST">
+                    ${baseform.prelims(view.form)}
+                    <div class="search-results-container standard-box">
+                        <h1 class="box-title">Your selected profiles</h1>
 
-                    <div class="search-results-header">
-                        <div class="search-column picture">
-                            Collector
-                        </div><div class="search-column completion">
-                            Completion
-                        </div><div class="search-column subscribers">
-                            Followers
-                        </div><div class="search-column rank">
-                            Rank
+                        <div class="search-results-header">
+                            <div class="search-column picture">
+                                Collector
+                            </div><div class="search-column completion">
+                                Completion
+                            </div><div class="search-column subscribers">
+                                Followers
+                            </div><div class="search-column rank">
+                                Rank
+                            </div>
+                            <div class="search-column details">
+                                &nbsp;
+                            </div>
                         </div>
-                        <div class="search-column details">
-                            &nbsp;
-                        </div>
+                        <ul class="search-results-body cart-items">
+                            %for i, collector in enumerate(vctxt.cart.getItems()):
+                                ${self.buildItem(view.form, i, collector)}
+                            %endfor
+                        </ul>
                     </div>
-                    <ul class="search-results-body cart-items">
-                        <li class="show-loading">
-                            <img src="${ROOT_STATIC_URL}img/ajax-loader.gif"/>
-                        </li>
-                    </ul>
-                </div>
-                <div class="cart-buttons">
-                    <a href="${request.fwd_url("website_checkout")}" class="btn btn-primary pull-right">Buy Now</a>
-                    <a href="${request.fwd_url("website_search")}" class="btn">Back to Search</a>
-                </div>
+                    <div class="cart-buttons">
+                        <button type="submit" class="btn btn-primary pull-right js-spend-credit" ${'' if vctxt.cart.canSpend(vctxt.user) else 'disabled'}>Buy Now</button>
+                        %if not vctxt.cart.canSpend(vctxt.user):
+                            <span class="insufficient-credits pull-right">
+                                Not enough credits:
+                                <a href="${request.fwd_url("website_checkout")}" class="btn btn-primary">Buy more credits</a>
+                            </span>
+                        %endif
+                        <a href="${request.fwd_url("website_search")}" class="btn">Back to Search</a>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </%def>
 
 
+<%def name="buildItem(form, pos, item)">
+    <li class="search-results-row sortable">
+        <input type="hidden" name="${form.id}.Collector" value="${item.id}"/>
+        <div class="search-column completion">
+            <b>${item.completion}%</b>
+        </div><div class="search-column subscribers">
+        <b>${item.subscribers}</b>
+    </div><div class="search-column rank">
+        <b>${item.rank}</b>
+    </div><div class="search-column details">
+        <div class="name">${item.getName()}</div>
+        <p class="location">${item.getAddress()}</p>
+        <a class="btn btn-primary dismiss" data-entity-id="${item.id}">Remove</a>
+    </div>
+    </li>
+</%def>
+
 <%block name="options">
-    options.pageconfig.CART_PAGE = {el: $(".cart-page")};
+    options.pageconfig.CART_PAGE = {el: $("#${view.form.id}")};
 </%block>

@@ -13,8 +13,13 @@ define(["tools/ajax"
                 ajax.ifyForm({form:this.$(".form-validated")});
           }
           , render: function(){
-                this.$el.modal("show");
-
+            var view = this;
+            cart.canSpend(user, function(canSpend){
+                if(canSpend)
+                    window.location.href = "/checkout/arbiter";
+                else
+                    view.$el.modal("show");
+            });
           }
         })
         , init = function(opts){
