@@ -17,6 +17,7 @@ define(["router"], function (Router) {
                 "search": "search"
                 , "cart": "cart"
                 , "checkout/option" : "selectoption"
+                , "checkout/join" : "collectors"
                 , "checkout" : "collectors"
                 , "*default": "default"
             }

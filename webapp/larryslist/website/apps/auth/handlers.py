@@ -2,7 +2,7 @@ from jsonclient.backend import DBMessage
 from larryslist.lib.baseviews import GenericErrorMessage
 from larryslist.lib.formlib.handlers import FormHandler
 from larryslist.website.apps.auth.forms import LoginForm, PasswordForgotHandler, PasswordResetForm, SignupForm
-from larryslist.website.apps.auth.models import CheckEmailExistsProc, PasswordTokenVerifyProc, SESSION_KEY
+from larryslist.website.apps.models import CheckEmailExistsProc, PasswordTokenVerifyProc, SESSION_KEY
 from pyramid.decorator import reify
 from pyramid.httpexceptions import HTTPFound
 

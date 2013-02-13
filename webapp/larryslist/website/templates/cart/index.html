@@ -35,9 +35,19 @@
                         <button type="submit" class="btn btn-primary pull-right js-spend-credit" ${'' if vctxt.cart.canSpend(vctxt.user) else 'disabled'}>Buy Now</button>
                         %if not vctxt.cart.canSpend(vctxt.user):
                             <span class="insufficient-credits pull-right">
-                                Not enough credits:
-                                <a href="${request.fwd_url("website_checkout")}" class="btn btn-primary">Buy more credits</a>
+                                %if not vctxt.user.getCredits():
+                                    No credits yet:
+                                    <a href="${request.fwd_url("website_checkout")}" class="btn btn-primary">Buy more credits</a>
+                                %elif not len(vctxt.cart.getItems()):
+                                    No profiles selected yet:
+                                    <a href="${request.fwd_url("website_search")}" class="btn btn-primary">Search for profiles</a>
+                                %else:
+                                    Not enough credits:
+                                    <a href="${request.fwd_url("website_checkout")}" class="btn btn-primary">Buy more credits</a>
+                                %endif
                             </span>
+                        %else:
+                            <a href="${request.fwd_url("website_checkout")}" class="btn btn-primary">Buy more credits</a>&nbsp;&nbsp;&nbsp;&nbsp;
                         %endif
                         <a href="${request.fwd_url("website_search")}" class="btn">Back to Search</a>
                     </div>

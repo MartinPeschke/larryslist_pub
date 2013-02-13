@@ -1,11 +1,23 @@
-define([], function(){
-    var UserModel = Backbone.Model.extend({
-        isAnon: function(){
+define(["tools/ajax"], function(ajax){
+    var
+
+    MinimalCollector = ajax.Model
+    , Collectors = ajax.Collection.extend({model:MinimalCollector})
+    , UserModel = ajax.Model.extend({
+        initialize: function(opts){
+            this.register({Collector: new Collectors()});
+        }
+        , isAnon: function(){
             return _.isEmpty(this.get("token"));
         }
         , getCredits: function(){
             return this.get("credit")||0;
         }
-    });
-    return new UserModel(hnc.options.user);
+        , ownsProfile: function(collector){
+            return !_.isEmpty(this.get("Collector").get(collector.id));
+        }
+    })
+    , user = new UserModel();
+    user.setRecursive(hnc.options.user);
+    return user;
 });

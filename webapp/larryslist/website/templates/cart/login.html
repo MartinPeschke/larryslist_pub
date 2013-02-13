@@ -4,16 +4,24 @@
 
 
 <%def name="content()">
-    <div class="container standard-box centered auth-page">
+    <div class="container auth-page">
         <div class="row">
-            <div class="span12">
-                <h1 class="box-title">Buy Now</h1>
+            <div class="span8">
+                ${self.buildForm(view.schemas['signup'], values.get(view.schemas['signup'].id, {}), errors.get(view.schemas['signup'].id, {}))}
+
+                ${self.buildForm(view.schemas['login'], values.get(view.schemas['login'].id, {}), errors.get(view.schemas['login'].id, {}))}
             </div>
-            <div class="span6">
-            ${self.buildForm(view.schemas['signup'], values.get(view.schemas['signup'].id, {}), errors.get(view.schemas['signup'].id, {}))}
-            </div>
-            <div class="span6">
-            ${self.buildForm(view.schemas['login'], values.get(view.schemas['login'].id, {}), errors.get(view.schemas['login'].id, {}))}
+            <div class="span4 cart-section">
+                <div class="search-results-container mini">
+                    <div class="search-results-header">
+                        <h4 class="highlight">Your Selection</h4>
+                    </div>
+                    <ul class="search-results-body cart-items">
+                        <li class="show-loading">
+                            <img src="${ROOT_STATIC_URL}img/ajax-loader.gif"/>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
@@ -33,6 +41,10 @@
     </form>
 </%def>
 
+
+<%block name="options">
+    options.pageconfig.COLLECTORS = {el: $(".cart-section"), mini: true};
+</%block>
 <%block name="scripts">
     <script>
         require(["tools/ajax"], function(ajax){

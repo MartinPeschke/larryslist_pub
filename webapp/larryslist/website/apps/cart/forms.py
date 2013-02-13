@@ -2,8 +2,7 @@ import formencode
 from larryslist.lib.baseviews import GenericErrorMessage
 from larryslist.lib.formlib.formfields import BaseForm, ConfigChoiceField, REQUIRED, EmailField, PasswordField, PlainHeadingField, StringField, CheckboxField, CheckboxPostField, CombinedField, HtmlAttrs
 from larryslist.website.apps.auth import LoginForm, SignupForm
-from larryslist.website.apps.auth.models import RefreshUserProfileProc
-from larryslist.website.apps.cart.models import PurchaseCreditProc, SpendCreditProc
+from larryslist.website.apps.models import RefreshUserProfileProc, PurchaseCreditProc, SpendCreditProc
 
 
 class PaymentOptionField(ConfigChoiceField):
@@ -67,13 +66,23 @@ class CheckoutForm(BaseForm):
     @classmethod
     def on_success(cls, request, values):
         values['userToken'] = request.root.user.token
-        result = PurchaseCreditProc(request, values)
-        status = result.get('PaymentStatus')
-        if status and status.get('success') == True:
+        status = PurchaseCreditProc(request, values)
+        if status.success == True:
             RefreshUserProfileProc(request, {'token':request.root.user.token})
             return {'success':True, 'redirect':request.fwd_url("website_cart")}
         else:
-            return {'success':False, "message":"Payment Failed", 'values':values, 'errors':{}}
+            errors = {}
+            if status.message == "PAYMENT_FAILED":
+                errors = {"number": "Invalid payment data, please check card details."}
+            elif status.message == "INVALID_CARD_NUMBER":
+                errors = {"number": "Invalid card number"}
+            elif status.message.startswith("validation 140"):
+                errors = {"expiryYear": "Expiry date must be in the future"}
+            elif status.message.startswith("validation 103"):
+                errors = {"cvs": "CVC is not right length"}
+            else:
+                errors = {"number": "Invalid card number {}".format(status.message)}
+            return {'success':False, "message":"Payment Failed", 'values':values, 'errors':errors}
 
 
 class SpendCreditsForm(BaseForm):

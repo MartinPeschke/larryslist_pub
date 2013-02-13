@@ -1,8 +1,6 @@
 from jsonclient.cached import CachedLoader
 from larryslist.website.apps.auth.forms import LoginForm
-from larryslist.website.apps.auth.models import getUserFromSession
-from larryslist.website.apps.cart.models import WebsiteCart
-from larryslist.website.apps.models import WebsiteConfigModel
+from larryslist.website.apps.models import getUserFromSession, WebsiteCart, WebsiteConfigModel
 from larryslist.lib.baseviews import RootContext
 from larryslist.models import ClientTokenProc
 from pyramid.decorator import reify
