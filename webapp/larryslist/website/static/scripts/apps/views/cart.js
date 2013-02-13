@@ -19,6 +19,7 @@ define(["tools/ajax", "models/cart", "models/user", "text!templates/flyout.html"
             this.$total = this.$(".total");
             cart.getItems(function(items){
                 view.$dropdown.html(view.template({total: items.length, user: user}));
+                view.$(".btn")[items.length?'removeClass':'addClass']("disabled");
             });
             this.model = cart;
             this.listenTo(this.model, "item:changed", this.onCartChange);
@@ -29,6 +30,7 @@ define(["tools/ajax", "models/cart", "models/user", "text!templates/flyout.html"
             cart.getItems(function(items){
                 view.$dropdown.html(view.template({total: items.length, user: user}));
                 view.$(".cart-total").html(items.length);
+                view.$(".btn")[items.length?'removeClass':'addClass']("disabled");
             });
         }
     });

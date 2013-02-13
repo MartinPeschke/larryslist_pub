@@ -30,7 +30,7 @@ define(["require"]
                                             window.app_router.navigate(href, true);
                                         else
                                             window.location.hash = href;
-                                    } else if($t.attr("hnc-loader")){
+                                    } else if($t.attr("hnc-loader") && !$t.hasClass("disabled")){
                                         require([$t.attr("hnc-loader")], function(View){
                                             View.init(window.__options__).render($t);
                                         });
