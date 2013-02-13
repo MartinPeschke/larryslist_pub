@@ -19,7 +19,15 @@
   &.centered {
     margin-top: 120px;
   }
+  hr {
+    border-top-color: #ddd;
+    border-bottom-color: transparent;
+  }
 }
+.sidebarbox {
+  padding: 15px;
+}
+
 .box-title {
   font-size: 20px;
   font-weight: normal;
@@ -27,6 +35,14 @@
   margin: 10px;
   text-align: center;
   padding: 5px 10px 10px;
+  &.inline {
+    margin: 0;
+    padding: 15px 10px 10px;
+    text-align:left;
+  }
+  &.tinted {
+    #gradient > .vertical(#ebebed, #f3f3f5);
+  }
 }
 
 

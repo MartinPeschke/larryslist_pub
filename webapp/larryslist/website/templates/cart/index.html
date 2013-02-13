@@ -5,11 +5,11 @@
 <%def name="content()">
     <div class="container centered cart-page">
         <div class="row">
-            <div class="span12">
-                <form class="${view.form.classes}" id="${view.form.id}" method="POST">
+            <form class="${view.form.classes}" id="${view.form.id}" method="POST">
+                <div class="span8">
                     ${baseform.prelims(view.form)}
-                    <div class="search-results-container standard-box">
-                        <h1 class="box-title">Your selected profiles</h1>
+                    <div class="search-results-container">
+                        <h5 class="box-title inline tinted">Shopping Cart</h5>
 
                         <div class="search-results-header">
                             <div class="search-column picture">
@@ -31,8 +31,8 @@
                             %endfor
                         </ul>
                     </div>
+
                     <div class="cart-buttons">
-                        <button type="submit" class="btn btn-primary pull-right js-spend-credit" ${'' if vctxt.cart.canSpend(vctxt.user) else 'disabled'}>Buy Now</button>
                         %if not vctxt.cart.canSpend(vctxt.user):
                             <span class="insufficient-credits pull-right">
                                 %if not len(vctxt.cart.getItems()):
@@ -47,12 +47,36 @@
                                 %endif
                             </span>
                         %else:
-                            <a href="${request.fwd_url("website_checkout")}" class="btn btn-primary">Buy more credits</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a href="${request.fwd_url("website_checkout")}" class="btn btn-primary">Buy more credits</a>&nbsp;&nbsp;&nbsp;&nbsp;
                         %endif
                         <a href="${request.fwd_url("website_search")}" class="btn">Back to Search</a>
                     </div>
-                </form>
-            </div>
+                </div>
+                <div class="span4">
+                    <div class="standard-box">
+                        <h5 class="box-title inline">Proceed</h5>
+                        <div class="cart-dropdown-section sidebarbox" data-template="templates/checkout-cart.html">
+                            <div class="cart-attach-dropdown">
+                                <img src="${ROOT_STATIC_URL}/img/ajax-loader.gif"/>
+                            </div>
+                            <br/>
+                            <div class="flyout-line">
+                                <button type="submit" class="js-spend-credit btn btn-primary btn-large wide-button" ${'' if vctxt.cart.canSpend(vctxt.user) else 'disabled'}>Buy now</button>
+                            </div>
+                        </div>
+                        <hr/>
+                        <div class="sidebarbox">
+                            <b>This is what you get:</b>
+                            <ul>
+                                <li>access to profile for 1 year (free updated included)</li>
+                                <li>all available information on profile (incl. address, collection, etc.)</li>
+                                <li>access from everywhere 24/7</li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </%def>
@@ -60,6 +84,7 @@
 
 <%def name="buildItem(form, pos, item)">
     <li class="search-results-row sortable">
+        <span class="marked-checkbox checked"></span>
         <input type="hidden" name="${form.id}.Collector-${pos}.id" value="${item.id}"/>
         <div class="search-column completion">
             <b>${item.completion}%</b>

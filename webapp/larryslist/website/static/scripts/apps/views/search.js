@@ -161,15 +161,17 @@ define(
 
             this.register(filter);
         }
-        , getSearchQuery: function(){
+        , getSearchQuery: function(resetFilters){
             var model = this, term = this.get("term");
             if(term.length > 2){
                 var filters = {};
-                _.each(this.FILTERS, function(f){
-                    var l = [];
-                    model.get(f.name).each(function(m){if(m.isSelected())l.push({name: m.getValue()})});
-                    if(l.length)filters[f.name] = l;
-                });
+                if(!resetFilters){
+                    _.each(this.FILTERS, function(f){
+                        var l = [];
+                        model.get(f.name).each(function(m){if(m.isSelected())l.push({name: m.getValue()})});
+                        if(l.length)filters[f.name] = l;
+                    });
+                }
                 return {"term":term, "Filters": filters};
             }
         }
@@ -309,7 +311,7 @@ define(
             this.$(".result-count").html("0");
         }
         , search: function(resetFilters){
-            var view = this, query = this.filter.getSearchQuery();
+            var view = this, query = this.filter.getSearchQuery(resetFilters);
             if(query){
                 this.$results.addClass("loading");
                 ajax.submitPrefixed({

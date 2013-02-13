@@ -9,7 +9,9 @@
 
     if(cart.length){
         require(["views/cart"], function(CartViews){
-            CartViews.DropDown({el: cart});
+            cart.each(function(idx, elem){
+                CartViews.DropDown({el: $(elem)});
+            });
         });
     }
 
