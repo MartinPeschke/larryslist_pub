@@ -44,9 +44,9 @@ class LocationModel(Mapping):
     token = TextField()
 
 class AddressModel(Mapping):
-    Country = LocationModel()
-    Region = LocationModel()
-    City = LocationModel()
+    Country = DictField(LocationModel)
+    Region = DictField(LocationModel)
+    City = DictField(LocationModel)
 
 class CollectorModel(Mapping):
     id = IntegerField()
@@ -67,20 +67,19 @@ class CollectorModel(Mapping):
 
 
 
-class WebsiteCart(CollectorModel):
+class WebsiteCart(object):
     Collectors = []
+
     def setContent(self, json):
-        self.Collectors = map(CollectorModel.wrap, json.get('Collectors', []))
+        self.Collectors = json.get('Collectors')
     def getContent(self, stringify = False):
-        try:
-            cart = map(methodcaller("unwrap", sparse = True), self.Collectors)
-        except AttributeError, e:
-            cart = []
+        cart = self.Collectors
         return simplejson.dumps({'Collectors':cart})
 
     def getItems(self):
         return self.Collectors
-
+    def getCollectors(self):
+        return map(CollectorModel.wrap, self.Collectors)
     def canSpend(self, user):
         return user.getCredits() >= len(self.getItems()) > 0
     def empty(self):
