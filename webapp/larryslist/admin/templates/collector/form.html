@@ -79,6 +79,8 @@
                 new View({el:form})
             });
         });
-        hnc.Config = ${vctxt.configJSON()|n};
+        %if view.activeForm.requires_config:
+            hnc.Config = ${vctxt.configJSON()|n};
+        %endif
     </script>
 </%block>

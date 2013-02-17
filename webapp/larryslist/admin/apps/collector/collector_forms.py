@@ -151,6 +151,7 @@ class CollectorUploadForm(BaseAdminForm):
 class CollectorArtAdvisoryForm(BaseAdminForm):
     id = "artadvisory"
     label = "Art Engagement"
+    requires_config = True
 
     getFormValues = classmethod(collectorMeta)
     isShown = classmethod(always)

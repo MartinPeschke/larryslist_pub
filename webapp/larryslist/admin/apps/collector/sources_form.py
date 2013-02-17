@@ -31,6 +31,7 @@ class BaseAdminForm(BaseForm):
     template = "larryslist:admin/templates/collector/form.html"
     extra_forms = [AddSourcesForm]
     fields = []
+    requires_config = False
 
     @classmethod
     def clean_data(cls, request, values):
