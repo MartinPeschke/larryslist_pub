@@ -4,7 +4,7 @@
 <%block name="controls">
     <div class="custom-control" data-custom-module="views/configtypeahead" data-config-attr="${widget.configAttr}">
     <div class="search-field pull-left">
-        <input type="text" class="query ${widget.getClasses()}" name="${widget.getName(prefix)}" value="${value}" autocomplete="off" ${widget.attrs.getInputAttrs(request)|n}/>
+        <input type="text" class="query ${widget.getClasses()}" name="${widget.getName(prefix)}" value="${value or ''}" autocomplete="off" ${widget.attrs.getInputAttrs(request)|n}/>
     </div>
     </div>
 </%block>
