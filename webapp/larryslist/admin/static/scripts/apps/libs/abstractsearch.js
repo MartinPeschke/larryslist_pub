@@ -4,6 +4,7 @@ define(["tools/hash", "tools/ajax", "text!templates/searchresult.html"]
         var numberMap = {48:0,  49:1, 50:2, 51:3, 52:4, 53:5, 54:6, 55:7, 56:8, 57:9, 96:0, 97:1, 98:2, 99:3, 100:4, 101:5, 102:6, 103:7, 104:8, 105:9}
         , AbstractSearch = Backbone.View.extend({
             shown : false
+            , PAGE_SIZE: 9
             , template:_.template(search_result_template)
             , initialize: function(opts){
                 this.id = hashlib.UUID();
@@ -190,7 +191,7 @@ define(["tools/hash", "tools/ajax", "text!templates/searchresult.html"]
             }
             , onSearchResult: function(collection){
                 if(collection){
-                    var models = collection.models.slice(0, 9);
+                    var models = collection.models.slice(0, this.PAGE_SIZE);
                     this.$resultNode.html(this.template({models:models, withExtra:!this.suppressExtra, total : collection.models.length}));
                     this.show();
                 }

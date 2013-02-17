@@ -1,7 +1,10 @@
 define(["tools/ajax"], function(ajax){
 
     var
-        NamedModel = ajax.Model.extend({idAttribute: 'name'})
+        NamedModel = ajax.Model.extend({
+            idAttribute: 'name'
+            , getSearchLabel: function(){return this.get('name')}
+        })
         , NamedModelCollection = ajax.Collection.extend({idAttribute: 'name', model: NamedModel})
 
 
