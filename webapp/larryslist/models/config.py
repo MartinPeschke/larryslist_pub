@@ -27,6 +27,7 @@ class RelationshipTypeModel(NamedModel): pass
 class InterestModel(NamedModel): pass
 class SocNetModel(NamedModel): pass
 class MediumModel(NamedModel): pass
+class MaterialModel(NamedModel): pass
 class GenreModel(NamedModel): pass
 class RankingModel(NamedModel): pass
 class PublisherModel(NamedModel): pass
@@ -53,11 +54,8 @@ DOCUMENT_TYPES = [DocumentTypeModel(name = 'IMAGE'), DocumentTypeModel(name = 'O
 
 RM = RankingModel
 RANKINGS = [RM(name="ARTnews"), RM(name="Art & Auction"), RM(name="Art Review")]
-
 FEEDER_ROLES = [FeederRoleModel(name="REVIEWER"), FeederRoleModel(name="OPERATOR")]
-
 YEARS = [NamedModel(name = yr) for yr in range(datetime.now().year, datetime.now().year - 50, -1)]
-
 MONTHS = [NamedModel(name = mon) for mon in range(1, 13)]
 EXPIRY_YEARS = [NamedModel(name = yr) for yr in range(datetime.now().year, datetime.now().year + 50)]
 CARD_TYPES = [NamedModel(name = 'VISA'), NamedModel(name = 'MC'), NamedModel(name = 'AMEX')]
@@ -77,6 +75,7 @@ class ConfigModel(Mapping):
     Industry = ListField(DictField(IndustryModel))
     Position = ListField(DictField(PositionModel))
     Medium = ListField(DictField(MediumModel))
+    Material = ListField(DictField(MaterialModel))
     Genre = ListField(DictField(GenreModel))
     Interest = ListField(DictField(InterestModel))
     Publisher = ListField(DictField(PublisherModel))

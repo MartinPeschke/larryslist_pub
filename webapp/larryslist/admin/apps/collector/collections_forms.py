@@ -2,6 +2,7 @@ from jsonclient.backend import DBException
 from larryslist.admin.apps.collector.collections_forms_fields import baseCollectionFields, collectionEditFields, collectionArtistsFields, collectionWebsiteFields, collectionUploadFields, collectionMuseumFields, collectionCooperationFields, collectionArtAdvisorFields
 from larryslist.admin.apps.collector.models import CreateCollectionProc, EditCollectionBaseProc, EditCollectionArtistsProc, EditCollectionPublicationsProc, SaveCollectionDocumentsProc, GetCollectionMetaProc, SetCollectionMetaProc
 from larryslist.admin.apps.collector.sources_form import BaseAdminForm
+from larryslist.lib.formlib.formfields import BaseForm, StringField, REQUIRED, ConfigChoiceField
 
 __author__ = 'Martin'
 
@@ -43,6 +44,13 @@ def getCreateLink(cls, request, view, user, forward = False):
 def getEditLink(cls, request, view, user, forward = False):
     f = request.fwd if forward else request.fwd_url
     return f("admin_collection_edit", collectorId = view.collector.id, stage = cls.id)
+
+
+
+
+class ArtworkForm(BaseForm):
+    mediumField = ConfigChoiceField("medium", "Medium", "Medium")
+    materialField = ConfigChoiceField("material", "Material", "Material")
 
 
 

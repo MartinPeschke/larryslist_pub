@@ -27,6 +27,7 @@ ROUTE_LIST = [
 
     # =============================== ADMIN-SETTINGS ===============================
     , ClassRoute    ("admin_settings_feeder_create"  , "/settings/feeder/create", contexts.AdminContext, settings.FeederHandler, "settings/feeder_create.html", view_attrs=JSON_FORM_ATTRS)
+    , FunctionRoute ("admin_ajax_template_artwork", "/ajax/templates/artwork.html", contexts.AdminAuthedContext, collector.artwork_handler, "collector/artwork.html")
 
 
 

@@ -26,14 +26,8 @@
             </div>
         </div>
 
-        <div class="control-group">
-            <label class="control-label">
-                Media:
-            </label>
-            <div class="controls">
-                <input type="text" class="input-large" name="Artist-0.Artwork-0.medium">
-            </div>
-        </div>
+        ${form.mediumField.render('Artist-0.Artwork-0', request, dict(), dict(), view)|n}
+
 
         <div class="control-group">
             <label class="control-label">
@@ -50,14 +44,7 @@
             </div>
         </div>
 
-        <div class="control-group">
-            <label class="control-label">
-                Material:
-            </label>
-            <div class="controls">
-                <input type="text" class="input-large" name="Artist-0.Artwork-0.material">
-            </div>
-        </div>
+        ${form.materialField.render('Artist-0.Artwork-0', request, dict(), dict(), view)|n}
 
     </div>
     <div class="modal-footer">

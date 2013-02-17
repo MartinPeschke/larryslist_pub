@@ -1,4 +1,4 @@
-define(["tools/messaging", "tools/ajax", "text!templates/artist/artwork.html"], function(messaging, ajax, template){
+define(["tools/messaging", "tools/ajax", "text!ajax/templates/artwork.html"], function(messaging, ajax, template){
     var
     formTempl = _.template(template)
     , init = function(opts){

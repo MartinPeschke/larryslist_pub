@@ -1,4 +1,4 @@
-from larryslist.admin.apps.collector.collections_forms import CollectionCreateForm, CollectionEditForm, CollectionArtistsForm, CollectionWebsiteForm, CollectionUploadForm, CollectionMuseumForm, CollectionCooperationForm, CollectionArtAdvisorForm
+from larryslist.admin.apps.collector.collections_forms import CollectionCreateForm, CollectionEditForm, CollectionArtistsForm, CollectionWebsiteForm, CollectionUploadForm, CollectionMuseumForm, CollectionCooperationForm, CollectionArtAdvisorForm, ArtworkForm
 from larryslist.admin.apps.collector.collector_forms import CollectorContactsForm, CollectorBusinessForm, CollectorEditForm, CollectorCreateForm, CollectionAddCollectorForm, CollectorUploadForm, CollectorArtAdvisoryForm, CollectorOtherFactsForm, CollectorRankingForm, CollectorArtFairForm
 from larryslist.admin.apps.collector.models import GetCollectorDetailsProc, SetCollectorStatusProc
 from larryslist.lib.baseviews import GenericErrorMessage, GenericSuccessMessage
@@ -30,6 +30,11 @@ def getCollectionLink(self, stage = 'basic'):
         return req.fwd_url("admin_collection_edit", collectorId = self.collector.id, stage = stage)
     else:
         return req.fwd_url("admin_collection_create", collectorId = self.collector.id)
+
+
+
+def artwork_handler(context, request):
+    return {'form': ArtworkForm}
 
 
 class BaseArtHandler(FormHandler):
