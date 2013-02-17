@@ -2,10 +2,11 @@ define(["tools/messaging", "tools/ajax", "text!templates/artist/artwork.html"], 
     var
     formTempl = _.template(template)
     , init = function(opts){
+        opts.$el = $(opts.event.target);
         var
             $el = $(formTempl(opts.data)).appendTo("body")
-            , $container = $(opts.el).closest(".tagsearch-container")
-            , $result = $(opts.el).siblings(".artworks-list")
+            , $container = opts.$el.closest(".tagsearch-container")
+            , $result = opts.$el.siblings(".artworks-list")
             , artTempl = _.template($container.find(".artwork-template").html())
             , success = function(resp, status, xhr, data){
                 var work = _.clone(data.Artist[0].Artwork[0]);

@@ -1,5 +1,5 @@
 import formencode
-from larryslist.lib.formlib.formfields import TokenTypeAheadField, MultipleFormField, StringField, ConfigChoiceField, PictureUploadField, PlainHeadingField, TagSearchField, EmailField, IMPORTANT, URLField, MultiConfigChoiceField, PictureUploadAttrs, REQUIRED, Placeholder, Field, configattr, TextareaField, BaseSchema, HiddenField
+from larryslist.lib.formlib.formfields import TokenTypeAheadField, MultipleFormField, StringField, ConfigChoiceField, PictureUploadField, PlainHeadingField, TagSearchField, EmailField, IMPORTANT, URLField, MultiConfigChoiceField, PictureUploadAttrs, REQUIRED, Placeholder, Field, configattr, TextareaField, BaseSchema, HiddenField, HtmlAttrs
 
 
 class RestrictedCountryField(TokenTypeAheadField):
@@ -124,7 +124,7 @@ collectorUploadFields = [
 
 class MuseumForm(MultipleFormField):
     fields = [
-        ConfigChoiceField("museum", "Top 100 Museum", "TopMuseum")
+        ConfigChoiceField("museum", "Top 100 Museum", "TopMuseum", attrs = HtmlAttrs(**{'data-custom-module':'views/museum'}),  input_classes="custom-control")
         , StringField("other_name", "Not Top 100 Museum, then name", label_classes='double')
         , ConfigChoiceField('position', 'Position', 'CollectionPosition')
         , StringField("year", "Year")

@@ -31,12 +31,7 @@ define(['tools/ajax', "libs/fileupload", "libs/typeahead", "libs/tagsearch"], fu
             });
 
             this.widgets = [];
-            this.$el.find(".typeahead-container").each(_.bind(this.addTypeAhead, this));
-            this.$el.find(".tagsearch-container").each(_.bind(this.addTagSearch, this));
-            this.$el.find(".dependent-control").each(_.bind(this.addDependent, this));
-            this.$el.find(".file-upload-control").each(_.bind(this.addFileUpload, this));
-            this.$el.find(".typed-upload-control").each(_.bind(this.addTypedFileUpload, this));
-
+            this.setupWidgets(this.$el);
 
             this.saveTimeout = null;
             this.savedTimeout = null;
@@ -57,6 +52,18 @@ define(['tools/ajax', "libs/fileupload", "libs/typeahead", "libs/tagsearch"], fu
 
                 }
             });
+        }
+        , setupWidgets : function(el){
+            el.find(".typeahead-container").each(_.bind(this.addTypeAhead, this));
+            el.find(".tagsearch-container").each(_.bind(this.addTagSearch, this));
+            el.find(".dependent-control").each(_.bind(this.addDependent, this));
+            el.find(".file-upload-control").each(_.bind(this.addFileUpload, this));
+            el.find(".typed-upload-control").each(_.bind(this.addTypedFileUpload, this));
+            el.find(".custom-control").each(_.bind(this.addCustomControl, this));
+        }
+        , addCustomControl: function(idx, elem){
+            var data = $(elem).data();
+            require([data.customModule], function(V){V.init({el: elem, data: data})});
         }
         , addDependent: function(idx, elem){
             var $target = $(elem), data = $target.data(), wrapper = $target.closest(this.templateSelector), depSrc = wrapper.find('[name$='+data.dependency+']')
@@ -138,12 +145,11 @@ define(['tools/ajax', "libs/fileupload", "libs/typeahead", "libs/tagsearch"], fu
                 templ.after(new_node);
                 new_node.trigger("change");
 
-                new_node.find(".typeahead-container").each(_.bind(this.addTypeAhead, this));
-                new_node.find(".dependent-control").each(_.bind(this.addDependent, this));
-
                 new_node.find("[generated]").remove();
                 new_node.find(".error").removeClass("error");
                 new_node.find(".valid").removeClass("valid");
+
+                this.setupWidgets(new_node);
             }
         }
         , removeRow : function(e){

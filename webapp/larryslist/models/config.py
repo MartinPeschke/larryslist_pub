@@ -42,7 +42,7 @@ class GenderModel(Mapping):
 class TopMuseumModel(NamedModel):
     city = TextField()
     def getLabel(self, request):return u"{0.name} ({0.city})".format(self)
-    def getKey(self, request):return u"{0.name} ({0.city})".format(self)
+    def getKey(self, request):return self.name
 GENDER_CHOICES = [GenderModel(key = 'm', label = 'male'), GenderModel(key = 'f', label = 'female')]
 SOCIAL_NETWORKS = [SocNetModel(name = 'Facebook'), SocNetModel(name = 'Linkedin'), SocNetModel(name = 'Twitter'), SocNetModel(name = 'Other')]
 DOCUMENT_TYPES = [DocumentTypeModel(name = 'IMAGE'), DocumentTypeModel(name = 'OTHER')]

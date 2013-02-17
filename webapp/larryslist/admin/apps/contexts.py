@@ -8,6 +8,7 @@ from larryslist.models import ClientTokenProc
 
 from pyramid.decorator import reify
 from pyramid.httpexceptions import HTTPForbidden
+import simplejson
 
 GetAdminConfigProc = ClientTokenProc("/config", root_key="Config", result_cls = AdminConfigModel)
 config_loader = CachedLoader(GetAdminConfigProc, "ADMIN_CONFIG_CACHE")
@@ -33,6 +34,9 @@ class AdminRootContext(RootContext):
     @reify
     def config(self):
         return config_loader.get(self.request)
+
+    def configJSON(self):
+        return simplejson.dumps(self.config.unwrap())
 
     def is_allowed(self, request):
         return True

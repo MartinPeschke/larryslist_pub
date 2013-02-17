@@ -294,4 +294,4 @@ def TypeAheadValidator(attrs):
         validator = formencode.validators.String(required = True)
     else:
         validator = formencode.validators.String(required = False, not_empty = False, if_missing= None)
-    return formencode.Schema(name = validator, token = validator, filter_extra_fields = True)
+    return formencode.Schema(name = validator, token = validator, filter_extra_fields = True, required = False, if_missing= dict({'name':'', 'token':''}))

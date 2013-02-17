@@ -11,8 +11,8 @@ $(function(){
 
     $(document).on({
         "click": function(e){
-            var data=  $(e.currentTarget).data();
-            require([data.customModule], function(V){V.init({el:e.currentTarget, data: data})});
+            var data = $(e.currentTarget).data();
+            require([data.customModule], function(V){V.init({el:e.currentTarget, data: data, event: e})});
         }
     },".js-link")
 });
