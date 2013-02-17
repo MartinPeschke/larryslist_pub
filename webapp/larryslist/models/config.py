@@ -20,6 +20,7 @@ class IndustryModel(NamedModel): pass
 class PositionModel(NamedModel): pass
 class EngagementPositionModel(NamedModel): pass
 class ArtFairPositionModel(NamedModel): pass
+class CollectionPositionModel(NamedModel): pass
 class CooperationTypeModel(NamedModel): pass
 class RelationshipTypeModel(NamedModel): pass
 
@@ -67,7 +68,7 @@ CARD_TYPES = [NamedModel(name = 'VISA'), NamedModel(name = 'MC'), NamedModel(nam
 COOPERATION_TYPES = [dict(name = "Exhibition of own collection"), dict(name = "Sponsoring"), dict(name = "Funding of Award"), dict(name = "Support of educational program")]
 ENGAGEMENT_POSITIONS = [{'name':'Trustee'},{'name':'Board Member'},{'name':'Selection Committee'},{'name':'Chairman'},{'name':'President'},{'name':'Founding Chairman'},{'name':'Co-Chair'},{'name':'Life Trustee'},{'name':'Treasurer'}]
 ART_FAIR_POSITION = [{'name':'Board Member of Fair'}, {'name':'Panel speaker'}, {'name':'In press release or on webpage mentioned'}, {'name':'Others'}]
-
+COLLECTION_POSITIONS = [{'name':"Director"},{'name':"Curator"},{'name':"Head of Collection"}]
 
 
 class ConfigModel(Mapping):
@@ -87,6 +88,7 @@ class ConfigModel(Mapping):
     CooperationType = ListField(DictField(CooperationTypeModel))
     EngagementPosition = ListField(DictField(EngagementPositionModel))
     ArtFairPosition = ListField(DictField(ArtFairPositionModel))
+    CollectionPosition = ListField(DictField(CollectionPositionModel))
 
     Network = SOCIAL_NETWORKS
     Gender = GENDER_CHOICES
@@ -105,5 +107,6 @@ class ConfigModel(Mapping):
     def wrap(cls, data):
         data['CooperationType'] = COOPERATION_TYPES
         data['EngagementPosition'] = ENGAGEMENT_POSITIONS
+        data['CollectionPosition'] = COLLECTION_POSITIONS
         data['ArtFairPosition'] = ART_FAIR_POSITION
         return super(ConfigModel, cls).wrap(data)
