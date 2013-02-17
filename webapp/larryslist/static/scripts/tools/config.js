@@ -1,13 +1,18 @@
 define(["tools/ajax"], function(ajax){
 
     var
-        Museum = ajax.Model.extend({
-            idAttribute: 'name'
-        })
-        , MuseumCollection = ajax.Collection.extend({idAttribute: 'name', model: Museum})
+        NamedModel = ajax.Model.extend({idAttribute: 'name'})
+        , NamedModelCollection = ajax.Collection.extend({idAttribute: 'name', model: NamedModel})
+
+
         , ConfigModel = ajax.Model.extend({
             initialize:function(){
-                this.register({TopMuseum: new MuseumCollection()});
+                this.register({
+                    TopMuseum: new NamedModelCollection()
+                    , Publisher : new NamedModelCollection()
+                    , CooperationType: new NamedModelCollection()
+                    , EngagementPosition: new NamedModelCollection()
+                    , ArtFair: new NamedModelCollection()});
                 this.onLoaded = $.Deferred();
                 this.load();
             }

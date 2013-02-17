@@ -400,6 +400,14 @@ class TypeAheadField(StringField):
         self.api_type = None
         self.api_url = api_url
 
+class ConfigTypeAheadField(StringField):
+    template = 'larryslist:lib/formlib/templates/typeahead_config.html'
+    if_empty = ''
+    def __init__(self, name, label, configAttr, attrs = NONE, classes = 'configtypeahead'):
+        super(ConfigTypeAheadField, self).__init__(name, label, attrs, classes)
+        self.configAttr = configAttr
+
+
 
 class TagSearchField(StringField):
     template = 'larryslist:lib/formlib/templates/tagsearch.html'

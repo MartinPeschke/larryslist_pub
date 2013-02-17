@@ -1,6 +1,6 @@
 import formencode
 from larryslist.admin.apps.collector.collector_forms_fields import TypedFileUploadField, ArbitraryURLAttachmentsFields
-from larryslist.lib.formlib.formfields import IntField, IMPORTANT, StringField, ApproxField, HiddenField, MultipleFormField, PlainHeadingField, ConfigChoiceField, URLField, TagSearchField, BaseSchema, Placeholder, TokenTypeAheadField, EmailField
+from larryslist.lib.formlib.formfields import IntField, IMPORTANT, StringField, ApproxField, HiddenField, MultipleFormField, PlainHeadingField, ConfigChoiceField, URLField, TagSearchField, BaseSchema, Placeholder, TokenTypeAheadField, EmailField, ConfigTypeAheadField
 
 __author__ = 'Martin'
 
@@ -38,7 +38,7 @@ collectionArtistsFields = [
 class PublicationsForm(MultipleFormField):
     fields = [
         StringField('title', "Title")
-        , ConfigChoiceField('publisher', 'Publisher', 'Publisher')
+        , ConfigTypeAheadField('publisher', 'Publisher', 'Publisher')
         , IntField('year', "Year")
     ]
 collectionWebsiteFields = [
@@ -115,7 +115,7 @@ class LoanForm(MultipleFormField):
     ]
 class CooperationForm(MultipleFormField):
     fields = [
-        ConfigChoiceField('type', "Type of Cooperation", "CooperationType")
+        ConfigTypeAheadField('type', "Type of Cooperation", "CooperationType")
         , StringField("comment", "Name of cooperation / Comment", label_classes="double")
         , StringField("year", "Year")
         , StringField("institution", "Name of institution")

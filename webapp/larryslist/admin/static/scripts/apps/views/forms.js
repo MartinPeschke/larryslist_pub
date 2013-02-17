@@ -63,7 +63,8 @@ define(['tools/ajax', "libs/fileupload", "libs/typeahead", "libs/tagsearch"], fu
         }
         , addCustomControl: function(idx, elem){
             var data = $(elem).data();
-            require([data.customModule], function(V){V.init({el: elem, data: data})});
+            data.el = elem;
+            require([data.customModule], function(V){V.init(data)});
         }
         , addDependent: function(idx, elem){
             var $target = $(elem), data = $target.data(), wrapper = $target.closest(this.templateSelector), depSrc = wrapper.find('[name$='+data.dependency+']')

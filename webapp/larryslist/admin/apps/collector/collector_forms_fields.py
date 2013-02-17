@@ -1,5 +1,5 @@
 import formencode
-from larryslist.lib.formlib.formfields import TokenTypeAheadField, MultipleFormField, StringField, ConfigChoiceField, PictureUploadField, PlainHeadingField, TagSearchField, EmailField, IMPORTANT, URLField, MultiConfigChoiceField, PictureUploadAttrs, REQUIRED, Placeholder, Field, configattr, TextareaField, BaseSchema, HiddenField, HtmlAttrs
+from larryslist.lib.formlib.formfields import TokenTypeAheadField, MultipleFormField, StringField, ConfigChoiceField, PictureUploadField, PlainHeadingField, TagSearchField, EmailField, IMPORTANT, URLField, MultiConfigChoiceField, PictureUploadAttrs, REQUIRED, Placeholder, Field, configattr, TextareaField, BaseSchema, HiddenField, HtmlAttrs, ConfigTypeAheadField
 
 
 class RestrictedCountryField(TokenTypeAheadField):
@@ -126,7 +126,7 @@ class MuseumForm(MultipleFormField):
     fields = [
         ConfigChoiceField("museum", "Top 100 Museum", "TopMuseum", attrs = HtmlAttrs(**{'data-custom-module':'views/museum'}),  input_classes="custom-control")
         , StringField("other_name", "Not Top 100 Museum, then name", label_classes='double')
-        , ConfigChoiceField('position', 'Position', 'CollectionPosition')
+        , ConfigTypeAheadField('position', 'Position', 'EngagementPosition')
         , StringField("year", "Year")
         , URLField("website", "Website")
         , PlainHeadingField("Location", tag="h5", classes="controls")
@@ -143,7 +143,7 @@ class SocietyMemberForm(MultipleFormField):
     fields = [
         StringField("societyName", "Name of society")
         , URLField("website", "Website")
-        , ConfigChoiceField("position", "Position", "Position")
+        , ConfigTypeAheadField("position", "Position", "EngagementPosition")
         , PlainHeadingField("Location", tag="h5", classes="controls")
         , TokenTypeAheadField('Country', 'Country', '/admin/search/address', 'AddressSearchResult', None)
         , TokenTypeAheadField('Region', 'Region', '/admin/search/address', 'AddressSearchResult', 'Country')
@@ -189,8 +189,8 @@ collectorRankingFields = [
 
 class ArtFairForm(MultipleFormField):
     fields = [
-        ConfigChoiceField("name", "Art Fair", "ArtFair")
-        , StringField("position", "Position")
+        ConfigTypeAheadField("name", "Art Fair", "ArtFair")
+        , ConfigChoiceField("position", "Position", 'ArtFairPosition')
         , ConfigChoiceField("year", "Year", "RankingYear")
     ]
 collectorArtFairFields = [

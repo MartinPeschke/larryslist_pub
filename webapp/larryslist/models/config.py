@@ -18,7 +18,8 @@ class NationalityModel(NamedModel): pass
 class TitleModel(NamedModel): pass
 class IndustryModel(NamedModel): pass
 class PositionModel(NamedModel): pass
-class CollectionPositionModel(NamedModel): pass
+class EngagementPositionModel(NamedModel): pass
+class ArtFairPositionModel(NamedModel): pass
 class CooperationTypeModel(NamedModel): pass
 class RelationshipTypeModel(NamedModel): pass
 
@@ -47,10 +48,8 @@ GENDER_CHOICES = [GenderModel(key = 'm', label = 'male'), GenderModel(key = 'f',
 SOCIAL_NETWORKS = [SocNetModel(name = 'Facebook'), SocNetModel(name = 'Linkedin'), SocNetModel(name = 'Twitter'), SocNetModel(name = 'Other')]
 DOCUMENT_TYPES = [DocumentTypeModel(name = 'IMAGE'), DocumentTypeModel(name = 'OTHER')]
 
-CPM = CollectionPositionModel
-COLLECTION_POSITIONS = [CPM(name = "Director"), CPM(name = "Curator"), CPM(name = "Head of Collection")]
-CTM = CooperationTypeModel
-COOPERATION_TYPES = [CTM(name = "Exhibition of own collection"), CTM(name = "Sponsoring"), CTM(name = "Funding of Award"), CTM(name = "Support of educational program")]
+
+
 RM = RankingModel
 RANKINGS = [RM(name="ARTnews"), RM(name="Art & Auction"), RM(name="Art Review")]
 
@@ -65,6 +64,9 @@ CARD_TYPES = [NamedModel(name = 'VISA'), NamedModel(name = 'MC'), NamedModel(nam
 
 
 
+COOPERATION_TYPES = [dict(name = "Exhibition of own collection"), dict(name = "Sponsoring"), dict(name = "Funding of Award"), dict(name = "Support of educational program")]
+ENGAGEMENT_POSITIONS = [{'name':'Trustee'},{'name':'Board Member'},{'name':'Selection Committee'},{'name':'Chairman'},{'name':'President'},{'name':'Founding Chairman'},{'name':'Co-Chair'},{'name':'Life Trustee'},{'name':'Treasurer'}]
+ART_FAIR_POSITION = [{'name':'Board Member of Fair'}, {'name':'Panel speaker'}, {'name':'In press release or on webpage mentioned'}, {'name':'Others'}]
 
 
 
@@ -82,11 +84,14 @@ class ConfigModel(Mapping):
     Relation = ListField(DictField(RelationshipTypeModel))
     ArtFair = ListField(DictField(ArtFairModel))
 
+    CooperationType = ListField(DictField(CooperationTypeModel))
+    EngagementPosition = ListField(DictField(EngagementPositionModel))
+    ArtFairPosition = ListField(DictField(ArtFairPositionModel))
+
     Network = SOCIAL_NETWORKS
     Gender = GENDER_CHOICES
     DocumentType = DOCUMENT_TYPES
-    CollectionPosition = COLLECTION_POSITIONS
-    CooperationType = COOPERATION_TYPES
+
     FeederRole = FEEDER_ROLES
     Ranking = RANKINGS
     RankingYear = YEARS
@@ -95,3 +100,10 @@ class ConfigModel(Mapping):
     ExpiryMonth = MONTHS
     ExpiryYear = EXPIRY_YEARS
     CardType = CARD_TYPES
+
+    @classmethod
+    def wrap(cls, data):
+        data['CooperationType'] = COOPERATION_TYPES
+        data['EngagementPosition'] = ENGAGEMENT_POSITIONS
+        data['ArtFairPosition'] = ART_FAIR_POSITION
+        return super(ConfigModel, cls).wrap(data)

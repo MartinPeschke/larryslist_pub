@@ -169,7 +169,7 @@ define(["tools/hash", "tools/ajax", "text!templates/searchresult.html"]
                 return query?{term:query}:null;
             }
             , doSearch : function(query){
-                var view = this, data, data = this.buildQuery(query);
+                var view = this, data = this.buildQuery(query);
                 if(data){
                     var queryId = view.queryId = hashlib.UUID();
                     this.$resultNode.html('<div class="loading center"><img src="/static/img/ajax-loader.gif"/></div>');

@@ -110,21 +110,14 @@ class CollectionArtistsForm(BaseAdminForm):
 class CollectionWebsiteForm(BaseAdminForm):
     id = 'website'
     label = 'Communication Platforms'
-
-    getFormValues = classmethod(collectionData)
+    requires_config = True
+    getFormValues = classmethod(collectionMeta)
     isShown = classmethod(always)
     isEnabled = classmethod(isAllowedEditForm)
     getLink = classmethod(getEditLink)
 
     fields = collectionWebsiteFields
-    @classmethod
-    def persist(cls, request, values):
-        values = {'id': request.matchdict['collectorId'], 'Collection': values}
-        try:
-            collection = EditCollectionPublicationsProc(request, values)
-        except DBException, e:
-            return {'success':False, 'message': e.message}
-        return {'success': True}
+    persist = classmethod(persistCollectionMeta)
 
 
 class CollectionUploadForm(BaseAdminForm):
@@ -166,7 +159,7 @@ class CollectionMuseumForm(BaseAdminForm):
 class CollectionCooperationForm(BaseAdminForm):
     id="cooperation"
     label = "Cooperation"
-
+    requires_config = True
     getFormValues = classmethod(collectionMeta)
     isShown = classmethod(always)
     isEnabled = classmethod(isAllowedEditForm)
