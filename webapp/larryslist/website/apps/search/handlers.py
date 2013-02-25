@@ -2,9 +2,5 @@ import urllib
 
 
 def index(context, request):
-    query = []
-    if 'l' in request.params:
-        query.append(request.params['l'])
-    if 't' in request.params:
-        query.append(request.params['t'])
+    query = [v for k,v in request.params.items() if k in ['l', 't'] and v]
     return {"query": ' '.join(query)}

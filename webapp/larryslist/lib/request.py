@@ -1,13 +1,23 @@
 from string import Template
 import urllib
 from babel import Locale
+from httplib2 import Response
 from .i18n import tsf
 from pyramid.httpexceptions import HTTPFound
 from pyramid.i18n import get_localizer
+from pyramid.view import view_config
+import simplejson
 
+
+class JsonAwareRedirect(Exception):
+    def __init__(self, location):
+        self.location = location
+
+def is_json(request):
+    return 'application/json' in request.content_type
 
 def fwd_raw(request, location):
-    raise HTTPFound(location = location)
+    raise JsonAwareRedirect(location = location)
 
 def rld_url(request, with_query = True, *args, **kwargs):
     if with_query:
@@ -16,9 +26,9 @@ def rld_url(request, with_query = True, *args, **kwargs):
         return request.current_route_url(*args, **kwargs)
 
 def rld(request, with_query = True, *args, **kwargs):
-    raise HTTPFound(location = request.rld_url(with_query, *args, **kwargs))
+    raise JsonAwareRedirect(location = request.rld_url(with_query, *args, **kwargs))
 def fwd(request, route_name, *args, **kwargs):
-    raise HTTPFound(location = request.fwd_url(route_name, *args, **kwargs))
+    raise JsonAwareRedirect(location = request.fwd_url(route_name, *args, **kwargs))
 
 def fwd_url(request, route_name, secure = False, *args, **kwargs):
     if secure:
@@ -83,6 +93,7 @@ def extend_request(config):
     def backend(request):
         return request.globals.backend
     config.add_request_method(backend, 'backend', reify=True)
+    config.add_request_method(is_json, 'is_json', reify=True)
 
     config.add_request_method(fwd_raw)
     config.add_request_method(rld_url)

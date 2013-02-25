@@ -79,7 +79,8 @@ class CompanyForm(MultipleFormField):
     ]
 
 collectorBusinessFields = [
-        CompanyForm("Company")
+        PlainHeadingField("Collector's Business / Industry")
+        , CompanyForm("Company")
         , PlainHeadingField('Further industries / type of businesses')
         , MultiConfigChoiceField('name', 'Name', "Industry", "Industry", attrs = REQUIRED)
     ]

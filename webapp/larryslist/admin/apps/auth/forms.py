@@ -10,6 +10,7 @@ __author__ = 'Martin'
 
 class LoginForm(BaseForm):
     label = "Login"
+    action_label = "Login"
     fields = [
         EmailField("email", "Email", REQUIRED)
         , PasswordField("pwd", "Password", REQUIRED)
@@ -31,6 +32,7 @@ class LoginForm(BaseForm):
 class PasswordforgotForm(BaseForm):
     id = 'pwdforgot'
     label = "Forgot password"
+    action_label = "Submit"
     fields = [
         EmailField("email", "Email", REQUIRED)
     ]

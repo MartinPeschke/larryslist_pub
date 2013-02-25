@@ -2,7 +2,10 @@ from jsonclient.routing import FunctionRoute, App, ClassRoute, RedirectRoute, JS
 from larryslist.admin.apps import collector, auth, settings
 
 from . import contexts, dashboard
-from pyramid.view import forbidden_view_config
+from larryslist.lib.request import JsonAwareRedirect
+from pyramid.response import Response
+from pyramid.view import forbidden_view_config, view_config
+import simplejson
 
 
 class AdminSettings(object):
@@ -33,6 +36,18 @@ ROUTE_LIST = [
 
 ]
 ROUTE_MAP = {r.name:r for r in ROUTE_LIST}
+
+
+
+@view_config(context=JsonAwareRedirect)
+def redirectJson(exc, request):
+    if request.is_json:
+        return Response(simplejson.dumps({'redirect': exc.location}), 200, content_type = 'application/json')
+    else:
+        response = Response("Resource Found!", 302, headerlist = [('location', exc.location)])
+    return response
+
+
 
 @forbidden_view_config()
 def forbidden(request):

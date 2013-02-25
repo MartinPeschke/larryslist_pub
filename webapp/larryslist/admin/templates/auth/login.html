@@ -28,7 +28,7 @@
             %endfor
         </div>
         <div class="form-actions">
-            <button class="btn btn-primary" type="submit">Login</button>
+            <button class="btn btn-primary" type="submit">${form.action_label|n}</button>
             %if form.id == 'pwdforgot':
                 <button type="submit" class="btn btn-warning resend-button hide">${_("WEBSITE_Resend")|n}</button>
             %endif

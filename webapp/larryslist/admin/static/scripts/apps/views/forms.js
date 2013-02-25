@@ -138,7 +138,7 @@ define(['tools/ajax', "libs/fileupload", "libs/typeahead", "libs/tagsearch"], fu
                     elem = $(elem);
                     inc(elem, "id");
                     inc(elem, "name");
-                    if(!elem.is('[type=checkbox]'))elem.val("");
+                    if(!elem.is('[type=checkbox],.typehead-token,[readonly]'))elem.val("");
                 });
                 new_node.removeAttr("data-sequence").attr("data-sequence", new_position);
                 if(!new_node.find(".remove-link").length) new_node.prepend(this.removeLink);
