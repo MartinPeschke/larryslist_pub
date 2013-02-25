@@ -9,7 +9,7 @@
         </script>
         <div class="current-tags">
             %for i, artist in enumerate(value):
-                ${self.tagTempl(widget, view.collection.id, str(i), "{name} - {yob}".format(**artist) if artist.get('yob') else artist['name'], artist['id'], artist.get("ArtWork", []), True)}
+                ${self.tagTempl(widget, view.collection.id, str(i), u"{name} - {yob}".format(**artist) if artist.get('yob') else artist['name'], artist['id'], artist.get("ArtWork", []), True)}
             %endfor
         </div>
         <div class="search-field">
