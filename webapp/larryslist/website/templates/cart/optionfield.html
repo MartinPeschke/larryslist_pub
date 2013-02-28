@@ -1,25 +1,25 @@
 <div class="checkbox-row">
 <% options = widget.getOptions(request) %>
 %for i, option in enumerate(options):
-<label class="checkbox-item inline ${'preferred' if option.preferred else ''} ${'last' if len(options) == i+1 else ''}">\
+<div class="checkbox-item inline ${'preferred' if option.preferred else ''} ${'last' if len(options) == i+1 else ''}">\
     %if option.preferred:
         <img src="${STATIC_URL}img/preferred_tape.png" class="preferred-tape"/>
     %endif
     <span class="price quantity">${option.getCredits()}</span>
-    <span class="text">credits</span>
+    <span class="text">${'credits' if option.getCredits() > 1 else 'credit'}</span>
     <hr/>
     <span class="price">${option.getFormattedPrice(request)}</span>
     <hr/>
     <span class="text">You save</span>
-    <span class="saved-amount">${option.getSavedAmount(request)}</span>
+    <span class="saved-amount total">${option.getSavedAmount(request)}</span>
     <hr/>
     <span class="text">Price per credit</span>
-    <span class="saved-amount">${option.getPerCreditAmount(request)}</span>
+    <span class="saved-amount per-credit">${option.getPerCreditAmount(request)}</span>
     <hr/>
 
     <span class="checkbox">
-                    <input type="radio" name="${widget.getName(prefix)}" value="${option.getKey(request)}" ${'checked' if widget.isSelected(option, value, request) else ''}/>
-                </span>
-    </label>\
+        <button type="submit" name="${widget.getName(prefix)}" value="${option.getKey(request)}" class="btn btn-primary">Buy credits</button>
+    </span>
+    </div>\
 %endfor
 </div>

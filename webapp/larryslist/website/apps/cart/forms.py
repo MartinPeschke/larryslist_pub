@@ -5,6 +5,8 @@ from larryslist.website.apps.auth import LoginForm, SignupForm
 from larryslist.website.apps.models import RefreshUserProfileProc, PurchaseCreditProc, SpendCreditProc
 
 
+PLAN_SELECTED_TOKEN = "PLAN_SELECTED"
+
 class PaymentOptionField(ConfigChoiceField):
     template = "larryslist:website/templates/cart/optionfield.html"
 
@@ -17,7 +19,7 @@ class PaymentOptionsForm(BaseForm):
     action_label = "Buy your plan now"
     @classmethod
     def on_success(cls, request, values):
-        request.session['PREFERRED_OPTION'] = values['option']
+        request.session[PLAN_SELECTED_TOKEN] = values['option']
         return {'success':True, 'redirect':request.fwd_url("website_checkout_arbiter")}
 
 class JoinLoginForm(LoginForm):

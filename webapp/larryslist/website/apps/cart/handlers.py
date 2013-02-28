@@ -1,10 +1,10 @@
 from larryslist.lib.formlib.handlers import FormHandler
-from larryslist.website.apps.cart.forms import PaymentOptionsForm, JoinLoginForm, JoinSignupForm, CheckoutForm, SpendCreditsForm, SavedDetailsCheckoutForm
+from larryslist.website.apps.cart.forms import PaymentOptionsForm, JoinLoginForm, JoinSignupForm, CheckoutForm, SpendCreditsForm, SavedDetailsCheckoutForm, PLAN_SELECTED_TOKEN
 from larryslist.website.apps.contexts import logged_in
 from pyramid.renderers import render_to_response
 
 
-PLAN_SELECTED_TOKEN = "PLAN_SELECTED"
+
 
 def checkout_arbiter(context, request):
     if not request.session.get(PLAN_SELECTED_TOKEN):

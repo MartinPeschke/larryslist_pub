@@ -31,7 +31,7 @@
                                 <img src="${STATIC_URL}img/paymentmethods.png"/>
                             </div>
                             <div>1 credit = 1 profile</div>
-                            <div><a href="#">Will the credits expire?</a></div>
+                            <div><a href="#" class="expiry-link">Will the credits expire?</a></div>
                         </div>
                     </form>
                 </div>
@@ -45,4 +45,26 @@
         </div>
     </div>
 </div>
+
+<div class="modal mini popup-modal hide" id="expiry-modal">
+    <div class="modal-body">
+        <a class="close" data-dismiss="modal" aria-hidden="true">×</a>
+        <h3>Will the credits expire?</h3>
+        <p>Credits that have not been spent for downloading profiles expire one year after their purchase.</p>
+        <p>However it is very rare that you will have any credits left that you have not been able to spend in an year.</p>
+        <p>
+            <a class="btn btn-primary" data-dismiss="modal">OK</a>
+        </p>
+    </div>
+</div>
 </%def>
+
+<%block name="scripts">
+    <script>
+        $(function(){
+            $(".expiry-link").on({click: function(e){
+                $("#expiry-modal").modal("show");
+            }});
+        })
+    </script>
+</%block>
