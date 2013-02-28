@@ -6,7 +6,7 @@ from . import contexts, index, auth
 
 ROUTE_LIST = [
     FunctionRoute   ("website_index"             , "/", contexts.WebsiteRootContext, index.index, "index.html")
-    , FunctionRoute   ("website_index_member"      , "/home", contexts.WebsiteRootContext, index.index_member, "index_member.html")
+    , FunctionRoute ("website_index_member"      , "/home", contexts.WebsiteRootContext, index.index_member, "index_member.html")
     , ClassRoute    ("website_login"             , "/login", contexts.WebsiteRootContext, auth.LoginHandler, "auth/form.html", view_attrs=JSON_FORM_ATTRS)
     , FunctionRoute ("website_logout"            , "/logout", contexts.WebsiteRootContext, auth.logout, None)
     , ClassRoute    ("website_signup"            , "/signup", contexts.WebsiteRootContext, auth.SignupHandler, "auth/form.html", view_attrs=JSON_FORM_ATTRS)
@@ -21,7 +21,7 @@ ROUTE_LIST = [
     , ClassRoute    ("website_checkout"             , "/checkout", contexts.WebsiteRootContext, cart.CheckoutHandler, "cart/checkout.html", view_attrs=JSON_FORM_ATTRS)
     , FunctionRoute ("website_checkout_arbiter"     , "/checkout/arbiter", contexts.WebsiteRootContext, cart.checkout_arbiter, None)
     , ClassRoute    ("website_checkout_join"        , "/checkout/join", contexts.WebsiteRootContext, cart.CheckoutLoginHandler, "cart/login.html", view_attrs=JSON_FORM_ATTRS)
-    , FunctionRoute ("website_checkout_options_ajax", "/ajax/templates/payment/options.html", contexts.WebsiteRootContext, cart.checkout_options, "cart/ajax/options.html")
+    , FunctionRoute ("website_checkout_plan_select" , "/checkout/plan", contexts.WebsiteRootContext, cart.checkout_plan_select, "cart/plan_select.html")
     , ClassRoute    ("website_checkout_set_option"  , "/checkout/option", contexts.WebsiteRootContext, cart.PaymentOptionsHandler, None, view_attrs=JSON_FORM_ATTRS)
     , FunctionRoute ("website_discard_saved_details", "/checkout/discard", contexts.WebsiteRootContext, cart.discard_saved_details, None)
 ]

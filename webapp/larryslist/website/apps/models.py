@@ -22,6 +22,8 @@ class PaymentOptionModel(Mapping):
         return i18n.format_currency(self.price / 100, 'EUR', request)
     def getSavedAmount(self, request):
         return i18n.format_currency(50, 'EUR', request)
+    def getPerCreditAmount(self, request):
+        return i18n.format_currency(int(self.price / self.credit), 'EUR', request)
 
 class WebsiteConfigModel(ConfigModel):
     PaymentOption = ListField(DictField(PaymentOptionModel))

@@ -6,7 +6,7 @@ from larryslist.website.apps.models import RefreshUserProfileProc, PurchaseCredi
 
 
 class PaymentOptionField(ConfigChoiceField):
-    template = "larryslist:website/templates/cart/ajax/optionfield.html"
+    template = "larryslist:website/templates/cart/optionfield.html"
 
     def isSelected(self, option, value, request):
         if not value: value = request.session.get('PREFERRED_OPTION')

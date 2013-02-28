@@ -1,4 +1,4 @@
-define(["tools/messaging", "tools/ajax", "text!ajax/templates/artwork.html"], function(messaging, ajax, template){
+define(["tools/messaging", "tools/ajax", "text!ajax/templates/artwork_modal.html"], function(messaging, ajax, template){
     var
     formTempl = _.template(template)
     , init = function(opts){
@@ -7,19 +7,12 @@ define(["tools/messaging", "tools/ajax", "text!ajax/templates/artwork.html"], fu
             $el = $(formTempl(opts.data)).appendTo("body")
             , $container = opts.$el.closest(".tagsearch-container")
             , $result = opts.$el.siblings(".artworks-list")
-            , artTempl = _.template($container.find(".artwork-template").html())
             , success = function(resp, status, xhr, data){
-                var work = _.clone(data.Artist[0].Artwork[0]);
-                if(work.year.length)work.year = '('+work.year+')';
-
-                var last = $result.find(".list-position").last();
-                if(last.length)work.pos = parseInt(last.text(), 10) + 1;
-                else work.pos = 1;
-                $result.append(artTempl(work));
+                $result.append(resp.html).addClass("has-artworks");
                 $el.modal("hide").off().remove();
             };
         $el.modal("show");
-        ajax.ifyForm({form: $el, url: "/api/0.0.1/admin/artist/artwork"
+        ajax.ifyForm({form: $el, url: "/admin/collection/artwork/save"
             , success: success
             , error: function(msg, resp, data){
                 if(msg=='ALREADY_ASSIGNED'){

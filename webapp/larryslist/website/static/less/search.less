@@ -1,18 +1,58 @@
 .search-page {
   padding-bottom: 100px;
 }
+.search-filters {
+  padding:  10px 0 0 20px;
+}
+.collection-filters + .collection-filters {border-top: 1px solid #ddd;}
+
+.filter-section {
+  h5 {
+    background: #f9f9f9;
+    margin: 0;
+    font-size:12px;
+    padding:  5px 10px;
+    border-top: 1px solid #ddd;
+    color: @linkColor;
+  }
+  label {padding-left:30px;}
+  .show-more {
+    display: block;
+    text-align: right;
+    padding: 0 10px;
+    font-size: .8em;
+  }
+}
+
+
 .search-box {
   position: relative;
   margin: 11px 0;
   .search-query {
     height: @baseLineHeight + 10px;
-    width: 80%;
+    width: 100%;
+    padding-right:17%;
     .box-sizing(border-box);
     + .btn {
       .box-sizing(border-box);
       height: @baseLineHeight + 10px;
       width: 20%;
+      padding: 4px 3px 3px;
     }
+  }
+  .btn {
+    position: absolute;
+    right: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+  }
+  .advanced-search-link {
+    position: absolute;
+    right: 0;
+    font-size: .8em;
+    color: #999;
+    text-transform: uppercase;
   }
 }
 .navbar .search-box {
@@ -34,17 +74,6 @@
   }
 }
 
-
-.search-results-container {
-  .box-shadow(0 0 3px rgba(0,0,0,.4));
-}
-
-.search-results-tags {
-  padding: 15px;
-  min-height: 22px;
-  border-bottom: 1px solid #ddd;
-  #gradient > .vertical(@navbarBackgroundHighlight, @navbarBackground);
-}
 .search-results-sorting {
   padding: 20px 20px 0;
   .control-group {
@@ -55,19 +84,39 @@
     margin-bottom: 0;
     padding: 0;
     height: 24px;
+    margin-top: -2px;
   }
 }
 
-.search-results-header .search-column {
-  font-weight:bold;
-  padding: 10px 0;
-  margin:  0 0;
-  min-height:30px;
-  &.picture {
-    width: 150px;
-    margin: 0;
+.search-results-header {
+  padding: 0 30px 0 0;
+  border-top: 1px solid #ddd;
+  margin-top: 10px;
+  clear:both;
+  .search-column {
+    font-weight:bold;
+    padding: 10px 0;
+    margin:  0 0;
+    min-height:30px;
+    &.picture {
+      width: 150px;
+      margin: 0;
+    }
+  }
+  .search-column.details {
+    margin-left:16px;
   }
 }
+.search-select-all-link {
+  vertical-align: top;
+  margin: -10px 16px 0;
+  display: block;
+  .link-style;
+  &:hover {text-decoration:  none;}
+  .marked-checkbox {margin-top: -2px;}
+  .text {display: inline-block;vertical-align: top;}
+}
+
 .search-results-body {
   list-style-type: none;
   margin: 0 0;
@@ -91,36 +140,48 @@
   line-height: 150px;
   text-align: center;
 }
+.marked-checkbox.checked, &.selected .marked-checkbox {
+  background-position: 2px -26px;
+}
+
+.marked-checkbox {
+  display: inline-block;
+  height: 21px;
+  width: 21px;
+  .background-image("../img/checkbox.png");
+  background-position: 2px 4px;
+  background-repeat: no-repeat;
+}
 
 .search-results-row {
   clear:both;
-
-  padding:10px 0;
-  margin: 5px 0;
-  height:80px;
-  border: 2px solid transparent;
-  position: relative;
+  border-top: 1px solid #ddd;
+  padding:10px;
   .marked-checkbox {
-    position: absolute;
     display: block;
+    position: absolute;
     top: 7px;
     left: 3px;
-    height: 21px;
-    width: 21px;
-    .background-image("../img/checkbox.png");
-    background-position: 2px 4px;
-    background-repeat: no-repeat;
+  }
+  .search-result-item {
+    border: 2px solid transparent;
+    padding:10px 20px 10px 0;
+    position: relative;
+    height:80px;
   }
   &.selectable{cursor:pointer;}
-  &.selected {
+  &.selected .search-result-item {
     border-color: @linkColor;
-    background: #f9f9f9;
-    .marked-checkbox {
-      background-position: 2px -26px;
-    }
+    #gradient > .vertical(@navbarBackgroundHighlight, @navbarBackground);
   }
-  .marked-checkbox.checked {
-    background-position: 2px -26px;
+
+  .last-updated {
+    position: absolute;
+    right: 20px;
+    bottom: 10px;
+    text-transform: uppercase;
+    font-size: .8em;
+    line-height: 1em;
   }
 }
 .search-column {
@@ -133,7 +194,7 @@
   &.completion, &.subscribers, &.rank {
     width: 15%;
     float:right;
-    text-align: center;
+    text-align: right;
     min-width:100px;
   }
   &.details {
@@ -142,24 +203,5 @@
     min-width:150px;
     .name {color: @linkColor; font-weight:bold;}
     .location {color: #999; font-size: .9em;}
-  }
-}
-
-
-
-.filter-section {
-  border: 1px solid #ddd;
-  h5 {
-    background: #f9f9f9;
-    margin: 0;
-    padding:  5px 10px;
-    color: @linkColor;
-  }
-  label {padding-left:30px;}
-  .show-more {
-    display: block;
-    text-align: right;
-    padding: 0 10px;
-    font-size: .8em;
   }
 }

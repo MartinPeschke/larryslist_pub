@@ -8,6 +8,25 @@
   background-color: #f9f9f9;
 }
 
+.single-artwork {
+  border-bottom: 1px solid #eee;
+  padding-left: 10px;
+  margin-right: 15px;
+  &.header {
+    border-bottom: 1px solid #ccc;
+    font-weight:bold;
+    display:none;
+  }
+}
+.has-artworks .single-artwork.header {
+  display:block;
+}
+.artwork-column {
+  width: 20%;
+  display:inline-block;
+  vertical-align: top;
+}
+
 .artist-embedded-form {
   .search-field {
     margin: 15px 1px;

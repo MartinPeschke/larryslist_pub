@@ -2,26 +2,31 @@
 <%def name="pageClass()">search-page-container</%def>
 
 <%def name="content()">
-    <div class="container search-page">
+    <div class="container page-body search-page">
+        <div class="row">
+
+            <div class="span12">
+                <div class="page-title-bar search-results-tags">
+                    <a href="#" class="pull-right dismiss">Reset</a>
+                </div>
+            </div>
+        </div>
         <div class="row">
             <div class="span3">
             <form class="search-filters">
                 <div class="search-box">
-                    <input type="text" name="l" class="search-query" placeholder="Search" value="${query}"/><button type="submit" class="btn btn-primary"><span data-icon="s" aria-hidden="true"></span></button>
+                    <input type="text" name="l" class="search-query" placeholder="Search" value="${query}"/><button type="submit" class="btn"><span data-icon="s" aria-hidden="true"></span></button>
                 </div>
                 <div class="collector-filters">
-                    <h4>Collector</h4>
+                    <h5>Personal</h5>
                 </div>
                 <div class="collection-filters">
-                    <h4>Collection</h4>
+                    <h5>Collection</h5>
                 </div>
             </form>
             </div>
             <div class="span9">
                 <div class="search-results-container">
-                    <div class="search-results-tags">
-                        <a href="#" class="pull-right dismiss">Reset</a>
-                    </div>
                     <div class="search-results-sorting form-inline">
                         <i>Displaying <span class="result-count">0</span> search results</i>
                         <div class="control-group sort-by">
@@ -34,11 +39,8 @@
                             </select>
                         </div>
                     </div>
-                    <hr/>
                     <div class="search-results-header">
-                        <div class="search-column picture">
-                            Collector
-                        </div><div class="search-column completion">
+                        <div class="search-column completion">
                             Completion
                         </div><div class="search-column subscribers">
                             Followers
@@ -46,8 +48,9 @@
                             Rank
                         </div>
                         <div class="search-column details">
-                            &nbsp;
+                            Collector
                         </div>
+                        <a class="link search-select-all-link" data-toggle-text="Deselect all"><span class="marked-checkbox"></span> <span class="text">Select All</span></a>
                     </div>
                     <ul class="search-results-body">
                         <li class="search-placeholder empty">

@@ -1,55 +1,14 @@
-<div class="modal hide fade">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h3>Add an artist</h3>
+${self.singleArtwork(artwork)|n}
+<%def name="singleArtwork(artwork)">
+    <div class="single-artwork">
+        <span class="artwork-column artwork-title">${artwork['title']|n} ${'({year})'.format(**artwork) if artwork.get('year') else ''|n}</span>
+        <span class="artwork-column artwork-medium">${artwork.get('medium', '')}</span>
+        <span class="artwork-column artwork-material">${artwork.get('material', '')}</span>
+        <span class="artwork-column artwork-dimen">
+            ${', '.join([u'{}: {}'.format(k[0], artwork[k]) for k in ['width', 'height', 'depth'] if artwork.get(k)])|n}
+            %if len([artwork[k] for k in ['width', 'height', 'depth'] if artwork.get(k)]):
+                ${'cm' if artwork.get('measurement') == "METRIC" else 'in'}
+            %endif
+        </span>
     </div>
-    <form class="form-horizontal form-validated" action="post">
-    <div class="modal-body">
-        <input type="hidden" name="id" value="{{ collectionId }}"/>
-        <input type="hidden" name="Artist-0.id" value="{{ artistId }}"/>
-
-        <div class="control-group">
-            <label class="control-label">
-                Title of artwork:
-            </label>
-            <div class="controls">
-                <input type="text" class="input-large" name="Artist-0.Artwork-0.title" required>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <label class="control-label">
-                Year of execution:
-            </label>
-            <div class="controls">
-                <input type="text" class="input-mini digits" name="Artist-0.Artwork-0.year">
-            </div>
-        </div>
-
-        ${form.mediumField.render('Artist-0.Artwork-0', request, dict(), dict(), view)|n}
-
-
-        <div class="control-group">
-            <label class="control-label">
-                Size:
-            </label>
-            <div class="controls">
-                H <input type="text" class="input-mini digits" name="Artist-0.Artwork-0.height">
-                W <input type="text" class="input-mini digits" name="Artist-0.Artwork-0.width">
-                D <input type="text" class="input-mini digits" name="Artist-0.Artwork-0.depth">
-                <select name="Artist-0.Artwork-0.measurement">
-                    <option value="METRIC">cm</option>
-                    <option value="IMPERIAL">inch</option>
-                </select>
-            </div>
-        </div>
-
-        ${form.materialField.render('Artist-0.Artwork-0', request, dict(), dict(), view)|n}
-
-    </div>
-    <div class="modal-footer">
-        <button type="submit" class="btn btn-primary">Save Artwork</button>
-        <button type="submit" class="btn btn-danger hide" name="Artist-0.Artwork-0.reassign" value="true">Reassign to this Artist</button>
-    </div>
-    </form>
-</div>
+</%def>

@@ -27,16 +27,20 @@ define(
         , initialize: function(opts){
             this.setElement(this.template({model: this.model, inCart:opts.inCart}));
             this.listenTo(this.model, "destroy", this.remove);
+            this.listenTo(this.model, "change:selected", this.setSelected);
             this.$button = this.$el.find(".btn");
             if(opts.inCart)this.toggleSelected();
         }
-        , toggleSelected: function(){
-            var selected = this.$el.toggleClass("selected").hasClass("selected");
-            this.model.set("selected", selected);
+        , setSelected: function(model, selected){
+            this.$el[selected?'addClass':'removeClass']("selected");
             cart[selected?'addProfile':'removeProfile'](this.model);
             var btnData = this.$button.data();
             this.$button.html(btnData[selected?'textUnselected':'textSelected'])[selected?'removeClass':'addClass']("btn-primary");
             this.$el.trigger("collector:"+(selected?"selected":"unselected"));
+        }
+
+        , toggleSelected: function(){
+            this.model.set("selected", !this.model.get("selected"));
         }
         , destroy: function(){
             this.model.destroy();
@@ -71,7 +75,6 @@ define(
             this.$el.appendTo(opts.root);
             this.offset = opts.root.offset();
             opts.root.on("collector:selected collector:unselected", _.bind(this.adjust, this));
-
         }
         , render: function(){
             var view = this;
@@ -199,19 +202,19 @@ define(
 
     , FilterView = ajax.View.extend({
         SECTIONS : { Collection: { root: ".collection-filters"
-                , elems: {
-                    "Artist": {title: "Artist", sort:1}
-                    , "Genre": {title: "Genre", sort:2}
-                    , "Medium": {title: "Medium", sort:3}
-                    , "Origin": {title: "Origin", sort:4}
-            }}
+                , elems: [
+                    {key: "Genre", title: "Category / Genre / Stylistic Period"}
+                    , {key: "Origin", title: "Region / Origin of Artist"}
+                    , {key: "Medium", title: "Medium"}
+                    , {key: "Artist", title: "Artist"}
+            ]}
             , Collector: { root: ".collector-filters"
-                , elems: {
-                    "Country": {title: "Country", sort:1}
-                    , "Region": {title: "Region", sort:2}
-                    , "City": {title: "City", sort:3}
-                    , "Gender": {title: "Gender", sort:4}
-            }}
+                , elems: [
+                    {key: "Country", title: "Country"}
+                    , {key: "Region", title: "Region"}
+                    , {key: "City", title: "City"}
+                    , {key: "Gender", title: "Gender"}
+            ]}
         }
         , events : {
             "submit .search-filters":"onSubmit"
@@ -222,9 +225,6 @@ define(
             this.$form = this.$(".search-filters");
             this.$query = this.$form.find(".search-query");
             this.model.set("term", this.$query.val());
-            this.model.listenTo(this.model, "change:term", function(e){
-                view.$query.val(view.model.get("term"));
-            });
 
             _.each(this.SECTIONS, function(val){
                 view.setup(val.elems, view.$(val.root), tagRoot);
@@ -232,31 +232,29 @@ define(
         }
         , setup: function(props, root, tagRoot){
             var view = this;
-            _.each(props, function(v, k){
-                view.listenTo(view.model, k+":updated", view.addSection(k, v, root));
-                view.listenTo(view.model, k+":change:selected", view.setTag(k, v, tagRoot));
+            _.each(props, function(v){
+                view.listenTo(view.model, v.key+":updated", view.addSection(v, root));
+                view.listenTo(view.model, v.key+":change:selected", view.setTag(v, tagRoot));
             });
         }
-        , setTag: function(key, opts, root){
+        , setTag: function(opts, root){
             return function(model, selected){
                 if(selected){
                     root.append(new TagView({model:model}).$el);
                 }
             }
         }
-        , addSection: function(key, opts, root){
+        , addSection: function(opts, root){
             var view = this;
             return function(model){
                 var v = new FilterSectionView({model: model, title: opts.title});
-                view.sortedInsert(root, v.$el, opts.sort);
+                root.append(v.$el);
             }
         }
         , onSubmit: function(e){
             var val = this.$query.val().trim();
-            if(val.length){
-                this.model.set("term", val);
-                this.model.trigger("do:search");
-            }
+            this.model.set("term", val);
+            this.model.trigger("do:search");
             e.stopPropagation();
             e.preventDefault();
             return false;
@@ -268,6 +266,7 @@ define(
         events: {
             'change .select-sort-by': "reSort"
             , "click .dismiss": "emptyResults"
+            , "click .search-select-all-link" :"selectAll"
         }
         , initialize: function(opts){
             this.$sorting = this.$(".search-results-sorting");
@@ -342,6 +341,18 @@ define(
         , reSort: function(e){
             this.results.reSort($(e.target).val());
             this.reSortResults();
+        }
+        , selectAll: function(e){
+            var $t = $(e.currentTarget), selected = $t.toggleClass("selected").hasClass("selected");
+            if(selected){
+                $t.data("backupText", $t.find(".text").text());
+                $t.find(".text").html($t.data("toggleText"));
+            } else {
+                $t.find(".text").text($t.data("backupText"));
+            }
+            this.results.each(function(model){
+                model.set("selected", selected);
+            })
         }
         , render: function(){
             this.doSearch(true);

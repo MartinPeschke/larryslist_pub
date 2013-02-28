@@ -4,7 +4,7 @@
 }
 
 .link, .js-link {cursor:pointer;}
-.link-style {cursor:pointer;text-decoration: underline; font-style: italic; color: #999;}
+.link-style {cursor:pointer;font-style: italic; color: #999;}
 .message-container.fixed {
   position: fixed;
   width: 100%;
@@ -73,4 +73,21 @@
 
 .highlight {
   color: @linkColor;
+}
+
+.standard-gradient() {
+  #gradient > .vertical(@navbarBackgroundHighlight, @navbarBackground);
+}
+
+.page-title-bar{
+  padding: 15px 30px;
+  min-height: 22px;
+  border-bottom: 1px solid #ddd;
+  .standard-gradient();
+}
+.page-body {
+  .box-shadow(0 0 3px rgba(0,0,0,.4));
+}
+.page-body-wrapper {
+  padding:  0 30px;
 }

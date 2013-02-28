@@ -36,8 +36,11 @@ def get_dec_sep(request):
 def display_currency(currency, request):
     return get_currency_symbol(currency, locale=get_locale(request))
 def format_currency(number, currency, request):
-    fnumber = Decimal('%.2f' % number)
-    return fc(fnumber, currency, locale = get_locale(request))
+    if round(number) == number:
+        return u'€{}'.format(int(number))
+    else:
+        fnumber = Decimal('%.2f' % number)
+        return fc(fnumber, currency, locale = get_locale(request))
 
 def parse_number(strNum, request):
     return pn(strNum, locale=get_locale(request))

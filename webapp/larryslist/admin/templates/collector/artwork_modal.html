@@ -1,0 +1,55 @@
+<div class="modal hide fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Add an artist</h3>
+    </div>
+    <form class="form-horizontal form-validated" action="post">
+    <div class="modal-body">
+        <input type="hidden" name="id" value="{{ collectionId }}"/>
+        <input type="hidden" name="Artist.id" value="{{ artistId }}"/>
+
+        <div class="control-group">
+            <label class="control-label">
+                Title of artwork:
+            </label>
+            <div class="controls">
+                <input type="text" class="input-large" name="Artwork.title" required>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label">
+                Year of execution:
+            </label>
+            <div class="controls">
+                <input type="text" class="input-mini digits" name="Artwork.year">
+            </div>
+        </div>
+
+        ${form.mediumField.render('Artwork', request, dict(), dict(), view)|n}
+
+
+        <div class="control-group">
+            <label class="control-label">
+                Size:
+            </label>
+            <div class="controls">
+                H <input type="text" class="input-mini digits" name="Artwork.height">
+                W <input type="text" class="input-mini digits" name="Artwork.width">
+                D <input type="text" class="input-mini digits" name="Artwork.depth">
+                <select name="Artwork.measurement">
+                    <option value="METRIC">cm</option>
+                    <option value="IMPERIAL">inch</option>
+                </select>
+            </div>
+        </div>
+
+        ${form.materialField.render('Artwork', request, dict(), dict(), view)|n}
+
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Save Artwork</button>
+        <button type="submit" class="btn btn-danger hide" name="reassign" value="true">Reassign to this Artist</button>
+    </div>
+    </form>
+</div>

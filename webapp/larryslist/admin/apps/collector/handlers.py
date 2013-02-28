@@ -1,10 +1,10 @@
 from larryslist.admin.apps.collector.collections_forms import CollectionCreateForm, CollectionEditForm, CollectionArtistsForm, CollectionWebsiteForm, CollectionUploadForm, CollectionMuseumForm, CollectionCooperationForm, CollectionArtAdvisorForm, ArtworkForm
 from larryslist.admin.apps.collector.collector_forms import CollectorContactsForm, CollectorBusinessForm, CollectorEditForm, CollectorCreateForm, CollectionAddCollectorForm, CollectorUploadForm, CollectorArtAdvisoryForm, CollectorOtherFactsForm, CollectorRankingForm, CollectorArtFairForm
-from larryslist.admin.apps.collector.models import GetCollectorDetailsProc, SetCollectorStatusProc
+from larryslist.admin.apps.collector.models import GetCollectorDetailsProc, SetCollectorStatusProc, SaveArtworkProc
 from larryslist.lib.baseviews import GenericErrorMessage, GenericSuccessMessage
 from larryslist.lib.formlib.handlers import FormHandler
 from pyramid.decorator import reify
-from pyramid.renderers import render_to_response
+from pyramid.renderers import render_to_response, render
 
 
 def getCollector(self):
@@ -35,7 +35,14 @@ def getCollectionLink(self, stage = 'basic'):
 
 def artwork_handler(context, request):
     return {'form': ArtworkForm}
-
+def save_artwork_handler(context, request):
+    data = request.json_body
+    artist = data.pop("Artist")
+    artwork = data.pop("Artwork")
+    artist['Artwork'] = [artwork]
+    data['Artist'] = [artist]
+    result = SaveArtworkProc(request, data)
+    return {'html': render("larryslist:admin/templates/collector/artwork.html", {'artwork':artwork}, request)}
 
 class BaseArtHandler(FormHandler):
     forms = []

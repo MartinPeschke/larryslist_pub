@@ -33,6 +33,7 @@ def wrap_proc_token(proc):
 
 def getRecItem(keys, map, default = []):
     for key in keys.split("."):
+
         map = map.get(key, {})
         if not map: return default
     return map

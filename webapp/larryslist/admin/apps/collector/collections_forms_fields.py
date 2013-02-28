@@ -27,6 +27,8 @@ collectionEditFields = baseCollectionFields  + [HiddenField('id')]
 class MultipleArtistField(TagSearchField):
     if_empty = []
     template = 'larryslist:admin/templates/collector/artist.html'
+    def artworkMeasure(self, artworkMap):
+        return ''
     def getValidator(self, request):
         return {self.name : formencode.ForEach(BaseSchema(id = formencode.validators.String(if_missing = None)), not_empty = self.attrs.required)}
 collectionArtistsFields = [
@@ -34,6 +36,9 @@ collectionArtistsFields = [
         , PlainHeadingField("Artists in Collection")
         , MultipleArtistField('Artist', "Artist", "/admin/search/artist", "Artist", attrs = Placeholder("Search for an Artist"), input_classes="input-xxlarge")
     ]
+
+
+
 
 class PublicationsForm(MultipleFormField):
     fields = [

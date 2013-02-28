@@ -1,9 +1,6 @@
-
+<%namespace file="artwork.html" name="artworklib"/>
 <div class="artist-embedded-form">
     <div class="tagsearch-container" data-custom-module="views/artist/search" data-api-url="${widget.api_url}" data-api="${widget.api_allow_new}" data-api-result="${widget.api_result}" data-api-result-id="name,yob" data-prefix="${widget.getName(prefix)}" ${widget.getQueryExtra()|n} data-on-create="views/artist/add">
-        <script type="template/text" class="artwork-template">
-            ${self.singleArtwork('{{ pos }}', '{{ title }}', '{{ year }}' )}
-        </script>
         <script type="template/text" class="tag-template">
             ${self.tagTempl(widget, view.collection.id,'{{ pos }}', '{{ model.getSearchLabel() }}', '{{ model.id }}')}
         </script>
@@ -24,18 +21,18 @@
         <span class="close">×</span>
         <input type="hidden" name="${widget.getName(prefix)}-${pos|n}.id" value="${id|n}"/>
         <div class="artworks-form-handler" style="margin-left:20%">
-            <div class="artworks-list">
+            <div class="artworks-list ${'has-artworks' if len(artworks) else ''}">
+                <div class="single-artwork header">
+                <span class="artwork-column artwork-title">Title</span>
+                <span class="artwork-column artwork-medium">Medium</span>
+                <span class="artwork-column artwork-material">Material</span>
+                <span class="artwork-column artwork-dimen">Measurements</span>
+                </div>
                 %for i, artwork in enumerate(artworks):
-                    ${self.singleArtwork(str(i+1), artwork['title'], '({year})'.format(**artwork) if artwork.get('year') else '')}
+                    ${artworklib.singleArtwork(artwork)}
                 %endfor
             </div>
             <a class="js-link open-form" data-custom-module="views/artist/artwork" data-artist-id="${id|n}" data-collection-id="${collectionId}">Add Artworks</a>
         </div>
-    </div>
-</%def>
-
-<%def name="singleArtwork(pos, title, year = None)">
-    <div class="single-artwork">
-        Artwork <span class="list-position">${pos|n}</span>: ${title|n} ${year|n}
     </div>
 </%def>

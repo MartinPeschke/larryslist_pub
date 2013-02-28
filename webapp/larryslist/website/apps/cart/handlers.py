@@ -4,8 +4,12 @@ from larryslist.website.apps.contexts import logged_in
 from pyramid.renderers import render_to_response
 
 
+PLAN_SELECTED_TOKEN = "PLAN_SELECTED"
+
 def checkout_arbiter(context, request):
-    if context.user.isAnon():
+    if not request.session.get(PLAN_SELECTED_TOKEN):
+        request.fwd("website_checkout_plan_select")
+    elif context.user.isAnon():
         request.fwd("website_checkout_join")
     elif not len(context.cart.getItems()):
         request.fwd("website_search")
@@ -13,6 +17,13 @@ def checkout_arbiter(context, request):
         request.fwd("website_cart")
     else:
         request.fwd("website_checkout")
+
+def checkout_plan_select(context, request):
+    handler = PaymentOptionsHandler(context, request)
+    result = handler.getForm()
+    result['options'] = context.config.getPaymentOptions()
+    return result
+
 
 
 def discard_saved_details(context, request):
@@ -36,13 +47,6 @@ class CheckoutHandler(FormHandler):
 
 class CheckoutLoginHandler(FormHandler):
     forms = [JoinLoginForm, JoinSignupForm]
-
-
-def checkout_options(context, request):
-    handler = PaymentOptionsHandler(context, request)
-    result = handler.getForm()
-    result['options'] = context.config.getPaymentOptions()
-    return result
 
 class PaymentOptionsHandler(FormHandler):
     form = PaymentOptionsForm

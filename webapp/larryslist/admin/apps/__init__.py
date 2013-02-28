@@ -28,12 +28,10 @@ ROUTE_LIST = [
     , ClassRoute    ("admin_collection_create"       , "/collection/create/:collectorId", contexts.AdminAuthedContext, collector.CollectionHandler, None, view_attrs=JSON_FORM_ATTRS)
     , ClassRoute    ("admin_collection_edit"         , "/collection/edit/:collectorId/:stage", contexts.AdminAuthedContext, collector.CollectionHandler, None, view_attrs=JSON_FORM_ATTRS)
 
+    , FunctionRoute ("admin_collection_artwork"      , "/collection/artwork/save", contexts.AdminAuthedContext, collector.save_artwork_handler, "json", {'request_method':'POST'})
     # =============================== ADMIN-SETTINGS ===============================
     , ClassRoute    ("admin_settings_feeder_create"  , "/settings/feeder/create", contexts.AdminContext, settings.FeederHandler, "settings/feeder_create.html", view_attrs=JSON_FORM_ATTRS)
-    , FunctionRoute ("admin_ajax_template_artwork", "/ajax/templates/artwork.html", contexts.AdminAuthedContext, collector.artwork_handler, "collector/artwork.html")
-
-
-
+    , FunctionRoute ("admin_ajax_template_artwork"   , "/ajax/templates/artwork_modal.html", contexts.AdminAuthedContext, collector.artwork_handler, "collector/artwork_modal.html")
 ]
 ROUTE_MAP = {r.name:r for r in ROUTE_LIST}
 

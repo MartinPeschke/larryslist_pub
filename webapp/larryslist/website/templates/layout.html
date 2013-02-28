@@ -52,11 +52,6 @@
 
     %if user.isAnon():
 
-            <li class="nav-entry">
-                <a class="nav-entry-link" href="${request.fwd_url("website_signup")}">
-                    Signup
-                </a>
-            </li>
             <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="${request.fwd_url("website_login")}">
                     Login
@@ -98,6 +93,7 @@
             <form action="${request.fwd_url("website_search")}">
                 <div class="search-box">
                     <input type="text" name="l" class="search-query" placeholder="Search" value=""><button type="submit" class="btn"><span data-icon="s" aria-hidden="true"></span></button>
+                    <a class="advanced-search-link" href="${request.fwd_url("website_search")}">Advanced Search</a>
                 </div>
             </form>
         </li>

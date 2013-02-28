@@ -48,16 +48,20 @@
 
 .flyout-line {margin: 5px 10px;min-width: 150px;}
 
-/* ============================ option select modal ======================= */
+/* ============================ option select page ======================= */
 
+.payment-plans {
+  margin: 30px 0 0;
+}
 
 .checkbox-row {
   padding: 0 0 10px;
 }
 .checkbox-item.inline {
   display: inline-block;
-  width: 33%;
-  padding: 40px 20px 20px;
+  width: 22%;
+  margin-right:4%;
+  padding: 20px 20px 10px;
   box-sizing: border-box;
   text-align: center;
   #gradient > .vertical(#fff, #eee);
@@ -70,11 +74,11 @@
     padding: 0;
   }
   &.preferred {
-    background: @linkColor;
+    background: #4a4a4a;
     color: white;
     top: -10px;
-    padding-top:50px;
-    padding-bottom:30px;
+    padding-top:30px;
+    padding-bottom:20px;
     hr {border-color:white;}
   }
   .preferred-tape {
@@ -82,22 +86,23 @@
     top: -3px;
     right: -5px;
   }
-  .price {font-size: 2em;}
-  .period {font-size: 1.3em;}
-  .quantity {display: block; text-transform: uppercase;}
+  &.last {margin-right:0;}
+  .price {font-size: 3em;line-height:1em;}
+  .period {font-size: 1.3em;line-height:1em;}
+  .quantity.price {display: block; text-transform: uppercase;line-height:.8em;}
   .text {display: block;font-size: .8em;}
   .saved-amount {display: block; font-size: 1.5em;}
   hr{
-    border-color: black;
+    border-color: #ddd;
     border-bottom: 0px solid transparent;
-    margin: 10px 0;
+    margin: 10px -20px;
   }
 }
 
 .explanation-row {
   .standard-box;
-  padding: 20px 20%;
-  box-shadow: 0 0 3px rgba(0,0,0,.4);
+  padding: 10px 30px;
+  margin-top: 30px;
   .modal-button {
     text-align: center;
   }
@@ -105,6 +110,8 @@
 .recommendation-icons{
   margin: 0;
   text-align: left;
+  border-top:  1px solid #ddd;
+  padding:  15px 30px;
 }
 
 // ====================== CHECKOUT ==========================
@@ -149,7 +156,7 @@
   .search-results-header{
     padding: 1px 30px 0;
     border-bottom: 1px solid #ddd;
-    #gradient > .vertical(@navbarBackgroundHighlight, @navbarBackground);
+    .standard-gradient();
   }
 }
 
