@@ -1,5 +1,5 @@
 from datetime import datetime
-from jsonclient import Mapping, TextField, DictField, ListField
+from jsonclient import Mapping, TextField, DictField, ListField, IntegerField
 
 __author__ = 'Martin'
 
@@ -46,6 +46,17 @@ class TopMuseumModel(NamedModel):
     city = TextField()
     def getLabel(self, request):return u"{0.name} ({0.city})".format(self)
     def getKey(self, request):return self.name
+
+
+
+class ReviewedCollectorsModel(Mapping):
+    no = IntegerField()
+
+
+
+
+
+
 GENDER_CHOICES = [GenderModel(key = 'm', label = 'male'), GenderModel(key = 'f', label = 'female')]
 SOCIAL_NETWORKS = [SocNetModel(name = 'Facebook'), SocNetModel(name = 'Linkedin'), SocNetModel(name = 'Twitter'), SocNetModel(name = 'Other')]
 DOCUMENT_TYPES = [DocumentTypeModel(name = 'IMAGE'), DocumentTypeModel(name = 'OTHER')]
@@ -96,7 +107,7 @@ class ConfigModel(Mapping):
     FeederRole = FEEDER_ROLES
     Ranking = RANKINGS
     RankingYear = YEARS
-
+    ReviewedCollectors = DictField(ReviewedCollectorsModel)
 
     ExpiryMonth = MONTHS
     ExpiryYear = EXPIRY_YEARS

@@ -25,7 +25,7 @@ requires = [
     'pyramid_exclog',
     'beautifulsoup',
     'unidecode',
-    'jsonclientHGMMP>=0.0.5',
+    'jsonclientHGMMP>=0.0.501',
     "dogpile.cache>=0.4.1"
     ]
 

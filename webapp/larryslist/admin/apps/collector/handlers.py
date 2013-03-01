@@ -1,3 +1,4 @@
+from jsonclient.cached import refreshAllCacheds
 from larryslist.admin.apps.collector.collections_forms import CollectionCreateForm, CollectionEditForm, CollectionArtistsForm, CollectionWebsiteForm, CollectionUploadForm, CollectionMuseumForm, CollectionCooperationForm, CollectionArtAdvisorForm, ArtworkForm
 from larryslist.admin.apps.collector.collector_forms import CollectorContactsForm, CollectorBusinessForm, CollectorEditForm, CollectorCreateForm, CollectionAddCollectorForm, CollectorUploadForm, CollectorArtAdvisoryForm, CollectorOtherFactsForm, CollectorRankingForm, CollectorArtFairForm
 from larryslist.admin.apps.collector.models import GetCollectorDetailsProc, SetCollectorStatusProc, SaveArtworkProc
@@ -126,5 +127,5 @@ def set_review_status(context, request):
         request.session.flash(GenericSuccessMessage("This collector has now been approved!"), "generic_messages")
     else:
         request.session.flash(GenericErrorMessage("Not allowed"), "generic_messages")
-
+    refreshAllCacheds(request)
     return request.fwd_raw(request.referer)
