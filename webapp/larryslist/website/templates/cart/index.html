@@ -1,14 +1,15 @@
 <%inherit file="../layout.html"/>
 <%namespace file="larryslist:lib/formlib/templates/baseform.html" name="baseform"/>
+<%namespace file="../widgets.html" name="widgets"/>
 
 
 <%def name="content()">
     <div class="container centered cart-page">
         <div class="row">
-            <form class="${view.form.classes}" id="${view.form.id}" method="POST">
+            <form class="${view.form.classes}" id="${view.form.id}" method="POST" action="${request.fwd_url("website_purchase")}">
                 <div class="span8">
                     ${baseform.prelims(view.form)}
-                    <div class="search-results-container page-body">
+                    <div class="search-results-container standard-frame">
                         <h5 class="box-title inline tinted">Shopping Cart</h5>
                         <div class="search-results-header">
                             <div class="search-column completion">
@@ -23,9 +24,12 @@
                             </div>
                         </div>
                         <ul class="search-results-body cart-items">
-                            %for i, collector in enumerate(vctxt.cart.getCollectors()):
-                                ${self.buildItem(view.form, i, collector)}
-                            %endfor
+                            <li class="search-placeholder empty">
+                                No profiles in cart
+                            </li>
+                            <li class="show-loading">
+                                <img src="${ROOT_STATIC_URL}img/ajax-loader.gif"/>
+                            </li>
                         </ul>
                     </div>
 
@@ -69,7 +73,9 @@
                                 <li>access from everywhere 24/7</li>
                             </ul>
                         </div>
-
+                    </div>
+                    <div class="standard-frame spaced-top">
+                        ${widgets.recommendations()}
                     </div>
                 </div>
             </form>
@@ -106,6 +112,9 @@
     <script>
         require(["tools/ajax"], function(ajax){
             ajax.ifyForm({form: $("#${view.form.id}")});
+        });
+        require(["views/recommendation"], function(View){
+            new View({el: $(".recommended-collectors")});
         });
     </script>
 </%block>

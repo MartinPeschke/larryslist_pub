@@ -204,9 +204,9 @@ define(
             var t = this.$results.children(".sortable").eq(this.results.indexOf(result))
                 , v = colItem.getView(result);
             if(t.length){
-                t.before(v);
+                t.before(v.$el);
             } else {
-                this.$results.append(v);
+                this.$results.append(v.$el);
             }
         }
         , updatedResults: function(){

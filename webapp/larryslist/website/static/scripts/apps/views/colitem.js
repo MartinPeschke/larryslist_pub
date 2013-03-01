@@ -19,23 +19,25 @@ define(
         })
 
         , ResultView = Backbone.View.extend({
-            events: {click:"toggleSelected"}
+            events: {click:"toggleInCart"}
             , initialize: function(opts){
                 this.setElement(opts.template({model: this.model, inCart:opts.inCart}));
                 this.listenTo(this.model, "destroy", this.remove);
-                this.listenTo(this.model, "change:selected", this.setSelected);
+                this.listenTo(this.model, "cart:added", this.inCart);
+                this.listenTo(this.model, "cart:removed", this.outCart);
                 this.$button = this.$el.find(".btn");
-                if(opts.inCart)this.toggleSelected();
+                if(opts.inCart)this.setSelected(true);
             }
-            , setSelected: function(model, selected){
+            , inCart: function(){this.setSelected(true)}
+            , outCart: function(){this.setSelected(false)}
+            , setSelected: function(selected){
                 this.$el[selected?'addClass':'removeClass']("selected");
-                cart[selected?'addProfile':'removeProfile'](this.model);
                 var btnData = this.$button.data();
                 this.$button.html(btnData[selected?'textUnselected':'textSelected'])[selected?'removeClass':'addClass']("btn-primary");
                 this.$el.trigger("collector:"+(selected?"selected":"unselected"));
             }
-            , toggleSelected: function(){
-                this.model.set("selected", !this.model.get("selected"));
+            , toggleInCart: function(){
+                cart[cart.contains(this.model)?'removeProfile':'addProfile'](this.model);
             }
             , destroy: function(){
                 this.model.destroy();
@@ -87,8 +89,8 @@ define(
         , getView = function(collector, templ){
             templ = templ || resultTempl;
             var cls = user.ownsProfile(collector)?OwnedResultView:ResultView
-                , v = new cls({model: collector, inCart: cart.contains(collector), template:templ}).$el;
+                , v = new cls({model: cart.getProfile(collector), inCart: cart.contains(collector), template:templ});
             return v;
         };
-    return {SearchResults:SearchResults, CartFlyout:CartFlyout, getView: getView};
+    return {SearchResults:SearchResults, ResultView:ResultView, CartFlyout:CartFlyout, getView: getView};
 });

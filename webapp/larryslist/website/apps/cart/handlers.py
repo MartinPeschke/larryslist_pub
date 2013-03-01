@@ -1,6 +1,7 @@
 from larryslist.lib.formlib.handlers import FormHandler
 from larryslist.website.apps.cart.forms import PaymentOptionsForm, JoinLoginForm, JoinSignupForm, CheckoutForm, SpendCreditsForm, SavedDetailsCheckoutForm, PLAN_SELECTED_TOKEN
 from larryslist.website.apps.contexts import logged_in
+from larryslist.website.apps.models import SpendCreditProc
 from pyramid.decorator import reify
 from pyramid.renderers import render_to_response
 
@@ -30,13 +31,23 @@ def checkout_plan_select(context, request):
     return result
 
 
-
 def discard_saved_details(context, request):
     context.user.discardSavedDetails()
     request.fwd("website_checkout")
 
 def straight_purchase(context, request):
-    request.fwd("website_index")
+    collectors = context.cart.getItems()
+    if not collectors:
+        request.rld()
+    elif not context.cart.canSpend(context.user):
+        request.fwd("website_checkout_arbiter")
+    else:
+        values = {'token': context.user.token, 'Collector':collectors}
+        SpendCreditProc(request, values)
+        if request.session.get(PLAN_SELECTED_TOKEN):
+            del request.session[PLAN_SELECTED_TOKEN]
+        context.cart.empty()
+        request.fwd("website_index")
 
 class CheckoutHandler(FormHandler):
     forms = [CheckoutForm, SavedDetailsCheckoutForm]

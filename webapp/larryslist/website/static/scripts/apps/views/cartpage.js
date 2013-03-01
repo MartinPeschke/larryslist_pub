@@ -1,27 +1,28 @@
-define(["tools/ajax", "models/cart", "models/user", "text!templates/cartpage_item.html", "text!templates/cartpage_item_mini.html"], function(ajax, cart, user, cartItem, miniItem){
+define(["tools/ajax", "models/cart", "models/user", "views/colitem", "text!templates/searchresult.html"], function(ajax, cart, user, colItem, cartItem){
     var
         MODULE_KEY = 'CART_PAGE'
         , instance
-
+        , templ = _.template(cartItem)
+        , ItemView = colItem.ResultView.extend({
+            outCart: function(){this.remove();}
+        })
         , View = Backbone.View.extend({
-            events : {'click .dismiss': "remove"}
-            , initialize: function(opts){
+            initialize: function(opts){
                 var view = this;
                 this.model = cart;
+                this.$results = this.$(".cart-items");
+                this.listenTo(this.model, "Collectors:add", this.add);
+                this.listenTo(this.model, "Collectors:remove", this.remove);
+                this.model.getItems(function(models){
+                    models.each(this.add, this);
+                }, this);
             }
-            , remove: function(e){
-                var view = this, id = $(e.target).data("entityId");
-                this.model.removeProfile({id: id});
-                $(e.target).closest(".search-results-row").remove();
-                var btn = this.$el.find(".js-spend-credit");
-                cart.canSpend(user, function(canSpend){
-                    btn.prop("disabled", !canSpend);
-                    if(canSpend){
-                        view.$(".insufficient-credits").fadeOut();
-                    } else {
-                        view.$(".insufficient-credits").fadeIn();
-                    }
-                });
+            , add: function(collector){
+                this.$results.append(new ItemView({model: collector, template: templ, inCart: true}).$el);
+                this.$results.find(".empty").addClass("hide");
+            }
+            , remove: function(){
+                this.$results.find(".empty")[this.model.get("Collectors").length?"addClass":"removeClass"]("hide");
             }
         })
         , init = function(opts){
