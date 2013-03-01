@@ -3,31 +3,71 @@
 
 
 <%def name="content()">
+    <%
+        cartLength = len(vctxt.cart.getItems())
+    %>
     <div class="container cart-page">
-        <div class="row">
-            <div class="span8">
-                <div class="payment-options">
-                    ${self.buildForm(view.getForm(), values.get(view.getForm().id, {}), errors.get(view.getForm().id, {}))}
+        <div class="row checkout-head-row">
+            <div class="span3 standard-box">
+                <h5 class="box-title highlight">Your selection</h5>
+                <div class="standard-padded-box">
+                    <small class="heading">Profiles selected</small>
+                    <h2>${cartLength}</h2>
+                    <small class="heading">Your profiles:</small>
+                    %for col in vctxt.cart.getCollectors():
+                        <div class="collector-mini-line">${col.getName()}, ${col.getAddress()}</div>
+                    %endfor
+                    <a href="/cart" class="link-style">Review your selection</a>
                 </div>
             </div>
-            <div class="span4 cart-section">
-                <div class="search-results-container mini">
-                    <div class="search-results-header">
-                        <h4 class="highlight">Your Selection</h4>
-                    </div>
-                    <ul class="search-results-body cart-items">
-                        <li class="show-loading">
-                            <img src="${ROOT_STATIC_URL}img/ajax-loader.gif"/>
-                        </li>
-                    </ul>
+            <div class="span3 standard-box">
+                <h5 class="box-title highlight">Your price plan</h5>
+                <div class="standard-padded-box">
+                    <p>You get ${view.selectedPlan.credit} ${'credits' if view.selectedPlan.credit>1 else 'credit'}.</p>
+                    <p>${cartLength} ${'credits' if cartLength else 'credit'} will be deducted</p>
+                    <a href="${request.fwd_url("website_checkout_plan_select")}" class="link-style">Change your plan</a>
                 </div>
-                <div class="checkout-sidebar">
-                    <h4>${g.project_name} is known from:</h4>
-                    <div class="adpartner">
-                        <img src="${STATIC_URL}img/adpartner_color.png?v=${VERSION_TOKEN}"/>
+            </div>
+            <div class="span3 standard-box">
+                <h5 class="box-title highlight">Your cost</h5>
+                <div class="standard-padded-box">
+                    <div>Your cost today:</div>
+                    <h2>${view.selectedPlan.getFormattedPrice(request)}</h2>
+                    <div>You save:</div>
+                    <h2>${view.selectedPlan.getSavedAmount(request)}</h2>
+                </div>
+            </div>
+            <div class="span3 standard-frame">
+                <h5 class="box-title">This is what you get</h5>
+                <div class="standard-padded-box">
+                    <ul>
+                        <li>all information on profile(incl. address, collection, etc.)</li>
+                        <li>free updates on profile for 1 year</li>
+                        <li>access from everywhere 24/7</li>
+                    </ul>
+                    <a href="#" class="link-style">View sample profile</a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span9">
+                <div class="page-body">
+                    <h5 class="box-title tinted">Buy Credits</h5>
+                    <div class="payment-options">
+                        ${self.buildForm(view.getForm(), values.get(view.getForm().id, {}), errors.get(view.getForm().id, {}))}
                     </div>
+                </div>
+            </div>
 
-                    <h4>More Questions?</h4>
+            <div class="span3">
+                <div class="checkout-sidebar">
+                    <h5 class="box-title tinted">${g.project_name} is known from:</h5>
+                    <div class="standard-padded-box">
+                        <div class="adpartner">
+                            <img src="${STATIC_URL}img/adpartner_color.png?v=${VERSION_TOKEN}"/>
+                        </div>
+                    </div>
+                    <h4 style="margin-left:13px;">More Questions?</h4>
                     <div class="accordion" id="faq-accordion">
                         ${self.renderExpander("what-do-i-get", u"What I get?", u"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?", True)}
                         ${self.renderExpander("why-payment-data", u"Why Pay?", u"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?")}
@@ -37,16 +77,12 @@
                         ${self.renderExpander("how-do-icancel", u"How to cancel?", u"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?")}
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
 </%def>
 
 
-<%block name="options">
-    options.pageconfig.COLLECTORS = {el: $(".cart-section"), mini: true};
-</%block>
 <%block name="scripts">
     <script>
         require(["tools/ajax"], function(ajax){

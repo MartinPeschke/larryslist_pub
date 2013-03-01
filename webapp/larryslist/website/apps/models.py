@@ -1,8 +1,9 @@
 from operator import methodcaller
-from jsonclient import ListField, DictField, Mapping, TextField, IntegerField, BooleanField
+from jsonclient import ListField, DictField, Mapping, TextField, IntegerField, BooleanField, DateTimeField
 from larryslist.lib import i18n
 from larryslist.models import ClientTokenProc
 from larryslist.models.config import ConfigModel
+from pyramid.decorator import reify
 import simplejson
 
 
@@ -27,12 +28,16 @@ class PaymentOptionModel(Mapping):
 
 class WebsiteConfigModel(ConfigModel):
     PaymentOption = ListField(DictField(PaymentOptionModel))
+
+    @reify
+    def optionMap(self):
+        return {o.token: o for o in self.PaymentOption}
     def getPaymentOptions(self):
         options = self.PaymentOption
         options[1].preferred = True
         return options
-
-
+    def getPaymentOption(self, token):
+        return self.optionMap[token]
 
 
 
@@ -53,6 +58,7 @@ class AddressModel(Mapping):
 class CollectorModel(Mapping):
     id = IntegerField()
     status = TextField()
+    updated = DateTimeField()
     initials = TextField()
     picture = TextField()
     rank = TextField()
@@ -66,7 +72,11 @@ class CollectorModel(Mapping):
         addr = self.Address[0]
         if not addr.Region or not addr.Country: return ''
         return u"{region}, {country}".format(region = addr.Region.name, country = addr.Country.name)
-
+    def getUpdated(self):
+        if self.updated:
+            return '{:0>2}/{}'.format(self.updated.month, self.updated.year)
+        else:
+            return ''
 
 
 class WebsiteCart(object):

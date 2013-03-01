@@ -18,7 +18,6 @@ define(["router"], function (Router) {
                 , "cart": "cart"
                 , "checkout/option" : "selectoption"
                 , "checkout/join" : "collectors"
-                , "checkout" : "collectors"
                 , "*default": "default"
             }
             , initialize:function(){

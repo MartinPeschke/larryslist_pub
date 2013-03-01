@@ -11,11 +11,10 @@
 
                 ${self.buildForm(view.schemas['login'], values.get(view.schemas['login'].id, {}), errors.get(view.schemas['login'].id, {}))}
             </div>
+
             <div class="span4 cart-section">
-                <div class="search-results-container mini">
-                    <div class="search-results-header">
-                        <h4 class="highlight">Your Selection</h4>
-                    </div>
+                <div class="search-results-container mini page-body">
+                    <h5 class="box-title tinted highlight">Your Selection</h5>
                     <ul class="search-results-body cart-items">
                         <li class="show-loading">
                             <img src="${ROOT_STATIC_URL}img/ajax-loader.gif"/>
@@ -23,6 +22,7 @@
                     </ul>
                 </div>
             </div>
+
         </div>
     </div>
 </%def>

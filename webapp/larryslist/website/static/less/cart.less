@@ -39,11 +39,7 @@
 .cart-attach-dropdown {
   .btn.btn-primary {margin-top:10px;}
 }
-.mini, .cart-page {
-  .search-results-body, .search-results-header {
-    padding:  0 30px;
-  }
-}
+
 
 
 .flyout-line {margin: 5px 10px;min-width: 150px;}
@@ -115,7 +111,12 @@
 }
 
 // ====================== CHECKOUT ==========================
-
+.checkout-head-row {
+  margin-bottom:30px;
+  > .span3 {
+    min-height:300px;
+  }
+}
 .checkout-options-modal {
   .highlight {
     margin: 0;
@@ -123,9 +124,7 @@
 }
 
 .checkout-sidebar {
-  padding: 10px;
   box-shadow: 0 0 3px rgba(0,0,0,.4);
-  margin-top: 30px;
   .accordion {
     margin-bottom: @baseLineHeight;
   }
@@ -133,58 +132,27 @@
     margin-bottom: 2px;
   }
   .accordion-heading {
-    .accordion-toggle {display: block;padding:8px 15px 8px 50px;color:@textColor;}
+    .accordion-toggle {display: block;padding:8px 15px 8px 35px;color:@textColor;}
   }
-  .accordion-inner {padding: 0px 15px 15px 50px;}
+  .accordion-inner {padding: 0px 15px 15px 35px;}
   .faq-arrow {
     .background-image("../img/faqicons.png");
     background-repeat: no-repeat;
     background-position: 0 0;
-    width: 25px;
-    height: 23px;
+    width: 16px;
+    height: 15px;
     display: block;
     float: left;
-    margin-left: -42px;
+    margin-left: -22px;
+    margin-top:3px;
   }
   .collapsed .faq-arrow {
-    background-position: 0 -24px;
+    background-position: 0 -15px;
   }
 }
-
-
-.search-results-container.mini{
-  .search-results-header{
-    padding: 1px 30px 0;
-    border-bottom: 1px solid #ddd;
-    .standard-gradient();
-  }
-}
-
-.search-results-row.mini{
-  height: auto;
-  cursor:default;
-  .right-col {
-    margin-left:40%;
-    width:60%;
-  }
-  .search-column {
-    &.completion, &.subscribers, &.rank {
-      width: auto;
-      float:None;
-      display: block;
-      text-align: right;
-      small {display: block;text-transform: uppercase;font-size: .7em;}
-      small, b{line-height:1em;font-weight:bold;}
-    }
-    &.details {
-      margin-left:0;
-      margin-right:0;
-      float:left;
-    }
-  }
-  + .search-results-row {
-    border-top: 1px solid #eee;
-  }
+.collector-mini-line {
+  .text-overflow();
+  line-height: 1.2em;
 }
 
 .insufficient-credits {margin-right:25px;}

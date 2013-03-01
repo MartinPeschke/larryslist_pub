@@ -8,9 +8,8 @@
             <form class="${view.form.classes}" id="${view.form.id}" method="POST">
                 <div class="span8">
                     ${baseform.prelims(view.form)}
-                    <div class="search-results-container">
+                    <div class="search-results-container page-body">
                         <h5 class="box-title inline tinted">Shopping Cart</h5>
-
                         <div class="search-results-header">
                             <div class="search-column picture">
                                 Collector
@@ -33,22 +32,6 @@
                     </div>
 
                     <div class="cart-buttons">
-                        %if not vctxt.cart.canSpend(vctxt.user):
-                            <span class="insufficient-credits pull-right">
-                                %if not len(vctxt.cart.getItems()):
-                                    No profiles selected yet:
-                                    <a href="${request.fwd_url("website_search")}" class="btn btn-primary">Search for profiles</a>
-                                %elif not vctxt.user.getCredits():
-                                    No credits yet:
-                                    <a href="${request.fwd_url("website_checkout")}" class="btn btn-primary">Buy more credits</a>
-                                %else:
-                                    Not enough credits:
-                                    <a href="${request.fwd_url("website_checkout")}" class="btn btn-primary">Buy more credits</a>
-                                %endif
-                            </span>
-                        %else:
-                                <a href="${request.fwd_url("website_checkout")}" class="btn btn-primary">Buy more credits</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                        %endif
                         <a href="${request.fwd_url("website_search")}" class="btn">Back to Search</a>
                     </div>
                 </div>
@@ -60,12 +43,27 @@
                                 <img src="${ROOT_STATIC_URL}/img/ajax-loader.gif"/>
                             </div>
                             <br/>
-                            <div class="flyout-line">
-                                <button type="submit" class="js-spend-credit btn btn-primary btn-large wide-button" ${'' if vctxt.cart.canSpend(vctxt.user) else 'disabled'}>Buy now</button>
+                            <div class="flyout-line clearfix">
+                                %if not vctxt.cart.canSpend(vctxt.user):
+                                    <span class="insufficient-credits pull-right">
+                                        %if not len(vctxt.cart.getItems()):
+                                            No profiles selected yet:
+                                            <a href="${request.fwd_url("website_search")}" class="btn btn-primary btn-large wide-button">Search for profiles</a>
+                                        %elif not vctxt.user.getCredits():
+                                            No credits yet:
+                                            <a href="${request.fwd_url("website_checkout")}" class="btn btn-primary btn-large wide-button">Buy credits now</a>
+                                        %else:
+                                            Not enough credits:
+                                            <a href="${request.fwd_url("website_checkout")}" class="btn btn-primary btn-large wide-button">Buy more credits</a>
+                                        %endif
+                                    </span>
+                                %else:
+                                    <button type="submit" class="js-spend-credit btn btn-primary btn-large wide-button">Buy now</button>
+                                %endif
                             </div>
                         </div>
                         <hr/>
-                        <div class="sidebarbox">
+                        <div class="standard-padded-box">
                             <b>This is what you get:</b>
                             <ul>
                                 <li>access to profile for 1 year (free updated included)</li>
@@ -84,19 +82,22 @@
 
 <%def name="buildItem(form, pos, item)">
     <li class="search-results-row sortable">
-        <span class="marked-checkbox checked"></span>
-        <input type="hidden" name="${form.id}.Collector-${pos}.id" value="${item.id}"/>
-        <div class="search-column completion">
-            <b>${item.completion}%</b>
-        </div><div class="search-column subscribers">
-        <b>${item.subscribers}</b>
-    </div><div class="search-column rank">
-        <b>${item.rank}</b>
-    </div><div class="search-column details">
-        <div class="name">${item.getName()}</div>
-        <p class="location">${item.getAddress()}</p>
-        <a class="btn btn-primary dismiss" data-entity-id="${item.id}">Remove</a>
-    </div>
+        <div class="search-result-item">
+            <input type="hidden" name="${form.id}.Collector-${pos}.id" value="${item.id}"/>
+            <span class="marked-checkbox checked"></span>
+            <div class="search-column completion">
+                <b>${item.completion}%</b>
+            </div><div class="search-column subscribers">
+                <b>${item.subscribers}</b>
+            </div><div class="search-column rank">
+                <b>${item.rank}</b>
+            </div><div class="search-column details">
+            <div class="name">${item.getName()}</div>
+            <p class="location">${item.getAddress()}</p>
+            <a class="btn btn-primary dismiss" data-entity-id="${item.id}">Deselect</a>
+        </div>
+            <span class="last-updated">Last updated: ${item.getUpdated()}</span>
+        </div>
     </li>
 </%def>
 

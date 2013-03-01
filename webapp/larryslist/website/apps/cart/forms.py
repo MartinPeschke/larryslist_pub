@@ -52,19 +52,12 @@ class CheckoutForm(BaseForm):
     action_label = "Buy your plan now"
     has_discard = False
     fields = [
-        PaymentOptionField("paymentOptionToken", None, "PaymentOption", default_none = False)
-        , PlainHeadingField("Credit Card")
-        , ConfigChoiceField("method", "Card Type", "CardType", default_none=False)
-        , StringField("holder", "Holder", REQUIRED)
-        , StringField("number", "Number", REQUIRED, min = 13, max = 16)
-        , StringField("cvs", "CVV", attrs = HtmlAttrs(required = True) , min = 3, max = 4)
-        , CombinedField([ConfigChoiceField("expiryMonth", None, "ExpiryMonth", default_none=False), ConfigChoiceField("expiryYear", None, "ExpiryYear", default_none=False)], "Expiration", REQUIRED)
-        , PlainHeadingField("Billing address")
-        , StringField("lastName", "Name", REQUIRED)
-        , StringField("firstName", "Surname", REQUIRED)
-        , StringField("line1", "Street", REQUIRED)
-        , CombinedField([StringField("postCode", "Zip Code", REQUIRED, input_classes="input-mini"), StringField("city", "City", REQUIRED, input_classes="input-medium")], "Post code / City", REQUIRED)
-        , StringField("country", "Country", REQUIRED)
+        PlainHeadingField("Credit Card", tag="h5", classes="label-spacealike")
+        , ConfigChoiceField("method", "Card Type:", "CardType", default_none=False)
+        , StringField("holder", "Holder:", REQUIRED)
+        , StringField("number", "Number:", REQUIRED, min = 13, max = 16)
+        , StringField("cvs", "CVV:", attrs = HtmlAttrs(required = True) , min = 3, max = 4,input_classes='input-mini')
+        , CombinedField([ConfigChoiceField("expiryMonth", None, "ExpiryMonth", default_none=False), ConfigChoiceField("expiryYear", None, "ExpiryYear", default_none=False)], "Expiration:", REQUIRED)
         , CheckboxPostField("agreeTOS", u"Yes, I have read the Terms and Conditions and Agree.", REQUIRED)
     ]
     @classmethod
