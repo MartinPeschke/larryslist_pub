@@ -54,7 +54,7 @@ class BaseAdminForm(BaseForm):
         if result.get('success'):
             sources = extra_forms[AddSourcesForm.id]
             if sources:
-                sources = {'id': request.matchdict['collectorId'], 'Source': sources}
+                sources = {'id': request.matchdict.get('collectorId', result.get('collectorId')), 'Source': sources}
                 try:
                     collection = SetSourcesProc(request, {'Collector':sources})
                 except DBException, e:

@@ -27,5 +27,5 @@ class FeederCreateForm(BaseForm):
             else:
                 result['message'] = e.message
             return result
-        request.session.flash(GenericSuccessMessage("New user {name} ({email}) created".format(**values)), "generic_messages")
+        request.session.flash(GenericSuccessMessage(u"New user {name} ({email}) created".format(**values)), "generic_messages")
         return {'success':True, 'redirect':request.fwd_url("admin_settings_feeder_create")}

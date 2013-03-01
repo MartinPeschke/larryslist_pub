@@ -62,7 +62,7 @@ class CollectorCreateForm(BaseAdminForm):
             collector = CreateCollectorProc(request, {'Collector':values})
         except DBException, e:
             return {'success':False, 'message': e.message}
-        return {'success': True, 'redirect': request.fwd_url("admin_collector_edit", collectorId = collector.id, stage='basic')}
+        return {'success': True, 'redirect': request.fwd_url("admin_collector_edit", collectorId = collector.id, stage='basic'), 'collectorId': collector.id}
 
 class CollectorEditForm(BaseAdminForm):
     id = "base"
