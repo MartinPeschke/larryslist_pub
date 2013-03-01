@@ -2,7 +2,7 @@
 
 
 <%def name="content()">
-<div class="container index-page">
+<div class="container">
     <div class="row">
         <div class="span8 standard-frame news-frame">
             <h5 class="box-title inline tinted">News</h5>
@@ -27,6 +27,16 @@
         </div>
         <div class="span4 standard-frame">
             <h5 class="box-title inline tinted">Collectors recommended to you</h5>
+            <div class="recommended-collectors">
+                <ul class="search-results-body">
+                    <li class="search-placeholder empty">
+                        No Results
+                    </li>
+                    <li class="show-loading">
+                        <img src="${ROOT_STATIC_URL}img/ajax-loader.gif"/>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
     <div class="row spaced-top">
@@ -36,3 +46,11 @@
     </div>
 </div>
 </%def>
+
+<%block name="scripts">
+    <script>
+        require(["views/recommendation"], function(View){
+            new View({el: $(".recommended-collectors")});
+        });
+    </script>
+</%block>

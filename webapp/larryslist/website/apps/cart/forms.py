@@ -79,6 +79,8 @@ class CheckoutForm(BaseForm):
                 values = {'token': context.user.token, 'Collector':[{'id': c.id} for c in context.cart.getCollectors()]}
                 SpendCreditProc(request, values)
                 context.cart.empty()
+                if request.session.get(PLAN_SELECTED_TOKEN):
+                    del request.session[PLAN_SELECTED_TOKEN]
                 request.fwd("website_index")
             else:
                 request.session.flash(GenericErrorMessage("Not enough credits to purchase all profiles."), "generic_messages")
@@ -126,5 +128,7 @@ class SpendCreditsForm(BaseForm):
             return {'success':False, 'message': "Insufficient credits"}
         else:
             SpendCreditProc(request, values)
+            if request.session.get(PLAN_SELECTED_TOKEN):
+                del request.session[PLAN_SELECTED_TOKEN]
             context.cart.empty()
         return {'success':True, 'redirect': request.fwd_url("website_index")}

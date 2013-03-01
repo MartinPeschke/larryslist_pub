@@ -16,7 +16,6 @@ define(["router"], function (Router) {
             routes: {
                 "search": "search"
                 , "cart": "cart"
-                , "checkout/option" : "selectoption"
                 , "checkout/join" : "collectors"
                 , "*default": "default"
             }
@@ -27,7 +26,6 @@ define(["router"], function (Router) {
                 this.on("route:search", dodo(["views/search"], 100));
                 this.on("route:cart", dodo(["views/cartpage"], 100));
                 this.on("route:collectors", dodo(["views/collectors_mini"], 100));
-                this.on("route:selectoption", dodo(["views/option"], 100));
             }
         })
     );

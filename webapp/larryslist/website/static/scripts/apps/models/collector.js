@@ -19,7 +19,11 @@ define(["tools/ajax"], function(ajax){
                 return ' ';
             else {
                 a = a.first();
-                return a.get("Region").name + ", " + a.get("Country").name;
+                if(a && a.get("Region") && a.get("Country")){
+                    return a.get("Region").name + ", " + a.get("Country").name;
+                } else {
+                    return '';
+                }
             }
         }
         , getLastUpdated : function(){

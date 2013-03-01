@@ -8,16 +8,20 @@ from pyramid.renderers import render_to_response
 
 
 def checkout_arbiter(context, request):
-    if not request.session.get(PLAN_SELECTED_TOKEN):
-        request.fwd("website_checkout_plan_select")
-    elif context.user.isAnon():
-        request.fwd("website_checkout_join")
+    if context.user.isAnon():
+        if not request.session.get(PLAN_SELECTED_TOKEN):
+            request.fwd("website_checkout_plan_select")
+        else:
+            request.fwd("website_checkout_join")
     elif not len(context.cart.getItems()):
         request.fwd("website_search")
     elif context.cart.canSpend(context.user):
-        request.fwd("website_cart")
+        request.fwd("website_purchase")
     else:
-        request.fwd("website_checkout")
+        if not request.session.get(PLAN_SELECTED_TOKEN):
+            request.fwd("website_checkout_plan_select")
+        else:
+            request.fwd("website_checkout")
 
 def checkout_plan_select(context, request):
     handler = PaymentOptionsHandler(context, request)
@@ -30,6 +34,9 @@ def checkout_plan_select(context, request):
 def discard_saved_details(context, request):
     context.user.discardSavedDetails()
     request.fwd("website_checkout")
+
+def straight_purchase(context, request):
+    request.fwd("website_index")
 
 class CheckoutHandler(FormHandler):
     forms = [CheckoutForm, SavedDetailsCheckoutForm]
