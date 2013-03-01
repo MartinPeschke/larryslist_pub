@@ -173,8 +173,10 @@ define(
             var val = this.$query.val().trim();
             this.model.set("term", val);
             this.model.trigger("do:search");
-            e.stopPropagation();
-            e.preventDefault();
+            if(!_.isEmpty(e)){
+                e.stopPropagation();
+                e.preventDefault();
+            }
             return false;
         }
     })
@@ -184,10 +186,12 @@ define(
             'change .select-sort-by': "reSort"
             , "click .dismiss": "emptyResults"
             , "click .search-select-all-link" :"selectAll"
+            , "change [name=myCollectors]":"issueSearch"
         }
         , initialize: function(opts){
             this.$sorting = this.$(".search-results-sorting");
             this.$results = this.$(".search-results-body");
+            this.$realm = this.$(".search-realm").find("input[name=myCollectors]");
 
             new colItem.CartFlyout({root: this.$results});
 
@@ -212,6 +216,9 @@ define(
         , updatedResults: function(){
             this.$results.find(".empty")[this.results.length?"addClass":"removeClass"]("hide");
         }
+        , issueSearch: function(){
+            this.filterView.onSubmit(false);
+        }
         , doFilter: function(){
             this.search(false);
         }
@@ -226,9 +233,10 @@ define(
         , search: function(resetFilters){
             var view = this, query = this.filter.getSearchQuery(resetFilters);
             if(query){
+                var url = this.$realm.filter(":checked").data("url");
                 this.$results.addClass("loading");
                 ajax.submitPrefixed({
-                    url: '/web/search/collector'
+                    url: url
                     , data: query
                     , success: function(resp, status, xhr){
                         var results = hnc.getRecursive(resp, "Collectors.Collector", []);
@@ -253,7 +261,8 @@ define(
             this.results.each(this.addResult, this);
         }
         , reSort: function(e){
-            this.results.reSort($(e.target).val());
+            var el = $(e.target).find("option").filter(":selected");
+            this.results.reSort(el.val(), el.data("reverse"));
             this.reSortResults();
         }
         , selectAll: function(e){

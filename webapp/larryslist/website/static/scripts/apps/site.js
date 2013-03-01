@@ -15,6 +15,7 @@ define(["router"], function (Router) {
         Backbone.Router.extend({
             routes: {
                 "search": "search"
+                , "home": "search"
                 , "cart": "cart"
                 , "checkout/join" : "collectors"
                 , "*default": "default"

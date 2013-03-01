@@ -1,5 +1,6 @@
 <%inherit file="layout.html"/>
 <%namespace file="widgets.html" name="widgets"/>
+<%namespace file="search/index.html" name="search"/>
 
 <%def name="content()">
 <div class="container">
@@ -29,15 +30,15 @@
             ${widgets.recommendations()}
         </div>
     </div>
-    <div class="row spaced-top">
-        <div class="span12 standard-frame">
-            <h5 class="box-title inline tinted">Search</h5>
-            ${len(vctxt.user.Collector)}
-        </div>
-    </div>
 </div>
+    <div class="search-page-container spaced-top">
+        ${search.content()}
+    </div>
 </%def>
 
+<%block name="options">
+    options.pageconfig.SEARCH = {el: $(".search-page-container")};
+</%block>
 <%block name="scripts">
     <script>
         require(["views/recommendation"], function(View){

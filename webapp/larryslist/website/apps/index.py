@@ -9,4 +9,4 @@ def index(context, request):
 
 
 def index_member(context, request):
-    return {}
+    return {'query':''}

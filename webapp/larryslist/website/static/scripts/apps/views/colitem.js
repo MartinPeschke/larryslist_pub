@@ -9,11 +9,15 @@ define(
         , SearchResults = ajax.Collection.extend({
             model: Collector
             , compField: "initials"
-            , comparator : function(model){
-                return model.get(this.compField);
+            , comparator : function(a, b){
+                var v1 = a.get(this.compField), v2 = b.get(this.compField);
+                if(v1==v2) return 0;
+                else if(this.reversed) return v1>v2?-1:1;
+                else return v1<v2?-1:1;
             }
-            , reSort: function(field){
+            , reSort: function(field, reversed){
                 this.compField = field;
+                this.reversed = reversed;
                 this.sort();
             }
         })
