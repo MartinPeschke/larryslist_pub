@@ -112,7 +112,7 @@ def LoggingInProc(path, db_messages = []):
     sproc = ClientTokenProc(path, root_key='User', result_cls=UserModel)
     def f(request, data):
         result = sproc(request, data)
-        request.session[SESSION_KEY] = request.user = result
+        request.session[SESSION_KEY] = request.root.user = result
         return result
     return f
 
@@ -136,19 +136,17 @@ class UserModel(Mapping):
         return self.token is None
     def getCredits(self):
         return self.credit
-
     def toJSON(self, stringify = True):
-        json = self.unwrap(sparse = True)
+        json = self.unwrap(sparse = True).copy()
         json['Collector'] = [{'id': c['id']} for c in json.pop("Collector", []) if c.get('id')]
         return simplejson.dumps(json)
-
     def hasSavedDetails(self):
         return bool(self.cardNumber)
-
     def discardSavedDetails(self):
         self.cardNumber = None
         return True
-
+    def getCreditWithPlan(self, plan):
+        return self.credit + plan.credit
 
 
 SignupProc = LoggingInProc("/user/signup")

@@ -11,9 +11,7 @@
                     <div class="search-results-container page-body">
                         <h5 class="box-title inline tinted">Shopping Cart</h5>
                         <div class="search-results-header">
-                            <div class="search-column picture">
-                                Collector
-                            </div><div class="search-column completion">
+                            <div class="search-column completion">
                                 Completion
                             </div><div class="search-column subscribers">
                                 Followers
@@ -21,7 +19,7 @@
                                 Rank
                             </div>
                             <div class="search-column details">
-                                &nbsp;
+                                Collector
                             </div>
                         </div>
                         <ul class="search-results-body cart-items">
@@ -45,7 +43,7 @@
                             <br/>
                             <div class="flyout-line clearfix">
                                 %if not vctxt.cart.canSpend(vctxt.user):
-                                    <span class="insufficient-credits pull-right">
+                                    <span class="insufficient-credits">
                                         %if not len(vctxt.cart.getItems()):
                                             No profiles selected yet:
                                             <a href="${request.fwd_url("website_search")}" class="btn btn-primary btn-large wide-button">Search for profiles</a>

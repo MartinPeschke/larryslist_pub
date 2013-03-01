@@ -8,7 +8,7 @@
     %>
     <div class="container cart-page">
         <div class="row checkout-head-row">
-            <div class="span3 standard-box">
+            <div class="span3 standard-box link-box">
                 <h5 class="box-title highlight">Your selection</h5>
                 <div class="standard-padded-box">
                     <small class="heading">Profiles selected</small>
@@ -17,18 +17,22 @@
                     %for col in vctxt.cart.getCollectors():
                         <div class="collector-mini-line">${col.getName()}, ${col.getAddress()}</div>
                     %endfor
-                    <a href="/cart" class="link-style">Review your selection</a>
+                    <a href="/cart" class="link-style bottom-box-link">Review your selection</a>
                 </div>
             </div>
-            <div class="span3 standard-box">
+            <div class="span3 standard-box link-box">
                 <h5 class="box-title highlight">Your price plan</h5>
                 <div class="standard-padded-box">
                     <p>You get ${view.selectedPlan.credit} ${'credits' if view.selectedPlan.credit>1 else 'credit'}.</p>
-                    <p>${cartLength} ${'credits' if cartLength else 'credit'} will be deducted</p>
-                    <a href="${request.fwd_url("website_checkout_plan_select")}" class="link-style">Change your plan</a>
+                    %if cartLength > vctxt.user.getCreditWithPlan(view.selectedPlan):
+                        <p class="highlight">${cartLength} ${'credits' if cartLength else 'credit'} are required.</p>
+                    %else:
+                        <p>${cartLength} ${'credits' if cartLength else 'credit'} will be deducted.</p>
+                    %endif
+                    <a href="${request.fwd_url("website_checkout_plan_select")}" class="link-style bottom-box-link">Change your plan</a>
                 </div>
             </div>
-            <div class="span3 standard-box">
+            <div class="span3 standard-box link-box">
                 <h5 class="box-title highlight">Your cost</h5>
                 <div class="standard-padded-box">
                     <div>Your cost today:</div>
@@ -37,7 +41,7 @@
                     <h2>${view.selectedPlan.getSavedAmount(request)}</h2>
                 </div>
             </div>
-            <div class="span3 standard-frame">
+            <div class="span3 standard-frame link-box">
                 <h5 class="box-title">This is what you get</h5>
                 <div class="standard-padded-box">
                     <ul>
@@ -45,7 +49,7 @@
                         <li>free updates on profile for 1 year</li>
                         <li>access from everywhere 24/7</li>
                     </ul>
-                    <a href="#" class="link-style">View sample profile</a>
+                    <a href="#" class="link-style bottom-box-link">View sample profile</a>
                 </div>
             </div>
         </div>
@@ -93,11 +97,12 @@
 
 <%def name="buildForm(form, values, errors)">
     <form class="${form.classes}" method="post" id="${form.id}">
-    ${baseform.prelims(form)}
+        ${baseform.prelims(form)}
+        <input type="hidden" name="${form.id}.paymentOptionToken" value="${view.selectedPlan.token}"/>
         %for field in form.fields:
             ${field.render(form.id, request, values, errors, view)|n}
         %endfor
-        <div class="form-actions">
+        <div class="form-actions standard-padded-box">
             <button type="submit" class="btn btn-primary">${form.action_label}</button>
             %if form.has_discard:
                 <a href="${request.fwd_url("website_discard_saved_details")}" class="btn">Discard Saved Details</a>

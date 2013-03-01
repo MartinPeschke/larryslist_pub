@@ -49,7 +49,7 @@ class JoinSignupForm(SignupForm):
 class CheckoutForm(BaseForm):
     id = "new"
     classes = 'form-horizontal form-validated'
-    action_label = "Buy your plan now"
+    action_label = "Purchase now"
     has_discard = False
     fields = [
         PlainHeadingField("Credit Card", tag="h5", classes="label-spacealike")
@@ -61,48 +61,28 @@ class CheckoutForm(BaseForm):
         , CheckboxPostField("agreeTOS", u"Yes, I have read the Terms and Conditions and Agree.", REQUIRED)
     ]
     @classmethod
-    def on_success(cls, request, values):
-        values['userToken'] = request.root.user.token
+    def extraOptions(cls, values):
         values['saveDetails'] = True
-        status = PurchaseCreditProc(request, values)
-        if status.success == True:
-            RefreshUserProfileProc(request, {'token':request.root.user.token})
-            return {'success':True, 'redirect':request.fwd_url("website_cart")}
-        else:
-            errors = {}
-            if status.message == "PAYMENT_FAILED":
-                errors = {"number": "Invalid payment data, please check card details."}
-            elif status.message == "INVALID_CARD_NUMBER":
-                errors = {"number": "Invalid card number"}
-            elif status.message.startswith("validation 140"):
-                errors = {"expiryYear": "Expiry date must be in the future"}
-            elif status.message.startswith("validation 103"):
-                errors = {"cvs": "CVC is not right length"}
-            else:
-                errors = {"number": "Invalid card number {}".format(status.message)}
-            return {'success':False, "message":"Payment Failed", 'values':values, 'errors':errors}
-
-
-
-class SavedDetailsCheckoutForm(BaseForm):
-    id = "saved"
-    classes = 'form-horizontal form-validated'
-    action_label = "Buy your plan now"
-    has_discard = True
-    fields = [
-        PaymentOptionField("paymentOptionToken", None, "PaymentOption", default_none = False)
-        , PlainHeadingField("Use Saved Credit Card Details")
-        , StringField("number", "Saved Card", attrs = HtmlAttrs(readonly = True))
-        , StringField("cvs", "CVV", attrs = HtmlAttrs(required = True) , min = 3, max = 4)
-    ]
+        return values
     @classmethod
     def on_success(cls, request, values):
         values['userToken'] = request.root.user.token
-        values['useSavedDetails'] = True
+        values = cls.extraOptions(values)
         status = PurchaseCreditProc(request, values)
         if status.success == True:
+            context = request.root
             RefreshUserProfileProc(request, {'token':request.root.user.token})
-            return {'success':True, 'redirect':request.fwd_url("website_cart")}
+
+            if not len(context.cart.getItems()):
+                request.fwd("website_index")
+            elif context.cart.canSpend(context.user):
+                values = {'token': context.user.token, 'Collector':[{'id': c.id} for c in context.cart.getCollectors()]}
+                SpendCreditProc(request, values)
+                context.cart.empty()
+                request.fwd("website_index")
+            else:
+                request.session.flash(GenericErrorMessage("Not enough credits to purchase all profiles."), "generic_messages")
+                request.fwd("website_cart")
         else:
             errors = {}
             if status.message == "PAYMENT_FAILED":
@@ -116,6 +96,21 @@ class SavedDetailsCheckoutForm(BaseForm):
             else:
                 errors = {"number": "Invalid card number {}".format(status.message)}
             return {'success':False, "message":"Payment Failed", 'values':values, 'errors':errors}
+
+class SavedDetailsCheckoutForm(CheckoutForm):
+    id = "saved"
+    has_discard = True
+    fields = [
+        PlainHeadingField("Use Saved Credit Card Details", tag="h5", classes="standard-padded-box")
+        , StringField("number", "Saved Card", attrs = HtmlAttrs(readonly = True))
+        , StringField("cvs", "CVV", attrs = HtmlAttrs(required = True) , min = 3, max = 4)
+    ]
+
+    @classmethod
+    def extraOptions(cls, values):
+        values['useSavedDetails'] = True
+        return values
+
 
 class SpendCreditsForm(BaseForm):
     id="spend"
@@ -130,6 +125,6 @@ class SpendCreditsForm(BaseForm):
         elif not context.cart.canSpend(context.user):
             return {'success':False, 'message': "Insufficient credits"}
         else:
-            result = SpendCreditProc(request, values)
+            SpendCreditProc(request, values)
             context.cart.empty()
         return {'success':True, 'redirect': request.fwd_url("website_index")}
