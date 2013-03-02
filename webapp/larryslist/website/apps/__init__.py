@@ -30,7 +30,7 @@ ROUTE_LIST = [
     , FunctionRoute ("website_collector_personal"   , "/collector/:collectorId/:name", contexts.WebsiteCollectorContext, collector.index, "collector/index.html")
     , FunctionRoute ("website_collector_collection"   , "/collector/:collectorId/:name/collection", contexts.WebsiteCollectorContext, collector.index, "collector/collection.html")
     , FunctionRoute ("website_collector_art"   , "/collector/:collectorId/:name/art", contexts.WebsiteCollectorContext, collector.index, "collector/art.html")
-    , FunctionRoute ("website_collector_news"   , "/collector/:collectorId/:name/news", contexts.WebsiteCollectorContext, collector.index, "collector/index.html")
+    , FunctionRoute ("website_collector_news"   , "/collector/:collectorId/:name/news", contexts.WebsiteCollectorContext, collector.index, "collector/news.html")
 ]
 
 

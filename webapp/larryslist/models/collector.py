@@ -43,9 +43,9 @@ class SimpleCollectorModel(Mapping):
     updated = DateTimeField()
     initials = TextField()
     picture = TextField()
-    rank = TextField(default = 0)
-    subscribers = TextField(default = 0)
-    completion = TextField(default = 0)
+    ranking = TextField(default = 0)
+    followers = TextField(default = 0)
+    completness = TextField(default = 0)
     Address = ListField(DictField(AddressModel))
     def getName(self):
         return self.initials
@@ -61,11 +61,11 @@ class SimpleCollectorModel(Mapping):
             return ''
 
     def getRank(self):
-        return self.rank
+        return self.ranking
     def getSubscribers(self):
-        return self.subscribers
+        return self.followers
     def getCompletion(self):
-        return u'{}%'.format(self.completion)
+        return self.completness
 
 
 
@@ -83,6 +83,12 @@ class SourceModel(Mapping):
     year = TextField()
     publisher = TextField()
 
+    def isURL(self):
+        return self.type == 'Internet/Blogs/Online Mag'
+
+    def getSourceLine(self):
+        fields = ['url', 'name', 'title', 'author', 'publisher', 'year', 'date']
+        return ', '.join([getattr(self, k) for k in fields if getattr(self, k, None)])
 
 class ArtworkModel(Mapping):
     title = TextField()
@@ -248,7 +254,7 @@ class CollectorModel(SimpleCollectorModel):
     Industry = ListField(DictField(IndustryModel))
     University = ListField(DictField(UniversityModel))
     Collection = DictField(CollectionModel)
-    Source = DictField(SourceModel)
+    Source = ListField(DictField(SourceModel))
     LinkedCollector = DictField(LinkedCollectorModel)
     Fact = ListField(DictField(OtherFactModel))
 

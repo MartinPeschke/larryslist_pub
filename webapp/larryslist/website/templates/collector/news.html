@@ -1,0 +1,19 @@
+<%inherit file="layout.html"/>
+
+<%def name="cards(collector)">
+    ${self.sourcesCard(vctxt.collector)}
+</%def>
+
+<%def name="sourcesCard(collector)">
+    %if len(collector.Source):
+    <%self:card title="Sources">
+        %for source in collector.Source:
+            %if source.isURL():
+                ${self.simpleLink("Online", source.url)}
+            %else:
+                ${self.simpleLine("Offline", source.getSourceLine())}
+            %endif
+        %endfor
+    </%self:card>
+    %endif
+</%def>
