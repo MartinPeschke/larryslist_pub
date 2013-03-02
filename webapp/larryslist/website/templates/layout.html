@@ -19,17 +19,39 @@
     <footer class="container">
         <div class="row">
         <div class="footer">
-            <div class="span8">
-                <ul class="inline unstyled">
-                    <li>
-                        <a href="#" class="footer-link">About</a>
-                        <a href="#" class="footer-link">Jobs</a>
-                        <a href="#" class="footer-link">Reviews</a>
-                        <a href="#" class="footer-link">Help</a>
-                        <a href="#" class="footer-link">Blog</a>
-                        <a href="#" class="footer-link">Twitter</a>
-                        <a href="#" class="footer-link">API Terms</a>
-                    </li>
+            <div class="span2">
+                <h5>About</h5>
+                <ul class="unstyled">
+                    <li><a href="${request.fwd_url("website_content_about")}" class="footer-link">Who is Larry</a></li>
+                    <li><a href="#" class="footer-link">What you get</a></li>
+                    <li><a href="#" class="footer-link">Our data sources</a></li>
+                    <li><a href="#" class="footer-link">Our collector ranking</a></li>
+                    <li><a href="#" class="footer-link">Pricing</a></li>
+                </ul>
+            </div>
+            <div class="span2">
+                <h5>Services</h5>
+                <ul class="unstyled">
+                    <li><a href="#" class="footer-link">Newsletter</a></li>
+                    <li><a href="#" class="footer-link">Blog</a></li>
+                    <li><a href="#" class="footer-link">Analytics</a></li>
+                </ul>
+            </div>
+            <div class="span2">
+                <h5>Info</h5>
+                <ul class="unstyled">
+                    <li><a href="${request.fwd_url("website_content_faq")}" class="footer-link">FAQ</a></li>
+                    <a href="#" class="footer-link">Career</a>
+                    <li><a href="${request.fwd_url("website_content_privacy")}" class="footer-link">Privacy</a></li>
+                    <a href="#" class="footer-link">Impressum</a>
+                </ul>
+            </div>
+            <div class="span2">
+                <h5>Corporate</h5>
+                <ul class="unstyled">
+                    <li><a href="${request.fwd_url("website_content_press")}" class="footer-link">Press</a></li>
+                    <li><a href="${request.fwd_url("website_content_contact")}" class="footer-link">Contact</a></li>
+                    <li><a href="${request.fwd_url("website_content_terms")}" class="footer-link">Terms & Conditions</a></li>
                 </ul>
             </div>
             <div class="span4">
@@ -52,6 +74,9 @@
 <%def name="menu(user)">
     ${self.searchField()}
     <ul class="nav pull-right">
+        <li class="nav-entry"><a class="nav-entry-link" href="#">Blog</a></li>
+        <li class="nav-entry"><a class="nav-entry-link" href="#">Analytics</a></li>
+
         <li class="nav-entry dropdown cart-dropdown-section">
             <a class="nav-entry-link" data-toggle="dropdown" href="${request.fwd_url("website_cart")}">
                 <span class="cart-total total">${len(vctxt.cart.getItems())}</span>

@@ -1,0 +1,13 @@
+<%inherit file="../layout.html"/>
+
+<%block name='extra_head'>
+    %if g.is_debug:
+        <link rel="stylesheet/less" href="${STATIC_URL}less/content.less">
+    %else:
+        <link rel="stylesheet" type="text/css" href="${STATIC_URL}css/content.min.css?${VERSION_TOKEN}">
+    %endif
+</%block>
+
+<%def name="content()">
+    ${next.content()}
+</%def>

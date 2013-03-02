@@ -13,6 +13,7 @@
     <meta itemprop="name" content="${g.project_name}">
     <meta itemprop="description" content="${g.project_name}">
 
+    <%block name='extra_head'></%block>
     %if g.is_debug:
             <script type="text/javascript">less = { env: 'development' };</script>
             <link rel="stylesheet/less" href="${STATIC_URL}less/site.less">
@@ -20,7 +21,6 @@
     %else:
             <link rel="stylesheet" type="text/css" href="${STATIC_URL}css/site.min.css?${VERSION_TOKEN}">
     %endif
-    <%block name='extra_head'></%block>
 </head>
 <body class="<%block name='body_class'>${request.root.app_label}</%block>">
     ${next.body()}

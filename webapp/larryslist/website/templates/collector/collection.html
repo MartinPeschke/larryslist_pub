@@ -1,13 +1,26 @@
 <%inherit file="layout.html"/>
 
 <%def name="cards(collector)">
-    ${self.basicCard(collector.Collection)}
-    ${self.artistsCard(collector.Collection)}
-    ${self.artworksCard(collector.Collection)}
-    ${self.exhibitionCard(vctxt.collectionMeta)}
-    ${self.directorCard(vctxt.collectionMeta)}
-    ${self.publicationCard(vctxt.collectionMeta)}
-    ${self.artAdvisorCard(vctxt.collectionMeta)}
+    %if collector.Collection:
+        ${self.basicCard(collector.Collection)}
+        ${self.artistsCard(collector.Collection)}
+        ${self.artworksCard(collector.Collection)}
+    %endif
+    %if vctxt.collectionMeta:
+        ${self.exhibitionCard(vctxt.collectionMeta)}
+        ${self.directorCard(vctxt.collectionMeta)}
+        ${self.publicationCard(vctxt.collectionMeta)}
+        ${self.artAdvisorCard(vctxt.collectionMeta)}
+    %endif
+    %if not (collector.Collection or vctxt.collectionMeta):
+        <%self:card title="No information available yet">
+        <div class="line">
+            <div class="value">
+                We are constantly updating our database, check back soon.
+            </div>
+        </div>
+        </%self:card>
+    %endif
 </%def>
 
 

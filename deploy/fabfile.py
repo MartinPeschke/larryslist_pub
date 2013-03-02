@@ -16,7 +16,7 @@ Style = namedtuple("Style", ["list", "hasBuster"])
 
 PROJECTNAME="larryslist"
 SUBSITES = [
-    SubSite(location = 'website', scripts=['setup.js'], styles=Style(['site.less'], True))
+    SubSite(location = 'website', scripts=['setup.js'], styles=Style(['site.less', "content.less"], True))
     , SubSite(location = 'admin', scripts=["setup.js"], styles=Style(['site.less'], True))
   ]
 PROCESS_GROUPS = ['p1']

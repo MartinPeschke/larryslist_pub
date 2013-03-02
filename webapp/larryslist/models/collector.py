@@ -271,7 +271,10 @@ class CollectorModel(SimpleCollectorModel):
     def isReviewed(self):
         return self.status == 'REVIEWED'
     def getGenreList(self):
-        return ', '.join([g.name for g in self.Collection.Genre])
+        if self.Collection:
+            return ', '.join([g.name for g in self.Collection.Genre])
+        else:
+            return ''
 
 
 

@@ -1,10 +1,21 @@
 <%inherit file="layout.html"/>
 
 <%def name="cards(collector)">
-    ${self.loanCard(vctxt.collectionMeta)}
-    ${self.cooperationCard(vctxt.collectionMeta)}
-    ${self.boardCard(vctxt.collectorMeta)}
-    ${self.societyCard(vctxt.collectorMeta)}
+    %if vctxt.collectionMeta:
+        ${self.loanCard(vctxt.collectionMeta)}
+        ${self.cooperationCard(vctxt.collectionMeta)}
+        ${self.boardCard(vctxt.collectorMeta)}
+        ${self.societyCard(vctxt.collectorMeta)}
+    %else:
+        <%self:card title="No information available yet">
+            <div class="line">
+                <div class="value">
+                    We are constantly updating our database, check back soon.
+                </div>
+            </div>
+        </%self:card>
+    %endif
+
 </%def>
 
 <%def name="loanCard(collection)">

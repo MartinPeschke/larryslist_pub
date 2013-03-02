@@ -69,7 +69,10 @@ class WebsiteCollectorContext(WebsiteAuthedContext):
 
     @reify
     def collectionMeta(self):
-        result = CollectionMetaModel.wrap(GetCollectionMetaProc(self.request, str(self.collector.Collection.id)))
+        if self.collector.Collection:
+            result = CollectionMetaModel.wrap(GetCollectionMetaProc(self.request, str(self.collector.Collection.id)))
+        else:
+            result = None
         return result
 
     @reify
