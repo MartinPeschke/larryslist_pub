@@ -1,4 +1,4 @@
-define(["tools/ajax", "libs/abstractsearch", "tools/config"], function(ajax, AbstractSearch, config){
+define(["tools/ajax", "tools/abstractsearch", "tools/config"], function(ajax, AbstractSearch, config){
     var
     ConfigSearch = AbstractSearch.extend({
         doSearch : function(query){

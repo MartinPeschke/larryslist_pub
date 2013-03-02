@@ -1,4 +1,4 @@
-define(["tools/ajax", "libs/abstractsearch", "libs/tagsearch"], function(ajax, AbstractSearch, tsv){
+define(["tools/ajax", "tools/abstractsearch", "libs/tagsearch"], function(ajax, AbstractSearch, tsv){
     var
     getRec = hnc.getRecursive
     , PlainResult = ajax.Model.extend({

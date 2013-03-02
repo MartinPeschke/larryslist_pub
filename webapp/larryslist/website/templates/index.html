@@ -30,8 +30,8 @@
                     <label class="control-label">
                         What city is the Collector based in?
                     </label>
-                    <div class="controls">
-                        <input type="text" name="l" class="input-xlarge"/>
+                    <div class="controls typeahead" data-api-url="/web/search/addressTypeAhead" data-api-result="TypeAhead">
+                        <div class="search-field"><input type="text" name="l" class="input-xlarge query"/></div>
                     </div>
                 </div>
             </div>
@@ -40,8 +40,8 @@
                     <label class="control-label">
                         What type of art is (s)he collecting?
                     </label>
-                    <div class="controls">
-                        <input type="text" name="t" class="input-xlarge"/><button type="submit" class="btn btn-primary"><span data-icon="s" aria-hidden="true"></span> Search</button>
+                    <div class="controls typeahead" data-api-url="/web/search/genreTypeAhead" data-api-result="TypeAhead">
+                        <div class="search-field"><input type="text" name="t" class="input-xlarge query"/></div><button type="submit" class="btn btn-primary"><span data-icon="s" aria-hidden="true"></span> Search</button>
                     </div>
                 </div>
             </div>
@@ -60,5 +60,14 @@
         </div>
     </div>
 </div>
-
 </%def>
+
+<%block name="scripts">
+    <script>
+        require(["views/typoahead"], function(View){
+            $(".typeahead").each(function(idx, elem){
+                new View(_.extend({el:elem}, $(elem).data()));
+            });
+        })
+    </script>
+</%block>
