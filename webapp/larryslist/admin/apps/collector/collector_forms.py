@@ -1,8 +1,9 @@
 from operator import itemgetter
 from jsonclient.backend import DBException
 from larryslist.admin.apps.collector.collector_forms_fields import collectorCreateFields, collectorContactsFields, collectorBusinessFields, collectionAddCollectorForm, collectorUploadFields, collectorArtAdvisoryFields, collectorOtherFactsFields, collectorRankingFields, collectorArtFairFields
-from larryslist.admin.apps.collector.models import CreateCollectorProc, EditCollectorBaseProc, EditCollectorContactsProc, EditCollectorBusinessProc, SaveCollectorDocumentsProc, SaveCollectorOtherFactsProc, GetCollectorMetaProc, SetCollectorMetaProc
+from larryslist.admin.apps.collector.models import CreateCollectorProc, EditCollectorBaseProc, EditCollectorContactsProc, EditCollectorBusinessProc, SaveCollectorDocumentsProc, SaveCollectorOtherFactsProc, SetCollectorMetaProc
 from larryslist.admin.apps.collector.sources_form import BaseAdminForm
+from larryslist.models.collector import GetCollectorMetaProc
 
 
 def collectorData(cls, view):

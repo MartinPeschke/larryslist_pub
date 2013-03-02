@@ -16,7 +16,7 @@ define(["tools/messaging", "tools/ajax", "text!ajax/templates/artwork_modal.html
             , success: success
             , error: function(msg, resp, data){
                 if(msg=='ALREADY_ASSIGNED'){
-                    $el.validate().showErrors({'Artist-0\\.Artwork-0\\.title':'Already exists in another collection!'})
+                    $el.validate().showErrors({'Artwork\\.title':'Already exists in another collection!'})
                     $el.find(".btn-primary").hide();
                     $el.find(".btn-danger").fadeIn();
                 } else {

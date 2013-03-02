@@ -114,7 +114,13 @@ define(['tools/messaging', "tools/hash"], function(messaging, hashlib){
                       , success: function(resp, status, xhr, data){
                           if(resp.success === false && resp.errors) {
                               var formId = $form.find("[name=type]").val();
-                              for(var k in resp.errors) if(/--repetitions$/.test(k))delete resp.errors[k];
+                              for(var k in resp.errors){
+                                  if(/--repetitions$/.test(k))delete resp.errors[k];
+                                  else { // formencode sends null errors into the list, needs stripping for jquery validate
+                                    if(_.isEmpty(resp.errors[k]))delete resp.errors[k];
+                                  }
+                              }
+
                               validator.showErrors(resp.errors);
                               for(var attr in resp.values){
                                   $form.find("#"+formId+"\\."+attr).val(resp.values[attr]);

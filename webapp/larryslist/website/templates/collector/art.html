@@ -1,0 +1,75 @@
+<%inherit file="layout.html"/>
+
+<%def name="cards(collector)">
+    ${self.loanCard(vctxt.collectionMeta)}
+    ${self.cooperationCard(vctxt.collectionMeta)}
+    ${self.boardCard(vctxt.collectorMeta)}
+    ${self.societyCard(vctxt.collectorMeta)}
+</%def>
+
+<%def name="loanCard(collection)">
+    %if len(collection.Loan):
+    <%self:card title="Permanent Loans and Donations of Artworks">
+            %for loan in collection.Loan:
+                <div class="single-museum">
+                <%self:addressCol obj="${loan}">
+                    ${self.simpleLine("Organization", loan.institution)}
+                    ${self.simpleLine("Year", loan.year)}
+                    ${self.simpleLine("What", loan.name)}
+                    ${self.simpleLine("Comment", loan.comment)}
+                </%self:addressCol>
+                </div>
+            %endfor
+    </%self:card>
+    %endif
+</%def>
+
+<%def name="cooperationCard(collection)">
+    %if len(collection.Cooperation):
+    <%self:card title="Cooperations with External Institutions">
+            %for loan in collection.Cooperation:
+                <div class="single-museum">
+                <%self:addressCol obj="${loan}">
+                    ${self.simpleLine("Organization", loan.institution)}
+                    ${self.simpleLine("Year", loan.year)}
+                    ${self.simpleLine("Type of Cooperation", loan.type)}
+                    ${self.simpleLine("Comment", loan.comment)}
+                </%self:addressCol>
+                </div>
+            %endfor
+    </%self:card>
+    %endif
+</%def>
+
+<%def name="boardCard(collector)">
+    %if len(collector.Museum):
+    <%self:card title="Museum Board, Advisory and Committee Positions">
+            %for loan in collector.Museum:
+                <div class="single-museum">
+                <%self:addressCol obj="${loan}">
+                    ${self.simpleLine("Name of Institution", loan.museum)}
+                    ${self.simpleLine("Name of Institution", loan.other_name)}
+                    ${self.simpleLine("Year", loan.year)}
+                    ${self.simpleLine("Position", loan.position)}
+                </%self:addressCol>
+                </div>
+            %endfor
+    </%self:card>
+    %endif
+</%def>
+
+<%def name="societyCard(collector)">
+    %if len(collector.SocietyMember):
+    <%self:card title="Museum Friends' Circle and Art Societies Memberships">
+            %for loan in collector.SocietyMember:
+                <div class="single-museum">
+                <%self:addressCol obj="${loan}">
+                    ${self.simpleLine("Name of Institution", loan.societyName)}
+                    ${self.simpleLine("Year", loan.year)}
+                    ${self.simpleLine("Position", loan.position)}
+                </%self:addressCol>
+                </div>
+            %endfor
+    </%self:card>
+    %endif
+</%def>

@@ -1,8 +1,9 @@
 from jsonclient.backend import DBException
 from larryslist.admin.apps.collector.collections_forms_fields import baseCollectionFields, collectionEditFields, collectionArtistsFields, collectionWebsiteFields, collectionUploadFields, collectionMuseumFields, collectionCooperationFields, collectionArtAdvisorFields
-from larryslist.admin.apps.collector.models import CreateCollectionProc, EditCollectionBaseProc, EditCollectionArtistsProc, EditCollectionPublicationsProc, SaveCollectionDocumentsProc, GetCollectionMetaProc, SetCollectionMetaProc
+from larryslist.admin.apps.collector.models import CreateCollectionProc, EditCollectionBaseProc, EditCollectionArtistsProc, SaveCollectionDocumentsProc, SetCollectionMetaProc
 from larryslist.admin.apps.collector.sources_form import BaseAdminForm
 from larryslist.lib.formlib.formfields import BaseForm, StringField, REQUIRED, ConfigChoiceField
+from larryslist.models.collector import GetCollectionMetaProc
 
 __author__ = 'Martin'
 

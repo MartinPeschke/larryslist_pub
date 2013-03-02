@@ -1,0 +1,165 @@
+<%inherit file="../layout.html"/>
+
+<%def name="content()">
+    <div class="container">
+        <div class="row">
+            <div class="span12">
+            ${self.collectorCard(vctxt.collector)}
+
+            <ul class="nav nav-tabs collector-tabs">
+                ${self.tabLink("Personal", "website_collector_personal")}
+                ${self.tabLink("Collection", "website_collector_collection")}
+                ${self.tabLink("Art Engagement", "website_collector_art")}
+                ${self.tabLink("Newsfeed", "website_collector_news")}
+            </ul>
+
+            ${self.cards(vctxt.collector)}
+            </div>
+        </div>
+    </div>
+</%def>
+
+<%def name="tabLink(label, route)">
+    <li class="nav-entry ${'active' if request.matched_route.name == route else ''}"><a href="${request.fwd_url(route, **request.matchdict)}" class="nav-entry-link">${label}</a></li>
+</%def>
+
+<%def name="collectorCard(collector)">
+    <div class="standard-frame collector-card">
+        <div class="collector-picture-big"><img class="picture" src="${request.getStaticUrl(collector.picture)}"/></div>
+        <div class="collector-details">
+            <div class="pull-right collector-stats">
+                <div class="search-column rank">
+                    <b class="value">${collector.getRank()}</b>
+                    <small class="caption">Rank</small>
+                </div>
+                <div class="search-column subscribers">
+                    <b class="value">${collector.getSubscribers()}</b>
+                    <small class="caption">Followers</small>
+                </div>
+                <div class="search-column completion">
+                    <b class="value">${collector.getCompletion()}</b>
+                    <div>
+                        <small class="last-updated caption">Last updated: ${collector.getUpdated()}</small>
+                        <small class="caption">Completion</small>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="highlight name">${collector.getName()}</h3>
+            %if collector.origName:
+                    <h3 class="highlight name">${collector.origName}</h3>
+            %endif
+            <div class="address">
+            ${collector.getAddress()}
+            </div>
+
+            <div class="genre-list">
+                <small class="heading">category, genre or stylistic period:</small>
+                <div class="text">${collector.getGenreList()}</div>
+            </div>
+
+            %if collector.LinkedCollector:
+                    <div class="collector-partner">
+                        <small class="heading">Partner:</small>
+                        <div class="text">${collector.LinkedCollector.getName()}</div>
+                    </div>
+            %endif
+        </div>
+
+    </div>
+</%def>
+
+
+
+
+
+<%def name="card(title)">
+    <div class="collector-details-card address-card">
+        <h5 class="card-title">${title}</h5>
+        <div class="card-content">
+        ${caller.body()}
+        </div>
+    </div>
+</%def>
+
+
+<%def name="value(v, pref = None)">
+    %if v:
+        <div>${'{}: '.format(pref) if pref else ''}${v|n}</div>
+    %endif
+</%def>
+
+
+
+<%def name="simpleLine(label, value)">
+    %if value:
+        <div class="line">
+            <small class="heading key">
+                ${label}:
+            </small>
+            <div class="value">
+                ${value}
+            </div>
+        </div>
+    %endif
+</%def>
+
+<%def name="simpleLink(label, value)">
+    %if value:
+        <div class="line">
+            <small class="heading key">
+            ${label}:
+            </small>
+            <div class="value">
+            <a href="${value}">${value}</a>
+            </div>
+        </div>
+    %endif
+</%def>
+
+
+<%def name="line(label, value = None)">
+    <div class="line">
+        <small class="heading key">
+        ${label}:
+        </small>
+        <div class="value">
+        ${value or caller.body()}
+        </div>
+    </div>
+</%def>
+
+
+<%def name="multiLine(collector, label, key, classes='')">
+    <% val = getattr(collector, key, []) %>
+    %if len(val):
+        <%self:line label="${label}">
+            <ul class="${classes} unstyled">
+                    %for i in val:
+                        <li>${i.getLabel(request)}</li>
+                    %endfor
+            </ul>
+        </%self:line>
+    %endif
+</%def>
+
+<%def name="addressCol(obj)">
+    <div class="first-col-value">
+        ${caller.body()}
+    </div>
+
+    <div class="address-value">
+        <div class="line">
+            <small class="heading key">
+                Location:
+            </small>
+            <div class="value">
+                <div>${obj.getLines(request)|n}</div>
+                <div>${obj.getCityPostCode(request)|n}</div>
+                <div>${obj.getRegion(request)|n}</div>
+                <div>${obj.getCountry(request)|n}</div>
+            </div>
+        </div>
+        ${self.simpleLink("Website", obj.website)}
+    </div>
+</%def>

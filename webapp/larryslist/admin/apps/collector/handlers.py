@@ -1,3 +1,4 @@
+from jsonclient.backend import DBMessage
 from jsonclient.cached import refreshAllCacheds
 from larryslist.admin.apps.collector.collections_forms import CollectionCreateForm, CollectionEditForm, CollectionArtistsForm, CollectionWebsiteForm, CollectionUploadForm, CollectionMuseumForm, CollectionCooperationForm, CollectionArtAdvisorForm, ArtworkForm
 from larryslist.admin.apps.collector.collector_forms import CollectorContactsForm, CollectorBusinessForm, CollectorEditForm, CollectorCreateForm, CollectionAddCollectorForm, CollectorUploadForm, CollectorArtAdvisoryForm, CollectorOtherFactsForm, CollectorRankingForm, CollectorArtFairForm
@@ -42,7 +43,10 @@ def save_artwork_handler(context, request):
     artwork = data.pop("Artwork")
     artist['Artwork'] = [artwork]
     data['Artist'] = [artist]
-    result = SaveArtworkProc(request, data)
+    try:
+        result = SaveArtworkProc(request, data)
+    except DBMessage, e:
+        return {'dbMessage': e.message}
     return {'html': render("larryslist:admin/templates/collector/artwork.html", {'artwork':artwork}, request)}
 
 class BaseArtHandler(FormHandler):

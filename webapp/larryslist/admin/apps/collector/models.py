@@ -1,5 +1,5 @@
-from larryslist.models.collector import CollectorModel, CollectionModel
-from larryslist.models import ClientTokenProc, MetaDataProc
+from larryslist.models.collector import CollectorModel, CollectionModel, MetaDataProc
+from larryslist.models import ClientTokenProc
 
 
 __author__ = 'Martin'
@@ -22,10 +22,7 @@ SaveCollectorOtherFactsProc = ClientTokenProc("/admin/collector/fact", root_key 
 
 
 
-GetCollectorMetaProc = MetaDataProc("/admin/collector/meta")
 SetCollectorMetaProc = MetaDataProc("/admin/collector/metaset")
-
-GetCollectionMetaProc = MetaDataProc("/admin/collection/meta")
 SetCollectionMetaProc = MetaDataProc("/admin/collection/metaset")
 
 

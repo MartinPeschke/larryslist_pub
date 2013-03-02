@@ -65,7 +65,7 @@ collectionUploadFields = [
 
 class MuseumForm(MultipleFormField):
     fields = [
-        StringField("Permanent museum/space name", "If yes, name", label_classes = 'double')
+        StringField("permanentSpace", "If yes, name")
         , StringField("year", "Founded in year")
         , StringField("url", "Website")
         , PlainHeadingField("Location", tag="h5", classes="controls")

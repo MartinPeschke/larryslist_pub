@@ -1,5 +1,6 @@
 from datetime import datetime
 from jsonclient import Mapping, TextField, DictField, ListField, IntegerField
+from pyramid.decorator import reify
 
 __author__ = 'Martin'
 
@@ -29,6 +30,8 @@ class SocNetModel(NamedModel): pass
 class MediumModel(NamedModel): pass
 class MaterialModel(NamedModel): pass
 class GenreModel(NamedModel): pass
+class ThemeModel(NamedModel): pass
+class OriginModel(NamedModel): pass
 class RankingModel(NamedModel): pass
 class PublisherModel(NamedModel): pass
 class SourceTypeModel(NamedModel): pass
@@ -43,6 +46,11 @@ class GenderModel(Mapping):
 
 
 class TopMuseumModel(NamedModel):
+    city = TextField()
+    country = TextField()
+    postCode = TextField()
+    line1 = TextField()
+    line2 = TextField()
     city = TextField()
     def getLabel(self, request):return u"{0.name} ({0.city})".format(self)
     def getKey(self, request):return self.name
@@ -112,6 +120,10 @@ class ConfigModel(Mapping):
     ExpiryMonth = MONTHS
     ExpiryYear = EXPIRY_YEARS
     CardType = CARD_TYPES
+
+    @reify
+    def topMuseumMap(self):
+        return {m.name:m for m in self.TopMuseum}
 
     @classmethod
     def wrap(cls, data):

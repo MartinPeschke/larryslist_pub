@@ -1,6 +1,6 @@
 from operator import itemgetter
 from jsonclient.backend import DBException
-from larryslist.admin.apps.collector.models import SetSourcesProc, GetCollectorMetaProc, SetCollectorMetaProc, SetCollectionMetaProc, GetCollectionMetaProc
+from larryslist.admin.apps.collector.models import SetSourcesProc
 from larryslist.lib.formlib.formfields import BaseForm, ConfigChoiceField, StringField, MultipleFormField, Placeholder, DependentAttrs
 
 

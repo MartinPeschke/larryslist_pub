@@ -145,6 +145,7 @@ class SocietyMemberForm(MultipleFormField):
         StringField("societyName", "Name of society")
         , URLField("website", "Website")
         , ConfigTypeAheadField("position", "Position", "EngagementPosition")
+        , StringField("year", "Year")
         , PlainHeadingField("Location", tag="h5", classes="controls")
         , TokenTypeAheadField('Country', 'Country', '/admin/search/address', 'AddressSearchResult', None)
         , TokenTypeAheadField('Region', 'Region', '/admin/search/address', 'AddressSearchResult', 'Country')

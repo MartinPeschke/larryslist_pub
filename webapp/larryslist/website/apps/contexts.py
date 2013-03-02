@@ -1,4 +1,5 @@
 from jsonclient.cached import CachedLoader
+from larryslist.models.collector import GetCollectionMetaProc, CollectionMetaModel, CollectorMetaModel, GetCollectorMetaProc
 from larryslist.website.apps.auth.forms import LoginForm
 from larryslist.website.apps.models import getUserFromSession, WebsiteCart, WebsiteConfigModel, GetCollectorProc
 from larryslist.lib.baseviews import RootContext
@@ -53,7 +54,7 @@ class WebsiteRootContext(RootContext):
 class WebsiteAuthedContext(WebsiteRootContext):
     def is_allowed(self, request):
         if self.user.isAnon():
-            request.fwd("website_checkout_signup")
+            request.fwd("website_checkout_join")
         else:
             return True
 
@@ -65,6 +66,16 @@ class WebsiteCollectorContext(WebsiteAuthedContext):
         if not col: return None
         else:
             return GetCollectorProc(self.request, {'id': id, 'userToken': self.user.token})
+
+    @reify
+    def collectionMeta(self):
+        result = CollectionMetaModel.wrap(GetCollectionMetaProc(self.request, str(self.collector.Collection.id)))
+        return result
+
+    @reify
+    def collectorMeta(self):
+        result = CollectorMetaModel.wrap(GetCollectorMetaProc(self.request, str(self.collector.id)))
+        return result
 
     def is_allowed(self, request):
         if self.user.isAnon():

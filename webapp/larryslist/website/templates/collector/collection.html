@@ -1,0 +1,126 @@
+<%inherit file="layout.html"/>
+
+<%def name="cards(collector)">
+    ${self.basicCard(collector.Collection)}
+    ${self.artistsCard(collector.Collection)}
+    ${self.artworksCard(collector.Collection)}
+    ${self.exhibitionCard(vctxt.collectionMeta)}
+    ${self.directorCard(vctxt.collectionMeta)}
+    ${self.publicationCard(vctxt.collectionMeta)}
+    ${self.artAdvisorCard(vctxt.collectionMeta)}
+</%def>
+
+
+
+<%def name="basicCard(collection)">
+    <%self:card title="Basic Information">
+        ${self.simpleLine('name', collection.name)}
+        ${self.simpleLine('Collection is Foundation', collection.foundation)}
+        ${self.simpleLink('Website', collection.url)}
+        ${self.simpleLine('Started collecting in year', collection.year)}
+        ${self.simpleLine('Number of Artworks', collection.getNoArtworks())}
+        ${self.simpleLine('Number of Artists', collection.getNoArtists())}
+        ${self.multiLine(collection, "Themes of Collection", "Theme")}
+        ${self.multiLine(collection, "Category, genre or styistic period represented in collection", "Genre")}
+        ${self.multiLine(collection, "Regional origin of artists in collection", "Origin")}
+        ${self.multiLine(collection, "medium of artworks represented in collection", "Medium")}
+    </%self:card>
+</%def>
+
+<%def name="artistsCard(collection)">
+    %if collection.hasArtists():
+        <%self:card title="Artists in Collection">
+            ${self.multiLine(collection, "Artists", "Artist", 'multi-column')}
+        </%self:card>
+    %endif
+</%def>
+
+<%def name="artworksCard(collection)">
+    %if collection.hasArtworks():
+        <%self:card title="Artworks in Collection">
+            <%self:line label="Artworks">
+                <ul class="multi-column unstyled">
+                    %for artist in collection.Artist:
+                        %for artwork in artist.ArtWork:
+                            <li class="single-artwork">
+                                <div>${artist.getLabel(request)}</div>
+                                ${self.value(artwork.title)}
+                                ${self.value(artwork.year)}
+                                ${self.value(artwork.medium)}
+                                %if artwork.size:
+                                    <div>${artwork.size}</div>
+                                %endif
+                                ${self.value(artwork.material)}
+                            </li>
+                        %endfor
+                    %endfor
+                </ul>
+            </%self:line>
+        </%self:card>
+    %endif
+</%def>
+
+<%def name="exhibitionCard(collection)">
+    %if len(collection.Museum):
+    <%self:card title="Exhibition Space / Museum of Collector">
+            %for museum in collection.Museum:
+                <div class="single-museum">
+                <%self:addressCol obj="${museum}">
+                    ${self.simpleLine("Name", museum.permanentSpace)}
+                    ${self.simpleLine("Founded in", museum.year)}
+                    ${self.simpleLine("Telephone", museum.telephone)}
+                    ${self.simpleLink("Website", museum.url)}
+                </%self:addressCol>
+                </div>
+            %endfor
+    </%self:card>
+    %endif
+</%def>
+
+<%def name="directorCard(collection)">
+    %if len(collection.Director):
+    <%self:card title="Curator of Collection">
+            %for director in collection.Director:
+                <div class="single-museum">
+                    ${self.simpleLine("Position", director.position)}
+                    ${self.simpleLine("Name", director.getLabel(request))}
+                    ${self.simpleLine("Name in Original Language", director.origName)}
+                    ${self.simpleLine("Email", director.email)}
+                    ${self.simpleLink("Facebook", director.facebook)}
+                    ${self.simpleLink("Linked in", director.linkedin)}
+                </div>
+            %endfor
+    </%self:card>
+    %endif
+</%def>
+
+<%def name="publicationCard(collection)">
+    %if len(collection.Publication):
+    <%self:card title="Publications">
+            %for pub in collection.Publication:
+                <div class="multi-column-line">
+                    ${self.simpleLine("Publication", pub.title)}
+                    ${self.simpleLine("Publisher", pub.publisher)}
+                    ${self.simpleLine("Year", pub.year)}
+                </div>
+            %endfor
+    </%self:card>
+    %endif
+</%def>
+
+<%def name="artAdvisorCard(collection)">
+    %if len(collection.ArtAdvisor):
+        <%self:card title="Art advisor">
+            %for aa in collection.ArtAdvisor:
+                <div class="single-museum">
+                    ${self.simpleLine("Name", aa.getLabel(request))}
+                    ${self.simpleLine("Name in Original Language", aa.origName)}
+                    ${self.simpleLine("Company", aa.company)}
+                    ${self.simpleLine("Email", aa.email)}
+                    ${self.simpleLink("Facebook", aa.facebook)}
+                    ${self.simpleLink("Linked in", aa.linkedin)}
+                </div>
+            %endfor
+        </%self:card>
+    %endif
+</%def>
