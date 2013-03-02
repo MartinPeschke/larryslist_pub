@@ -206,7 +206,7 @@ define(
         }
         , addResult: function(result){
             var t = this.$results.children(".sortable").eq(this.results.indexOf(result))
-                , v = colItem.getView(result, null, this.realm.ownedProfile);
+                , v = colItem.getView(result, null);
             if(t.length){
                 t.before(v.$el);
             } else {
@@ -215,6 +215,7 @@ define(
         }
         , updatedResults: function(){
             this.$results.find(".empty")[this.results.length?"addClass":"removeClass"]("hide");
+            this.checkAllSelected();
         }
         , switchRealm: function(e){
             this.setRealm($(e.target));
@@ -249,7 +250,7 @@ define(
                     , data: query
                     , success: function(resp, status, xhr){
                         var results = hnc.getRecursive(resp, "Collectors.Collector", []);
-                        view.results.addOrUpdate(results, {'preserve':false});
+                        view.results.addOrUpdate(cart.parseResults(results), {'preserve':false});
                         view.$(".result-count").html(results.length);
 
                         var filters = hnc.getRecursive(resp, "Filters", []);
@@ -282,9 +283,18 @@ define(
             } else {
                 $t.find(".text").text($t.data("backupText"));
             }
-            this.results.each(function(model){
-                model.set("selected", selected);
-            })
+            cart[selected?'addProfiles':'removeProfiles'](this.results);
+        }
+        , checkAllSelected: function(){
+            var results = this.$results.find(".search-results-row"), $t = this.$(".search-select-all-link"), selected = results.length == results.filter(".selected").length;
+            if(selected){
+                $t.addClass("selected");
+                $t.data("backupText", $t.find(".text").text());
+                $t.find(".text").html($t.data("toggleText"));
+            } else {
+                $t.removeClass("selected");
+                $t.find(".text").text($t.data("backupText"));
+            }
         }
         , render: function(){
             this.doSearch(true);

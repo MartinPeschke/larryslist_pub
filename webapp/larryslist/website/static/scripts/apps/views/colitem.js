@@ -45,25 +45,6 @@ define(
             , toggleInCart: function(){
                 cart[cart.contains(this.model)?'removeProfile':'addProfile'](this.model);
             }
-            , destroy: function(){
-                this.model.destroy();
-            }
-        })
-
-        , OwnedResultView = Backbone.View.extend({
-            initialize: function(opts){
-                this.setElement(opts.template({model: this.model, inCart:opts.inCart, owned: opts.owned}));
-                this.listenTo(this.model, "destroy", this.remove);
-
-                var owned = this.$el.removeClass("selectable").addClass("owned");
-                this.model.set("owned", owned);
-                cart.removeProfile(this.model);
-                this.$(".btn").replaceWith('<div class="label">Already subscribed</span>')
-                this.$(".marked-checkbox").remove();
-            }
-            , destroy: function(){
-                this.model.destroy();
-            }
         })
 
         , FullResultView = Backbone.View.extend({
@@ -106,16 +87,16 @@ define(
             }
         })
 
-        , getView = function(collector, templ, respectOwned){
+        , getView = function(collector, templ){
             var cls, v;
-            if(respectOwned && user.ownsProfile(collector)){
+            if(user.ownsProfile(collector)){
                 templ = templ || resultTemplFull;
                 cls = FullResultView;
             } else {
                 templ = templ || resultTempl;
-                cls = user.ownsProfile(collector)?OwnedResultView:ResultView;
+                cls = ResultView;
             }
-            v = new cls({model: cart.getProfile(collector), inCart: cart.contains(collector), template:templ})
+            v = new cls({model: collector, inCart: cart.contains(collector), template:templ})
             return v;
         };
     return {SearchResults:SearchResults, ResultView:ResultView, CartFlyout:CartFlyout, getView: getView};

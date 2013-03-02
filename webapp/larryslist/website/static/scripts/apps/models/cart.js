@@ -25,12 +25,36 @@ define(["tools/ajax", "models/collector"], function(ajax, Collector){
                 collector.trigger("cart:added");
             }
         }
+        , addProfiles: function(collectors){
+            this.stopListening(this, 'Collectors:add', this.persist);
+            this.stopListening(this, 'Collectors:remove', this.persist);
+            collectors.each(this.addProfile, this);
+            this.listenTo(this, 'Collectors:add', this.persist);
+            this.listenTo(this, 'Collectors:remove', this.persist);
+            this.persist();
+        }
         , removeProfile: function(collector){
-            collector.trigger("cart:removed");
             this.get("Collectors").remove(collector.id);
+            collector.trigger("cart:removed");
+        }
+        , removeProfiles: function(collectors){
+            this.stopListening(this, 'Collectors:add', this.persist);
+            this.stopListening(this, 'Collectors:remove', this.persist);
+            collectors.each(this.removeProfile, this);
+            this.listenTo(this, 'Collectors:add', this.persist);
+            this.listenTo(this, 'Collectors:remove', this.persist);
+            this.persist();
         }
         , getProfile: function(collector){
             return this.get("Collectors").get(collector.id) || collector;
+        }
+        , parseResults: function(objs){
+            var cart = this.get("Collectors")
+            if(!cart.length)return objs;
+            _.map(objs, function(obj){
+                return cart.get(obj.id)?cart.get(obj.id):obj
+            });
+            return objs;
         }
         , contains: function(collector){
             return !_.isEmpty(this.get("Collectors").get(collector.id))

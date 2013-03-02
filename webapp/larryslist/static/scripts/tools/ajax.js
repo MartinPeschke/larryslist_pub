@@ -297,6 +297,8 @@ define(['tools/messaging', "tools/hash"], function(messaging, hashlib){
                   tmpModel = this.get(id);
                   if(tmpModel){
                       tmpModel.setRecursive(tmp, options);
+                  } else if (tmp instanceof ajax.Model) {
+                      this.add(tmp, options);
                   } else {
                       tmpModel = new this.model();
                       tmpModel.setRecursive(tmp, options);

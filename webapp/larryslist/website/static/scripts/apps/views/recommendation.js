@@ -50,7 +50,7 @@ define(["tools/ajax", "models/cart", "models/user", "models/collector"
                 , data: {'userToken': user.get("token")}
                 , success: function(resp, status, xhr){
                     var results = hnc.getRecursive(resp, "Collectors.Collector", []);
-                    view.results.addOrUpdate(results, {'preserve':false});
+                    view.results.addOrUpdate(cart.parseResults(results), {'preserve':false});
                 }
                 , complete: function(){
                     view.$results.removeClass("loading");
