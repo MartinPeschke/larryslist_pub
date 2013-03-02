@@ -7,8 +7,8 @@
 .collection-filters + .collection-filters {border-top: 1px solid #ddd;}
 
 .search-realm {
-  margin-left:15px;
-  > label.radio{display: inline-block; vertical-align: top;}
+  margin: 15px 0 0;
+  > label.radio{display: inline-block; vertical-align: top;white-space: nowrap;margin-left: 22px;}
 }
 .filter-section {
   h5 {
@@ -117,6 +117,7 @@
   display: block;
   .link-style;
   &:hover {text-decoration:  none;}
+  &.hide {display: none;}
   .marked-checkbox {margin-top: -2px;}
   .text {display: inline-block;vertical-align: top;}
 }
@@ -210,7 +211,6 @@
   }
 }
 
-
 /* ===================================== MINI ========================== */
 .search-results-container.mini{
   .search-results-header{
@@ -228,22 +228,25 @@
     margin-left:40%;
     width:60%;
   }
+  + .search-results-row {
+    border-top: 1px solid #eee;
+  }
+}
+
+.collector-stats {
   .search-column {
     &.completion, &.subscribers, &.rank {
       width: auto;
       float:None;
       display: block;
       text-align: right;
-      small {display: block;text-transform: uppercase;font-size: .7em;}
-      small, b{line-height:1em;font-weight:bold;}
+      .caption {display: block;text-transform: uppercase;font-size: .7em;}
+      .caption, .value{line-height:1em;font-weight:bold;}
     }
     &.details {
       margin-left:0;
       margin-right:0;
       float:left;
     }
-  }
-  + .search-results-row {
-    border-top: 1px solid #eee;
   }
 }

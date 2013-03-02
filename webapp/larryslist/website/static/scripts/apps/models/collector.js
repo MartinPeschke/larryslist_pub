@@ -13,6 +13,9 @@ define(["tools/ajax"], function(ajax){
         , getName: function(){
             return this.get("initials");
         }
+        , getFullName: function(){
+            return this.get("firstName") +' '+ this.get("lastName");
+        }
         , getAddress: function(){
             var a = this.get("Address");
             if(_.isEmpty(a))

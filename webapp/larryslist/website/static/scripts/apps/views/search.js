@@ -4,7 +4,7 @@ define(
             , "text!templates/tag.html"
             , "text!templates/filtersection.html"
             , "text!templates/filteroption.html"]
-    , function(ajax, cart, user, Collector, colItem, tagTempl, fsTempl, foTempl){
+    , function(ajax, cart, user, Collector, colItem, tagTempl, fsTempl, foTempl, srTempl, fsrTempl){
     var
     MODULE_KEY = 'SEARCH'
     , instance
@@ -82,9 +82,9 @@ define(
 
             this.register(filter);
         }
-        , getSearchQuery: function(resetFilters){
-            var model = this, term = this.get("term");
-            if(term.length > 2){
+        , getSearchQuery: function(resetFilters, allowEmpty){
+            var model = this, term = this.get("term")||'';
+            if(term.length > 2 || allowEmpty){
                 var filters = {};
                 if(!resetFilters){
                     _.each(this.FILTERS, function(f){
@@ -93,7 +93,7 @@ define(
                         if(l.length)filters[f.name] = l;
                     });
                 }
-                return {"term":term, "Filters": filters};
+                return {"term":term, "Filters": filters, userToken:user.get("token")};
             }
         }
         , reset: function(models){
@@ -184,14 +184,14 @@ define(
     , View = ajax.View.extend({
         events: {
             'change .select-sort-by': "reSort"
-            , "click .dismiss": "emptyResults"
+            , "click .dismiss": "resetResults"
             , "click .search-select-all-link" :"selectAll"
-            , "change [name=myCollectors]":"issueSearch"
+            , "change [name=myCollectors]":"switchRealm"
         }
         , initialize: function(opts){
             this.$sorting = this.$(".search-results-sorting");
             this.$results = this.$(".search-results-body");
-            this.$realm = this.$(".search-realm").find("input[name=myCollectors]");
+            this.setRealm(this.$(".search-realm").find("input[name=myCollectors]").filter(":checked"));
 
             new colItem.CartFlyout({root: this.$results});
 
@@ -206,7 +206,7 @@ define(
         }
         , addResult: function(result){
             var t = this.$results.children(".sortable").eq(this.results.indexOf(result))
-                , v = colItem.getView(result);
+                , v = colItem.getView(result, null, this.realm.ownedProfile);
             if(t.length){
                 t.before(v.$el);
             } else {
@@ -216,8 +216,13 @@ define(
         , updatedResults: function(){
             this.$results.find(".empty")[this.results.length?"addClass":"removeClass"]("hide");
         }
-        , issueSearch: function(){
+        , switchRealm: function(e){
+            this.setRealm($(e.target));
             this.filterView.onSubmit(false);
+        }
+        , setRealm: function($el){
+            this.realm = $el.data();
+            this.$(".search-select-all-link")[this.realm.ownedProfile?'addClass':'removeClass']('hide');
         }
         , doFilter: function(){
             this.search(false);
@@ -226,14 +231,18 @@ define(
             this.search(true);
         }
         , emptyResults: function(){
-            this.results.addOrUpdate([], {'preserve':false});
             this.filter.reset(false);
+            this.results.addOrUpdate([], {'preserve':false});
             this.$(".result-count").html("0");
         }
+        , resetResults: function(){
+            this.filter.reset(false);
+            this.doSearch(true);
+        }
         , search: function(resetFilters){
-            var view = this, query = this.filter.getSearchQuery(resetFilters);
+            var view = this, query = this.filter.getSearchQuery(resetFilters, this.realm.allowEmptySearch);
             if(query){
-                var url = this.$realm.filter(":checked").data("url");
+                var url = this.realm.url;
                 this.$results.addClass("loading");
                 ajax.submitPrefixed({
                     url: url

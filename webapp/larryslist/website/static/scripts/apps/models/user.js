@@ -16,6 +16,9 @@ define(["tools/ajax"], function(ajax){
         , ownsProfile: function(collector){
             return !_.isEmpty(this.get("Collector").get(collector.id));
         }
+        , getCollectors: function(){
+            return this.get("Collector")
+        }
     })
     , user = new UserModel();
     user.setRecursive(hnc.options.user);

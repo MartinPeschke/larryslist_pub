@@ -1,5 +1,5 @@
 from jsonclient.routing import FunctionRoute, App, ClassRoute, JSON_FORM_ATTRS, JSON_HANDLER_ATTRS, route_factory
-from larryslist.website.apps import search, cart
+from larryslist.website.apps import search, cart, collector
 from pyramid.httpexceptions import HTTPFound
 
 from . import contexts, index, auth
@@ -25,6 +25,9 @@ ROUTE_LIST = [
     , FunctionRoute ("website_checkout_plan_select" , "/checkout/plan", contexts.WebsiteRootContext, cart.checkout_plan_select, "cart/plan_select.html")
     , ClassRoute    ("website_checkout_set_option"  , "/checkout/option", contexts.WebsiteRootContext, cart.PaymentOptionsHandler, None, view_attrs=JSON_FORM_ATTRS)
     , FunctionRoute ("website_discard_saved_details", "/checkout/discard", contexts.WebsiteRootContext, cart.discard_saved_details, None)
+
+
+    , FunctionRoute ("website_collector"            , "/collector/:collectorId/:name", contexts.WebsiteCollectorContext, collector.index, "collector/index.html")
 ]
 
 

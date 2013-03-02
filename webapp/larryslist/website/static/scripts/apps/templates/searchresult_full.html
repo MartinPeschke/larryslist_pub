@@ -1,0 +1,19 @@
+<li class="search-results-row sortable selectable">
+    <div class="search-result-item">
+        <div class="search-column picture">
+            <img class="collector-picture" src="{{ model.getPicture() }}" />
+        </div><div class="search-column completion">
+            <b>{{ model.get("completion") }}%</b>
+        </div><div class="search-column subscribers">
+            <b>{{ model.get("subscribers") }}</b>
+        </div><div class="search-column rank">
+            <b>{{ model.get("rank") }}</b>
+        </div><div class="search-column details">
+
+            <div class="name">{{ model.getFullName() }}</div>
+            <p class="location">{{ model.getAddress() }}</p>
+            <a class="btn btn-primary">View</a>
+        </div>
+        <span class="last-updated">Last updated: {{ model.getLastUpdated() }}</span>
+    </div>
+</li>

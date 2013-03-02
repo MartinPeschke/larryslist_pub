@@ -6,6 +6,9 @@ from larryslist.models.config import ConfigModel
 from pyramid.decorator import reify
 import simplejson
 
+from larryslist.models.collector import CollectorModel as FullCollectorModel
+from larryslist.models.collector import SimpleCollectorModel as CollectorModel
+
 
 class PaymentOptionModel(Mapping):
     PERIOD = 'year'
@@ -46,37 +49,6 @@ class WebsiteConfigModel(ConfigModel):
 
 
 
-class LocationModel(Mapping):
-    name = TextField()
-    token = TextField()
-
-class AddressModel(Mapping):
-    Country = DictField(LocationModel)
-    Region = DictField(LocationModel)
-    City = DictField(LocationModel)
-
-class CollectorModel(Mapping):
-    id = IntegerField()
-    status = TextField()
-    updated = DateTimeField()
-    initials = TextField()
-    picture = TextField()
-    rank = TextField()
-    subscribers = TextField()
-    completion = TextField()
-    Address = ListField(DictField(AddressModel))
-    def getName(self):
-        return self.initials
-    def getAddress(self):
-        if not len(self.Address): return ''
-        addr = self.Address[0]
-        if not addr.Region or not addr.Country: return ''
-        return u"{region}, {country}".format(region = addr.Region.name, country = addr.Country.name)
-    def getUpdated(self):
-        if self.updated:
-            return '{:0>2}/{}'.format(self.updated.month, self.updated.year)
-        else:
-            return ''
 
 
 class WebsiteCart(object):
@@ -130,7 +102,7 @@ class UserModel(Mapping):
     email = TextField()
     credit = IntegerField(default = 0)
     cardNumber = TextField()
-    Collector = ListField(DictField(CollectorModel))
+    Collector = ListField(DictField(FullCollectorModel))
 
     def isAnon(self):
         return self.token is None
@@ -148,6 +120,11 @@ class UserModel(Mapping):
     def getCreditWithPlan(self, plan):
         return self.credit + plan.credit
 
+    @reify
+    def collectorMap(self):
+        return {c.id: c for c in self.Collector}
+    def getCollector(self, id):
+        return self.collectorMap.get(int(id))
 
 SignupProc = LoggingInProc("/user/signup")
 LoginProc = LoggingInProc("/user/login")
@@ -161,3 +138,6 @@ RefreshUserProfileProc = LoggingInProc("/user/profile")
 
 PurchaseCreditProc = ClientTokenProc("/web/credit/buy", result_cls=PaymentStatusModel, root_key="PaymentStatus")
 SpendCreditProc = LoggingInProc("/web/credit/spend")
+
+
+GetCollectorProc = ClientTokenProc("/web/user/getcollector", result_cls=FullCollectorModel, root_key="Collector")

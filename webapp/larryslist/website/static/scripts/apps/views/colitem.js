@@ -1,11 +1,13 @@
 define(
     ["tools/ajax", "models/cart", "models/user", "models/collector"
         , "text!templates/searchresult.html"
+        , "text!templates/searchresult_full.html"
         , "text!templates/flyout.html"]
-    , function(ajax, cart, user, Collector, resultTempl, flyoutTempl){
+    , function(ajax, cart, user, Collector, resultTempl, fullResultTempl, flyoutTempl){
 
     var
         resultTempl = _.template(resultTempl)
+        , resultTemplFull = _.template(fullResultTempl)
         , SearchResults = ajax.Collection.extend({
             model: Collector
             , compField: "initials"
@@ -64,6 +66,20 @@ define(
             }
         })
 
+        , FullResultView = Backbone.View.extend({
+            events: {click:"gotoProfile"}
+            , initialize: function(opts){
+                this.setElement(opts.template({model: this.model, inCart:opts.inCart, owned: opts.owned}));
+                this.listenTo(this.model, "destroy", this.remove);
+            }
+            , destroy: function(){
+                this.model.destroy();
+            }
+            , gotoProfile: function(){
+                window.location.href="/collector/"+this.model.id+"/"+encodeURIComponent(this.model.getFullName());
+            }
+        })
+
         , CartFlyout = Backbone.View.extend({
             template: _.template(flyoutTempl)
             , tagName: "div"
@@ -90,10 +106,16 @@ define(
             }
         })
 
-        , getView = function(collector, templ){
-            templ = templ || resultTempl;
-            var cls = user.ownsProfile(collector)?OwnedResultView:ResultView
-                , v = new cls({model: cart.getProfile(collector), inCart: cart.contains(collector), template:templ});
+        , getView = function(collector, templ, respectOwned){
+            var cls, v;
+            if(respectOwned && user.ownsProfile(collector)){
+                templ = templ || resultTemplFull;
+                cls = FullResultView;
+            } else {
+                templ = templ || resultTempl;
+                cls = user.ownsProfile(collector)?OwnedResultView:ResultView;
+            }
+            v = new cls({model: cart.getProfile(collector), inCart: cart.contains(collector), template:templ})
             return v;
         };
     return {SearchResults:SearchResults, ResultView:ResultView, CartFlyout:CartFlyout, getView: getView};

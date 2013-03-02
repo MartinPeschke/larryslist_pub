@@ -1,24 +1,28 @@
 <%inherit file="../layout.html"/>
 <%def name="pageClass()">search-page-container</%def>
 
+
 <%def name="content()">
-    <div class="container page-body search-page">
-        <div class="row">
-            <div class="span12">
-                <div class="box-title tinted search-results-tags">
-                    <a href="#" class="pull-right dismiss">Reset</a>
-                </div>
+    ${self.searchBody(False)}
+</%def>
+<%def name="searchBody(mineSelected = False)">
+<div class="container page-body search-page">
+    <div class="row">
+        <div class="span12">
+            <div class="box-title tinted search-results-tags">
+                <a class="link-style pull-right dismiss">Reset</a>
             </div>
         </div>
-        <div class="row">
-            <div class="span3">
-            <div class="search-realm">
+    </div>
+    <div class="row">
+        <div class="span3">
+            <div class="search-realm ${'hide' if vctxt.user.isAnon() else ''}">
                 <label class="radio">
-                    <input type="radio" name="myCollectors" data-url="/web/search/mycollector">
-                    My Collectors
+                    <input type="radio" name="myCollectors" data-url="/web/search/mycollector" data-owned-profile="true" data-allow-empty-search="true" ${'checked' if mineSelected else ''}>
+                    My
                 </label>
                 <label class="radio">
-                    <input type="radio" name="myCollectors" data-url="/web/search/collector" checked>
+                    <input type="radio" name="myCollectors" data-url="/web/search/collector" data-owned-profile="false" data-allow-empty-search="false" ${'' if mineSelected else 'checked'}>
                     All Collectors
                 </label>
             </div>
@@ -34,46 +38,46 @@
                     <h5>Collection</h5>
                 </div>
             </form>
-            </div>
-            <div class="span9">
-                <div class="search-results-container">
-                    <div class="search-results-sorting form-inline">
-                        <i>Displaying <span class="result-count">0</span> search results</i>
-                        <div class="control-group sort-by">
-                            <label class="control-label">Sort By</label>
-                            <select class="select-sort-by" name="sortby">
-                                <option value="initials" data-reverse="false">Name</option>
-                                <option value="rank" data-reverse="false">Rank</option>
-                                <option value="subscribers" data-reverse="true">Followers</option>
-                                <option value="completion" data-reverse="true">Completion</option>
-                            </select>
-                        </div>
+        </div>
+        <div class="span9">
+            <div class="search-results-container">
+                <div class="search-results-sorting form-inline">
+                    <i>Displaying <span class="result-count">0</span> search results</i>
+                    <div class="control-group sort-by">
+                        <label class="control-label">Sort By</label>
+                        <select class="select-sort-by" name="sortby">
+                            <option value="initials" data-reverse="false">Name</option>
+                            <option value="rank" data-reverse="false">Rank</option>
+                            <option value="subscribers" data-reverse="true">Followers</option>
+                            <option value="completion" data-reverse="true">Completion</option>
+                        </select>
                     </div>
-                    <div class="search-results-header">
-                        <div class="search-column completion">
-                            Completion
-                        </div><div class="search-column subscribers">
-                            Followers
-                        </div><div class="search-column rank">
-                            Rank
-                        </div>
-                        <div class="search-column details">
-                            Collector
-                        </div>
-                        <a class="link search-select-all-link" data-toggle-text="Deselect all"><span class="marked-checkbox"></span> <span class="text">Select All</span></a>
-                    </div>
-                    <ul class="search-results-body">
-                        <li class="search-placeholder empty">
-                            No Results
-                        </li>
-                        <li class="show-loading">
-                            <img src="${ROOT_STATIC_URL}img/ajax-loader.gif"/>
-                        </li>
-                    </ul>
                 </div>
+                <div class="search-results-header">
+                    <div class="search-column completion">
+                        Completion
+                    </div><div class="search-column subscribers">
+                    Followers
+                </div><div class="search-column rank">
+                    Rank
+                </div>
+                    <div class="search-column details">
+                        Collector
+                    </div>
+                    <a class="link search-select-all-link" data-toggle-text="Deselect all"><span class="marked-checkbox"></span> <span class="text">Select All</span></a>
+                </div>
+                <ul class="search-results-body">
+                    <li class="search-placeholder empty">
+                        No Results
+                    </li>
+                    <li class="show-loading">
+                        <img src="${ROOT_STATIC_URL}img/ajax-loader.gif"/>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
+</div>
 </%def>
 
 <%block name="options">

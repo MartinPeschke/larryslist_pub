@@ -3,18 +3,18 @@
         <div class="name">{{ model.getName() }}</div>
         <p class="location">{{ model.getAddress() }}</p>
     </div>
-    <div class="right-col">
+    <div class="right-col collector-stats">
         <div class="search-column rank">
-            <b>{{ model.get("rank") }}</b>
-            <small>Rank</small>
+            <b class="value">{{ model.get("rank") }}</b>
+            <small class="caption">Rank</small>
         </div>
         <div class="search-column subscribers">
-            <b>{{ model.get("subscribers") }}</b>
-            <small>Followers</small>
+            <b class="value">{{ model.get("subscribers") }}</b>
+            <small class="caption">Followers</small>
         </div>
         <div class="search-column completion">
-            <b>{{ model.get("completion") }}%</b>
-            <small>Completion</small>
+            <b class="value">{{ model.get("completion") }}%</b>
+            <small class="caption">Completion</small>
         </div>
     </div>
 </li>
