@@ -22,5 +22,5 @@ class NewsHandler(FormHandler):
         return GetNewsFeedProc(self.request)
 
     def pre_fill_values(self, request, result):
-        result['values'][self.form.id] = self.newsFeed.unwrap()
+        result['values'][self.form.id] = self.newsFeed.unwrap() or {}
         return result
