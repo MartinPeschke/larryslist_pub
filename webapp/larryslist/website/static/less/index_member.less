@@ -1,8 +1,14 @@
 .news-frame {
+  max-height: 250px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+
   article {
     display: block;
     padding:  20px;
     .source {color: #999; margin-top:10px;text-transform: uppercase;}
+    .date {color: #999; margin-top:10px;}
     + article {border-top: 1px solid #ddd;}
   }
 }

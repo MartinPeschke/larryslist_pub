@@ -5,14 +5,14 @@
 <%def name="content()">
 <div class="container">
     <div class="row">
-        <div class="span8 standard-frame news-frame">
+        <div class="span8 standard-frame">
             <h5 class="box-title inline tinted">News</h5>
 
-            <div class="frame-body">
+            <div class="frame-body news-frame">
                 %for news in newsfeed:
                     <article>
                         <div class="summary">${news.value}</div>
-                        <small class="source">${news.source}</small>
+                        <small class="source">${news.source}</small> <small class="date">(${i18n.format_date(news.created, request)})</small>
                     </article>
                 %endfor
             </div>
