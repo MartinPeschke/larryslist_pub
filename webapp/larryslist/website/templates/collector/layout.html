@@ -25,7 +25,7 @@
 
 <%def name="collectorCard(collector)">
     <div class="standard-frame collector-card">
-        <div class="collector-picture-big"><img class="picture" src="${request.getStaticUrl(collector.picture)}"/></div>
+        <div class="collector-picture-big"><img class="picture" src="${request.getStaticUrl(collector.getPicture())}"/></div>
         <div class="collector-details">
             <div class="pull-right collector-stats">
                 <div class="search-column rank">

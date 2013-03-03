@@ -61,7 +61,7 @@ class SimpleCollectorModel(Mapping):
             return ''
 
     def getRank(self):
-        return self.ranking
+        return "#{}".format(self.ranking)
     def getSubscribers(self):
         return self.followers
     def getCompletion(self):
@@ -165,13 +165,13 @@ class CollectionModel(Mapping):
         if self.totalArtistsAprx:
             return u'>{}'.format(self.totalArtists)
         else:
-            return unicode(self.totalArtists)
+            return unicode(self.totalArtists or 'Unknown')
 
     def getNoArtworks(self):
         if self.totalWorksAprx:
             return u'>{}'.format(self.totalWorks)
         else:
-            return unicode(self.totalWorks)
+            return unicode(self.totalWorks or 'Unknown')
     def hasArtists(self):
         return len(self.Artist) > 0
 
@@ -275,7 +275,8 @@ class CollectorModel(SimpleCollectorModel):
             return ', '.join([g.name for g in self.Collection.Genre])
         else:
             return ''
-
+    def getPicture(self):
+        return self.picture or "http://www.gravatar.com/avatar/00000000000000000000000000000000?d=mm&s=200"
 
 
     def getDOB(self, request):
