@@ -16,6 +16,14 @@ define(["tools/ajax"], function(ajax){
         , ownsProfile: function(collector){
             return !_.isEmpty(this.get("Collector").get(collector.id));
         }
+        , getProfile: function(id){
+            return this.get("Collector").get(id);
+        }
+        , prepResult: function(obj){
+            var o = this.get("Collector").get(obj.id);
+            if(o) return _.extend(obj, o.attributes)
+            else return obj;
+        }
         , getCollectors: function(){
             return this.get("Collector");
         }

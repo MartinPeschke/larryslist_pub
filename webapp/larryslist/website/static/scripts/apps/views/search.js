@@ -250,7 +250,10 @@ define(
                     , data: query
                     , success: function(resp, status, xhr){
                         var results = hnc.getRecursive(resp, "Collectors.Collector", []);
-                        view.results.addOrUpdate(cart.parseResults(results), {'preserve':false});
+                        _.each(results, function(obj){
+                            cart.prepResult(user.prepResult(obj));
+                        });
+                        view.results.addOrUpdate(results, {'preserve':false});
                         view.$(".result-count").html(results.length);
 
                         var filters = hnc.getRecursive(resp, "Filters", []);

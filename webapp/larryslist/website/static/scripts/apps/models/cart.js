@@ -1,4 +1,4 @@
-define(["tools/ajax", "models/collector"], function(ajax, Collector){
+define(["tools/ajax", "models/collector", "models/user"], function(ajax, Collector, user){
     var STORAGE_KEY = 'LS_USER_CART'
 
     , Collectors = ajax.Collection.extend({
@@ -20,7 +20,7 @@ define(["tools/ajax", "models/collector"], function(ajax, Collector){
             }});
         }
         , addProfile: function(collector){
-            if(!this.contains(collector)){
+            if(!this.contains(collector) && !user.ownsProfile(collector)){
                 this.get("Collectors").add(collector);
                 collector.trigger("cart:added");
             }
@@ -49,13 +49,18 @@ define(["tools/ajax", "models/collector"], function(ajax, Collector){
             return this.get("Collectors").get(collector.id) || collector;
         }
         , parseResults: function(objs){
-            var cart = this.get("Collectors")
+            var cart = this.get("Collectors");
             if(!cart.length)return objs;
             var result = [];
             _.each(objs, function(obj){
                 result.push(cart.get(obj.id) || obj);
             });
             return result;
+        }
+        , prepResult: function(obj){
+            var o = cart.get(obj.id);
+            if(o) { o.setRecursive(obj); return o; }
+            else return obj;
         }
         , contains: function(collector){
             return !_.isEmpty(this.get("Collectors").get(collector.id))
