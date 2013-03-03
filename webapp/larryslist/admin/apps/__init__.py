@@ -19,6 +19,8 @@ ROUTE_LIST = [
     , FunctionRoute ("admin_logout"                  , "/logout", contexts.AdminRootContext, auth.logout, None)
     , ClassRoute    ('admin_reset_password'          , '/password/reset/:token', contexts.AdminRootContext, auth.PasswordResetHandler, "auth/password_reset.html", view_attrs = JSON_FORM_ATTRS)
 
+    , ClassRoute    ('admin_news_feed'               , '/newsfeed', contexts.AdminContext, dashboard.NewsHandler, "newsfeed.html", view_attrs = JSON_FORM_ATTRS)
+
     # ============================== COLLECTOR/COLLECTIONS =========================
     , ClassRoute    ("admin_collector_create"        , "/collector/create", contexts.AdminAuthedContext, collector.CollectorHandler, None, view_attrs=JSON_FORM_ATTRS)
     , ClassRoute    ("admin_collector_edit"          , "/collector/edit/:collectorId/:stage", contexts.AdminAuthedContext, collector.CollectorHandler, None, view_attrs=JSON_FORM_ATTRS)

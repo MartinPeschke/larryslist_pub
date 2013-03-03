@@ -1,0 +1,43 @@
+<%inherit file="layout.html"/>
+
+
+<%block name="contentbody">
+    <div class="padded-body dashboard">
+        <div class="row-fluid">
+            <div class="span12">
+                <h2>News</h2>
+                ${self.buildBody(view.form, values.get(view.form.id, dict()), errors.get(view.form.id, dict()))}
+            </div>
+        </div>
+    </div>
+</%block>
+
+
+
+<%def name="buildBody(form, values, errors)">
+    <form class="news-feed-form ${form.classes}" id="${form.id}" method="post">
+        <div class="add-more-wrapper">
+            <a class="add-more-link btn btn-primary" data-append-first="true">Add News</a>
+        </div>
+
+        <input type="hidden" name="type" value="${form.id}"/>
+        <input type="hidden" name="furl" value="${request.furl}"/>
+        <input type="hidden" name="token" value="${request.session.get_csrf_token()}"/>
+        %for field in form.fields:
+            ${field.render(form.id, request, values, errors, view)|n}
+        %endfor
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+    </form>
+</%def>
+
+<%block name="scripts">
+    <script>
+        require(["views/forms"], function(View){
+            $(".content-body").find(".form-validated").each(function(idx, form){
+                new View({el:form})
+            });
+        });
+    </script>
+</%block>

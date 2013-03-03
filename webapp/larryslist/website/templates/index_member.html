@@ -9,20 +9,12 @@
             <h5 class="box-title inline tinted">News</h5>
 
             <div class="frame-body">
-                <article>
-                    <div class="summary">It's true - he does answer email faster than you. But seriously, Philipp is awesome and always helpful across the whole gamut of entrepreneur problems. His special skill is not sugarcoating.</div>
-                    <small class="source">financial times, 09.2012</small>
-                </article>
-
-                <article>
-                    <div class="summary">It's true - he does answer email faster than you. But seriously, Philipp is awesome and always helpful across the whole gamut of entrepreneur problems. His special skill is not sugarcoating.</div>
-                    <small class="source">forbes, 08.2012</small>
-                </article>
-
-                <article>
-                    <div class="summary">Phil is the uber-connector of europe, he's credible, intelligent, and adds the most value of all advisors within the Seedcamp ecosystem. Don't start a startup this side of the atlantic without him.</div>
-                    <small class="source">the guardian, 05.2011</small>
-                </article>
+                %for news in newsfeed:
+                    <article>
+                        <div class="summary">${news.value}</div>
+                        <small class="source">${news.source}</small>
+                    </article>
+                %endfor
             </div>
 
         </div>

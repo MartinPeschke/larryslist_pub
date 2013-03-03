@@ -1,4 +1,4 @@
-
+from larryslist.models.news import GetNewsFeedProc
 
 
 def index(context, request):
@@ -9,4 +9,4 @@ def index(context, request):
 
 
 def index_member(context, request):
-    return {'query':''}
+    return {'query':'', 'newsfeed': GetNewsFeedProc(request).NewsFeed}

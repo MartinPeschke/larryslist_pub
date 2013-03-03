@@ -24,6 +24,7 @@ class MenuItem(object):
 
 HEADER_MENU = [
     MenuItem(True, "admin_settings_feeder_create", "Add Feeder")
+    , MenuItem(True, "admin_news_feed", "Add News")
 ]
 
 
