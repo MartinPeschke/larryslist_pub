@@ -49,11 +49,6 @@ def redirectJson(exc, request):
 
 
 
-@forbidden_view_config()
-def forbidden(request):
-    request.fwd("admin_login")
-
-
 def includeme(config):
     settings = config.registry.settings
     settings['g'].setSettings(AdminSettings, settings)
