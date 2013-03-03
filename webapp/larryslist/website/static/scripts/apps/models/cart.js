@@ -51,10 +51,11 @@ define(["tools/ajax", "models/collector"], function(ajax, Collector){
         , parseResults: function(objs){
             var cart = this.get("Collectors")
             if(!cart.length)return objs;
-            _.map(objs, function(obj){
-                return cart.get(obj.id)?cart.get(obj.id):obj
+            var result = [];
+            _.each(objs, function(obj){
+                result.push(cart.get(obj.id) || obj);
             });
-            return objs;
+            return result;
         }
         , contains: function(collector){
             return !_.isEmpty(this.get("Collectors").get(collector.id))

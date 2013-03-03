@@ -6,16 +6,16 @@
     </div>
     <div class="right-col collector-stats">
         <div class="search-column rank">
-            <b>{{ model.getRank() }}</b>
-            <small>Rank</small>
+            <b class="value">{{ model.getRank() }}</b>
+            <small class="caption">Rank</small>
         </div>
         <div class="search-column subscribers">
-            <b>{{ model.get("subscribers") }}</b>
-            <small>Followers</small>
+            <b class="value">{{ model.get("subscribers") }}</b>
+            <small class="caption">Followers</small>
         </div>
         <div class="search-column completion">
-            <b>{{ model.getCompletion() }}</b>
-            <small>Completion</small>
+            <b class="value">{{ model.getCompletion() }}</b>
+            <small class="caption">Completion</small>
         </div>
     </div>
 </li>
