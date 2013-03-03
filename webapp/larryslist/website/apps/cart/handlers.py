@@ -38,7 +38,7 @@ def discard_saved_details(context, request):
 def straight_purchase(context, request):
     collectors = context.cart.getItems()
     if not collectors:
-        request.rld()
+        request.fwd("website_cart")
     elif not context.cart.canSpend(context.user):
         request.fwd("website_checkout_arbiter")
     else:
