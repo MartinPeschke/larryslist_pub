@@ -79,7 +79,7 @@ class SourceModel(Mapping):
     name = TextField()
     title = TextField()
     author = TextField()
-    date = DateField()
+    date = TextField()
     year = TextField()
     publisher = TextField()
 
