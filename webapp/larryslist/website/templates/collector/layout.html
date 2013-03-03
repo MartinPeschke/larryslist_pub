@@ -1,4 +1,6 @@
 <%inherit file="../layout.html"/>
+<%namespace file="../widgets.html" name="widgets"/>
+
 
 <%def name="content()">
     <div class="container">
@@ -69,7 +71,11 @@
     </div>
 </%def>
 
-
+<%def name="recommendedCard()">
+    <div class="standard-frame">
+        ${widgets.recommendations(True)}
+    </div>
+</%def>
 
 
 
@@ -163,3 +169,12 @@
         ${self.simpleLink("Website", obj.website)}
     </div>
 </%def>
+
+
+<%block name="scripts">
+    <script>
+        require(["views/recommendation"], function(View){
+            new View({el: $(".recommended-collectors")});
+        });
+    </script>
+</%block>

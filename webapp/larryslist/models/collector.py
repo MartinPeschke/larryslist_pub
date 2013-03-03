@@ -212,8 +212,7 @@ class CompanyModel(AddressModel):
     name = TextField()
     position = TextField()
     industry = TextField()
-    url = TextField()
-
+    website = TextField(name = 'url')
 
 class LinkedCollectorModel(Mapping):
     id = IntegerField()

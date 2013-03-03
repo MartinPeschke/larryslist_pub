@@ -2,6 +2,7 @@
 
 <%def name="cards(collector)">
     ${self.basicCard(collector)}
+    ${self.recommendedCard()}
     ${self.addressCard(collector)}
     ${self.businessCard(collector)}
     ${self.addInfoCard(collector)}
@@ -59,9 +60,6 @@
                             <div><b>${company.name or 'No Name'}</b></div>
                             ${self.value(company.position)}
                             ${self.value(company.industry, "Industry")}
-                            %if company.url:
-                                <div><a href="${company.url}">${company.url}</a></div>
-                            %endif
                         </%self:addressCol>
                     %endfor
                 </%self:line>
