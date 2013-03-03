@@ -154,10 +154,10 @@
                 Location:
             </small>
             <div class="value">
-                <div>${obj.getLines(request)|n}</div>
-                <div>${obj.getCityPostCode(request)|n}</div>
-                <div>${obj.getRegion(request)|n}</div>
-                <div>${obj.getCountry(request)|n}</div>
+                ${self.value(obj.getLines(request))}
+                ${self.value(obj.getCityPostCode(request))}
+                ${self.value(obj.getRegion(request))}
+                ${self.value(obj.getCountry(request))}
             </div>
         </div>
         ${self.simpleLink("Website", obj.website)}

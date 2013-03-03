@@ -399,7 +399,7 @@ class BoardMemberModel(AddressModel):
     def getCountry(self, request):
         if self.museum and self.getMusem(request):
             museum = self.getMusem(request)
-            return museum.country
+            return museum.country or ''
         return super(BoardMemberModel, self).getCountry(request)
 
 class SocietyMemberModel(AddressModel):

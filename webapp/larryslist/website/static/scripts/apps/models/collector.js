@@ -37,11 +37,17 @@ define(["tools/ajax"], function(ajax){
             var path = this.get("picture");
             return path?hnc.resUrl(path):"http://www.gravatar.com/avatar/00000000000000000000000000000000?d=mm";
         }
+        , getRank: function(){
+            return "#"+this.get("rank")
+        }
+        , getCompletion: function(){
+            return this.get("completion")
+        }
         , parseLocal: function(obj){
             obj.updatedDate = hnc.parseDate(obj.updated);
-            obj.rank = Math.floor(Math.random()*1000);
-            obj.completion = Math.floor(Math.random()*100);
-            obj.subscribers = Math.floor(Math.random()*1000);
+            obj.rank = obj.ranking;
+            obj.completion = obj.completness;
+            obj.subscribers = obj.followers;
             return obj;
         }
     });

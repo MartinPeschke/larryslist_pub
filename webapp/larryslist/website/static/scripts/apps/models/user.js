@@ -17,7 +17,7 @@ define(["tools/ajax"], function(ajax){
             return !_.isEmpty(this.get("Collector").get(collector.id));
         }
         , getCollectors: function(){
-            return this.get("Collector")
+            return this.get("Collector");
         }
     })
     , user = new UserModel();

@@ -3,11 +3,11 @@
         <div class="search-column picture">
             <img class="collector-picture" src="{{ model.getPicture() }}" />
         </div><div class="search-column completion">
-            <b>{{ model.get("completion") }}%</b>
+            <b>{{ model.getCompletion() }}</b>
         </div><div class="search-column subscribers">
             <b>{{ model.get("subscribers") }}</b>
         </div><div class="search-column rank">
-            <b>{{ model.get("rank") }}</b>
+            <b>{{ model.getRank() }}</b>
         </div><div class="search-column details">
 
             <div class="name">{{ model.getFullName() }}</div>

@@ -110,7 +110,7 @@ class UserModel(Mapping):
         return self.credit
     def toJSON(self, stringify = True):
         json = self.unwrap(sparse = True).copy()
-        json['Collector'] = [{'id': c['id']} for c in json.pop("Collector", []) if c.get('id')]
+        json['Collector'] = [{'id': c['id'], 'firstName':c['firstName'], 'lastName':c['lastName']} for c in json.pop("Collector", []) if c.get('id')]
         return simplejson.dumps(json)
     def hasSavedDetails(self):
         return bool(self.cardNumber)
