@@ -9,4 +9,11 @@ def index(context, request):
 
 
 def index_member(context, request):
-    return {'query':'', 'newsfeed': GetNewsFeedProc(request).NewsFeed[:10]}
+    news = GetNewsFeedProc(request)
+    if news:
+        news = news.NewsFeed
+        if news:
+            news = news[:10]
+        else: news = []
+    else: news = []
+    return {'query':'', 'newsfeed': news}
