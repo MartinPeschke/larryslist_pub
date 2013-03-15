@@ -1,4 +1,5 @@
-﻿from formencode.validators import Invalid
+﻿import re, urlparse
+from formencode.validators import Invalid, FancyValidator
 from BeautifulSoup import BeautifulSoup
 import formencode
 from datetime import datetime
@@ -295,3 +296,186 @@ def TypeAheadValidator(attrs):
     else:
         validator = formencode.validators.String(required = False, not_empty = False, if_missing= '')
     return formencode.Schema(name = validator, token = validator, filter_extra_fields = True, required = False, if_missing= dict({'name':'', 'token':''}))
+
+
+
+# from bitbucket repo, patched for unicode support (not available in 1.2.6)
+class URL(formencode.FancyValidator):
+    """
+    Validate a URL, either http://... or https://.  If check_exists
+    is true, then we'll actually make a request for the page.
+
+    If add_http is true, then if no scheme is present we'll add
+    http://
+
+    ::
+
+        >>> u = URL(add_http=True)
+        >>> u.to_python('foo.com')
+        'http://foo.com'
+        >>> u.to_python('http://hahaha.ha/bar.html')
+        'http://hahaha.ha/bar.html'
+        >>> u.to_python('http://xn--m7r7ml7t24h.com')
+        'http://xn--m7r7ml7t24h.com'
+        >>> u.to_python('http://xn--c1aay4a.xn--p1ai')
+        'http://xn--c1aay4a.xn--p1ai'
+        >>> u.to_python('http://foo.com/test?bar=baz&fleem=morx')
+        'http://foo.com/test?bar=baz&fleem=morx'
+        >>> u.to_python('http://foo.com/login?came_from=http%3A%2F%2Ffoo.com%2Ftest')
+        'http://foo.com/login?came_from=http%3A%2F%2Ffoo.com%2Ftest'
+        >>> u.to_python('http://foo.com:8000/test.html')
+        'http://foo.com:8000/test.html'
+        >>> u.to_python('http://foo.com/something\\nelse')
+        Traceback (most recent call last):
+            ...
+        Invalid: That is not a valid URL
+        >>> u.to_python('https://test.com')
+        'https://test.com'
+        >>> u.to_python('http://test')
+        Traceback (most recent call last):
+            ...
+        Invalid: You must provide a full domain name (like test.com)
+        >>> u.to_python('http://test..com')
+        Traceback (most recent call last):
+            ...
+        Invalid: That is not a valid URL
+        >>> u = URL(add_http=False, check_exists=True)
+        >>> u.to_python('http://google.com')
+        'http://google.com'
+        >>> u.to_python('google.com')
+        Traceback (most recent call last):
+            ...
+        Invalid: You must start your URL with http://, https://, etc
+        >>> u.to_python('http://formencode.org/doesnotexist.html')
+        Traceback (most recent call last):
+            ...
+        Invalid: The server responded that the page could not be found
+        >>> u.to_python('http://this.domain.does.not.exist.example.org/test.html')
+        ... # doctest: +ELLIPSIS
+        Traceback (most recent call last):
+            ...
+        Invalid: An error occured when trying to connect to the server: ...
+
+    If you want to allow addresses without a TLD (e.g., ``localhost``) you can do::
+
+        >>> URL(require_tld=False).to_python('http://localhost')
+        'http://localhost'
+
+    By default, internationalized domain names (IDNA) in Unicode will be
+    accepted and encoded to ASCII using Punycode (as described in RFC 3490).
+    You may set allow_idna to False to change this behavior::
+
+        >>> URL(allow_idna=True).to_python(u'http://\u0433\u0443\u0433\u043b.\u0440\u0444')
+        'http://xn--c1aay4a.xn--p1ai'
+        >>> URL(allow_idna=True, add_http=True).to_python(u'\u0433\u0443\u0433\u043b.\u0440\u0444')
+        'http://xn--c1aay4a.xn--p1ai'
+        >>> URL(allow_idna=False).to_python(u'http://\u0433\u0443\u0433\u043b.\u0440\u0444')
+        Traceback (most recent call last):
+            ...
+        Invalid: That is not a valid URL
+    """
+
+    check_exists = False
+    add_http = True
+    require_tld = True
+    allow_idna = True
+
+    url_re = re.compile(r'''
+        ^(http|https)://
+        (?:[%:\w]*@)?                           # authenticator
+        (?P<domain>[a-z0-9][a-z0-9\-]{,62}\.)*  # (sub)domain - alpha followed by 62max chars (63 total)
+        (?P<tld>[a-z]{2,}|xn--[a-z0-9\-]{2,})   # TLD
+        (?::[0-9]+)?                            # port
+
+        # files/delims/etc
+        (?P<path>/.*)?
+        $
+    ''', re.I | re.VERBOSE)
+
+    scheme_re = re.compile(r'^[a-zA-Z]+:')
+
+    messages = dict(
+        noScheme=_('You must start your URL with http://, https://, etc'),
+        badURL=_('That is not a valid URL'),
+        httpError=_('An error occurred when trying to access the URL:'
+                    ' %(error)s'),
+        socketError=_('An error occured when trying to connect to the server:'
+                      ' %(error)s'),
+        notFound=_('The server responded that the page could not be found'),
+        status=_('The server responded with a bad status code (%(status)s)'),
+        noTLD=_('You must provide a full domain name (like %(domain)s.com)'))
+
+    def _to_python(self, value, state):
+        value = value.strip()
+        if self.add_http:
+            if not self.scheme_re.search(value):
+                value = 'http://' + value
+        # MP: commented because we really want the unicode, damn it
+        # if self.allow_idna:
+        #    value = self._encode_idna(value)
+        if self.allow_idna:
+           value = unicode(value)
+
+        match = self.scheme_re.search(value)
+        if not match:
+            raise Invalid(self.message('noScheme', state), value, state)
+        value = match.group(0).lower() + value[len(match.group(0)):]
+        match = self.url_re.search(value)
+        if not match:
+            raise Invalid(self.message('badURL', state), value, state)
+        if self.require_tld and not match.group('domain'):
+            raise Invalid(
+                self.message('noTLD', state, domain=match.group('tld')),
+                value, state)
+        if self.check_exists and (
+                value.startswith('http://') or value.startswith('https://')):
+            self._check_url_exists(value, state)
+        return value
+
+    def _encode_idna(self, url):
+        global urlparse
+        if urlparse is None:
+            import urlparse
+        scheme, netloc, path, params, query, fragment = urlparse.urlparse(url)
+        try:
+            return str(urlparse.urlunparse((
+                scheme, netloc.encode('idna'), path, params, query, fragment)))
+        except UnicodeError:
+            return url
+
+    def _check_url_exists(self, url, state):
+        global httplib, urlparse, socket
+        if httplib is None:
+            import httplib
+        if urlparse is None:
+            import urlparse
+        if socket is None:
+            import socket
+        scheme, netloc, path, params, query, fragment = urlparse.urlparse(
+            url, 'http')
+        if scheme == 'http':
+            ConnClass = httplib.HTTPConnection
+        else:
+            ConnClass = httplib.HTTPSConnection
+        try:
+            conn = ConnClass(netloc)
+            if params:
+                path += ';' + params
+            if query:
+                path += '?' + query
+            conn.request('HEAD', path)
+            res = conn.getresponse()
+        except httplib.HTTPException, e:
+            raise Invalid(
+                self.message('httpError', state, error=e), state, url)
+        except socket.error, e:
+            raise Invalid(
+                self.message('socketError', state, error=e), state, url)
+        else:
+            if res.status == 404:
+                raise Invalid(
+                    self.message('notFound', state), state, url)
+            if not 200 <= res.status < 500:
+                raise Invalid(
+                    self.message('status', state, status=res.status),
+                    state, url)

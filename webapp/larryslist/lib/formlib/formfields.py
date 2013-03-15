@@ -3,7 +3,7 @@ from operator import methodcaller
 import formencode
 from formencode.validators import OneOf
 from larryslist.models.config import NullConfigModel
-from larryslist.lib.formlib.validators import DateValidator, TypeAheadValidator
+from larryslist.lib.formlib.validators import DateValidator, TypeAheadValidator, URL
 from pyramid.renderers import render
 import simplejson
 
@@ -282,7 +282,8 @@ class IntField(Field):
 
 class URLField(Field):
     input_classes = 'input-xxlarge'
-    _validator = formencode.validators.URL
+    _validator = formencode.validators.String
+
 class EmailField(StringField):
     input_classes = 'input-large email'
     type = 'email'
