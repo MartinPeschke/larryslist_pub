@@ -222,7 +222,7 @@ class LinkedCollectorModel(Mapping):
     def getName(self):
         result = u'{0.firstName} {0.lastName}'.format(self)
         if self.relation:
-            result += u"({})".format(self.relation)
+            result += u" ({})".format(self.relation)
         return result
 
 class OtherFactModel(Mapping):

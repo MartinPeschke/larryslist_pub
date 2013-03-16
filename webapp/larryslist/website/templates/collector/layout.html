@@ -97,35 +97,35 @@
 
 
 
-<%def name="simpleLine(label, value)">
+<%def name="simpleLine(label, value, classes='')">
     %if value:
-        <div class="line">
+        <div class="line ${classes}">
             <small class="heading key">
                 ${label}:
             </small>
             <div class="value">
-                ${value}
+                ${value|n}
             </div>
         </div>
     %endif
 </%def>
 
-<%def name="simpleLink(label, value)">
+<%def name="simpleLink(label, value, classes='')">
     %if value:
-        <div class="line">
+        <div class="line ${classes}">
             <small class="heading key">
             ${label}:
             </small>
             <div class="value">
-            <a href="${value}">${value}</a>
+            <a class="text-overflow" href="${value}">${value}</a>
             </div>
         </div>
     %endif
 </%def>
 
 
-<%def name="line(label, value = None)">
-    <div class="line">
+<%def name="line(label, value = None, classes='')">
+    <div class="line ${classes}">
         <small class="heading key">
         ${label}:
         </small>
@@ -150,23 +150,24 @@
 </%def>
 
 <%def name="addressCol(obj)">
-    <div class="first-col-value">
-        ${caller.body()}
-    </div>
-
-    <div class="address-value">
-        <div class="line">
-            <small class="heading key">
-                Location:
-            </small>
-            <div class="value">
-                ${self.value(obj.getLines(request))}
-                ${self.value(obj.getCityPostCode(request))}
-                ${self.value(obj.getRegion(request))}
-                ${self.value(obj.getCountry(request))}
-            </div>
+    <div class="address-line">
+        <div class="first-col-value">
+            ${caller.body()}
         </div>
-        ${self.simpleLink("Website", obj.website)}
+        <div class="address-value">
+            <div class="line">
+                <small class="heading key">
+                    Location:
+                </small>
+                <div class="value">
+                    ${self.value(obj.getLines(request))}
+                    ${self.value(obj.getCityPostCode(request))}
+                    ${self.value(obj.getRegion(request))}
+                    ${self.value(obj.getCountry(request))}
+                </div>
+            </div>
+            ${self.simpleLink("Website", obj.website)}
+        </div>
     </div>
 </%def>
 

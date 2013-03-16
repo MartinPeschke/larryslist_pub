@@ -1,11 +1,15 @@
 <%inherit file="layout.html"/>
 
 <%def name="cards(collector)">
-    %if vctxt.collectionMeta:
-        ${self.loanCard(vctxt.collectionMeta)}
-        ${self.cooperationCard(vctxt.collectionMeta)}
-        ${self.boardCard(vctxt.collectorMeta)}
-        ${self.societyCard(vctxt.collectorMeta)}
+    <%
+        collection = vctxt.collectionMeta
+        collector = vctxt.collectorMeta
+    %>
+    %if collection and (len(collection.Loan) or len(collection.Cooperation)) or collector and (len(collector.Museum) or len(collector.SocietyMember)):
+        ${self.loanCard(collection)}
+        ${self.cooperationCard(collection)}
+        ${self.boardCard(collector)}
+        ${self.societyCard(collector)}
     %else:
         <%self:card title="No information available yet">
             <div class="line">

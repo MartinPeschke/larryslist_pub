@@ -42,20 +42,52 @@ define(
     , FilterSectionView = Backbone.View.extend({
         template: _.template(fsTempl)
         , defaultShow: 5
+        , events: {"click .show-more":"showMore"}
         , initialize: function(opts){
             this.setElement(this.template({model: this.model, title:opts.title}));
             if(this.model.length){this.onUpdate(this.model);}
             this.listenTo(this.model, "destroy", this.remove);
         }
-        , onUpdate: function(models){
-            var $el = this.$(".filter-list"), limit = this.defaultShow;
-            models.each(function(model, idx){
-                var v = new FilterOptionView({model:model, isExtra:idx>=limit});
-                $el.append(v.$el);
-            });
-            if(models.length>limit){
-                $el.append('<a class="link show-more" data-toggle-text="▲ '+ (models.length - limit) +' less" data-toggle-target=".filter-section" data-toggle-class="expanded">▼ '+ (models.length - limit) +' more</a>')
+        , onUpdate: function(model){
+            var $el = this.$(".filter-list")
+                , models = model.models
+                , limit = this.defaultShow
+                , len = Math.min(models.length, limit)
+                , html = []
+                , idx;
+            for(idx=0;idx<len;idx++){
+                var model = models[idx], v = new FilterOptionView({model:model, isExtra:false});
+                html.push(v.el);
             }
+            $el.html(html);
+            if(models.length>limit){
+                $el.append('<a class="link show-more" data-toggle-text="▲ '+ (models.length - limit) +' less">▼ '+ (models.length - limit) +' more</a>')
+            }
+        }
+        , showMore: function(e){
+            var $el = this.$(".filter-list")
+                , current = this.$(".filter-list").children(".checkbox")
+                , limit = this.defaultShow
+                , models = this.model.models
+                , len = models.length
+                , expanded = this.$el.toggleClass("expanded").hasClass("expanded")
+                , $t = $(e.target)
+                , html = []
+                , idx;
+            if(!$t.data("backupText")){$t.data("backupText", $t.html());}
+            if(expanded){
+                $t.html($t.data("toggleText"));
+            } else {
+                $t.html($t.data("backupText"));
+            }
+            if(current.length < len){
+                for(idx=limit;idx<len;idx++){
+                    var model = models[idx], v = new FilterOptionView({model:model, isExtra:true});
+                    html.push(v.el);
+                }
+                $(e.target).before(html);
+            }
+
         }
         , getTitle: function(){
             return this.options.title;
@@ -201,19 +233,19 @@ define(
             this.listenTo(this.filter, "do:search", this.doSearch);
 
             this.results = new colItem.SearchResults();
-            this.listenTo(this.results, "add", this.addResult);
             this.listenTo(this.results, "updated", this.updatedResults);
         }
-        , addResult: function(result){
-            var t = this.$results.children(".sortable").eq(this.results.indexOf(result))
-                , v = colItem.getView(result, null);
-            if(t.length){
-                t.before(v.$el);
-            } else {
-                this.$results.append(v.$el);
-            }
+
+        , buildResults: function(){
+            var res = [];
+            this.results.each(function(item){
+                var v = colItem.getView(item, null);
+                res.push(v.$el);
+            });
+            this.$results.append(res);
         }
         , updatedResults: function(){
+            this.buildResults();
             this.$results.find(".empty")[this.results.length?"addClass":"removeClass"]("hide");
             this.checkAllSelected();
         }
@@ -271,7 +303,7 @@ define(
         }
         , reSortResults: function(){
             this.$results.children(".sortable").off().remove();
-            this.results.each(this.addResult, this);
+            this.buildResults();
         }
         , reSort: function(e){
             var el = $(e.target).find("option").filter(":selected");

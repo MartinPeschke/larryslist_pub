@@ -71,15 +71,11 @@
 <%def name="addInfoCard(collector)">
     %if collector.hasFacts():
         <%self:card title="Additional Information">
-            <%self:line label=" ">
-                %for fact in collector.Fact:
-                   %if fact.value:
-                       <div class="other-fact">
-                           ${fact.value|n}
-                       </div>
-                   %endif
-                %endfor
-            </%self:line>
+            %for fact in collector.Fact:
+               %if fact.value:
+                   ${self.simpleLine("Fact", fact.value)}
+               %endif
+            %endfor
         </%self:card>
     %endif
 </%def>

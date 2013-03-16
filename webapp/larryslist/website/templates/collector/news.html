@@ -18,9 +18,9 @@
     <%self:card title="Sources">
         %for source in collector.Source:
             %if source.isURL():
-                ${self.simpleLink("Online", source.url)}
+                ${self.simpleLink(source.type, source.url, classes="extra-long")}
             %else:
-                ${self.simpleLine("Offline", source.getSourceLine())}
+                ${self.simpleLine(source.type, source.getSourceLine(), classes="extra-long")}
             %endif
         %endfor
     </%self:card>

@@ -6,6 +6,7 @@ from larryslist.admin.apps.collector.models import GetCollectorDetailsProc, SetC
 from larryslist.lib.baseviews import GenericErrorMessage, GenericSuccessMessage
 from larryslist.lib.formlib.handlers import FormHandler
 from pyramid.decorator import reify
+from pyramid.httpexceptions import HTTPNotFound
 from pyramid.renderers import render_to_response, render
 
 
@@ -53,6 +54,10 @@ class BaseArtHandler(FormHandler):
     forms = []
     admin_forms = []
     activeForm = None
+    def __init__(self, context = None, request = None):
+        super(BaseArtHandler, self).__init__(context, request)
+        if self.collector._data is None:
+            raise HTTPNotFound()
 
 
     @reify

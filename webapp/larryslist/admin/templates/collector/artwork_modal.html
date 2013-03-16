@@ -1,7 +1,7 @@
 <div class="modal hide fade">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h3>Add an artist</h3>
+        <h3>Add an artwork</h3>
     </div>
     <form class="form-horizontal form-validated" action="post">
     <div class="modal-body">
@@ -34,9 +34,9 @@
                 Size:
             </label>
             <div class="controls">
-                H <input type="text" class="input-mini digits" name="Artwork.height">
-                W <input type="text" class="input-mini digits" name="Artwork.width">
-                D <input type="text" class="input-mini digits" name="Artwork.depth">
+                H <input type="text" class="input-mini number" name="Artwork.height">
+                W <input type="text" class="input-mini number" name="Artwork.width">
+                D <input type="text" class="input-mini number" name="Artwork.depth">
                 <select name="Artwork.measurement">
                     <option value="METRIC">cm</option>
                     <option value="IMPERIAL">inch</option>
