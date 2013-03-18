@@ -1,8 +1,8 @@
 <%inherit file="layout.html"/>
 
 <%def name="cards(collector)">
-    %if len(vctxt.collector.Source):
-        ${self.sourcesCard(vctxt.collector)}
+    %if len(view.collector.Source):
+        ${self.sourcesCard(view.collector)}
     %else:
         <%self:card title="No information available yet">
             <div class="line">

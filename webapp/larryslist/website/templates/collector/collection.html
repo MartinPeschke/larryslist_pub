@@ -6,13 +6,13 @@
         ${self.artistsCard(collector.Collection)}
         ${self.artworksCard(collector.Collection)}
     %endif
-    %if vctxt.collectionMeta:
-        ${self.exhibitionCard(vctxt.collectionMeta)}
-        ${self.directorCard(vctxt.collectionMeta)}
-        ${self.publicationCard(vctxt.collectionMeta)}
-        ${self.artAdvisorCard(vctxt.collectionMeta)}
+    %if view.collectionMeta:
+        ${self.exhibitionCard(view.collectionMeta)}
+        ${self.directorCard(view.collectionMeta)}
+        ${self.publicationCard(view.collectionMeta)}
+        ${self.artAdvisorCard(view.collectionMeta)}
     %endif
-    %if not (collector.Collection or vctxt.collectionMeta):
+    %if not (collector.Collection or view.collectionMeta):
         <%self:card title="No information available yet">
         <div class="line">
             <div class="value">

@@ -2,8 +2,8 @@
 
 <%def name="cards(collector)">
     <%
-        collection = vctxt.collectionMeta
-        collector = vctxt.collectorMeta
+        collection = view.collectionMeta
+        collector = view.collectorMeta
     %>
     %if collection and (len(collection.Loan) or len(collection.Cooperation)) or collector and (len(collector.Museum) or len(collector.SocietyMember)):
         ${self.loanCard(collection)}
@@ -23,9 +23,10 @@
 </%def>
 
 <%def name="loanCard(collection)">
-    %if len(collection.Loan):
+    <% loans = collection.getDenseList(collection.Loan) %>
+    %if len(loans):
     <%self:card title="Permanent Loans and Donations of Artworks">
-            %for loan in collection.Loan:
+            %for loan in loans:
                 <div class="single-museum">
                 <%self:addressCol obj="${loan}">
                     ${self.simpleLine("Organization", loan.institution)}
@@ -40,9 +41,10 @@
 </%def>
 
 <%def name="cooperationCard(collection)">
-    %if len(collection.Cooperation):
+    <% cooperations = collection.getDenseList(collection.Cooperation) %>
+    %if len(cooperations):
     <%self:card title="Cooperations with External Institutions">
-            %for loan in collection.Cooperation:
+            %for loan in cooperations:
                 <div class="single-museum">
                 <%self:addressCol obj="${loan}">
                     ${self.simpleLine("Organization", loan.institution)}
@@ -57,26 +59,28 @@
 </%def>
 
 <%def name="boardCard(collector)">
-    %if len(collector.Museum):
+    <% museums = collector.getDenseList(collector.Museum) %>
+    %if len(museums):
     <%self:card title="Museum Board, Advisory and Committee Positions">
-            %for loan in collector.Museum:
-                <div class="single-museum">
-                <%self:addressCol obj="${loan}">
-                    ${self.simpleLine("Name of Institution", loan.museum)}
-                    ${self.simpleLine("Name of Institution", loan.other_name)}
-                    ${self.simpleLine("Year", loan.year)}
-                    ${self.simpleLine("Position", loan.position)}
-                </%self:addressCol>
-                </div>
-            %endfor
+        %for loan in museums:
+            <div class="single-museum">
+            <%self:addressCol obj="${loan}">
+                ${self.simpleLine("Name of Institution", loan.museum)}
+                ${self.simpleLine("Name of Institution", loan.other_name)}
+                ${self.simpleLine("Year", loan.year)}
+                ${self.simpleLine("Position", loan.position)}
+            </%self:addressCol>
+            </div>
+        %endfor
     </%self:card>
     %endif
 </%def>
 
 <%def name="societyCard(collector)">
-    %if len(collector.SocietyMember):
+    <% society = collector.getDenseList(collector.SocietyMember) %>
+    %if len(society):
     <%self:card title="Museum Friends' Circle and Art Societies Memberships">
-            %for loan in collector.SocietyMember:
+            %for loan in society:
                 <div class="single-museum">
                 <%self:addressCol obj="${loan}">
                     ${self.simpleLine("Name of Institution", loan.societyName)}

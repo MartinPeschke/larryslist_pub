@@ -1,4 +1,4 @@
-from jsonclient.routing import FunctionRoute, App, ClassRoute, JSON_FORM_ATTRS, JSON_HANDLER_ATTRS, route_factory
+from jsonclient.routing import FunctionRoute, App, ClassRoute, JSON_FORM_ATTRS, JSON_HANDLER_ATTRS, route_factory, STANDARD_VIEW_ATTRS
 from larryslist.website.apps import search, cart, collector, content
 from pyramid.httpexceptions import HTTPFound
 
@@ -26,13 +26,12 @@ ROUTE_LIST = [
     , ClassRoute    ("website_checkout_set_option"  , "/checkout/option", contexts.WebsiteRootContext, cart.PaymentOptionsHandler, None, view_attrs=JSON_FORM_ATTRS)
     , FunctionRoute ("website_discard_saved_details", "/checkout/discard", contexts.WebsiteRootContext, cart.discard_saved_details, None)
 
+    , ClassRoute ("website_collector_personal"   , "/collector/:collectorId/:name", contexts.WebsiteAuthedContext, collector.CollectorHandler, "collector/index.html", view_attrs=STANDARD_VIEW_ATTRS)
+    , ClassRoute ("website_collector_collection"   , "/collector/:collectorId/:name/collection", contexts.WebsiteAuthedContext, collector.CollectorHandler, "collector/collection.html", view_attrs=STANDARD_VIEW_ATTRS)
+    , ClassRoute ("website_collector_art"   , "/collector/:collectorId/:name/art", contexts.WebsiteAuthedContext, collector.CollectorHandler, "collector/art.html", view_attrs=STANDARD_VIEW_ATTRS)
+    , ClassRoute ("website_collector_news"   , "/collector/:collectorId/:name/news", contexts.WebsiteAuthedContext, collector.CollectorHandler, "collector/news.html", view_attrs=STANDARD_VIEW_ATTRS)
 
-    , FunctionRoute ("website_collector_personal"   , "/collector/:collectorId/:name", contexts.WebsiteCollectorContext, collector.index, "collector/index.html")
-    , FunctionRoute ("website_collector_collection"   , "/collector/:collectorId/:name/collection", contexts.WebsiteCollectorContext, collector.index, "collector/collection.html")
-    , FunctionRoute ("website_collector_art"   , "/collector/:collectorId/:name/art", contexts.WebsiteCollectorContext, collector.index, "collector/art.html")
-    , FunctionRoute ("website_collector_news"   , "/collector/:collectorId/:name/news", contexts.WebsiteCollectorContext, collector.index, "collector/news.html")
-
-    #static content
+    # static content
     , FunctionRoute ("website_content_about"   , "/about", contexts.WebsiteRootContext, content.index, "content/about.html")
     , FunctionRoute ("website_content_contact" , "/contact", contexts.WebsiteRootContext, content.index, "content/contact.html")
     , FunctionRoute ("website_content_faq"     , "/faq", contexts.WebsiteRootContext, content.index, "content/faq.html")

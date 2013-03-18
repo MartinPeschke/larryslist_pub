@@ -57,33 +57,3 @@ class WebsiteAuthedContext(WebsiteRootContext):
             request.fwd("website_checkout_join")
         else:
             return True
-
-class WebsiteCollectorContext(WebsiteAuthedContext):
-    @reify
-    def collector(self):
-        id = self.request.matchdict.get('collectorId')
-        col = self.user.getCollector(id)
-        if not col: return None
-        else:
-            return GetCollectorProc(self.request, {'id': id, 'userToken': self.user.token})
-
-    @reify
-    def collectionMeta(self):
-        if self.collector.Collection:
-            result = CollectionMetaModel.wrap(GetCollectionMetaProc(self.request, str(self.collector.Collection.id)))
-        else:
-            result = None
-        return result
-
-    @reify
-    def collectorMeta(self):
-        result = CollectorMetaModel.wrap(GetCollectorMetaProc(self.request, str(self.collector.id)))
-        return result
-
-    def is_allowed(self, request):
-        if self.user.isAnon():
-            request.fwd("website_index")
-        elif not self.collector:
-            raise HTTPUnauthorized()
-        else:
-            return True

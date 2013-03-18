@@ -4,6 +4,7 @@ from larryslist.models.config import GenreModel, MediumModel, NamedModel, Intere
 from pyramid.decorator import reify
 
 
+
 class LocationModel(Mapping):
     name = TextField()
     token = TextField()
@@ -366,6 +367,8 @@ class CollectionMetaModel(Mapping):
     ArtAdvisor = ListField(DictField(ArtAdvisorModel))
     Loan = ListField(DictField(LoanModel))
     Cooperation = ListField(DictField(CooperationModel))
+    def getDenseList(self, list):
+        return [l for l in list if isinstance(l, Mapping) and not l.isEmptyModel()]
 
 
 
@@ -410,3 +413,5 @@ class SocietyMemberModel(AddressModel):
 class CollectorMetaModel(Mapping):
     Museum = ListField(DictField(BoardMemberModel))
     SocietyMember = ListField(DictField(SocietyMemberModel))
+    def getDenseList(self, list):
+        return [l for l in list if isinstance(l, Mapping) and not l.isEmptyModel()]
