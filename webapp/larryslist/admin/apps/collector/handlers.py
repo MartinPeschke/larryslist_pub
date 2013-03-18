@@ -56,7 +56,7 @@ class BaseArtHandler(FormHandler):
     activeForm = None
     def __init__(self, context = None, request = None):
         super(BaseArtHandler, self).__init__(context, request)
-        if self.collector._data is None:
+        if self.collector and self.collector._data is None:
             raise HTTPNotFound()
 
 
