@@ -7,10 +7,17 @@
         ${self.artworksCard(collector.Collection)}
     %endif
     %if view.collectionMeta:
-        ${self.exhibitionCard(view.collectionMeta)}
-        ${self.directorCard(view.collectionMeta)}
-        ${self.publicationCard(view.collectionMeta)}
-        ${self.artAdvisorCard(view.collectionMeta)}
+        <%
+            collection = view.collectionMeta
+            museums = collection.getDenseList(collection.Museum)
+            directors = collection.getDenseList(collection.Director)
+            publications = collection.getDenseList(collection.Publication)
+            artadvisors = collection.getDenseList(collection.ArtAdvisor)
+        %>
+        ${self.exhibitionCard(museums)}
+        ${self.directorCard(directors)}
+        ${self.publicationCard(publications)}
+        ${self.artAdvisorCard(artadvisors)}
     %endif
     %if not (collector.Collection or view.collectionMeta):
         <%self:card title="No information available yet">
@@ -73,10 +80,10 @@
     %endif
 </%def>
 
-<%def name="exhibitionCard(collection)">
-    %if len(collection.Museum):
+<%def name="exhibitionCard(museums)">
+    %if len(museums):
     <%self:card title="Exhibition Space / Museum of Collector">
-            %for museum in collection.Museum:
+            %for museum in museums:
                 <div class="single-museum">
                 <%self:addressCol obj="${museum}">
                     ${self.simpleLine("Name", museum.permanentSpace)}
@@ -90,10 +97,10 @@
     %endif
 </%def>
 
-<%def name="directorCard(collection)">
-    %if len(collection.Director):
+<%def name="directorCard(directors)">
+    %if len(directors):
     <%self:card title="Curator of Collection">
-            %for director in collection.Director:
+            %for director in directors:
                 <div class="single-museum">
                     ${self.simpleLine("Position", director.position)}
                     ${self.simpleLine("Name", director.getLabel(request))}
@@ -107,10 +114,10 @@
     %endif
 </%def>
 
-<%def name="publicationCard(collection)">
-    %if len(collection.Publication):
+<%def name="publicationCard(pubs)">
+    %if len(pubs):
     <%self:card title="Publications">
-            %for pub in collection.Publication:
+            %for pub in pubs:
                 <div class="multi-column-line">
                     ${self.simpleLine("Publication", pub.title)}
                     ${self.simpleLine("Publisher", pub.publisher)}
@@ -121,10 +128,10 @@
     %endif
 </%def>
 
-<%def name="artAdvisorCard(collection)">
-    %if len(collection.ArtAdvisor):
+<%def name="artAdvisorCard(advisors)">
+    %if len(advisors):
         <%self:card title="Art advisor">
-            %for aa in collection.ArtAdvisor:
+            %for aa in advisors:
                 <div class="single-museum">
                     ${self.simpleLine("Name", aa.getLabel(request))}
                     ${self.simpleLine("Name in Original Language", aa.origName)}

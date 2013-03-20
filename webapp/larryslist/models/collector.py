@@ -176,8 +176,12 @@ class CollectionModel(Mapping):
     def hasArtists(self):
         return len(self.Artist) > 0
 
+    @reify
+    def artworkList(self):
+        return [aw for a in self.Artist for aw in a.ArtWork]
+
     def hasArtworks(self):
-        return len(self.Artist) > 0
+        return len(self.artworkList)
 
 class UniversityModel(Mapping):
     name = TextField()

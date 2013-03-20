@@ -4,12 +4,16 @@
     <%
         collection = view.collectionMeta
         collector = view.collectorMeta
+        loans = collection.getDenseList(collection.Loan)
+        cooperations = collection.getDenseList(collection.Cooperation)
+        museums = collector.getDenseList(collector.Museum)
+        society = collector.getDenseList(collector.SocietyMember)
     %>
-    %if collection and (len(collection.Loan) or len(collection.Cooperation)) or collector and (len(collector.Museum) or len(collector.SocietyMember)):
-        ${self.loanCard(collection)}
-        ${self.cooperationCard(collection)}
-        ${self.boardCard(collector)}
-        ${self.societyCard(collector)}
+    %if collection and (len(loans) or len(cooperations)) or collector and (len(museums) or len(society)):
+        ${self.loanCard(loans)}
+        ${self.cooperationCard(cooperations)}
+        ${self.boardCard(museums)}
+        ${self.societyCard(society)}
     %else:
         <%self:card title="No information available yet">
             <div class="line">
@@ -22,8 +26,7 @@
 
 </%def>
 
-<%def name="loanCard(collection)">
-    <% loans = collection.getDenseList(collection.Loan) %>
+<%def name="loanCard(loans)">
     %if len(loans):
     <%self:card title="Permanent Loans and Donations of Artworks">
             %for loan in loans:
@@ -40,8 +43,7 @@
     %endif
 </%def>
 
-<%def name="cooperationCard(collection)">
-    <% cooperations = collection.getDenseList(collection.Cooperation) %>
+<%def name="cooperationCard(cooperations)">
     %if len(cooperations):
     <%self:card title="Cooperations with External Institutions">
             %for loan in cooperations:
@@ -58,8 +60,7 @@
     %endif
 </%def>
 
-<%def name="boardCard(collector)">
-    <% museums = collector.getDenseList(collector.Museum) %>
+<%def name="boardCard(museums)">
     %if len(museums):
     <%self:card title="Museum Board, Advisory and Committee Positions">
         %for loan in museums:
@@ -76,8 +77,7 @@
     %endif
 </%def>
 
-<%def name="societyCard(collector)">
-    <% society = collector.getDenseList(collector.SocietyMember) %>
+<%def name="societyCard(society)">
     %if len(society):
     <%self:card title="Museum Friends' Circle and Art Societies Memberships">
             %for loan in society:
