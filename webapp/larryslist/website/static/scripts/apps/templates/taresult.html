@@ -1,11 +1,3 @@
-<span class="resultcounter">{{ models.length }} hits
-    {% if (models.length < total){ %}
-        of {{ total }}
-    {% } %}
-</span>
-{% if(models.length > 0){ %}
-    <a class="dismiss">×</a>
-{% } %}
 <ul class="entity-search" >
 {% _(models).each(function(item, idx){ %}
     <li data-entity-id="{{ item.id }}" class="search-result-item" shortcut="{{ idx+1 }}">

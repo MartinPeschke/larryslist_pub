@@ -3,63 +3,104 @@
 
 <%def name="content()">
 
-<div class="sub-header-band">
+<div class="container">
+    <div class="row">
+        <div class="span12">
+            <h1 class="profile-count-band">
+                The only<br/>collector database in the web with
+                <b class="count-suffix">${vctxt.config.ReviewedCollectors.no} collector profiles</b>
+                in the database
+            </h1>
+        </div>
+    </div>
+
+    <form class="search-form form-validated index-search-form" method="GET" action="${request.fwd_url("website_search", query='')}">
+        <div class="row">
+            <div class="span12">
+                <h1 class="box-title center">Find Art Collectors</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span6">
+                <div class="control-group first">
+                    <label class="control-label search-title">
+                        What city is the Collector based in?
+                    </label>
+                    <div class="controls typeahead" data-api-url="/web/search/addressTypeAhead" data-api-result="TypeAhead">
+                        <div class="search-field"><input type="text" name="l" class="input-fullwidth query" autocomplete="off"/></div>
+                    </div>
+                </div>
+            </div>
+            <div class="span6">
+                <div class="control-group last">
+                    <label class="control-label search-title">
+                        What artist are you looking for?
+                    </label>
+                    <div class="controls typeahead" data-api-url="/web/search/genreTypeAhead" data-api-result="TypeAhead">
+                        <div class="search-field"><input type="text" name="t" class="input-fullwidth query" autocomplete="off"/></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span12 center">
+                <button type="submit" class="btn btn-primary btn-large btn-extra-wide"><span data-icon="s" aria-hidden="true"></span> Search</button>
+            </div>
+        </div>
+    </form>
+    <div class="row">
+        <div class="span12">
+            <h1 class="box-title center">This Is How It Works</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="span12">
+            <div class="home-icons">
+                <div class="home-icon search"></div>
+                <div class="text">Search collectors via filters</div>
+            </div><div class="home-icons">
+                <div class="home-icon buy"></div>
+                <div class="text">Buy profiles at 9&euro; each</div>
+            </div><div class="home-icons">
+                <div class="home-icon view"></div>
+                <div class="text">View collector's profiles</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="index-tab-nav">
     <div class="container">
         <div class="row">
             <div class="span12">
-                <div class="profile-count-band">
-                    <span class="count-prefix">
-                        The only collector database in the web
-                    </span>
-                    <span class="profile-count">${vctxt.config.ReviewedCollectors.no}</span>
-                    <span class="count-suffix">collector profiles<br/>in the database</span>
+                <ul class="nav nav-pills home-nav-pills"><li class="nav-pill-large active"><a href="#what-you-get">
+                    What You Get
+                </a></li><li class="nav-pill-large"><a href="#pricing">
+                    Pricing
+                </a></li><li class="nav-pill-large"><a href="#ranking">
+                    Collector Ranking
+                </a></li><li class="nav-pill-large"><a href="#data-sources">
+                    Data Sources
+                </a></li><li class="nav-pill-large"><a href="#who-is-larry">
+                    Who is Larry?
+                </a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="affix-placeholder"></div>
+    <div class="landing-lower-page">
+        <div class="container">
+            <div class="row">
+                <div class="span12 homepage-tab-container">
+                    ${self.tabs()}
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="container standard-box centered index-page">
-    <div class="row">
-        <div class="span12">
-            <h4 class="box-title center">Find Art Collectors</h4>
-        </div>
-        <form class="search-form form-validated" method="GET" action="${request.fwd_url("website_search", query='')}">
-            <div class="span6">
-                <div class="control-group first">
-                    <label class="control-label">
-                        What city is the Collector based in?
-                    </label>
-                    <div class="controls typeahead" data-api-url="/web/search/addressTypeAhead" data-api-result="TypeAhead">
-                        <div class="search-field"><input type="text" name="l" class="input-xlarge query" autocomplete="off"/></div>
-                    </div>
-                </div>
-            </div>
-            <div class="span6">
-                <div class="control-group last">
-                    <label class="control-label">
-                        What type of art is (s)he collecting?
-                    </label>
-                    <div class="controls typeahead" data-api-url="/web/search/genreTypeAhead" data-api-result="TypeAhead">
-                        <div class="search-field"><input type="text" name="t" class="input-xlarge query" autocomplete="off"/><button type="submit" class="btn btn-primary"><span data-icon="s" aria-hidden="true"></span> Search</button></div>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
-<div class="container standard-box centered index-page">
-    <div class="row">
-        <div class="span12">
-            <div class="spaced-out">
-                <p><b>The most comprehensive people search on the web</b></p>
-                <p>
-                    We dive into the deep web to bring you results you won't find in any other search engine then we use a powerful identity resolution engine to link those seemingly disparate results into a set of meaningful profiles so you can easily find the person you are looking for. Curently there are 6.345 collectors in our database.
-                </p>
-            </div>
-        </div>
-    </div>
-</div>
 </%def>
 
 <%block name="scripts">
@@ -69,5 +110,31 @@
                 new View(_.extend({el:elem}, $(elem).data()));
             });
         })
+        $("#index-tab-nav").affix({offset: $("#index-tab-nav").offset().top});
+        $(window).scrollspy({target: "#index-tab-nav", offset: 200});
     </script>
 </%block>
+
+
+<%def name="tabs()">
+    <div id="what-you-get" class="index-pane">
+        <div class="panel left picture">pic</div>
+        <div class="panel right text">text</div>
+    </div><hr class="pane-separator">
+    <div id="pricing" class="index-pane">
+        <div class="panel left picture">pic</div>
+        <div class="panel right text">pic</div>
+    </div><hr class="pane-separator">
+    <div id="ranking" class="index-pane">
+        <div class="panel left picture">pic</div>
+        <div class="panel right text">pic</div>
+    </div><hr class="pane-separator">
+    <div id="data-sources" class="index-pane">
+        <div class="panel left picture">pic</div>
+        <div class="panel right text">pic</div>
+    </div><hr class="pane-separator">
+    <div id="who-is-larry" class="index-pane">
+        <div class="panel left picture">text</div>
+        <div class="panel right text">text</div>
+    </div>
+</%def>

@@ -1,88 +1,55 @@
-@dimmedBackdround: #f3f3f3;
-@borderColor:#ddd;
-@searchResultItemHeight: 26px;
+@borderColor:#777;
+@searchResultItemHeight: 30px;
+
+.search-field {
+  input {margin-bottom:0;}
+}
+
 .entity-search-result {
   position: absolute;
   z-index:5;
   width: 100%;
   min-width:300px;
   left:0;
-  background: @dimmedBackdround;
+  background: @dropdownBackground;
 
   .loading {
     text-align: center;
     padding:  10px;
-    border: 1px solid @borderColor;
-  }
-  .resultcounter {
-    position: absolute;
-    bottom: -@searchResultItemHeight - 4px;
-    right: 0;
-    background: @dimmedBackdround;
-    padding: 5px 10px;
-    text-shadow: 0 0 1px
-    white;
-    box-shadow: 0 5px 10px
-    rgba(0, 0, 0, 0.2);
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
-    border-left: 1px solid darken(@borderColor, 20%);
-    border-bottom: 1px solid darken(@borderColor, 20%);
-    border-right: 1px solid darken(@borderColor, 20%);
+    border: 1px solid @dropdownBorder;
   }
   .entity-search {
     padding: 0;
     list-style-type: none;
     margin: 0px;
     border: 1px solid darken(@borderColor, 20%);
-    border-top: 1px solid @borderColor;
-    border-bottom-left-radius: 5px;
-  }
-  .dismiss {
-    float: right;
-    cursor: pointer;
-    top: 0;
-    font-size: 2em;
-    position: absolute;
-    text-align: center;
-    right: -@searchResultItemHeight;
-    line-height:@searchResultItemHeight;
-    height:@searchResultItemHeight;
-    width: @searchResultItemHeight;
-    background-color: @dimmedBackdround;
-    border-top-right-radius: 12px;
-    border-bottom-right-radius: 12px;
-    border-top: 1px solid darken(@borderColor, 20%);
-    border-right: 1px solid darken(@borderColor, 20%);
-    border-bottom: 1px solid darken(@borderColor, 20%);
-    border-left: 1px solid @borderColor;
-    &:hover {background-color:darken(@dimmedBackdround, 10%);}
+    border-top: none;
   }
 }
 .search-result-item {
   padding: 2px 80px 2px 6px;
+  line-height: @searchResultItemHeight - 4px;
   position:relative;
   cursor:pointer;
-  color:#666;
+  color:@white;
   &.active {
-    background:#ddd;
-    .shortcut {background:#ddd;}
+    background:darken(@dropdownBackground, 15%);
+    .shortcut {background:darken(@dropdownBorder, 10%);}
   }
   + .search-result-item {border-top: 1px solid @borderColor;}
 
   .shortcut {
-    background: #EFEFEF;
-    border-left:1px solid #e3e3e3;
-    padding: 0;
+    background: darken(@dropdownBorder, 10%);
+    border-left:1px solid @dropdownBorder;
+    padding: 0 15px 0 0;
     height: 100%;
     display: block;
     position: absolute;
     right: 0;
     top: 0;
     vertical-align: middle;
-    line-height: 30px;
-    width: 69px;
-    text-align: center;
+    line-height: @searchResultItemHeight;
+    text-align: right;
   }
   &.create-new-entity {
     background:#666;
