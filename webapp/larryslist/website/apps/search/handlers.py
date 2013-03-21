@@ -1,6 +1,8 @@
-import urllib
+from xml.sax.saxutils import quoteattr
+from formencode.variabledecode import variable_decode
+import simplejson
 
 
 def index(context, request):
-    query = [v for k,v in request.params.items() if k in ['l', 't'] and v]
-    return {"query": ' '.join(query)}
+    query = variable_decode(request.params)
+    return {"query": quoteattr(simplejson.dumps(query))}

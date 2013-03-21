@@ -4,7 +4,7 @@ define(["tools/ajax", "tools/abstractsearch", "text!templates/taresult.html"], f
             , PlainResult = ajax.Model.extend({
             idAttribute:'value'
             , getSearchLabel: function(){
-                return this.id;
+                return this.get("label");
             }
         })
         , PlainSearchResult = ajax.Collection.extend({
@@ -25,17 +25,18 @@ define(["tools/ajax", "tools/abstractsearch", "text!templates/taresult.html"], f
         })
         , PlainTypeAhead = Backbone.View.extend({
             initialize: function(opts){
-                var view = this;
+                var view = this, $el = this.$el;
+                opts.mapping = opts.mapping || {};
                 this.$query = this.$(".query");
                 this.search = this.getSearch(opts);
                 this.search.on('selected', function(term){
                     view.search.hide();
                     view.$query.val(term.getSearchLabel());
+                    _.each(opts.mapping, function(sel, key, obj){
+                        $el.find(sel).val(term.get(key));
+                    })
                 });
-                this.search.on('extraItemSelected unknownterm:selected unknownterm:metaSelected', function(termname){
-                    view.search.hide();
-                    view.$query.val(termname);
-                });
+                this.search.on('extraItemSelected unknownterm:selected unknownterm:metaSelected', function(termname){});
             }
             , getSearch: function(opts){
                 return new TypeAheadSearch({
