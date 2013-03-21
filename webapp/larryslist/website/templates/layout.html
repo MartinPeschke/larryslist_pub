@@ -18,55 +18,63 @@
         </div>
     </%block>
     <%block name="footer">
-    <footer class="container">
-        <div class="row">
-        <div class="footer">
-            <div class="span2">
-                <h5>About</h5>
-                <ul class="unstyled">
-                    <li><a href="${request.fwd_url("website_content_about")}" class="footer-link">Who is Larry</a></li>
-                    <li><a href="#" class="footer-link">What you get</a></li>
-                    <li><a href="#" class="footer-link">Our data sources</a></li>
-                    <li><a href="#" class="footer-link">Our collector ranking</a></li>
-                    <li><a href="#" class="footer-link">Pricing</a></li>
-                </ul>
-            </div>
-            <div class="span2">
-                <h5>Services</h5>
-                <ul class="unstyled">
-                    <li><a href="#" class="footer-link">Newsletter</a></li>
-                    <li><a href="#" class="footer-link">Blog</a></li>
-                    <li><a href="#" class="footer-link">Analytics</a></li>
-                </ul>
-            </div>
-            <div class="span2">
-                <h5>Info</h5>
-                <ul class="unstyled">
-                    <li><a href="${request.fwd_url("website_content_faq")}" class="footer-link">FAQ</a></li>
-                    <a href="#" class="footer-link">Career</a>
-                    <li><a href="${request.fwd_url("website_content_privacy")}" class="footer-link">Privacy</a></li>
-                    <a href="#" class="footer-link">Impressum</a>
-                </ul>
-            </div>
-            <div class="span2">
-                <h5>Corporate</h5>
-                <ul class="unstyled">
-                    <li><a href="${request.fwd_url("website_content_press")}" class="footer-link">Press</a></li>
-                    <li><a href="${request.fwd_url("website_content_contact")}" class="footer-link">Contact</a></li>
-                    <li><a href="${request.fwd_url("website_content_terms")}" class="footer-link">Terms & Conditions</a></li>
-                </ul>
-            </div>
-            <div class="span4">
-                <!-- Begin MailChimp Signup Form -->
-                <div id="mc_embed_signup">
-                    <form action="http://larrylist.us6.list-manage.com/subscribe/post?u=864162daef&amp;id=708c4879f8" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" novalidate>
-                        <label for="mce-EMAIL">Newsletter sign-up</label>
-                        <input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="Email-address*" required><button type="submit" name="subscribe" id="mc-embedded-subscribe" class="btn btn-primary">Go</button>
-                    </form>
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="span12 center">
+                    <h4>Larry's List is known from</h4>
+                    <img src="${STATIC_URL}img/adpartner_cnn.png" class="known-from-pic"/>
+                    <img src="${STATIC_URL}img/adpartner_nyt.png" class="known-from-pic"/>
+                    <img src="${STATIC_URL}img/adpartner_art.png" class="known-from-pic"/>
                 </div>
-                <!--End mc_embed_signup-->
             </div>
-        </div>
+            <div class="row">
+                <div class="span2">
+                    <h4>About</h4>
+                    <ul class="unstyled">
+                        <li><a href="${request.fwd_url("website_content_about")}" class="footer-link">Who is Larry</a></li>
+                        <li><a href="#" class="footer-link">What you get</a></li>
+                        <li><a href="#" class="footer-link">Our data sources</a></li>
+                        <li><a href="#" class="footer-link">Our collector ranking</a></li>
+                        <li><a href="#" class="footer-link">Pricing</a></li>
+                    </ul>
+                </div>
+                <div class="span2">
+                    <h4>Services</h4>
+                    <ul class="unstyled">
+                        <li><a href="#" class="footer-link">Newsletter</a></li>
+                        <li><a href="#" class="footer-link">Blog</a></li>
+                        <li><a href="#" class="footer-link">Analytics</a></li>
+                    </ul>
+                </div>
+                <div class="span2">
+                    <h4>Info</h4>
+                    <ul class="unstyled">
+                        <li><a href="${request.fwd_url("website_content_faq")}" class="footer-link">FAQ</a></li>
+                        <a href="#" class="footer-link">Career</a>
+                        <li><a href="${request.fwd_url("website_content_privacy")}" class="footer-link">Privacy</a></li>
+                        <a href="#" class="footer-link">Impressum</a>
+                    </ul>
+                </div>
+                <div class="span2">
+                    <h4>Corporate</h4>
+                    <ul class="unstyled">
+                        <li><a href="${request.fwd_url("website_content_press")}" class="footer-link">Press</a></li>
+                        <li><a href="${request.fwd_url("website_content_contact")}" class="footer-link">Contact</a></li>
+                        <li><a href="${request.fwd_url("website_content_terms")}" class="footer-link">Terms & Conditions</a></li>
+                    </ul>
+                </div>
+                <div class="span4">
+                    <!-- Begin MailChimp Signup Form -->
+                    <div id="mc_embed_signup">
+                        <form action="http://larrylist.us6.list-manage.com/subscribe/post?u=864162daef&amp;id=708c4879f8" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" novalidate>
+                            <label class="mail-chimp-header" for="mce-EMAIL">Newsletter sign-up</label>
+                            <input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="Email-address*" required><button type="submit" name="subscribe" id="mc-embedded-subscribe" class="btn btn-primary">Go</button>
+                        </form>
+                    </div>
+                    <!--End mc_embed_signup-->
+                </div>
+            </div>
         </div>
     </footer>
     </%block>

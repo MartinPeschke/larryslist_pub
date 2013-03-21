@@ -50,9 +50,7 @@ small.heading {text-transform: uppercase;display: block;}
   .btn {margin-top:0;}
 }
 
-.footer {
-  margin-top:30px; padding: 20px 0; width: 100%; display: block; border-top: 1px solid #eee;;
-}
+
 
 .highlight {
   color: @linkColor;
@@ -84,13 +82,29 @@ small.heading {text-transform: uppercase;display: block;}
 }
 
 
+
+
+
+
+.footer {
+  margin-top:30px; padding: 20px 0;
+  background-color: @navbarBackground;
+  .known-from-pic {
+    vertical-align: top;
+    margin: 0 10px 30px;
+  }
+  .footer-link {
+    color:@textColor;
+    font-size:12px;
+    line-height:2em;
+  }
+}
 /* ============ MAILCHIMP ================== */
 
 #mc_embed_signup {
-  padding: 15px 15px 10px;
-  #gradient > .vertical(#ebebed,#fff);
-  .standard-frame;
-  .btn {vertical-align: top;}
-  label {font-weight: bold;}
+  .btn {vertical-align: top;.borderradius(0);}
+  .mail-chimp-header {font-family: @headingsFontFamily; font-size: @baseFontSize * 1.25; margin: 10px 0;}
   #mc-embedded-subscribe-form {margin-bottom:0;}
 }
+
+
