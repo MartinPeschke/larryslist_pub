@@ -27,9 +27,9 @@
                         What city is the Collector based in?
                     </label>
                     <div class="controls typeahead" data-api-url="/web/search/addressTypeAhead" data-api-result="TypeAhead" data-mapping='{"value":".val", "key":".key"}'>
-                    <input type="hidden" name="addr.key" class="key"/>
-                    <input type="hidden" name="addr.val" class="val"/>
-                        <div class="search-field"><input type="text" name="addr.lbl" class="input-fullwidth query" autocomplete="off"/></div>
+                    <input type="hidden" name="q-0.key" class="key"/>
+                    <input type="hidden" name="q-0.val" class="val"/>
+                        <div class="search-field"><input type="text" class="input-fullwidth query" autocomplete="off"/></div>
                     </div>
                 </div>
             </div>
@@ -39,9 +39,9 @@
                         What artist are you looking for?
                     </label>
                     <div class="controls typeahead" data-api-url="/web/search/artistTypeAhead" data-api-result="TypeAhead" data-mapping='{"value":".val", "key":".key"}'>
-                        <input type="hidden" name="art.key" class="key"/>
-                        <input type="hidden" name="art.val" class="val"/>
-                        <div class="search-field"><input type="text" name="art.lbl" class="input-fullwidth query" autocomplete="off"/></div>
+                        <input type="hidden" name="q-1.key" class="key"/>
+                        <input type="hidden" name="q-1.val" class="val"/>
+                        <div class="search-field"><input type="text" class="input-fullwidth query" autocomplete="off"/></div>
                     </div>
                 </div>
             </div>

@@ -6,10 +6,10 @@
     ${self.searchBody(False)}
 </%def>
 <%def name="searchBody(mineSelected = False)">
-<div class="container page-body search-page">
+<div class="container search-page">
     <div class="row">
         <div class="span12">
-            <div class="box-title tinted search-results-tags">
+            <div class="box-title search-results-tags">
                 <a class="link-style pull-right dismiss">Reset</a>
             </div>
         </div>
@@ -28,15 +28,6 @@
             </div>
 
             <form class="search-filters">
-                <div class="search-box">
-                    <input type="text" name="l" class="search-query" placeholder="Search" value="${query}" autocomplete="off"/><button type="submit" class="btn"><span data-icon="s" aria-hidden="true"></span></button>
-                </div>
-                <div class="collector-filters">
-                    <h5>Personal</h5>
-                </div>
-                <div class="collection-filters">
-                    <h5>Collection</h5>
-                </div>
             </form>
         </div>
         <div class="span9">
@@ -81,5 +72,5 @@
 </%def>
 
 <%block name="options">
-    options.pageconfig.SEARCH = {el: $(".search-page-container")};
+    options.pageconfig.SEARCH = {el: $(".search-page-container"), query:${query|n}};
 </%block>

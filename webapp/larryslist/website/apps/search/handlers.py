@@ -5,4 +5,5 @@ import simplejson
 
 def index(context, request):
     query = variable_decode(request.params)
-    return {"query": quoteattr(simplejson.dumps(query))}
+    query = query.get("q", [])
+    return {"query": simplejson.dumps(query)}

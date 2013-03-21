@@ -4,7 +4,7 @@ define(
             , "text!templates/tag.html"
             , "text!templates/filtersection.html"
             , "text!templates/filteroption.html"]
-    , function(ajax, cart, user, Collector, colItem, tagTempl, fsTempl, foTempl, srTempl, fsrTempl){
+    , function(ajax, cart, user, Collector, colItem, tagTempl, fsTempl, foTempl){
     var
     MODULE_KEY = 'SEARCH'
     , instance
@@ -44,7 +44,7 @@ define(
         , defaultShow: 5
         , events: {"click .show-more":"showMore"}
         , initialize: function(opts){
-            this.setElement(this.template({model: this.model, title:opts.title}));
+            this.setElement(this.template(opts));
             if(this.model.length){this.onUpdate(this.model);}
             this.listenTo(this.model, "destroy", this.remove);
         }
@@ -151,54 +151,34 @@ define(
     })
 
     , FilterView = ajax.View.extend({
-        SECTIONS : { Collection: { root: ".collection-filters"
-                , elems: [
-                    {key: "Genre", title: "Category / Genre / Stylistic Period"}
-                    , {key: "Origin", title: "Region / Origin of Artist"}
-                    , {key: "Medium", title: "Medium"}
-                    , {key: "Artist", title: "Artist"}
-            ]}
-            , Collector: { root: ".collector-filters"
-                , elems: [
-                    {key: "Country", title: "Country"}
-                    , {key: "Region", title: "Region"}
-                    , {key: "City", title: "City"}
-                    , {key: "Gender", title: "Gender"}
-            ]}
-        }
+        FILTER : [
+            {key: "ARTIST", prop:"Artist", title: "Artist", expanded: true, allLabel: "All Artists"}
+            , {key: "CITY", prop:"City", title: "City", expanded: true, allLabel: "All Cities"}
+            , {key: "GENDER", prop:"Gender", title: "Gender", expanded: false, allLabel: "All Genders"}
+            , {key: "COUNTRY", prop:"Country", title: "Country", expanded: false, allLabel: "All Countries"}
+            , {key: "GENRE", prop:"Genre", title: "Genre", expanded: false, allLabel: "All Genres"}
+            , {key: "ORIGIN", prop:"Origin", title: "Regional Art Coverage", expanded: false, allLabel: "All Regions"}
+            , {key: "MEDIUM", prop:"Medium", title: "Medium", expanded: false, allLabel: "All Media"}
+        ]
         , events : {
             "submit .search-filters":"onSubmit"
         }
         , initialize: function(){
             var view = this, tagRoot = this.$(".search-results-tags");
-
             this.$form = this.$(".search-filters");
-            this.$query = this.$form.find(".search-query");
-            this.model.set("term", this.$query.val());
-
-            _.each(this.SECTIONS, function(val){
-                view.setup(val.elems, view.$(val.root), tagRoot);
-            });
+            _.each(this.FILTER, view.setup, this);
         }
-        , setup: function(props, root, tagRoot){
-            var view = this;
-            _.each(props, function(v){
-                view.listenTo(view.model, v.key+":updated", view.addSection(v, root));
-                view.listenTo(view.model, v.key+":change:selected", view.setTag(v, tagRoot));
-            });
+        , setup: function(props){
+            var view = this, root = this.$form;
+            var v = new FilterSectionView(_.extend({model: view.model.get(props.prop)}, props));
+            root.append(v.$el);
+            //view.listenTo(view.model, props.prop+":change:selected", view.setTag(props));
         }
         , setTag: function(opts, root){
             return function(model, selected){
                 if(selected){
                     root.append(new TagView({model:model}).$el);
                 }
-            }
-        }
-        , addSection: function(opts, root){
-            var view = this;
-            return function(model){
-                var v = new FilterSectionView({model: model, title: opts.title});
-                root.append(v.$el);
             }
         }
         , onSubmit: function(e){
