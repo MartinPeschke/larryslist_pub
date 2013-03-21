@@ -1,9 +1,8 @@
 define(
     ["tools/ajax", "models/cart", "models/user", "models/collector"
         , "text!templates/searchresult.html"
-        , "text!templates/searchresult_full.html"
-        , "text!templates/flyout.html"]
-    , function(ajax, cart, user, Collector, resultTempl, fullResultTempl, flyoutTempl){
+        , "text!templates/searchresult_full.html"]
+    , function(ajax, cart, user, Collector, resultTempl, fullResultTempl){
 
     var
         resultTempl = _.template(resultTempl)
@@ -60,33 +59,6 @@ define(
                 window.location.href="/collector/"+this.model.id+"/"+encodeURIComponent(this.model.getFullName());
             }
         })
-
-        , CartFlyout = Backbone.View.extend({
-            template: _.template(flyoutTempl)
-            , tagName: "div"
-            , className: "cart-flyout"
-            , initialize:function(opts){
-                this.model = cart;
-                this.listenTo(this.model, "item:changed", this.render);
-                this.render();
-                this.$el.appendTo(opts.root);
-                this.offset = opts.root.offset();
-                opts.root.on("collector:selected collector:unselected", _.bind(this.adjust, this));
-            }
-            , render: function(){
-                var view = this;
-                this.model.getItems(function(items){
-                    var show = items.length>0;
-                    view.$el.html(view.template({total:items.length, user: user}));
-                    view.$el[show?'removeClass':'addClass']("invisi");
-                });
-            }
-            , adjust: function(e){
-                var pos = $(e.target).offset();
-                this.$el.css({top:pos.top - this.offset.top});
-            }
-        })
-
         , getView = function(collector, templ){
             var cls, v;
             if(user.ownsProfile(collector)){
@@ -99,5 +71,5 @@ define(
             v = new cls({model: collector, inCart: cart.contains(collector), template:templ})
             return v;
         };
-    return {SearchResults:SearchResults, ResultView:ResultView, CartFlyout:CartFlyout, getView: getView};
+    return {SearchResults:SearchResults, ResultView:ResultView, getView: getView};
 });

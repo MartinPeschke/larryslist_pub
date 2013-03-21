@@ -13,7 +13,9 @@
         ${self.header_messages()}
     </%block>
     <%block name="contentwrapper">
-        ${next.content()}
+        <div class="page-wrapper">
+            ${next.content()}
+        </div>
     </%block>
     <%block name="footer">
     <footer class="container">
@@ -72,13 +74,12 @@
 
 
 <%def name="menu(user)">
-    ${self.searchField()}
     <ul class="nav pull-right">
         <li class="nav-entry"><a class="nav-entry-link" href="#">Blog</a></li>
         <li class="nav-entry"><a class="nav-entry-link" href="#">Analytics</a></li>
 
-        <li class="nav-entry dropdown cart-dropdown-section">
-            <a class="nav-entry-link" data-toggle="dropdown" href="${request.fwd_url("website_cart")}">
+        <li class="dropdown cart-dropdown-section">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="${request.fwd_url("website_cart")}">
                 <span class="cart-total total">${len(vctxt.cart.getItems())}</span>
                 <span class="caret"></span>
             </a>
@@ -86,9 +87,7 @@
                 <li class="nav-entry cart-attach-dropdown"></li>
             </ul>
         </li>
-
     %if user.isAnon():
-
             <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="${request.fwd_url("website_login")}">
                     Login
@@ -112,11 +111,25 @@
                 </ul>
             </li>
     %else:
-        <li class="nav-entry">
-            <a class="nav-entry-link" href="${request.fwd_url("website_logout")}">
-                Logout
-            </a>
-        </li>
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="${request.fwd_url("website_user_profile")}">
+                    Account
+                    <span class="caret"></span>
+                </a>
+                <span class="down-arrow"></span>
+                <ul class="dropdown-menu">
+                    <li class="nav-entry">
+                        <a class="nav-entry-link" href="${request.fwd_url("website_user_profile")}">
+                            Account
+                        </a>
+                    </li>
+                    <li class="nav-entry">
+                        <a class="nav-entry-link" href="${request.fwd_url("website_logout")}">
+                            Logout
+                        </a>
+                    </li>
+                </ul>
+            </li>
     %endif
     </ul>
 </%def>
@@ -124,15 +137,3 @@
 
 <%block name="layoutscripts"/>
 <%def name="pageClass()"></%def>
-<%def name="searchField()">
-    <ul class="nav">
-        <li class="nav-entry">
-            <form action="${request.fwd_url("website_search")}">
-                <div class="search-box">
-                    <input type="text" name="l" class="search-query" placeholder="Search" value="" autocomplete="off"><button type="submit" class="btn"><span data-icon="s" aria-hidden="true"></span></button>
-                    <a class="advanced-search-link" href="${request.fwd_url("website_search")}">Advanced Search</a>
-                </div>
-            </form>
-        </li>
-    </ul>
-</%def>

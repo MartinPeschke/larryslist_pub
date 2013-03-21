@@ -225,8 +225,6 @@ define(
             this.$results = this.$(".search-results-body");
             this.setRealm(this.$(".search-realm").find("input[name=myCollectors]").filter(":checked"));
 
-            new colItem.CartFlyout({root: this.$results});
-
             this.filter = new FilterModel();
             this.filterView = new FilterView({el:this.$el, model: this.filter});
             this.listenTo(this.filter, "do:filter", this.doFilter);

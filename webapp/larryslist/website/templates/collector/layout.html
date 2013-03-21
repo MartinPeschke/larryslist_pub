@@ -14,7 +14,6 @@
                 ${self.tabLink("Art Engagement", "website_collector_art")}
                 ${self.tabLink("Sources", "website_collector_news")}
             </ul>
-
             ${self.cards(view.collector)}
             </div>
         </div>
@@ -47,12 +46,12 @@
                 </div>
             </div>
 
-            <h3 class="highlight name">${collector.getName()}</h3>
+            <h3 class="highlight name">${collector.getNameWTitle()}</h3>
             %if collector.origName:
-                    <h3 class="highlight name">${collector.origName}</h3>
+                <h3 class="highlight name">${collector.origName}</h3>
             %endif
             <div class="address">
-            ${collector.getAddress()}
+                ${collector.getAddress()}
             </div>
 
             <div class="genre-list">
@@ -61,13 +60,18 @@
             </div>
 
             %if collector.LinkedCollector:
-                    <div class="collector-partner">
-                        <small class="heading">Partner:</small>
-                        <div class="text">${collector.LinkedCollector.getName()}</div>
-                    </div>
+                <% ll = collector.LinkedCollector %>
+                <div class="collector-partner">
+                    <small class="heading">Partner:</small>
+                    %if vctxt.user.hasCollector(ll):
+                        <a href="${request.fwd_url("website_collector_personal", collectorId=ll.id, name=ll.getName())}" class="text">${ll.getName()}</a>
+                    %else:
+                        <div class="text">${ll.getName()}</div>
+                        <a href="#" class="btn btn-primary add-to-cart-link" data-profile=${ll.getJson()|n}>Buy Now</a>
+                    %endif
+                </div>
             %endif
         </div>
-
     </div>
 </%def>
 
@@ -114,10 +118,10 @@
     %if value:
         <div class="line ${classes}">
             <small class="heading key">
-            ${label}:
+                ${label}:
             </small>
             <div class="value">
-            <a class="text-overflow" href="${value}">${value}</a>
+                <a class="text-overflow" href="${value}">${value}</a>
             </div>
         </div>
     %endif

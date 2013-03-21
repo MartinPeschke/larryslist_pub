@@ -9,7 +9,12 @@ define(["tools/ajax", "models/collector", "models/user"], function(ajax, Collect
             this.register({'Collectors': new Collectors()});
 
             var data = hnc.options.cart;
-            if(data)this.setRecursive(data);
+            try{
+                if(data)this.setRecursive(data);
+            }catch(TypeError){
+                ajax.submit({url:"/cart/save", data:{}});
+            }
+
             this.listenTo(this, 'Collectors:add', this.persist);
             this.listenTo(this, 'Collectors:remove', this.persist);
         }
@@ -20,6 +25,7 @@ define(["tools/ajax", "models/collector", "models/user"], function(ajax, Collect
             }});
         }
         , addProfile: function(collector){
+            if (!(collector instanceof Collector)) {collector = new Collector(collector);}
             if(!this.contains(collector) && !user.ownsProfile(collector)){
                 this.get("Collectors").add(collector);
                 collector.trigger("cart:added");

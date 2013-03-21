@@ -1,8 +1,9 @@
+from xml.sax import saxutils
 from jsonclient import TextField, Mapping, DateField, IntegerField, BooleanField, DictField, ListField, DateTimeField
 from jsonclient.backend import RemoteProc
 from larryslist.models.config import GenreModel, MediumModel, NamedModel, InterestModel, IndustryModel, ThemeModel, OriginModel
 from pyramid.decorator import reify
-
+import simplejson
 
 
 class LocationModel(Mapping):
@@ -229,6 +230,8 @@ class LinkedCollectorModel(Mapping):
         if self.relation:
             result += u" ({})".format(self.relation)
         return result
+    def getJson(self):
+        return saxutils.quoteattr(simplejson.dumps(self.unwrap()))
 
 class OtherFactModel(Mapping):
     value = TextField()
@@ -242,6 +245,7 @@ STATUS = {
 class CollectorModel(SimpleCollectorModel):
 
     feederName = TextField()
+    title = TextField()
     firstName = TextField()
     lastName = TextField()
     origName = TextField()
@@ -264,6 +268,11 @@ class CollectorModel(SimpleCollectorModel):
 
     def getName(self):
         return u'{firstName} {lastName}'.format(firstName = self.firstName, lastName = self.lastName)
+    def getNameWTitle(self):
+        result = self.getName()
+        if self.title:
+            result ="{} {}".format(self.title, result)
+        return result
     def getStatusLabel(self):
         return STATUS[self.status]
     def canSubmitforReview(self, user):
@@ -371,10 +380,6 @@ class CollectionMetaModel(Mapping):
     ArtAdvisor = ListField(DictField(ArtAdvisorModel))
     Loan = ListField(DictField(LoanModel))
     Cooperation = ListField(DictField(CooperationModel))
-    def getDenseList(self, list):
-        return [l for l in list if isinstance(l, Mapping) and not l.isEmptyModel()]
-
-
 
 class BoardMemberModel(AddressModel):
     museum = TextField()
@@ -417,5 +422,3 @@ class SocietyMemberModel(AddressModel):
 class CollectorMetaModel(Mapping):
     Museum = ListField(DictField(BoardMemberModel))
     SocietyMember = ListField(DictField(SocietyMemberModel))
-    def getDenseList(self, list):
-        return [l for l in list if isinstance(l, Mapping) and not l.isEmptyModel()]

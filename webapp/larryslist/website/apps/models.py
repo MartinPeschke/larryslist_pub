@@ -55,13 +55,13 @@ class WebsiteCart(object):
     Collectors = []
 
     def setContent(self, json):
-        self.Collectors = json.get('Collectors')
+        self.Collectors = json.get('Collectors', [])
     def getContent(self, stringify = False):
         cart = self.Collectors
         return simplejson.dumps({'Collectors':cart})
 
     def getItems(self):
-        return self.Collectors
+        return self.Collectors or []
     def getCollectors(self):
         return map(CollectorModel.wrap, self.Collectors)
     def canSpend(self, user):
@@ -125,6 +125,8 @@ class UserModel(Mapping):
         return {c.id: c for c in self.Collector}
     def getCollector(self, id):
         return self.collectorMap.get(int(id))
+    def hasCollector(self, collector):
+        return isinstance(self.collectorMap.get(collector.id), CollectorModel)
 
 SignupProc = LoggingInProc("/user/signup")
 LoginProc = LoggingInProc("/user/login")

@@ -4,10 +4,10 @@
     <%
         collection = view.collectionMeta
         collector = view.collectorMeta
-        loans = collection.getDenseList(collection.Loan)
-        cooperations = collection.getDenseList(collection.Cooperation)
-        museums = collector.getDenseList(collector.Museum)
-        society = collector.getDenseList(collector.SocietyMember)
+        loans = view.getDenseList(collection, 'Loan')
+        cooperations = view.getDenseList(collection, 'Cooperation')
+        museums = view.getDenseList(collector, 'Museum')
+        society = view.getDenseList(collector, 'SocietyMember')
     %>
     %if collection and (len(loans) or len(cooperations)) or collector and (len(museums) or len(society)):
         ${self.loanCard(loans)}

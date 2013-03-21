@@ -1,4 +1,4 @@
-define(["tools/ajax", "tools/abstractsearch"], function(ajax, AbstractSearch){
+define(["tools/ajax", "tools/abstractsearch", "text!templates/taresult.html"], function(ajax, AbstractSearch, tmpl){
     var
         getRec = hnc.getRecursive
             , PlainResult = ajax.Model.extend({
@@ -18,7 +18,8 @@ define(["tools/ajax", "tools/abstractsearch"], function(ajax, AbstractSearch){
             }
         })
         , TypeAheadSearch = AbstractSearch.extend({
-            buildQuery: function(query){
+            template : _.template(tmpl)
+            , buildQuery: function(query){
                 return {term:query};
             }
         })

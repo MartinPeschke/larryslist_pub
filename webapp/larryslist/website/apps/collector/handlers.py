@@ -1,3 +1,4 @@
+from jsonclient import Mapping
 from larryslist.lib.baseviews import BaseHandler
 from larryslist.models.collector import CollectorMetaModel, GetCollectorMetaProc, CollectionMetaModel, GetCollectionMetaProc
 from larryslist.website.apps.models import GetCollectorProc
@@ -44,3 +45,7 @@ class CollectorHandler(BaseHandler):
             raise HTTPUnauthorized()
         else:
             return True
+
+    def getDenseList(self, obj, attr):
+        list = getattr(obj, attr, [])
+        return [l for l in list if isinstance(l, Mapping) and not l.isEmptyModel()]

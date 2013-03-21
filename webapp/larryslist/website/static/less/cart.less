@@ -7,6 +7,7 @@
   height:30px;
   display: inline-block;
   line-height: 20px;
+  margin-bottom: -10px;
   text-align: center;
   font-weight: bold;
   font-size: 1.2em;
@@ -20,8 +21,13 @@
   padding: 10px;
   border: 1px solid #eee;
   .box-shadow(0 0 3px rgba(0,0,0,.3));
-  .transition(~'top .4s ease-in-out, opacity .4s ease-in-out');
+  .transition(~'background-color .1s ease-in-out, top .4s ease-in-out, opacity .4s ease-in-out');
   &.invisi {.opacity(0);}
+  /*
+  &.highlighted {
+    background-color:rgba(5,5,5,.2);
+  }
+  */
 }
 
 

@@ -8,7 +8,6 @@ define(["tools/ajax", "models/cart", "models/user", "models/collector"
         initialize: function(opts){
             this.$results = this.$el.find(".search-results-body");
             this.results = new colItem.SearchResults();
-            new colItem.CartFlyout({root: this.$results});
 
             this.listenTo(this.results, "add", this.addResult);
             this.listenTo(this.results, "updated", this.updatedResults);

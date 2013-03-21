@@ -210,6 +210,7 @@ define(["tools/hash", "tools/ajax", "text!tools/templates/searchresult.html"]
                 this.$el.addClass("expanded");
                 this.rePosition();
                 if(this.$scrollWrap.length){this.$scrollWrap.on("scroll."+this.id, _.bind(this.rePosition, this));}
+                $(window).on("resize."+this.id, _.bind(this.rePosition, this));
                 this.trigger("show");
             }
             , hide: function(){
@@ -217,6 +218,7 @@ define(["tools/hash", "tools/ajax", "text!tools/templates/searchresult.html"]
                 this.$el.removeClass("expanded");
                 this.$resultNode.empty().hide();
                 this.$scrollWrap.off("scroll."+this.id);
+                $(window).off("resize."+this.id);
                 this.trigger("hide");
             }
             , mouseenter: function(e){

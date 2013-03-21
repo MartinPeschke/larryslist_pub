@@ -9,10 +9,10 @@
     %if view.collectionMeta:
         <%
             collection = view.collectionMeta
-            museums = collection.getDenseList(collection.Museum)
-            directors = collection.getDenseList(collection.Director)
-            publications = collection.getDenseList(collection.Publication)
-            artadvisors = collection.getDenseList(collection.ArtAdvisor)
+            museums = view.getDenseList(collection, 'Museum')
+            directors = view.getDenseList(collection, 'Director')
+            publications = view.getDenseList(collection, 'Publication')
+            artadvisors = view.getDenseList(collection, 'ArtAdvisor')
         %>
         ${self.exhibitionCard(museums)}
         ${self.directorCard(directors)}
@@ -29,8 +29,6 @@
         </%self:card>
     %endif
 </%def>
-
-
 
 <%def name="basicCard(collection)">
     <%self:card title="Basic Information">

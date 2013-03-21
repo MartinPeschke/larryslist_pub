@@ -2,18 +2,21 @@ from jsonclient.routing import FunctionRoute, App, ClassRoute, JSON_FORM_ATTRS, 
 from larryslist.website.apps import search, cart, collector, content
 from pyramid.httpexceptions import HTTPFound
 
-from . import contexts, index, auth
+from . import contexts, index, auth, account
 
 ROUTE_LIST = [
     FunctionRoute   ("website_index"             , "/", contexts.WebsiteRootContext, index.index, "index.html")
     , FunctionRoute ("website_index_member"      , "/home", contexts.WebsiteAuthedContext, index.index_member, "index_member.html")
-    , ClassRoute    ("website_login"             , "/login", contexts.WebsiteRootContext, auth.LoginHandler, "auth/form.html", view_attrs=JSON_FORM_ATTRS)
+    , ClassRoute    ("website_login"             , "/login", contexts.WebsiteAnonOnlyContext, auth.LoginHandler, "auth/form.html", view_attrs=JSON_FORM_ATTRS)
     , FunctionRoute ("website_logout"            , "/logout", contexts.WebsiteRootContext, auth.logout, None)
-    , ClassRoute    ("website_signup"            , "/signup", contexts.WebsiteRootContext, auth.SignupHandler, "auth/form.html", view_attrs=JSON_FORM_ATTRS)
+    , ClassRoute    ("website_signup"            , "/signup", contexts.WebsiteAnonOnlyContext, auth.SignupHandler, "auth/form.html", view_attrs=JSON_FORM_ATTRS)
     , ClassRoute    ("website_password"          , "/ajax/templates/password.html", contexts.WebsiteRootContext, auth.PasswordHandler, "auth/password.html", view_attrs=JSON_FORM_ATTRS)
     , ClassRoute    ("website_password_reset"    , "/password/reset/:token", contexts.WebsiteRootContext, auth.PasswordResetHandler, "auth/form.html", view_attrs=JSON_FORM_ATTRS)
     , FunctionRoute ("website_join_checkemail"   , "/signup/checkemail", contexts.WebsiteRootContext, auth.join_checkemail, "json", {'xhr':True})
     , FunctionRoute ("website_search"            , "/search", contexts.WebsiteRootContext, search.index, "search/index.html")
+
+    # user profile
+    , FunctionRoute ("website_user_profile"      , "/account", contexts.WebsiteRootContext, account.index, "account/index.html")
 
     , ClassRoute    ("website_cart"              , "/cart", contexts.WebsiteRootContext, cart.SpendCreditsHandler, "cart/index.html", view_attrs=JSON_FORM_ATTRS)
     , FunctionRoute ("website_cart_save"         , "/cart/save", contexts.WebsiteRootContext, cart.save_cart, "json", {'xhr':True})
@@ -21,7 +24,7 @@ ROUTE_LIST = [
     , ClassRoute    ("website_checkout"             , "/checkout", contexts.WebsiteRootContext, cart.CheckoutHandler, "cart/checkout.html", view_attrs=JSON_FORM_ATTRS)
     , FunctionRoute ("website_purchase"             , "/purchase", contexts.WebsiteRootContext, cart.straight_purchase, None)
     , FunctionRoute ("website_checkout_arbiter"     , "/checkout/arbiter", contexts.WebsiteRootContext, cart.checkout_arbiter, None)
-    , ClassRoute    ("website_checkout_join"        , "/checkout/join", contexts.WebsiteRootContext, cart.CheckoutLoginHandler, "cart/login.html", view_attrs=JSON_FORM_ATTRS)
+    , ClassRoute    ("website_checkout_join"        , "/checkout/join", contexts.WebsiteAnonOnlyContext, cart.CheckoutLoginHandler, "cart/login.html", view_attrs=JSON_FORM_ATTRS)
     , FunctionRoute ("website_checkout_plan_select" , "/checkout/plan", contexts.WebsiteRootContext, cart.checkout_plan_select, "cart/plan_select.html")
     , ClassRoute    ("website_checkout_set_option"  , "/checkout/option", contexts.WebsiteRootContext, cart.PaymentOptionsHandler, None, view_attrs=JSON_FORM_ATTRS)
     , FunctionRoute ("website_discard_saved_details", "/checkout/discard", contexts.WebsiteRootContext, cart.discard_saved_details, None)

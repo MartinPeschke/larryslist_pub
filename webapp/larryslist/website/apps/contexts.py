@@ -46,10 +46,18 @@ class WebsiteRootContext(RootContext):
     @reify
     def cart(self):
         session = self.request.session
-        cart = session.get("website_cart", WebsiteCart())
+        cart = session.get("website_cart") or WebsiteCart()
         if "website_cart" not in session:
             session["website_cart"] = cart
         return cart
+
+class WebsiteAnonOnlyContext(WebsiteRootContext):
+    def is_allowed(self, request):
+        if self.user.isAnon():
+            return True
+        else:
+            request.fwd("website_index")
+
 
 class WebsiteAuthedContext(WebsiteRootContext):
     def is_allowed(self, request):
