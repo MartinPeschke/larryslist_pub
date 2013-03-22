@@ -1,28 +1,52 @@
 define(
-    ["tools/ajax", "models/cart", "models/user", "models/collector"
+    ["tools/hash", "tools/ajax", "models/cart", "models/user", "models/collector"
+            , "tools/abstractsearch", "text!templates/taresult.html"
             , "views/colitem"
             , "text!templates/tag.html"
             , "text!templates/filtersection.html"
             , "text!templates/filteroption.html"]
-    , function(ajax, cart, user, Collector, colItem, tagTempl, fsTempl, foTempl){
+    , function(hashlib, ajax, cart, user, Collector,  AbstractSearch, typeTmpl, colItem, tagTempl, fsTempl, foTempl){
     var
     MODULE_KEY = 'SEARCH'
     , instance
-    , FilterTag = ajax.Model.extend({
-        idAttribute: "name"
-        , getValue: function(){return this.get("name");}
-        , getLabel: function(){return this.get("name");}
-        , isSelected: function(){return this.get("selected");}
-    })
-    , FilterTags = ajax.Collection.extend({idAttribute: "name", model: FilterTag})
+    , getRec = hnc.getRecursive
 
-    , TokenTag = ajax.Model.extend({
-        idAttribute: "name"
-        , getValue: function(){return this.get("token");}
-        , getLabel: function(){return this.get("name");}
+    , FilterTag = ajax.Model.extend({
+        idAttribute: "value"
+        , getValue: function(){return this.get("value");}
+        , getLabel: function(){return this.get("label");}
         , isSelected: function(){return this.get("selected");}
+        , getSearchLabel: function(){
+            return this.get("label");
+        }
     })
-    , TokenTags = ajax.Collection.extend({idAttribute: "name", model: TokenTag})
+    , FilterTags = ajax.Collection.extend({idAttribute: "value", model: FilterTag})
+
+    , TypeAheadSearch = AbstractSearch.extend({
+        template : _.template(typeTmpl)
+        , submitFunc: _.bind(ajax.submit, ajax)
+        , buildQuery: function(query){
+            return {key: this.options.apiKey, value: query};
+        }
+    })
+    , PlainTypeAhead = Backbone.View.extend({
+        initialize: function(opts){
+            var view = this, $el = this.$el;
+            opts.mapping = opts.mapping || {};
+            this.$query = this.$(".query");
+            this.search = this.getSearch(opts);
+        }
+        , getSearch: function(opts){
+            return new TypeAheadSearch({
+                el:this.$el
+                , suppressExtra: true
+                , model: new FilterTags([])
+                , searchUrl: '/search/entity'
+                , apiKey: opts.apiKey
+            });
+        }
+    })
+
 
     , FilterOptionView = Backbone.View.extend({
         template: _.template(foTempl)
@@ -38,31 +62,74 @@ define(
         , onChange: function(){
             this.model.set("selected", this.$("input").is(":checked"));
         }
+        , selectSilent: function(val){
+            this.model.set({selected: val}, {silent: true});
+            this.$("input").prop("checked", val);
+        }
     })
     , FilterSectionView = Backbone.View.extend({
         template: _.template(fsTempl)
-        , defaultShow: 5
-        , events: {"click .show-more":"showMore"}
-        , initialize: function(opts){
-            this.setElement(this.template(opts));
-            if(this.model.length){this.onUpdate(this.model);}
-            this.listenTo(this.model, "destroy", this.remove);
+        , defaultShow: 20
+        , events: {
+            "click .show-more":"showMore"
         }
-        , onUpdate: function(model){
+        , initialize: function(opts){
+            var view = this;
+            this.setElement(this.template(opts));
+            this.selectedCount = 0;
+            this.model.each(function(m){if(m.get("selected"))this.selectedCount++;}, this);
+
+            this.allModel = new FilterTag({label: this.options.allLabel, selected:this.selectedCount===0, allModel: true});
+            this.allView = new FilterOptionView({model:this.allModel, isExtra:false});
+            this.render(this.model);
+
+            this.listenTo(this.model, "add", this.addOption);
+            this.listenTo(this.model, "change:selected", this.filterSelected);
+            this.listenTo(this.allModel, "change:selected", this.allSelected);
+            //this.listenTo(this.model, "destroy", this.remove);
+
+
+            var ta = new PlainTypeAhead({el: this.$(".type-ahead-field"), apiKey: opts.key});
+            ta.search.on('selected', function(term){
+                ta.search.hide();
+                ta.$query.val("");
+                view.model.addOrUpdate(term, {preserve: true});
+                term.set("selected", true);
+            });
+        }
+        , render: function(model){
             var $el = this.$(".filter-list")
                 , models = model.models
                 , limit = this.defaultShow
                 , len = Math.min(models.length, limit)
                 , html = []
                 , idx;
+            html.push(this.allView.el);
             for(idx=0;idx<len;idx++){
                 var model = models[idx], v = new FilterOptionView({model:model, isExtra:false});
                 html.push(v.el);
             }
-            $el.html(html);
+            $el.append(html);
             if(models.length>limit){
                 $el.append('<a class="link show-more" data-toggle-text="▲ '+ (models.length - limit) +' less">▼ '+ (models.length - limit) +' more</a>')
             }
+        }
+        , addOption: function(model){
+            var $el = this.$(".filter-list");
+            var v = new FilterOptionView({model:model, isExtra:false});
+            $el.append(v.el);
+        }
+        , allSelected: function(){
+            this.model.each(function(m){if(m.get("selected"))m.set("selected", false);}, this);
+            this.allModel.set("selected", true);
+        }
+        , filterSelected: function(model, selected){
+            if(selected)this.selectedCount++;
+            else this.selectedCount--;
+            this.checkAll();
+        }
+        , checkAll:function(e){
+            this.allView.selectSilent(this.selectedCount <= 0);
         }
         , showMore: function(e){
             var $el = this.$(".filter-list")
@@ -87,7 +154,6 @@ define(
                 }
                 $(e.target).before(html);
             }
-
         }
         , getTitle: function(){
             return this.options.title;
@@ -95,45 +161,46 @@ define(
     })
     , FilterModel = ajax.Model.extend({
         FILTERS: [
-            {name: "Artist", cls:FilterTags}
-            , {name: "Gender", cls:FilterTags}
-            , {name: "Genre", cls:FilterTags}
-            , {name: "Medium", cls:FilterTags}
-            , {name: "Origin", cls:FilterTags}
-            , {name: "Country", cls:TokenTags}
-            , {name: "Region", cls:TokenTags}
-            , {name: "City", cls:TokenTags}
+            {name: "ARTIST", cls:FilterTags}
+            , {name: "GENDER", cls:FilterTags}
+            , {name: "GENRE", cls:FilterTags}
+            , {name: "MEDIUM", cls:FilterTags}
+            , {name: "ORIGIN", cls:FilterTags}
+            , {name: "COUNTRY", cls:FilterTags}
+            , {name: "REGION", cls:FilterTags}
+            , {name: "CITY", cls:FilterTags}
         ]
-        , initialize:function(opts){
+        , initialize:function(filters, query){
             var model = this, filter = {};
+            query = query || {};
 
             _.each(this.FILTERS, function(f){
-                filter[f.name] = new f.cls();
+                filter[f.name] = new f.cls(null);
                 model.listenTo(filter[f.name], "change:selected", function(){model.trigger("do:filter");})
             });
 
             this.register(filter);
+            this.setRecursive(filters);
+
+            // set SELECTED=TRUE for anything in QUERY
+            _.each(query, function(val, key, obj){val.selected = true;});
+            this.setRecursive(query, {preserve: true});
+
         }
         , getSearchQuery: function(resetFilters, allowEmpty){
-            var model = this, term = this.get("term")||'';
-            if(term.length > 2 || allowEmpty){
-                var filters = {};
-                if(!resetFilters){
-                    _.each(this.FILTERS, function(f){
-                        var l = [];
-                        model.get(f.name).each(function(m){if(m.isSelected())l.push({name: m.getValue()})});
-                        if(l.length)filters[f.name] = l;
-                    });
-                }
-                return {"term":term, "Filters": filters, userToken:user.get("token")};
-            }
+            var model = this;
+            var filters = [];
+            _.each(this.FILTERS, function(f){
+                model.get(f.name).each(function(m){
+                    if(m.isSelected()&&m.getValue())filters.push({key:f.name, value: m.getValue()});
+                });
+            });
+            return {"Filter": filters, userToken:user.get("token")};
         }
         , reset: function(models){
-            var term = this.get("term");
             this.deepClear();
             if(models !== false){
                 this.setRecursive(models);
-                this.set("term", term);
             }
         }
     })
@@ -170,20 +237,10 @@ define(
         }
         , setup: function(props){
             var view = this, root = this.$form;
-            var v = new FilterSectionView(_.extend({model: view.model.get(props.prop)}, props));
+            var v = new FilterSectionView(_.extend({model: view.model.get(props.key)}, props));
             root.append(v.$el);
-            //view.listenTo(view.model, props.prop+":change:selected", view.setTag(props));
-        }
-        , setTag: function(opts, root){
-            return function(model, selected){
-                if(selected){
-                    root.append(new TagView({model:model}).$el);
-                }
-            }
         }
         , onSubmit: function(e){
-            var val = this.$query.val().trim();
-            this.model.set("term", val);
             this.model.trigger("do:search");
             if(!_.isEmpty(e)){
                 e.stopPropagation();
@@ -205,13 +262,15 @@ define(
             this.$results = this.$(".search-results-body");
             this.setRealm(this.$(".search-realm").find("input[name=myCollectors]").filter(":checked"));
 
-            this.filter = new FilterModel();
+            this.filter = new FilterModel(opts.filters, opts.query);
             this.filterView = new FilterView({el:this.$el, model: this.filter});
             this.listenTo(this.filter, "do:filter", this.doFilter);
             this.listenTo(this.filter, "do:search", this.doSearch);
 
             this.results = new colItem.SearchResults();
             this.listenTo(this.results, "updated", this.updatedResults);
+            this.lastQuery = {};
+            this.lastResult;
         }
 
         , buildResults: function(){
@@ -251,33 +310,30 @@ define(
             this.doSearch(true);
         }
         , search: function(resetFilters){
-            var view = this, query = this.filter.getSearchQuery(resetFilters, this.realm.allowEmptySearch);
-            if(query){
+            var view = this, query = this.filter.getSearchQuery(resetFilters);
+            if(!_.isEqual(this.lastQuery, query)){
                 var url = this.realm.url;
                 this.$results.addClass("loading");
+                var lastResult = this.lastResult = hashlib.UUID();
                 ajax.submitPrefixed({
                     url: url
                     , data: query
                     , success: function(resp, status, xhr){
+                        if(lastResult != view.lastResult)return;
                         var results = hnc.getRecursive(resp, "Collectors.Collector", []);
                         _.each(results, function(obj){
                             cart.prepResult(user.prepResult(obj));
                         });
                         view.results.addOrUpdate(results, {'preserve':false});
                         view.$(".result-count").html(results.length);
-
-                        var filters = hnc.getRecursive(resp, "Filters", []);
-                        if(resetFilters){
-                            view.filter.reset(filters);
-                        }
                     }
                     , complete: function(){
+                        if(lastResult != view.lastResult)return;
                         view.$results.removeClass("loading");
                     }
                 });
-            } else {
-                this.emptyResults();
             }
+            this.lastQuery = query;
         }
         , reSortResults: function(){
             this.$results.children(".sortable").off().remove();

@@ -16,13 +16,25 @@
 .cart-flyout {
   position: absolute;
   right:-190px;
-  width: 150px;
+  width: 200px;
   top: 0;
   padding: 10px;
   border: 1px solid #eee;
-  .box-shadow(0 0 3px rgba(0,0,0,.3));
+  background-color: @dropdownBackground;
+  .box-shadow(0 3px 6px rgba(0,0,0,.3));
   .transition(~'background-color .1s ease-in-out, top .4s ease-in-out, opacity .4s ease-in-out');
   &.invisi {.opacity(0);}
+
+  &:before {
+    content: '';
+    display: inline-block;
+    border-left: 15px solid #fff;
+    border-bottom: 10px solid transparent;
+    border-top: 10px solid transparent;
+    position: absolute;
+    top: 15px;
+    left: -3px;
+  }
 }
 
 

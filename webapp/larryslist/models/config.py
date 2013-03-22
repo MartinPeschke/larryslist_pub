@@ -1,8 +1,17 @@
+from bisect import bisect_left
+from collections import OrderedDict
 from datetime import datetime
+from operator import itemgetter
 from jsonclient import Mapping, TextField, DictField, ListField, IntegerField
+from larryslist.models.address import LocationModel
+from larryslist.models.artist import ArtistModel
 from pyramid.decorator import reify
 
 __author__ = 'Martin'
+
+
+
+
 
 class NullConfigModel(Mapping):
     name = TextField()
@@ -14,6 +23,9 @@ class NamedModel(Mapping):
     name = TextField()
     def getKey(self, request):return self.name
     def getLabel(self, request):return self.name
+
+    def toQuery(self):
+        return {'value':self.name, 'label': self.name}
 
 class NationalityModel(NamedModel): pass
 class TitleModel(NamedModel): pass
@@ -96,12 +108,17 @@ class ConfigModel(Mapping):
     Medium = ListField(DictField(MediumModel))
     Material = ListField(DictField(MaterialModel))
     Genre = ListField(DictField(GenreModel))
+    Origin = ListField(DictField(OriginModel))
     Interest = ListField(DictField(InterestModel))
     Publisher = ListField(DictField(PublisherModel))
     SourceType = ListField(DictField(SourceTypeModel))
     TopMuseum = ListField(DictField(TopMuseumModel))
     Relation = ListField(DictField(RelationshipTypeModel))
     ArtFair = ListField(DictField(ArtFairModel))
+    Artist = ListField(DictField(ArtistModel))
+    City = ListField(DictField(LocationModel))
+    Country = ListField(DictField(LocationModel))
+
 
     CooperationType = ListField(DictField(CooperationTypeModel))
     EngagementPosition = ListField(DictField(EngagementPositionModel))
@@ -124,6 +141,69 @@ class ConfigModel(Mapping):
     @reify
     def topMuseumMap(self):
         return {m.name:m for m in self.TopMuseum}
+
+
+    @reify
+    def searchLookups(self):
+        return {
+            'ARTIST':{str(a.id): a for a in self.Artist}
+            , 'CITY': {a.token: a for a in self.City}
+            , 'COUNTRY': {c.token: c for c in self.Country}
+            , 'MEDIUM': {c.name for c in self.Medium}
+            , 'GENRE': {c.name for c in self.Genre}
+            , 'ORIGIN': {c.name for c in self.Origin}
+        }
+    def getArtist(self, id):
+        lookup = self.searchLookups['ARTIST']
+        try:
+            return lookup.get(int(id))
+        except TypeError, e:
+            return None
+    def getCity(self, token):
+        lookup = self.searchLookups['CITY']
+        return lookup.get(token)
+    def getCountry(self, token):
+        lookup = self.searchLookups['COUNTRY']
+        return lookup.get(token)
+
+    def convertToQuery(self, queryMap):
+        query = {}
+        for k,v in queryMap.items():
+            lookup = self.searchLookups.get(k)
+            obj = lookup.get(v)
+            if obj:
+                query[k] = obj.toQuery()
+        return query
+
+    def getFilterSelection(self):
+        return {
+            'GENDER': [{'value':'f', 'label':'Woman'}, {'value':'m', 'label':'Man'}]
+            , 'MEDIUM': [g.toQuery() for g in self.Medium[:5]]
+            , 'GENRE': [g.toQuery() for g in self.Genre[:5]]
+            , 'COUNTRY': [g.toQuery() for g in self.Country[:5]]
+            , 'ORIGIN': [g.toQuery() for g in self.Origin[:5]]
+            , 'ARTIST': [g.toQuery() for g in self.Artist[:5]]
+            , 'CITY': [g.toQuery() for g in self.City[:5]]
+        }
+    @reify
+    def searchIndex(self):
+        return {
+            'MEDIUM': OrderedDict(sorted([(g.name.lower(), g) for g in self.Medium]))
+            , 'GENRE': OrderedDict(sorted([(g.name.lower(), g) for g in self.Genre]))
+            , 'COUNTRY': OrderedDict(sorted([(g.name.lower(), g) for g in self.Country]))
+            , 'ORIGIN': OrderedDict(sorted([(g.name.lower(), g)  for g in self.Origin]))
+            , 'ARTIST': OrderedDict(sorted([(g.name.lower(), g)  for g in self.Artist]))
+            , 'CITY': OrderedDict(sorted([(g.name.lower(), g) for g in self.City]))
+        }
+    def querySearch(self, query):
+        key, word_fragment = query['key'], query['value'].lower()
+        if not key or not word_fragment:
+            return []
+        wordlist = self.searchIndex[key].keys()
+        result = wordlist[bisect_left(wordlist, word_fragment):bisect_left(wordlist, word_fragment[:-1] + chr(ord(word_fragment[-1])+1))]
+        lookup = self.searchIndex[key]
+        return [lookup[r].toQuery() for r in result[:10]]
+
 
     @classmethod
     def wrap(cls, data):

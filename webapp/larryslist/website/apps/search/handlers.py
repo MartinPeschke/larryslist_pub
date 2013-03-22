@@ -4,6 +4,10 @@ import simplejson
 
 
 def index(context, request):
-    query = variable_decode(request.params)
-    query = query.get("q", [])
-    return {"query": simplejson.dumps(query)}
+    queryMap = variable_decode(request.params)
+    query = context.config.convertToQuery(queryMap)
+    return {"query": simplejson.dumps(query), 'filters': simplejson.dumps(context.config.getFilterSelection())}
+
+
+def entities(context, request):
+    return context.config.querySearch(request.json_body)

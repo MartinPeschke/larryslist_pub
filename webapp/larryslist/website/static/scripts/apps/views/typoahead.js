@@ -32,9 +32,7 @@ define(["tools/ajax", "tools/abstractsearch", "text!templates/taresult.html"], f
                 this.search.on('selected', function(term){
                     view.search.hide();
                     view.$query.val(term.getSearchLabel());
-                    _.each(opts.mapping, function(sel, key, obj){
-                        $el.find(sel).val(term.get(key));
-                    })
+                    view.$query.prev(".key").attr("name", term.get('key')).val(term.get('value'));
                 });
                 this.search.on('extraItemSelected unknownterm:selected unknownterm:metaSelected', function(termname){});
             }

@@ -6,6 +6,7 @@ define(["tools/hash", "tools/ajax", "text!tools/templates/searchresult.html"]
             shown : false
             , PAGE_SIZE: 9
             , template:_.template(search_result_template)
+            , submitFunc : _.bind(ajax.submitPrefixed, ajax)
             , initialize: function(opts){
                 this.id = hashlib.UUID();
                 this.template = this.options.template||this.template;
@@ -174,7 +175,7 @@ define(["tools/hash", "tools/ajax", "text!tools/templates/searchresult.html"]
                 if(data){
                     var queryId = view.queryId = hashlib.UUID();
                     this.$resultNode.html('<div class="loading center"><img src="/static/img/ajax-loader.gif"/></div>');
-                    ajax.submitPrefixed({url:this.searchUrl
+                    this.submitFunc({url:this.searchUrl
                         , data: data
                         , success: function(resp, status, xhr){
                             if(queryId == view.queryId){

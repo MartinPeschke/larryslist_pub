@@ -14,6 +14,7 @@ ROUTE_LIST = [
     , ClassRoute    ("website_password_reset"    , "/password/reset/:token", contexts.WebsiteRootContext, auth.PasswordResetHandler, "auth/form.html", view_attrs=JSON_FORM_ATTRS)
     , FunctionRoute ("website_join_checkemail"   , "/signup/checkemail", contexts.WebsiteRootContext, auth.join_checkemail, "json", {'xhr':True})
     , FunctionRoute ("website_search"            , "/search", contexts.WebsiteRootContext, search.index, "search/index.html")
+    , FunctionRoute ("website_search_entity"     , "/search/entity", contexts.WebsiteRootContext, search.entities, "json", {'xhr':True} )
 
     # user profile
     , FunctionRoute ("website_user_profile"      , "/account", contexts.WebsiteRootContext, account.index, "account/index.html")

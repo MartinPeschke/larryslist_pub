@@ -1,43 +1,13 @@
 from xml.sax import saxutils
-from jsonclient import TextField, Mapping, DateField, IntegerField, BooleanField, DictField, ListField, DateTimeField
+from jsonclient import TextField, Mapping, IntegerField, BooleanField, DictField, ListField, DateTimeField
 from jsonclient.backend import RemoteProc
-from larryslist.models.config import GenreModel, MediumModel, NamedModel, InterestModel, IndustryModel, ThemeModel, OriginModel
+from larryslist.models.address import AddressModel
+from larryslist.models.artist import ArtistModel
+from larryslist.models.config import GenreModel, MediumModel, InterestModel, IndustryModel, ThemeModel, OriginModel
 from pyramid.decorator import reify
 import simplejson
 
 
-class LocationModel(Mapping):
-    name = TextField()
-    token = TextField()
-
-class AddressModel(Mapping):
-    line1 = TextField()
-    line2 = TextField()
-    line3 = TextField()
-    postCode = TextField()
-    Country = DictField(LocationModel)
-    Region = DictField(LocationModel)
-    City = DictField(LocationModel)
-    website = TextField()
-
-    def getLines(self, request):
-        return '<br/>'.join([getattr(self, v) for v in ['line1', 'line2', 'line3'] if getattr(self, v, None)])
-
-    def getCityPostCode(self, request):
-        if self.postCode and self.City:
-            return u'{}, {}'.format(self.City.name, self.postCode)
-        elif self.postCode:
-            return self.postCode
-        elif self.City:
-            return self.City.name
-        else:
-            return ''
-
-    def getRegion(self, request):
-        return self.Region.name if self.Region else ''
-
-    def getCountry(self, request):
-        return self.Country.name if self.Country else ''
 
 class SimpleCollectorModel(Mapping):
     id = IntegerField()
@@ -92,48 +62,7 @@ class SourceModel(Mapping):
         fields = ['url', 'name', 'title', 'author', 'publisher', 'year', 'date']
         return ', '.join([getattr(self, k) for k in fields if getattr(self, k, None)])
 
-class ArtworkModel(Mapping):
-    title = TextField()
-    year = TextField()
-    material = TextField()
-    medium = TextField()
-    width = IntegerField()
-    height = IntegerField()
-    depth = IntegerField()
-    measurement = TextField()
 
-    def getMeasure(self):
-        return 'cm' if self.measurement == 'METRIC' else 'in'
-    @reify
-    def size(self):
-        m = ''
-        if self.width:
-            m += u'w: {} '.format(self.width)
-        if self.height:
-            m += u'h: {} '.format(self.height)
-        if self.depth:
-            m += u'd: {} '.format(self.depth)
-        if m: m += self.getMeasure()
-        return m
-
-
-
-    def getLabel(self, request):
-        if self.year:
-            return u'{} ({})'.format(self.title, self.year)
-        else:
-            return self.title
-
-
-class ArtistModel(Mapping):
-    name = TextField()
-    year = TextField()
-    ArtWork = ListField(DictField(ArtworkModel))
-    def getLabel(self, request):
-        if self.year:
-            return u'{} ({})'.format(self.name, self.year)
-        else:
-            return self.name
 
 class CollectionRegionModel(Mapping):
     name = TextField()
