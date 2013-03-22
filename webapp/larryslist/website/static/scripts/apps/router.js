@@ -3,7 +3,7 @@ define(["require"]
         var
         initialize = function (router) {
                 window.app_router = new router({});
-                Backbone.history.start({ pushState: true });
+                Backbone.history.start({ pushState: false });
                 var last = 0, onTap = function(e){
                         var $t = $(e.currentTarget);
                         if($t.hasClass("stop")){

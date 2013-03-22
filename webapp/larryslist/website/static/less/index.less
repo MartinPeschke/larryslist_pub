@@ -109,31 +109,28 @@
   background-color: @navbarBackground;
   overflow: hidden;
   .index-pane {
-    min-height:800px;
-    padding-top: 100px;
-    margin-top: -100px;
+    min-height:900px;
+    padding-top: 50px;
+    margin-top: -50px;
+    position: relative;
   }
   hr.pane-separator {
     margin:0;
   }
   .panel {
     text-align: center;
-  }
-  .panel.left {
-    width:50%;
-    float:left;
-  }
-  .panel.right {
-    margin-left:50%;
-  }
-  .centered-heading {
-    margin:10px 16%;
-  }
-  .spaced {
-    margin: 50px 0;
+    &.text {
+      position: absolute;
+      bottom:50px;
+      height: 200px;
+      overlow:hidden;
+    }
   }
   .panel-content {
-    margin: 80px 40px 0;
+    margin:10px 16%;
+    &.spaced {
+      margin-top:120px;
+    }
   }
 }
 

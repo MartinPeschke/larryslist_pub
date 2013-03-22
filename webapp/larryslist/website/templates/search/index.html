@@ -74,3 +74,10 @@
 <%block name="options">
     options.pageconfig.SEARCH = {el: $(".search-page-container"), query:${query|n}, filters: ${filters|n}};
 </%block>
+<%block name="scripts">
+    <script>
+        require(["views/search"], function(v){
+            v.init(hnc.options).render();
+        });
+    </script>
+</%block>
