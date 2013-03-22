@@ -4,7 +4,7 @@
   background-color: @navbarBackground;
 }
 .collection-filters + .collection-filters {border-top: 1px solid #ddd;}
-
+.box-title.results-counter {padding-left:0;}
 .search-realm {
   margin: 15px 0 0;
   > label.radio{display: inline-block; vertical-align: top;white-space: nowrap;margin-left: 22px;}
@@ -21,9 +21,9 @@
 .filter-section {
   .section-header {
     margin: 0;
-    padding:  5px 15px;
-    border-bottom: 1px solid #A4A4A4;
-    line-height:40px;
+    padding: 15px 10px;
+    border-bottom: 1px solid @borderDarker;
+    line-height:16px;
     font-size: @largerFontSize;
     font-weight: bold;
   }
@@ -31,7 +31,7 @@
     border-top:1px solid @white;
     padding-top: 10px;
   }
-  label {padding-left:35px;}
+  label {padding-left:35px;line-height: 20px;}
   .all-checkbox-label {
     font-weight:bold;
   }
@@ -42,13 +42,32 @@
     font-size: .8em;
   }
   .type-ahead-field {
-    padding: 0 11px 0 10px;
-  }
-  + .filter-section {
-    margin-top:30px;
+    padding: 0 11px 30px 10px;
   }
 }
 
+.expander {
+  display: none;
+}
+.expandable {
+  .section-header {cursor:pointer;}
+  .section-body {display:none;}
+  .expander {
+    display: block;
+    float: right;
+    height:16px;
+    width:16px;
+    .background-image("../img/sprites.png");
+    background-position: -32px 0;
+    background-repeat: no-repeat;
+  }
+  &.expanded {
+    .expander{
+      background-position: -32px -16px;
+    }
+    .section-body {display:block;}
+  }
+}
 
 
 .search-results-tags {.clearfix;padding: 25px 20px;}
@@ -83,6 +102,28 @@
   border-bottom: 1px solid @linkColor;
   clear:both;
 }
+
+.sortable-col {
+  cursor:pointer;.unselectable();
+  .sorting-switch {
+    height:16px;
+    width:16px;
+    display: block;
+    display: inline-block;
+    .background-image("../img/sprites.png");
+    background-position: -16px 0;
+    background-repeat: no-repeat;
+    vertical-align: top;
+  }
+  &.down .sorting-switch{
+    background-position: -16px -32px;
+  }
+  &.up .sorting-switch{
+    background-position: -16px -16px;
+  }
+}
+
+
 .search-select-all-link {
   vertical-align: top;
   margin: -10px 16px 0;
@@ -91,7 +132,6 @@
   text-decoration:  none;
   &:hover {text-decoration:  none;}
   &.hide {display: none;}
-  .marked-checkbox {margin-top: -2px;}
   .text {display: inline-block;vertical-align: top;}
 }
 
@@ -121,32 +161,15 @@
   line-height: 150px;
   text-align: center;
 }
-.marked-checkbox.checked, &.selected .marked-checkbox {
-  background-position: 2px -26px;
-}
-
-.marked-checkbox {
-  display: inline-block;
-  height: 21px;
-  width: 21px;
-  .background-image("../img/checkbox.png");
-  background-position: 2px 4px;
-  background-repeat: no-repeat;
-}
-
 .search-results-row {
   clear:both;
-  border-top: 1px solid #ddd;
-  padding:10px;
-  .marked-checkbox {
-    display: block;
-    position: absolute;
-    top: 7px;
-    left: 3px;
-  }
+  border-top: 1px solid @borderDarker;
+  padding-top:1px;
   .search-result-item {
-    border: 2px solid transparent;
-    padding:10px 20px 10px 0;
+    border-width: 0 4px;
+    border-style: solid;
+    border-color: transparent;
+    padding:15px 20px 30px 0;
     position: relative;
     height:80px;
   }
@@ -156,7 +179,8 @@
   &.selectable{cursor:pointer;}
   &.selected .search-result-item {
     border-color: @linkColor;
-    #gradient > .vertical(@navbarBackgroundHighlight, @navbarBackground);
+    background-color:@borderDarker;
+
   }
 
   .last-updated {
@@ -173,7 +197,10 @@
     float:left;
     text-align: center;
     width: 80px;
-    margin: 0 10px;
+    height: 80px;
+    margin: 0 0 0 10px;
+    border:1px solid @borderDarker;
+    background-color: @navbarBackgroundHighlight;
   }
   &.completion, &.subscribers, &.rank {
     width: 17%;
@@ -181,10 +208,10 @@
     text-align: right;
   }
   &.details {
-    margin-left:30px;
+    margin-left:100px;
     margin-right:45%;
-    .name {color: @linkColor; font-weight:bold;}
-    .location {color: #999; font-size: .9em;.text-overflow();}
+    .name {color: @linkColor; margin:0 0 5px;}
+    .location {font-size: .9em;.text-overflow();}
   }
 }
 

@@ -38,7 +38,7 @@ define(["tools/ajax"], function(ajax){
             return path?hnc.resUrl(path):"http://www.gravatar.com/avatar/00000000000000000000000000000000?d=mm";
         }
         , getRank: function(){
-            return "#"+this.get("rank")
+            return this.get("rank")
         }
         , getCompletion: function(){
             return this.get("completion")

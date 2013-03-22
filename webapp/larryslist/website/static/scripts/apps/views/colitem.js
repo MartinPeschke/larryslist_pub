@@ -9,7 +9,7 @@ define(
         , resultTemplFull = _.template(fullResultTempl)
         , SearchResults = ajax.Collection.extend({
             model: Collector
-            , compField: "initials"
+            , compField: "rank"
             , comparator : function(a, b){
                 var v1 = a.get(this.compField), v2 = b.get(this.compField);
                 if(v1==v2) return 0;

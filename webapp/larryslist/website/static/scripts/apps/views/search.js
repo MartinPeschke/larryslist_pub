@@ -199,10 +199,12 @@ define(
             return {"Filter": filters, userToken:user.get("token")};
         }
         , reset: function(models){
-            this.deepClear();
-            if(models !== false){
-                this.setRecursive(models);
-            }
+            var model = this;
+            _.each(this.FILTERS, function(f){
+                model.get(f.name).each(function(m){
+                    m.set("selected", false);
+                })
+            })
         }
     })
     , TagView = Backbone.View.extend({
@@ -220,13 +222,13 @@ define(
 
     , FilterView = ajax.View.extend({
         FILTER : [
-            {key: "ARTIST", prop:"Artist", title: "Artist", expanded: true, allLabel: "All Artists", placeholder:"Enter artist's name"}
-            , {key: "CITY", prop:"City", title: "City", expanded: true, allLabel: "All Cities", placeholder:"Enter city name"}
-            , {key: "GENDER", prop:"Gender", title: "Gender", expanded: false, allLabel: "All Genders"}
-            , {key: "COUNTRY", prop:"Country", title: "Country", expanded: false, allLabel: "All Countries", placeholder:"Enter country name"}
-            , {key: "GENRE", prop:"Genre", title: "Genre", expanded: false, allLabel: "All Genres", placeholder:"Enter a genre"}
-            , {key: "ORIGIN", prop:"Origin", title: "Regional Art Coverage", expanded: false, allLabel: "All Regions", placeholder:"Enter region"}
-            , {key: "MEDIUM", prop:"Medium", title: "Medium", expanded: false, allLabel: "All Media", placeholder:"Enter medium"}
+            {key: "ARTIST", prop:"Artist", title: "Artist", expanded: true, allLabel: "All Artists", placeholder:"Enter artist's name", expandable:false}
+            , {key: "CITY", prop:"City", title: "City", expanded: true, allLabel: "All Cities", placeholder:"Enter city name", expandable:false}
+            , {key: "GENDER", prop:"Gender", title: "Gender", expanded: false, allLabel: "All Genders", expandable:true}
+            , {key: "COUNTRY", prop:"Country", title: "Country", expanded: false, allLabel: "All Countries", placeholder:"Enter country name", expandable:true}
+            , {key: "GENRE", prop:"Genre", title: "Genre", expanded: false, allLabel: "All Genres", placeholder:"Enter a genre", expandable:true}
+            , {key: "ORIGIN", prop:"Origin", title: "Regional Art Coverage", expanded: false, allLabel: "All Regions", placeholder:"Enter region", expandable:true}
+            , {key: "MEDIUM", prop:"Medium", title: "Medium", expanded: false, allLabel: "All Media", placeholder:"Enter medium", expandable:true}
         ]
         , events : {
             "submit .search-filters":"onSubmit"
@@ -253,7 +255,7 @@ define(
 
     , View = ajax.View.extend({
         events: {
-            'change .select-sort-by': "reSort"
+            'click .sortable-col': "reSort"
             , "click .dismiss": "resetResults"
             , "click .search-select-all-link" :"selectAll"
             , "change [name=myCollectors]":"switchRealm"
@@ -269,7 +271,7 @@ define(
             this.listenTo(this.filter, "do:search", this.doSearch);
 
             this.results = new colItem.SearchResults();
-            this.listenTo(this.results, "updated", this.updatedResults);
+            this.listenTo(this.results, "updated emptied", this.updatedResults);
             this.lastQuery = {};
             this.lastResult;
         }
@@ -341,8 +343,17 @@ define(
             this.buildResults();
         }
         , reSort: function(e){
-            var el = $(e.target).find("option").filter(":selected");
-            this.results.reSort(el.val(), el.data("reverse"));
+            var sw = $(e.target);
+            sw.siblings(".sortable-col").removeClass("down up")
+            if(sw.hasClass("down")){
+                sw.removeClass("down").addClass("up");
+            } else if(sw.hasClass("up")){
+                sw.removeClass("up").addClass("down");
+            } else {
+                sw.addClass("down");
+            }
+            var prop = sw.data("property");
+            this.results.reSort(prop, sw.hasClass("down"));
             this.reSortResults();
         }
         , selectAll: function(e){

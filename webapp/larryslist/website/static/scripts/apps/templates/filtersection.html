@@ -1,7 +1,10 @@
-<div class="filter-section">
-    <div class="section-header">{{ title }}</div>
-    <div class="filter-list"></div>
-    <div class="type-ahead-field">
-    <div class="search-field"><input type="text" class="input-fullwidth query" autocomplete="off"/></div>
+<div class="filter-section {{ expandable?'expandable':'' }}">
+    <div class="section-header" {{ expandable?'data-toggle-class="expanded" data-toggle-target=".filter-section.expandable"':'' }}>
+        <span class="expander"></span>
+        {{ title }}
+    </div>
+    <div class="section-body">
+        <div class="filter-list"></div>
+        <div class="type-ahead-field"><div class="search-field"><input type="text" class="input-fullwidth query" autocomplete="off"/></div></div>
     </div>
 </div>

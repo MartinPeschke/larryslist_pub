@@ -7,7 +7,7 @@
 <div class="container">
     <div class="row">
         <div class="span12">
-            <h4 class="box-title">
+            <h4 class="box-title results-counter">
                 Displaying <b class="highlight"><span class="result-count">0</span> Search Results</b>
             </h4>
         </div>
@@ -43,17 +43,16 @@
         <div class="span9">
             <div class="search-results-container">
                 <div class="search-results-header">
-                    <div class="search-column completion">
+                    <div class="search-column completion sortable-col" data-property="completion">
                         Collection
-                    </div><div class="search-column subscribers">
+                        <span class="sorting-switch"></span>
+                    </div><div class="search-column subscribers sortable-col" data-property="subscribers">
                         Contact
-                    </div><div class="search-column rank">
+                        <span class="sorting-switch"></span>
+                    </div><div class="search-column rank sortable-col up" data-property="rank">
                         Rank
-                    </div>
-                    <h4>
-                            Collector
-                    </h4>
-                    <!-- <a class="link search-select-all-link" data-toggle-text="Deselect all"><span class="marked-checkbox"></span> <span class="text">Select All</span></a>-->
+                        <span class="sorting-switch"></span>
+                    </div><h4>Collector</h4>
                 </div>
                 <ul class="search-results-body">
                     <li class="search-placeholder empty">

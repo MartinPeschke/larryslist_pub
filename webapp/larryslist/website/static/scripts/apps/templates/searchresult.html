@@ -1,16 +1,17 @@
 <li class="search-results-row sortable selectable">
     <div class="search-result-item">
-        <span class="marked-checkbox"></span>
         <div class="search-column completion">
             <b>{{ model.getCompletion() }}</b>
         </div><div class="search-column subscribers">
             <b>{{ model.get("subscribers") }}</b>
         </div><div class="search-column rank">
             <b>{{ model.getRank() }}</b>
+        </div><div class="search-column picture">
+
         </div><div class="search-column details">
-            <div class="name">{{ model.getName() }}</div>
+            <h4 class="name">{{ model.getName() }}</h4>
             <p class="location">{{ model.getAddress() }}</p>
-            <a class="btn btn-primary" data-text-selected="Select" data-text-unselected="Deselect">{{ inCart?'Deselect':'Select' }}</a>
+            <a class="btn btn-primary" data-text-selected="Buy" data-text-unselected="Deselect">{{ inCart?'Deselect':'Buy' }}</a>
         </div>
         <span class="last-updated">Last updated: {{ model.getLastUpdated() }}</span>
     </div>
