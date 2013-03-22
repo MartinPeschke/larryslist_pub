@@ -1,4 +1,4 @@
-<label class="checkbox {{ isExtra?'show-expanded':'' }}">
+<label class="checkbox {{ isExtra?'show-expanded':'' }} {{ model.getValue()?'':'all-checkbox-label' }}">
     <input type="checkbox" value="{{ model.getValue() }}" {{ model.get("selected")?"checked":"" }} class="{{ model.getValue()?'':'all-checkbox' }}"/>
     {{ model.getLabel() }}
 </label>

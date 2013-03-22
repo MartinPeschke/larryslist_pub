@@ -1,9 +1,7 @@
 
 .search-page {
   padding-bottom: 100px;
-}
-.search-filters {
-  padding:  10px 0 0 20px;
+  background-color: @navbarBackground;
 }
 .collection-filters + .collection-filters {border-top: 1px solid #ddd;}
 
@@ -11,62 +9,49 @@
   margin: 15px 0 0;
   > label.radio{display: inline-block; vertical-align: top;white-space: nowrap;margin-left: 22px;}
 }
+
+.search-filters-wrapper {
+  margin:  10px 0 0 20px;
+}
+.search-filters {
+  border-top: 1px solid @linkColor;
+  background-color:@navbarBackgroundHighlight;
+}
+
 .filter-section {
-  h5 {
-    background: #f9f9f9;
+  .section-header {
     margin: 0;
-    font-size:12px;
-    padding:  5px 10px;
-    border-top: 1px solid #ddd;
-    color: @linkColor;
+    padding:  5px 15px;
+    border-bottom: 1px solid #A4A4A4;
+    line-height:40px;
+    font-size: @largerFontSize;
+    font-weight: bold;
   }
-  label {padding-left:30px;}
+  .filter-list {
+    border-top:1px solid @white;
+    padding-top: 10px;
+  }
+  label {padding-left:35px;}
+  .all-checkbox-label {
+    font-weight:bold;
+  }
   .show-more {
     display: block;
     text-align: right;
     padding: 0 10px;
     font-size: .8em;
   }
+  .type-ahead-field {
+    padding: 0 11px 0 10px;
+  }
+  + .filter-section {
+    margin-top:30px;
+  }
 }
 
 
-.search-box {
-  position: relative;
-  margin: 11px 0;
-  .search-query {
-    height: @baseLineHeight + 10px;
-    width: 100%;
-    padding-right:17%;
-    .box-sizing(border-box);
-    + .btn {
-      .box-sizing(border-box);
-      height: @baseLineHeight + 10px;
-      width: 20%;
-      padding: 4px 3px 3px;
-    }
-  }
-  .btn {
-    position: absolute;
-    right: 0;
-    background: transparent;
-    border: none;
-    box-shadow: none;
-  }
-  .advanced-search-link {
-    position: absolute;
-    right: 0;
-    bottom: -1.4em;
-    font-size: .8em;
-    color: #999;
-    text-transform: uppercase;
-  }
-}
-.navbar .search-box {
-  margin: 24px 0;
-  .btn {margin-top:0;}
-}
 
-.search-results-tags {.clearfix;}
+.search-results-tags {.clearfix;padding: 25px 20px;}
 .tag.label {
   margin-right:10px;
   padding: 4px 6px;
@@ -95,23 +80,8 @@
 }
 
 .search-results-header {
-  padding: 0 30px 0 0;
-  border-top: 1px solid #ddd;
-  margin-top: 10px;
+  border-bottom: 1px solid @linkColor;
   clear:both;
-  .search-column {
-    font-weight:bold;
-    padding: 10px 0;
-    margin:  0 0;
-    min-height:30px;
-    &.picture {
-      width: 150px;
-      margin: 0;
-    }
-  }
-  .search-column.details {
-    margin-left:16px;
-  }
 }
 .search-select-all-link {
   vertical-align: top;
@@ -125,6 +95,9 @@
   .text {display: inline-block;vertical-align: top;}
 }
 
+.search-results-container {
+  margin-right:20px;
+}
 .search-results-body {
   list-style-type: none;
   margin: 0 0;

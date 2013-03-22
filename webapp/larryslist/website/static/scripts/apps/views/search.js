@@ -90,11 +90,12 @@ define(
 
 
             var ta = new PlainTypeAhead({el: this.$(".type-ahead-field"), apiKey: opts.key});
+            this.$(".type-ahead-field").find(".query").prop("placeholder", opts.placeholder);
             ta.search.on('selected', function(term){
                 ta.search.hide();
                 ta.$query.val("");
                 view.model.addOrUpdate(term, {preserve: true});
-                term.set("selected", true);
+                view.model.get(term.id).set("selected", true);
             });
         }
         , render: function(model){
@@ -219,13 +220,13 @@ define(
 
     , FilterView = ajax.View.extend({
         FILTER : [
-            {key: "ARTIST", prop:"Artist", title: "Artist", expanded: true, allLabel: "All Artists"}
-            , {key: "CITY", prop:"City", title: "City", expanded: true, allLabel: "All Cities"}
+            {key: "ARTIST", prop:"Artist", title: "Artist", expanded: true, allLabel: "All Artists", placeholder:"Enter artist's name"}
+            , {key: "CITY", prop:"City", title: "City", expanded: true, allLabel: "All Cities", placeholder:"Enter city name"}
             , {key: "GENDER", prop:"Gender", title: "Gender", expanded: false, allLabel: "All Genders"}
-            , {key: "COUNTRY", prop:"Country", title: "Country", expanded: false, allLabel: "All Countries"}
-            , {key: "GENRE", prop:"Genre", title: "Genre", expanded: false, allLabel: "All Genres"}
-            , {key: "ORIGIN", prop:"Origin", title: "Regional Art Coverage", expanded: false, allLabel: "All Regions"}
-            , {key: "MEDIUM", prop:"Medium", title: "Medium", expanded: false, allLabel: "All Media"}
+            , {key: "COUNTRY", prop:"Country", title: "Country", expanded: false, allLabel: "All Countries", placeholder:"Enter country name"}
+            , {key: "GENRE", prop:"Genre", title: "Genre", expanded: false, allLabel: "All Genres", placeholder:"Enter a genre"}
+            , {key: "ORIGIN", prop:"Origin", title: "Regional Art Coverage", expanded: false, allLabel: "All Regions", placeholder:"Enter region"}
+            , {key: "MEDIUM", prop:"Medium", title: "Medium", expanded: false, allLabel: "All Media", placeholder:"Enter medium"}
         ]
         , events : {
             "submit .search-filters":"onSubmit"
