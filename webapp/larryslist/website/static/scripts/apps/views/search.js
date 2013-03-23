@@ -86,7 +86,7 @@ define(
             this.listenTo(this.model, "add", this.addOption);
             this.listenTo(this.model, "change:selected", this.filterSelected);
             this.listenTo(this.allModel, "change:selected", this.allSelected);
-            //this.listenTo(this.model, "destroy", this.remove);
+            this.listenTo(this.model, "destroy", this.remove);
 
 
             var ta = new PlainTypeAhead({el: this.$(".type-ahead-field"), apiKey: opts.key});
@@ -222,13 +222,13 @@ define(
 
     , FilterView = ajax.View.extend({
         FILTER : [
-            {key: "ARTIST", prop:"Artist", title: "Artist", expanded: true, allLabel: "All Artists", placeholder:"Enter artist's name", expandable:false}
-            , {key: "CITY", prop:"City", title: "City", expanded: true, allLabel: "All Cities", placeholder:"Enter city name", expandable:false}
-            , {key: "GENDER", prop:"Gender", title: "Gender", expanded: false, allLabel: "All Genders", expandable:true}
-            , {key: "COUNTRY", prop:"Country", title: "Country", expanded: false, allLabel: "All Countries", placeholder:"Enter country name", expandable:true}
-            , {key: "GENRE", prop:"Genre", title: "Genre", expanded: false, allLabel: "All Genres", placeholder:"Enter a genre", expandable:true}
-            , {key: "ORIGIN", prop:"Origin", title: "Regional Art Coverage", expanded: false, allLabel: "All Regions", placeholder:"Enter region", expandable:true}
-            , {key: "MEDIUM", prop:"Medium", title: "Medium", expanded: false, allLabel: "All Media", placeholder:"Enter medium", expandable:true}
+            {key: "ARTIST", prop:"Artist", title: "Artist", expanded: true, allLabel: "All Artists", placeholder:"Enter artist's name", expandable:false, hasTypeAhead: true}
+            , {key: "CITY", prop:"City", title: "City", expanded: true, allLabel: "All Cities", placeholder:"Enter city name", expandable:false, hasTypeAhead: true}
+            , {key: "GENDER", prop:"Gender", title: "Gender", expanded: false, allLabel: "All Genders", expandable:true, hasTypeAhead: false}
+            , {key: "COUNTRY", prop:"Country", title: "Country", expanded: false, allLabel: "All Countries", placeholder:"Enter country name", expandable:true, hasTypeAhead: true}
+            , {key: "GENRE", prop:"Genre", title: "Genre", expanded: false, allLabel: "All Genres", placeholder:"Enter a genre", expandable:true, hasTypeAhead: true}
+            , {key: "ORIGIN", prop:"Origin", title: "Regional Art Coverage", expanded: false, allLabel: "All Regions", placeholder:"Enter region", expandable:true, hasTypeAhead: true}
+            , {key: "MEDIUM", prop:"Medium", title: "Medium", expanded: false, allLabel: "All Media", placeholder:"Enter medium", expandable:true, hasTypeAhead: true}
         ]
         , events : {
             "submit .search-filters":"onSubmit"
@@ -239,9 +239,24 @@ define(
             _.each(this.FILTER, view.setup, this);
         }
         , setup: function(props){
-            var view = this, root = this.$form;
-            var v = new FilterSectionView(_.extend({model: view.model.get(props.key)}, props));
+            var root = this.$form
+                , tagRoot = this.$(".search-results-tags")
+                , model = this.model.get(props.key)
+                , doTag = this.setTag(tagRoot);
+            this.listenTo(this.model, props.key+":change:selected", doTag);
+            model.each(function(m){
+                if(m.get("selected"))doTag(m, true);
+            });
+
+            var v = new FilterSectionView(_.extend({model: model}, props));
             root.append(v.$el);
+        }
+        , setTag: function(tagRoot){
+            return function(model, selected){
+                if(selected){
+                    tagRoot.append(new TagView({model:model}).$el);
+                }
+            }
         }
         , onSubmit: function(e){
             this.model.trigger("do:search");
@@ -260,9 +275,11 @@ define(
             , "click .search-select-all-link" :"selectAll"
             , "change [name=myCollectors]":"switchRealm"
         }
+        , empty: '<li class="search-placeholder empty">No Results</li>'
         , initialize: function(opts){
             this.$sorting = this.$(".search-results-sorting");
             this.$results = this.$(".search-results-body");
+            this.loading = this.$results.html();
             this.setRealm(this.$(".search-realm").find("input[name=myCollectors]").filter(":checked"));
 
             this.filter = new FilterModel(opts.filters, opts.query);
@@ -282,11 +299,11 @@ define(
                 var v = colItem.getView(item, null);
                 res.push(v.$el);
             });
-            this.$results.append(res);
+            this.$results.html(res);
         }
         , updatedResults: function(){
             this.buildResults();
-            this.$results.find(".empty")[this.results.length?"addClass":"removeClass"]("hide");
+            if(!this.results.length)this.$results.html(this.empty);
             this.checkAllSelected();
         }
         , switchRealm: function(e){
@@ -316,7 +333,7 @@ define(
             var view = this, query = this.filter.getSearchQuery(resetFilters);
             if(!_.isEqual(this.lastQuery, query)){
                 var url = this.realm.url;
-                this.$results.addClass("loading");
+                this.$results.html(this.loading)
                 var lastResult = this.lastResult = hashlib.UUID();
                 ajax.submitPrefixed({
                     url: url
@@ -332,7 +349,6 @@ define(
                     }
                     , complete: function(){
                         if(lastResult != view.lastResult)return;
-                        view.$results.removeClass("loading");
                     }
                 });
             }
