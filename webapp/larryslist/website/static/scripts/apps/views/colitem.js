@@ -20,6 +20,7 @@ define(
                 this.compField = field;
                 this.reversed = reversed;
                 this.sort();
+                this.each(function(m, idx){m.trigger('sort', m, idx)});
             }
         })
 
@@ -30,6 +31,7 @@ define(
                 this.listenTo(this.model, "destroy", this.remove);
                 this.listenTo(this.model, "cart:added", this.inCart);
                 this.listenTo(this.model, "cart:removed", this.outCart);
+                this.listenTo(this.model, "sort", this.reInsert);
                 this.$button = this.$el.find(".btn");
                 if(opts.inCart)this.setSelected(true);
             }
@@ -43,6 +45,10 @@ define(
             }
             , toggleInCart: function(){
                 cart[cart.contains(this.model)?'removeProfile':'addProfile'](this.model);
+            }
+            , reInsert:function(model, idx){
+                var root = this.$el.parent();
+                root.append(this.$el.detach());
             }
         })
 

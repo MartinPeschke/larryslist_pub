@@ -70,7 +70,10 @@
 }
 
 
-.search-results-tags {.clearfix;padding: 25px 20px;}
+.search-results-tags {
+  .clearfix;padding: 20px 20px;
+  .dismiss {margin-bottom:10px;}
+}
 .tag.label {
   margin-right:10px;
   margin-bottom: 5px;
@@ -143,10 +146,16 @@
   margin: 0 0;
   position: relative;
   .show-loading {
-    display:block;
+    display:none;
     text-align: center;
     line-height: 80px;
   }
+  &.loading {
+    .show-loading {display:block;}
+    .search-results-row {display:none;}
+  }
+  .empty {display: none;}
+  &.is-empty .empty {display:block;}
 }
 
 .search-placeholder.empty {

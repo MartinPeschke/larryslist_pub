@@ -272,14 +272,16 @@ define(
         events: {
             'click .sortable-col': "reSort"
             , "click .dismiss": "resetResults"
-            , "click .search-select-all-link" :"selectAll"
+            , "click .show-more": "showMoreResults"
             , "change [name=myCollectors]":"switchRealm"
         }
-        , empty: '<li class="search-placeholder empty">No Results</li>'
+        , count: _.template('<b class="highlight">{{ count }} Search Results</b>')
+        , partialCount: _.template('<b class="highlight">{{ count }} of {{ total }} Search Results</b>')
+        , showMore: '<a class="search-placeholder show-more link">Show more</a>'
+        , pageSize:60
         , initialize: function(opts){
             this.$sorting = this.$(".search-results-sorting");
             this.$results = this.$(".search-results-body");
-            this.loading = this.$results.html();
             this.setRealm(this.$(".search-realm").find("input[name=myCollectors]").filter(":checked"));
 
             this.filter = new FilterModel(opts.filters, opts.query);
@@ -289,22 +291,28 @@ define(
 
             this.results = new colItem.SearchResults();
             this.listenTo(this.results, "updated emptied", this.updatedResults);
+            this.listenTo(this.results, "add", this.addResult);
             this.lastQuery = {};
+            this.rawResults = [];
             this.lastResult;
         }
-
-        , buildResults: function(){
-            var res = [];
-            this.results.each(function(item){
-                var v = colItem.getView(item, null);
-                res.push(v.$el);
-            });
-            this.$results.html(res);
+        , addResult: function(model){
+            var v = colItem.getView(model, null);
+            this.$results.append(v.$el);
         }
         , updatedResults: function(){
-            this.buildResults();
-            if(!this.results.length)this.$results.html(this.empty);
-            this.checkAllSelected();
+            var r = this.results, $r = this.$results;
+            if(r.length >= this.rawResults.length){
+                $r[r.length === 0?'addClass':'removeClass']("is-empty");
+                $r.siblings(".show-more").remove();
+                this.$(".results-counter").html(this.count({count: r.length}));
+            } else {
+                $r.removeClass("is-empty");
+                var link = $r.siblings(".show-more").remove();
+                if(!link.length)link = this.showMore;
+                $r.after(link);
+                this.$(".results-counter").html(this.partialCount({count: r.length, total: this.rawResults.length}));
+            }
         }
         , switchRealm: function(e){
             this.setRealm($(e.target));
@@ -312,7 +320,6 @@ define(
         }
         , setRealm: function($el){
             this.realm = $el.data();
-            this.$(".search-select-all-link")[this.realm.ownedProfile?'addClass':'removeClass']('hide');
         }
         , doFilter: function(){
             this.search(false);
@@ -323,7 +330,6 @@ define(
         , emptyResults: function(){
             this.filter.reset(false);
             this.results.addOrUpdate([], {'preserve':false});
-            this.$(".result-count").html("0");
         }
         , resetResults: function(){
             this.filter.reset(false);
@@ -333,30 +339,33 @@ define(
             var view = this, query = this.filter.getSearchQuery(resetFilters);
             if(!_.isEqual(this.lastQuery, query)){
                 var url = this.realm.url;
-                this.$results.html(this.loading)
                 var lastResult = this.lastResult = hashlib.UUID();
+                this.$results.addClass("loading").removeClass("is-empty").siblings(".show-more").remove();
+                this.$(".results-counter").html("Loading...");
                 ajax.submitPrefixed({
                     url: url
                     , data: query
                     , success: function(resp, status, xhr){
                         if(lastResult != view.lastResult)return;
-                        var results = hnc.getRecursive(resp, "Collectors.Collector", []);
-                        _.each(results, function(obj){
-                            cart.prepResult(user.prepResult(obj));
-                        });
-                        view.results.addOrUpdate(results, {'preserve':false});
-                        view.$(".result-count").html(results.length);
+                        view.rawResults = hnc.getRecursive(resp, "Collectors.Collector", []);
+                        view.appendResults(view.rawResults.slice(0, view.pageSize), false);
                     }
                     , complete: function(){
-                        if(lastResult != view.lastResult)return;
+                        if(lastResult == view.lastResult)view.$results.removeClass("loading");
                     }
                 });
             }
             this.lastQuery = query;
         }
-        , reSortResults: function(){
-            this.$results.children(".sortable").off().remove();
-            this.buildResults();
+        , appendResults: function(results, preserve){
+            _.each(results, function(obj){
+                cart.prepResult(user.prepResult(obj));
+            });
+            this.results.addOrUpdate(results, {'preserve':preserve});
+        }
+        , showMoreResults: function(e){
+            var len = this.results.length;
+            this.appendResults(this.rawResults.slice(len, len+this.pageSize), true);
         }
         , reSort: function(e){
             var sw = $(e.target);
@@ -370,28 +379,6 @@ define(
             }
             var prop = sw.data("property");
             this.results.reSort(prop, sw.hasClass("down"));
-            this.reSortResults();
-        }
-        , selectAll: function(e){
-            var $t = $(e.currentTarget), selected = $t.toggleClass("selected").hasClass("selected");
-            if(selected){
-                $t.data("backupText", $t.find(".text").text());
-                $t.find(".text").html($t.data("toggleText"));
-            } else {
-                $t.find(".text").text($t.data("backupText"));
-            }
-            cart[selected?'addProfiles':'removeProfiles'](this.results);
-        }
-        , checkAllSelected: function(){
-            var results = this.$results.find(".search-results-row"), $t = this.$(".search-select-all-link"), selected = results.length == results.filter(".selected").length;
-            if(selected){
-                $t.addClass("selected");
-                $t.data("backupText", $t.find(".text").text());
-                $t.find(".text").html($t.data("toggleText"));
-            } else {
-                $t.removeClass("selected");
-                $t.find(".text").text($t.data("backupText"));
-            }
         }
         , render: function(){
             this.doSearch(true);
