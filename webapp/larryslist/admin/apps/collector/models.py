@@ -9,6 +9,7 @@ __author__ = 'Martin'
 
 SetSourcesProc = ClientTokenProc("/admin/collector/sourceedit", root_key = 'Collector', result_cls=CollectorModel)
 SetCollectorStatusProc = ClientTokenProc("/admin/collector/status")
+DeactivateCollectorProc = ClientTokenProc("/admin/collector/inactive")
 
 
 CreateCollectorProc = ClientTokenProc("/admin/collector/create", root_key = 'Collector', result_cls=CollectorModel)

@@ -11,6 +11,8 @@
                     <button type="submit" name="status" value="SUBMIT" class="btn">Submit for Review</button>
                 %elif view.collector.canReview(vctxt.user):
                     <button type="submit" name="status" value="APPROVE" class="btn">Approve</button>
+                %elif vctxt.user.isAdmin():
+                    <button type="submit" name="status" value="DEACTIVATE" class="btn">Set Inactive</button>
                 %endif
             </form>
         %else:
