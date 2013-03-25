@@ -44,7 +44,7 @@ body {
 ul, ol {padding: 0;margin: 0;list-style: none;}
 
 
-h1, h2, h3, h4, h5, h6 {
+h1, h2, h3, h4, h5, h6, #stageheader {
     margin: 9px 0;
     font-family: "Playfair Display SC", Georgia, "Times New Roman", Times, serif;
     font-weight: 400;
@@ -52,7 +52,7 @@ h1, h2, h3, h4, h5, h6 {
     color: inherit;
     text-rendering: optimizelegibility;
 }
-h4 {font-size: 20px;}
+h4, #stageheader {font-size: 20px;}
 
 img {
     max-width: 100%;
@@ -262,7 +262,7 @@ table.basetable select.inputField, table.basetable select.errorField {
        -moz-box-shadow: 0 0 3px rgba(0,0,0,0.4);
             box-shadow: 0 0 3px rgba(0,0,0,0.4);
 }
-.box-title {border-bottom: 1px solid #e5000c;padding: 10px 15px;margin: 0;}
+.box-title, #stageheader {border-bottom: 1px solid #e5000c;padding: 10px 15px;margin: 0;}
 .box-title.tinted {
     background-color: #eee;
     background-image: -moz-linear-gradient(top,#e7e7e7,#f8f8f8);
