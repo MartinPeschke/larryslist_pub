@@ -1,8 +1,8 @@
 
 
-<%def name="recommendations(horizontal = False, classes='box-title inline tinted')">
+<%def name="recommendations(horizontal = False, classes='box-title', results_classes='')">
     <h4 class="${classes}">Recommended to you</h4>
-    <div class="recommended-collectors ${'horizontal' if horizontal else ''}">
-        <ul class="search-results-body"><li class="show-loading"><img src="${ROOT_STATIC_URL}img/ajax-loader.gif"/></li><li class="search-placeholder empty">No Recommendations at this point</li></ul>
+    <div class="recommended-collectors ${'horizontal' if horizontal else 'vertical'}">
+        <ul class="search-results-body ${results_classes}"><li class="show-loading"><img src="${ROOT_STATIC_URL}img/ajax-loader.gif"/></li><li class="search-placeholder empty">No Recommendations at this point</li></ul>
     </div>
 </%def>

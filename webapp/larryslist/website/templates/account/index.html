@@ -3,7 +3,29 @@
 <%def name="content()">
     <div class="container">
         <div class="row">
-            <div class="span12">welcome</div>
+            <div class="span12">
+                <h4 class="box-title">Welcome <span class="highlight">${vctxt.user.name}</span></h4>
+                <div class="profile-box">
+                    <h4 class="box-title">Basic Information</h4>
+
+
+                    <h4 class="box-title">Change your password</h4>
+
+
+                    <h4 class="box-title">Balance</h4>
+
+                    <div class="line xlarge">
+                        <div class="key">Current Credit Balance</div>
+                        <div class="value highlight">${vctxt.user.credit}</div>
+                    </div>
+
+                    <a href="${request.fwd_url("website_checkout_plan_select")}" class="btn-buy-now" >Buy Now</a>
+                    <div class="line xlarge">
+                        <div class="key">Valid until</div>
+                        <div class="value">${vctxt.user.getCreditValidity(request)}</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

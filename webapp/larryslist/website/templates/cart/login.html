@@ -6,23 +6,12 @@
 <%def name="content()">
     <div class="container auth-page">
         <div class="row">
-            <div class="span8">
+            <div class="span6">
                 ${self.buildForm(view.schemas['signup'], values.get(view.schemas['signup'].id, {}), errors.get(view.schemas['signup'].id, {}))}
-
+           </div>
+           <div class="span6">
                 ${self.buildForm(view.schemas['login'], values.get(view.schemas['login'].id, {}), errors.get(view.schemas['login'].id, {}))}
             </div>
-
-            <div class="span4 cart-section">
-                <div class="search-results-container mini page-body">
-                    <h5 class="box-title tinted highlight">Your Selection</h5>
-                    <ul class="search-results-body cart-items">
-                        <li class="show-loading">
-                            <img src="${ROOT_STATIC_URL}img/ajax-loader.gif"/>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
         </div>
     </div>
 </%def>
@@ -31,23 +20,25 @@
 <%def name="buildForm(form, values, errors)">
     <form class="${form.classes}" method="post" id="${form.id}">
         ${baseform.prelims(form)}
-        <legend>${form.label}</legend>
+        <h4 class="box-title">${form.label}</h4>
+        <div class="form-fields">
+        <div class="form-fields-inner">
         %for field in form.fields:
             ${field.render(form.id, request, values, errors, view)|n}
         %endfor
-        <div class="form-actions">
+        </div><div class="form-actions">
             <button type="submit" class="btn btn-primary">${form.action_label}</button>
+        </div>
         </div>
     </form>
 </%def>
 
 <%block name="scripts">
     <script>
-        require(["tools/ajax", "views/collectors_mini"], function(ajax, CartView){
+        require(["tools/ajax"], function(ajax){
             $(".auth-page").find(".form-validated").each(function(idx, el){
                 ajax.ifyForm({form: $(el)});
             });
-            new CartView.View({el: $(".cart-section"), mini: true});
         })
     </script>
 </%block>

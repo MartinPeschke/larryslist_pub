@@ -1,3 +1,4 @@
+from datetime import timedelta, datetime
 from operator import methodcaller
 from jsonclient import ListField, DictField, Mapping, TextField, IntegerField, BooleanField, DateTimeField
 from larryslist.lib import i18n
@@ -127,6 +128,9 @@ class UserModel(Mapping):
         return self.collectorMap.get(int(id))
     def hasCollector(self, collector):
         return isinstance(self.collectorMap.get(collector.id), CollectorModel)
+
+    def getCreditValidity(self, request):
+        return i18n.format_date(datetime.now() + timedelta(356), request)
 
 SignupProc = LoggingInProc("/user/signup")
 LoginProc = LoggingInProc("/user/login")
