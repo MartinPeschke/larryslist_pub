@@ -11,6 +11,8 @@ body {
 	font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 	background-color: #ffffff;
 	overflow-y: scroll;
+	font-size:12px;
+	line-height: 18px;
 }
 
 /* Main Elements */
@@ -277,7 +279,7 @@ table.basetable select.inputField, table.basetable select.errorField {
 .checkout-sidebar .accordion {margin-bottom: 18px;}
 .checkout-sidebar .accordion-group {margin-bottom: 2px;}
 .accordion-heading {border-bottom: 0;}
-.checkout-sidebar .accordion-heading .accordion-toggle {display: block;padding: 8px 15px 8px 35px;color: #333;cursor: pointer;}
+.checkout-sidebar .accordion-heading .accordion-toggle {display: block;padding: 8px 15px 8px 35px;color: #333;cursor: pointer;line-height: 18px;}
 .checkout-sidebar .accordion-inner {padding: 0 15px 15px 35px;}
 .checkout-sidebar .faq-arrow {
     background-image: url("../img/faqicons.png?v=6cf5ee94a24ae3d0ea4bd442b3404173");
@@ -362,18 +364,6 @@ table.basetable select.inputField, table.basetable select.errorField {
 
 /* Common HTML Elements in #content */
 
-#content p,#content ul,#content pre {
-	padding: 5px;
-}
-
-#content h2 {
-	color: #367EA6;
-	padding-top: 6px;
-	font-size: 1.3em;
-	font-weight: bold;
-	margin-top: 0.5em;
-	margin-bottom: 0.8em;
-}
 
 #content h3 {
 	margin-left: 5px;
