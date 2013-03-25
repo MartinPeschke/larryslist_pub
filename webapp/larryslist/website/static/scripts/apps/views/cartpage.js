@@ -19,10 +19,11 @@ define(["tools/ajax", "models/cart", "models/user", "views/colitem", "text!templ
             }
             , add: function(collector){
                 this.$results.append(new ItemView({model: collector, template: templ, inCart: true}).$el);
-                this.$results.find(".empty").addClass("hide");
+                this.$results.removeClass("is-empty");
             }
             , remove: function(){
-                this.$results.find(".empty")[this.model.get("Collectors").length?"addClass":"removeClass"]("hide");
+                var empty = this.model.get("Collectors").length==0;
+                this.$results[empty?'addClass':'removeClass']("is-empty");
             }
         })
         , init = function(opts){

@@ -13,8 +13,17 @@
   }
 }
 
+
+
 .collector-card {
+  margin-bottom:60px;
+  vertical-align: top;
+}
+.collector-picture-card {
   padding:  15px;
+  margin-bottom:15px;
+  border-top: 1px solid @linkColor;
+  border-bottom: 1px solid @linkColor;
   .clearfix;
 
   .text {line-height:1em;}
@@ -30,30 +39,38 @@
     overflow: hidden;
     float:left;
   }
-  small.heading {margin-top:10px;color: #999;font-size: .8em;}
   .collector-stats {width: 40%; margin-bottom:-15px;}
   .search-column {
     margin-bottom: 15px;
     > .value {font-size: 1.5em;}
   }
-  .last-updated {
-    float: left;
-    margin-top: 0;
-    font-size: .7em;
-    line-height: 1em;
-  }
 }
 
+.genre-list {
+  .caption {
+    float:right;
+    margin-right:15px;
+  }
+  .heading {
+    color: #999;
+    float: left;
+    width: 135px;
+    text-align: right;
+    margin-right: 10px;
+    text-transform: uppercase;
+    font-size:10px;
+  }
+  .text {margin-left:150px;font-weight:bold;width:50%;}
+}
+
+
+.collector-details-cards {background-color: @navbarBackground;padding-bottom: 30px;margin-bottom: 30px;}
 .collector-details-card {
-  margin-bottom:15px;
-  .standard-box;
   .clearfix;
   .card-title {
-    #gradient > .vertical(#333, #636363);
-    margin: 0;
-    color: white;
-    padding: 5px 15px;
-    float:left;
+    margin: 30px 20px 0;
+    padding: 10px 0;
+    border-bottom: 1px solid @linkColor;
   }
   .card-content {padding-bottom: 10px;.clearfix;clear: both;padding-top: 15px;}
   .multi-column {
@@ -64,6 +81,7 @@
       margin-bottom:8px;
       line-height:1em;
       >div {padding-bottom:5px;}
+      > a {line-height:1.2em;}
     }
 
     >li.single-artwork {
@@ -80,7 +98,7 @@
   .key {
     width: 120px;
     float: left;
-    font-size:.7em;
+    font-size:@smallFontSize;
     color: #666;
     line-height: 1.1em;
     padding-top: 6px;
@@ -112,8 +130,11 @@
       overflow: hidden;
     }
     &.icon-facebook {background-position: 0 0;}
-    &.icon-twitter {background-position: -35px 0;}
-    &.icon-linkedin {background-position: -136px 0;}
+    &.icon-twitter {background-position: -30px 0;}
+    &.icon-xing {background-position: -60px 0;}
+    &.icon-linkedin {background-position: -120px 0;}
+    &.icon-renren {background-position: -150px 0;}
+    &.icon-weibo {background-position: -180px 0;}
   }
   .address-line {
     float:left;

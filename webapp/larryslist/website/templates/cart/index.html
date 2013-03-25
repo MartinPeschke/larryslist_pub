@@ -50,10 +50,10 @@
                                             <a href="${request.fwd_url("website_search")}" class="btn btn-primary btn-large wide-button">Search for profiles</a>
                                         %elif not vctxt.user.getCredits():
                                             No credits yet:
-                                            <a href="${request.fwd_url("website_checkout")}" class="btn btn-primary btn-large wide-button">Buy credits now</a>
+                                            <a href="${request.fwd_url("website_checkout_arbiter")}" class="btn btn-primary btn-large wide-button">Buy credits now</a>
                                         %else:
                                             Not enough credits:
-                                            <a href="${request.fwd_url("website_checkout")}" class="btn btn-primary btn-large wide-button">Buy more credits</a>
+                                            <a href="${request.fwd_url("website_checkout_arbiter")}" class="btn btn-primary btn-large wide-button">Buy more credits</a>
                                         %endif
                                     </span>
                                 %else:

@@ -132,6 +132,9 @@ class NetworkModel(Mapping):
         'Facebook':'icon icon-facebook'
         ,'Twitter':'icon icon-twitter'
         ,'Linkedin':'icon icon-linkedin'
+        ,'Xing':'icon icon-xing'
+        ,'Weibo':'icon icon-weibo'
+        ,'Renren':'icon icon-renren'
     }
     name = TextField()
     url = TextField()

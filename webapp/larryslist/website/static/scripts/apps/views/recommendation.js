@@ -15,19 +15,6 @@ define(["tools/ajax", "models/cart", "models/user", "models/collector"
             this.listenTo(this.results, "cart:removed", this.updatedResults);
             this.fetch();
         }
-        , checkVisible: function(){
-            var visCount = 0;
-            this.$results.find(".search-results-row").each(function(idx, elem){
-                var $el = $(elem);
-                if(visCount<3 && !$el.hasClass("selected")){
-                    $el.removeClass("hide");
-                    visCount+=1;
-                } else {
-                    $el.addClass("hide");
-                }
-            });
-            return visCount;
-        }
         , addResult: function(result){
             var t = this.$results.children(".sortable").eq(this.results.indexOf(result))
                 , v = colItem.getView(result, templ);
@@ -38,8 +25,8 @@ define(["tools/ajax", "models/cart", "models/user", "models/collector"
             }
         }
         , updatedResults: function(){
-            var notEmpty = this.checkVisible();
-            this.$results.find(".empty")[notEmpty?"addClass":"removeClass"]("hide");
+            var empty = this.results.length==0;
+            this.$results[empty?'addClass':'removeClass']("is-empty");
         }
         , fetch: function(){
             var view = this;
@@ -48,7 +35,7 @@ define(["tools/ajax", "models/cart", "models/user", "models/collector"
                 url: '/web/search/recommended'
                 , data: {'userToken': user.get("token")}
                 , success: function(resp, status, xhr){
-                    var results = hnc.getRecursive(resp, "Collectors.Collector", []);
+                    var results = hnc.getRecursive(resp, "Collectors.Collector", []).slice(0,3);
                     _.each(results, function(obj){
                         cart.prepResult(user.prepResult(obj));
                     });

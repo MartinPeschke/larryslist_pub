@@ -76,6 +76,7 @@
   @bgColor: rgb(231,231,231);
   margin-bottom: 0;
   .box-shadow(0 -2px 3px rgba(0,0,0,.2));
+  &.four-col > .nav-pill-large {width:25%;}
   > .nav-pill-large {
     width:20%;
     border-bottom: 1px solid @white;
@@ -95,13 +96,20 @@
     &:hover > a {
       color:@textColor;
     }
-    &.active > a {
-      border: none;
-      .box-shadow(~"0 5px 15px -2px rgba(0,0,0,.4) inset");
-      #gradient > .vertical(@bgColor, @navbarBackground);
-      line-height: 51px;
-      height: 51px;
-      margin-bottom:-1px;
+    &.active {
+      .background-image("../img/tabactive.png");
+      background-position: 100% -51px;
+      background-repeat: no-repeat;
+      > a {
+        border: none;
+        .background-image("../img/tabactive.png");
+        background-position: 0 0;
+        background-repeat: no-repeat;
+        line-height: 51px;
+        height: 51px;
+        margin-bottom:-1px;
+        margin-right:20px;
+      }
     }
   }
 }

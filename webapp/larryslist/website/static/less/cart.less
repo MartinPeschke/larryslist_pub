@@ -1,17 +1,21 @@
 
 .cart-total {
-  .background-image("../img/cart.png");
-  background-position: 0 0;
-  background-repeat: no-repeat;
-  width: 56px;
-  height:30px;
   display: inline-block;
   line-height: 20px;
-  margin-bottom: -10px;
   text-align: center;
   font-weight: bold;
-  font-size: 1.2em;
+  font-size: @largeFontSize;
+  line-height:16px;
+  vertical-align: top;
   color: @linkColor;
+}
+.cart-icon{
+  display: inline-block;
+  .background-image("../img/sprites.png");
+  background-position: -48px -32px;
+  background-repeat: no-repeat;
+  width: 16px;
+  height:16px;
 }
 .cart-flyout {
   position: absolute;
@@ -68,7 +72,7 @@
     font-size: 20px;
     line-height:10px;
     display: inline-block;
-    width: 30px;
+    min-width: 30px;
     text-align: right;
     margin-right: 5px;
     line-height: 20px;

@@ -1,4 +1,4 @@
-from jsonclient import Mapping, TextField, IntegerField, ListField, DictField
+from jsonclient import Mapping, TextField, IntegerField, ListField, DictField, DecimalField
 from pyramid.decorator import reify
 
 
@@ -7,9 +7,9 @@ class ArtworkModel(Mapping):
     year = TextField()
     material = TextField()
     medium = TextField()
-    width = IntegerField()
-    height = IntegerField()
-    depth = IntegerField()
+    width = DecimalField()
+    height = DecimalField()
+    depth = DecimalField()
     measurement = TextField()
 
     def getMeasure(self):
@@ -18,11 +18,14 @@ class ArtworkModel(Mapping):
     def size(self):
         m = ''
         if self.width:
-            m += u'w: {} '.format(self.width)
+            w = self.width
+            m += u'w: {} '.format(int(w) if w ==int(w) else w)
         if self.height:
-            m += u'h: {} '.format(self.height)
+            h = self.height
+            m += u'h: {} '.format(int(h) if h ==int(h) else h)
         if self.depth:
-            m += u'd: {} '.format(self.depth)
+            d = self.depth
+            m += u'd: {} '.format(int(d) if d ==int(d) else d)
         if m: m += self.getMeasure()
         return m
 

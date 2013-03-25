@@ -6,78 +6,93 @@
     <div class="container">
         <div class="row">
             <div class="span12">
-            ${self.collectorCard(view.collector)}
+                ${self.collectorCard(view.collector)}
+            </div>
+        </div>
+    </div>
 
-            <ul class="nav nav-tabs collector-tabs">
-                ${self.tabLink("Personal", "website_collector_personal")}
-                ${self.tabLink("Collection", "website_collector_collection")}
-                ${self.tabLink("Art Engagement", "website_collector_art")}
-                ${self.tabLink("Sources", "website_collector_news")}
-            </ul>
-            ${self.cards(view.collector)}
+    <div id="index-tab-nav">
+        <div class="container">
+            <div class="row">
+                <div class="span12">
+                    <ul class="nav nav-pills home-nav-pills four-col">
+                        ${self.tabLink("Personal", "website_collector_personal")}
+                        ${self.tabLink("Collection", "website_collector_collection")}
+                        ${self.tabLink("Art Engagement", "website_collector_art")}
+                        ${self.tabLink("Sources", "website_collector_news")}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="affix-placeholder"></div>
+
+    <div class="container">
+        <div class="row">
+            <div class="span12 collector-details-cards">
+                ${self.cards(view.collector)}
             </div>
         </div>
     </div>
 </%def>
 
 <%def name="tabLink(label, route)">
-    <li class="nav-entry ${'active' if request.matched_route.name == route else ''}"><a href="${request.fwd_url(route, **request.matchdict)}" class="nav-entry-link">${label}</a></li>
+    <li class="nav-pill-large ${'active' if request.matched_route.name == route else ''}"><a href="${request.fwd_url(route, **request.matchdict)}" class="nav-entry-link">${label}</a></li>
 </%def>
 
 <%def name="collectorCard(collector)">
-    <div class="standard-frame collector-card">
-        <div class="collector-picture-big"><img class="picture" src="${request.getStaticUrl(collector.getPicture())}"/></div>
-        <div class="collector-details">
-            <div class="pull-right collector-stats">
-                <div class="search-column rank">
-                    <b class="value">${collector.getRank()}</b>
-                    <small class="caption">Rank</small>
-                </div>
-                <div class="search-column subscribers">
-                    <b class="value">${collector.getSubscribers()}</b>
-                    <small class="caption">Followers</small>
-                </div>
-                <div class="search-column completion">
-                    <b class="value">${collector.getCompletion()}</b>
-                    <div>
-                        <small class="last-updated caption">Last updated: ${collector.getUpdated()}</small>
-                        <small class="caption">Completion</small>
+    <div class="collector-card">
+        <div class="collector-picture-card">
+            <div class="collector-picture-big"><img class="picture" src="${request.getStaticUrl(collector.getPicture())}"/></div>
+            <div class="collector-details">
+                <div class="pull-right collector-stats">
+                    <div class="search-column rank">
+                        <b class="value">${collector.getRank()}</b>
+                        <small class="caption">Rank</small>
+                    </div>
+                    <div class="search-column subscribers">
+                        <b class="value">${collector.getSubscribers()}</b>
+                        <small class="caption">Followers</small>
+                    </div>
+                    <div class="search-column completion">
+                        <b class="value">${collector.getCompletion()}</b>
+                        <div>
+                            <small class="caption">Completion</small>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <h3 class="highlight name">${collector.getNameWTitle()}</h3>
-            %if collector.origName:
-                <h3 class="highlight name">${collector.origName}</h3>
-            %endif
-            <div class="address">
-                ${collector.getAddress()}
-            </div>
-
-            <div class="genre-list">
-                <small class="heading">category, genre or stylistic period:</small>
-                <div class="text">${collector.getGenreList()}</div>
-            </div>
-
-            %if collector.LinkedCollector:
-                <% ll = collector.LinkedCollector %>
-                <div class="collector-partner">
-                    <small class="heading">Partner:</small>
-                    %if vctxt.user.hasCollector(ll):
-                        <a href="${request.fwd_url("website_collector_personal", collectorId=ll.id, name=ll.getName())}" class="text">${ll.getName()}</a>
-                    %else:
-                        <div class="text">${ll.getName()}</div>
-                        <a href="#" class="btn btn-primary add-to-cart-link" data-profile=${ll.getJson()|n}>Buy Now</a>
-                    %endif
+                <h3 class="highlight name">${collector.getNameWTitle()}</h3>
+                %if collector.origName:
+                    <h3 class="highlight name">${collector.origName}</h3>
+                %endif
+                <div class="address">
+                    ${collector.getAddress()}
                 </div>
-            %endif
+                %if collector.LinkedCollector:
+                    <% ll = collector.LinkedCollector %>
+                    <div class="collector-partner">
+                        <small class="heading" style="display: inline-block;margin-top: 10px;">Partner:</small>
+                        %if vctxt.user.hasCollector(ll):
+                            <a href="${request.fwd_url("website_collector_personal", collectorId=ll.id, name=ll.getName())}" class="text">${ll.getName()}</a>
+                        %else:
+                            <span class="text">${ll.getName()}</span> &nbsp;&nbsp; <a href="#" class="btn btn-primary add-to-cart-link" data-profile=${ll.getJson()|n}>Buy Now</a>
+                        %endif
+                    </div>
+                %endif
+            </div>
+        </div>
+        <div class="genre-list">
+            <div class="last-updated caption"><span class="heading">Last updated:</span> <b>${collector.getUpdated()}</b></div>
+            <div class="heading">category, genre or stylistic period:</div>
+            <div class="text">${collector.getGenreList()}</div>
         </div>
     </div>
 </%def>
 
 <%def name="recommendedCard()">
-    <div class="standard-frame">
-        ${widgets.recommendations(True)}
+    <div class="collector-details-card address-card">
+        ${widgets.recommendations(True, classes='card-title highlight')}
     </div>
 </%def>
 
@@ -85,7 +100,7 @@
 
 <%def name="card(title)">
     <div class="collector-details-card address-card">
-        <h5 class="card-title">${title}</h5>
+        <h4 class="card-title">${title}</h4>
         <div class="card-content">
         ${caller.body()}
         </div>
@@ -145,9 +160,9 @@
     %if len(val):
         <%self:line label="${label}">
             <ul class="${classes} unstyled">
-                    %for i in val:
-                        <li>${i.getLabel(request)}</li>
-                    %endfor
+                %for i in val:
+                    <li>${i.getLabel(request)}</li>
+                %endfor
             </ul>
         </%self:line>
     %endif
@@ -181,5 +196,6 @@
         require(["views/recommendation"], function(View){
             new View({el: $(".recommended-collectors")});
         });
+        $("#index-tab-nav").affix({offset: $("#index-tab-nav").offset().top});
     </script>
 </%block>

@@ -253,8 +253,8 @@
       float:None;
       display: block;
       text-align: right;
-      .caption {display: block;text-transform: uppercase;font-size: .7em;}
-      .caption, .value{line-height:1em;font-weight:bold;}
+      .caption {display: block;text-transform: uppercase;font-size:@smallFontSize;color:#999;}
+      .caption, .value{line-height:1em;font-weight:bold;margin-left: 0;}
     }
     &.details {
       margin-left:0;
@@ -269,6 +269,7 @@
 .recommended-collectors.horizontal {
   .clearfix;
   margin-bottom: 15px;
+  .search-results-body{margin: 15px;}
   .search-results-row.sortable.mini {
     .box-sizing(border-box);
     float: left;
@@ -276,4 +277,5 @@
     clear: none;
     box-sizing: border-box;
   }
+  .search-results-row.mini + .search-results-row {border-top:none;}
 }
