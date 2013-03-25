@@ -41,16 +41,13 @@
     </form>
 </%def>
 
-
-<%block name="options">
-    options.pageconfig.COLLECTORS = {el: $(".cart-section"), mini: true};
-</%block>
 <%block name="scripts">
     <script>
-        require(["tools/ajax"], function(ajax){
+        require(["tools/ajax", "views/collectors_mini"], function(ajax, CartView){
             $(".auth-page").find(".form-validated").each(function(idx, el){
                 ajax.ifyForm({form: $(el)});
             });
+            new CartView.View({el: $(".cart-section"), mini: true});
         })
     </script>
 </%block>

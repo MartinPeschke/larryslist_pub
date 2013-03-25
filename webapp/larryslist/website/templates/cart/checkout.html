@@ -9,7 +9,7 @@
     <div class="container cart-page">
         <div class="row checkout-head-row">
             <div class="span3 standard-box link-box">
-                <h5 class="box-title highlight">Your selection</h5>
+                <h4 class="box-title highlight">Your selection</h4>
                 <div class="standard-padded-box">
                     <small class="heading">Profiles selected</small>
                     <h2>${cartLength}</h2>
@@ -21,7 +21,7 @@
                 </div>
             </div>
             <div class="span3 standard-box link-box">
-                <h5 class="box-title highlight">Your price plan</h5>
+                <h4 class="box-title highlight">Your price plan</h4>
                 <div class="standard-padded-box">
                     <p>You get ${view.selectedPlan.credit} ${'credits' if view.selectedPlan.credit>1 else 'credit'}.</p>
                     %if cartLength > vctxt.user.getCreditWithPlan(view.selectedPlan):
@@ -33,7 +33,7 @@
                 </div>
             </div>
             <div class="span3 standard-box link-box">
-                <h5 class="box-title highlight">Your cost</h5>
+                <h4 class="box-title highlight">Your cost</h4>
                 <div class="standard-padded-box">
                     <div>Your cost today:</div>
                     <h2>${view.selectedPlan.getFormattedPrice(request)}</h2>
@@ -42,7 +42,7 @@
                 </div>
             </div>
             <div class="span3 standard-frame link-box">
-                <h5 class="box-title">This is what you get</h5>
+                <h4 class="box-title">This is what you get</h4>
                 <div class="standard-padded-box">
                     <ul>
                         <li>all information on profile(incl. address, collection, etc.)</li>
@@ -56,7 +56,7 @@
         <div class="row">
             <div class="span9">
                 <div class="page-body">
-                    <h5 class="box-title tinted">Buy Credits</h5>
+                    <h4 class="box-title tinted">Buy Credits</h4>
                     <div class="payment-options">
                         ${self.buildForm(view.getForm(), values.get(view.getForm().id, {}), errors.get(view.getForm().id, {}))}
                     </div>
@@ -65,7 +65,7 @@
 
             <div class="span3">
                 <div class="checkout-sidebar">
-                    <h5 class="box-title tinted">${g.project_name} is known from:</h5>
+                    <h4 class="box-title tinted">${g.project_name} is known from:</h4>
                     <div class="standard-padded-box">
                         <div class="adpartner">
                             <img src="${STATIC_URL}img/adpartner_color.png?v=${VERSION_TOKEN}"/>

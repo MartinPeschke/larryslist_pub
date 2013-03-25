@@ -10,7 +10,7 @@
                 <div class="span8">
                     ${baseform.prelims(view.form)}
                     <div class="search-results-container standard-frame">
-                        <h5 class="box-title inline tinted">Shopping Cart</h5>
+                        <h4 class="box-title inline tinted">Shopping Cart</h4>
                         <div class="search-results-header">
                             <div class="search-column completion">
                                 Completeness
@@ -18,10 +18,7 @@
                                 Followers
                             </div><div class="search-column rank">
                                 Rank
-                            </div>
-                            <div class="search-column details">
-                                Collector
-                            </div>
+                            </div><h4 class="box-title">Collector</h4>
                         </div>
                         <ul class="search-results-body cart-items">
                             <li class="search-placeholder empty">
@@ -39,7 +36,7 @@
                 </div>
                 <div class="span4">
                     <div class="standard-box">
-                        <h5 class="box-title inline">Proceed</h5>
+                        <h4 class="box-title inline">Proceed</h4>
                         <div class="cart-dropdown-section sidebarbox" data-template="templates/checkout-cart.html">
                             <div class="cart-attach-dropdown">
                                 <img src="${ROOT_STATIC_URL}/img/ajax-loader.gif"/>
@@ -104,16 +101,14 @@
     </li>
 </%def>
 
-<%block name="options">
-    options.pageconfig.CART_PAGE = {el: $("#${view.form.id}")};
-</%block>
 <%block name="scripts">
     <script>
         require(["tools/ajax"], function(ajax){
             ajax.ifyForm({form: $("#${view.form.id}")});
         });
-        require(["views/recommendation"], function(View){
+        require(["views/cartpage", "views/recommendation"], function(CartPage, View){
             new View({el: $(".recommended-collectors")});
+            new CartPage.View({el: $("#${view.form.id}")});
         });
     </script>
 </%block>

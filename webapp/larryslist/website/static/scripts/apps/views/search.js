@@ -177,7 +177,7 @@ define(
 
             _.each(this.FILTERS, function(f){
                 filter[f.name] = new f.cls(null);
-                model.listenTo(filter[f.name], "change:selected", function(){model.trigger("do:filter");})
+                model.listenTo(filter[f.name], "change:selected", function(){model.trigger("do:search");})
             });
 
             this.register(filter);
@@ -188,7 +188,7 @@ define(
             this.setRecursive(query, {preserve: true});
 
         }
-        , getSearchQuery: function(resetFilters, allowEmpty){
+        , getSearchQuery: function(){
             var model = this;
             var filters = [];
             _.each(this.FILTERS, function(f){
@@ -286,8 +286,7 @@ define(
 
             this.filter = new FilterModel(opts.filters, opts.query);
             this.filterView = new FilterView({el:this.$el, model: this.filter});
-            this.listenTo(this.filter, "do:filter", this.doFilter);
-            this.listenTo(this.filter, "do:search", this.doSearch);
+            this.listenTo(this.filter, "do:search", this.search);
 
             this.results = new colItem.SearchResults();
             this.listenTo(this.results, "updated emptied", this.updatedResults);
@@ -316,16 +315,10 @@ define(
         }
         , switchRealm: function(e){
             this.setRealm($(e.target));
-            this.filterView.onSubmit(false);
+            this.search(true);
         }
         , setRealm: function($el){
             this.realm = $el.data();
-        }
-        , doFilter: function(){
-            this.search(false);
-        }
-        , doSearch: function(){
-            this.search(true);
         }
         , emptyResults: function(){
             this.filter.reset(false);
@@ -333,11 +326,11 @@ define(
         }
         , resetResults: function(){
             this.filter.reset(false);
-            this.doSearch(true);
+            this.search();
         }
-        , search: function(resetFilters){
-            var view = this, query = this.filter.getSearchQuery(resetFilters);
-            if(!_.isEqual(this.lastQuery, query)){
+        , search: function(force){
+            var view = this, query = this.filter.getSearchQuery();
+            if(!_.isEqual(this.lastQuery, query) || force){
                 var url = this.realm.url;
                 var lastResult = this.lastResult = hashlib.UUID();
                 this.$results.addClass("loading").removeClass("is-empty").siblings(".show-more").remove();
@@ -381,7 +374,7 @@ define(
             this.results.reSort(prop, sw.hasClass("down"));
         }
         , render: function(){
-            this.doSearch(true);
+            this.search();
         }
     })
     , init = function(opts){

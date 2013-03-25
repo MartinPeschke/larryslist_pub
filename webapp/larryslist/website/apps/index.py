@@ -1,4 +1,6 @@
+from formencode.variabledecode import variable_decode
 from larryslist.models.news import GetNewsFeedProc
+import simplejson
 
 
 def index(context, request):
@@ -16,4 +18,7 @@ def index_member(context, request):
             news = news[:10]
         else: news = []
     else: news = []
-    return {'query':'', 'newsfeed': news}
+
+    queryMap = variable_decode(request.params)
+    query = context.config.convertToQuery(queryMap)
+    return {"query": simplejson.dumps(query), 'filters': simplejson.dumps(context.config.getFilterSelection()), 'newsfeed': news}

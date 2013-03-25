@@ -28,13 +28,11 @@
     </div>
 </%def>
 
-<%block name="options">
-    options.pageconfig.SEARCH = {el: $(".search-page-container")};
-</%block>
 <%block name="scripts">
     <script>
-        require(["views/recommendation"], function(View){
+        require(["views/search", "views/recommendation"], function(v, View){
             new View({el: $(".recommended-collectors")});
+            new v.View({el: $(".search-page-container"), query:${query|n}, filters: ${filters|n}}).render();
         });
     </script>
 </%block>
