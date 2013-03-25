@@ -10,6 +10,7 @@ body {
 	color: #333;
 	font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 	background-color: #ffffff;
+	overflow-y: scroll;
 }
 
 /* Main Elements */
@@ -115,7 +116,7 @@ img {
     text-decoration: none;
     text-shadow: 0 1px 0 #e7e7e7;
 }
-
+#pmcontent {min-height: 350px;}
 #foot {
 	display: none;
     width: 940px;
@@ -288,7 +289,7 @@ table.basetable select.inputField, table.basetable select.errorField {
     float: left;
     margin-left: -22px;
     margin-top: 3px;
-}
+}.checkout-sidebar .collapsed .faq-arrow {background-position: 0 -15px;}
 .collapse {
     position: relative;
     height: 0;
