@@ -477,12 +477,12 @@ table.od th {
 
 a {
 	text-decoration: none;
-	color: #39f
+	color: #rgb(229,0,12);
 }
 
 a:visited {
 	text-decoration: none;
-	color: #39f
+	color: #rgb(229,0,12);
 }
 
 /* Form elements */
