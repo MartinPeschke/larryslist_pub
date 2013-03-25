@@ -71,6 +71,7 @@ class CheckoutHandler(FormHandler):
         plan = self.context.config.getPaymentOption(planToken)
         return plan
 
+
 class CheckoutLoginHandler(FormHandler):
     forms = [JoinLoginForm, JoinSignupForm]
 
@@ -95,3 +96,5 @@ def save_cart(context, request):
 
 class SpendCreditsHandler(FormHandler):
     form = SpendCreditsForm
+
+

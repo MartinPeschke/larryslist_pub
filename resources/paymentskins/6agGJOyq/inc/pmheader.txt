@@ -1,0 +1,13 @@
+<link href='//fonts.googleapis.com/css?family=Open+Sans:400italic,400,700,300|Playfair+Display+SC:400,700' rel='stylesheet' type='text/css'>
+<div class="navbar">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="brand" href="http://local.larryslist.de/">Larry's List</a>
+            <ul class="nav pull-right">
+                <li class="nav-entry"><a class="nav-entry-link" href="#">Blog</a></li>
+                <li class="nav-entry"><a class="nav-entry-link" href="#">Analytics</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div id="pmcontent" class="container">

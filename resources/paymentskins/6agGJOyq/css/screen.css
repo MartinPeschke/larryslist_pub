@@ -1,0 +1,1058 @@
+html {
+	height: 100%;
+	max-height: 100%;
+	font-size: 0.75em;
+	font-family: tahoma, verdana, arial, sans-serif;
+	background-color: #f8f8f8;
+}
+
+body {
+	color: #333;
+	font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	background-color: #ffffff;
+}
+
+/* Main Elements */
+.container {
+    width: 940px;
+    margin-right: auto;
+    margin-left: auto;
+}
+.container:before, .container:after, .row:before, .row:after {
+    display: table;
+    content: "";
+    line-height: 0;
+}
+.container:after, .row:after {clear: both;}
+.row {margin-left: -20px;}
+[class*="span"] {float: left;min-height: 1px;margin-left: 20px;}
+.span2 {width: 140px;}
+.span4 {width: 300px;}
+.span12 {width: 940px;}
+
+
+ul, ol {padding: 0;margin: 0;list-style: none;}
+
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 9px 0;
+    font-family: "Playfair Display SC", Georgia, "Times New Roman", Times, serif;
+    font-weight: 400;
+    line-height: 18px;
+    color: inherit;
+    text-rendering: optimizelegibility;
+}
+h4 {font-size: 20px;}
+
+img {
+    max-width: 100%;
+    width: auto	9;
+    height: auto;
+    vertical-align: middle;
+    border: 0;
+    -ms-interpolation-mode: bicubic;
+}
+.center h4, .center {text-align:center;}
+
+
+
+
+
+
+.navbar {
+    overflow: visible;
+    margin-bottom: 18px;
+}
+.navbar-inner {
+    min-height: 94px;
+    padding-left: 20px;
+    padding-right: 20px;
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #d9d9d9;
+}
+.navbar .brand {
+    float: left;
+    display: block;
+    text-indent: -999em;
+    padding: 20px 20px 20px;
+    margin-left: -20px;
+    font-weight: 200;
+    color: #333333;
+    text-shadow: 0 1px 0 #e7e7e7;
+    width: 240px;
+    height:54px;
+    background-image: url(../img/logo.png);
+    background-position: 0 20px;
+    background-repeat: no-repeat;
+}
+.navbar .nav {
+    position: relative;
+    left: 0;
+    display: block;
+    float: right;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.navbar .nav > li {
+    float: left;
+    line-height: 18px;
+}
+.navbar .nav > li > a {
+    display:block;
+    padding: 38px 15px 38px;
+    color: #333333;
+    font-weight: bold;
+    text-decoration: none;
+    text-shadow: 0 1px 0 #e7e7e7;
+}
+
+#foot {
+	display: none;
+    width: 940px;
+    margin-right: auto;
+    margin-left: auto;
+}
+.footer {
+    margin-top: 30px;
+    padding: 20px 0;
+    background-color: #f8f8f8;
+}
+.footer .known-from-pic {
+    vertical-align: top;
+    margin: 0 10px 30px;
+}
+.footer .footer-link {color: #333333;line-height: 2em;text-decoration: none;}
+
+
+#mc_embed_signup #mc-embedded-subscribe-form {margin-bottom: 0;}
+label, input, button, select, textarea {font-size: 12px;font-weight: normal;line-height: 18px;}
+label {display: block;}
+#mc_embed_signup .mail-chimp-header {font-family: "Playfair Display SC", Georgia, "Times New Roman", Times, serif;font-size: 15px;margin: 10px 0;}
+button, input, select, textarea {margin: 0;font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;width: 206px;margin-left: 0;}
+table.basetable .inputField, select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {
+    display: inline-block;
+    height: 18px;
+    padding: 4px 6px;
+    font-size: 12px;
+    line-height: 18px;
+    color: #555555;
+    vertical-align: middle;
+}
+table.basetable .inputField, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -webkit-transition: border linear .2s, box-shadow linear .2s;
+    -moz-transition: border linear .2s, box-shadow linear .2s;
+    -o-transition: border linear .2s, box-shadow linear .2s;
+    transition: border linear .2s, box-shadow linear .2s;
+}
+table.basetable select.inputField, table.basetable select.errorField {
+  height: 28px; /* In IE7, the height of the select element cannot be changed by height, only font-size */
+  *margin-top: 4px; /* For IE7, add top margin to align select with labels */
+  line-height: 28px;
+  width:auto;
+}
+
+.btn, .paySubmit.paySubmitcard {
+    display: inline-block;
+    padding: 2px 12px;
+    margin-bottom: 0;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 18px;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    color: #333333;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+    background-color: #f5f5f5;
+    background-image: -moz-linear-gradient(top, #ffffff, #e6e6e6);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#e6e6e6));
+    background-image: -webkit-linear-gradient(top, #ffffff, #e6e6e6);
+    background-image: -o-linear-gradient(top, #ffffff, #e6e6e6);
+    background-image: linear-gradient(to bottom, #ffffff, #e6e6e6);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#ffe6e6e6', GradientType=0);
+    border-color: #e6e6e6 #e6e6e6 #bfbfbf;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+    border: 1px solid #bbbbbb;
+    border-bottom-color: #a2a2a2;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05);
+    -moz-box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05);
+}
+.btn:hover {
+    color: #333333;
+    text-decoration: none;
+    background-position: 0 -15px;
+    -webkit-transition: background-position 0.1s linear;
+    -moz-transition: background-position 0.1s linear;
+    -o-transition: background-position 0.1s linear;
+    transition: background-position 0.1s linear;
+}
+.btn-primary:hover, .btn-primary:active, .btn-primary.active, .btn-primary.disabled, .btn-primary[disabled] {
+    color: #ffffff;
+    background-color: #e54000;
+}
+.btn-primary:active, .btn-primary.active {
+    background-color: #b23200 9;
+}
+.btn-primary:hover, .btn-primary:active, .btn-primary.active, .btn-primary.disabled, .btn-primary[disabled] {
+    color: #ffffff;
+    background-color: #e54000;
+}
+.btn.active, .btn:active {
+    background-image: none;
+    outline: 0;
+    -webkit-box-shadow: inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
+    -moz-box-shadow: inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
+}
+
+.btn-primary, .paySubmit.paySubmitcard {
+    color: #ffffff;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    background-color: #e51a07;
+    background-image: -moz-linear-gradient(top, #e5000c, #e54000);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#e5000c), to(#e54000));
+    background-image: -webkit-linear-gradient(top, #e5000c, #e54000);
+    background-image: -o-linear-gradient(top, #e5000c, #e54000);
+    background-image: linear-gradient(to bottom, #e5000c, #e54000);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffe5000c', endColorstr='#ffe54000', GradientType=0);
+    border-color: #e54000 #e54000 #992b00;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+#mc_embed_signup .btn {
+    vertical-align: top;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    width: 40px;
+    padding: 4px;
+}
+.paySubmit.paySubmitcard {
+    margin-left: 207px;
+    float:left;
+}
+#displayAmount {margin: 15px 0;}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.paddiv1, .paddiv2 {
+	height: 0px;
+}
+
+#nextstep {
+	font-weight: bold;
+	height: 22px;
+	color: #fff;
+	font-size: 1.1em;
+}
+
+#nextstepc {
+	text-align: center;
+	padding-top: 4px;
+	padding-bottom: 2px;
+	background-color: #999;
+}
+
+.popupMsg {
+	display: none;
+	border: 1px solid #666;
+	background-color: #eee;
+	margin-bottom: 5px;
+	margin-right: 10px;
+	margin-left: 10px;
+	padding: 6px;
+}
+
+.popupMsgOPP {
+	position: relative; 
+	top: -155px; 
+	margin-left: 0px;
+	z-index: 10;
+}
+
+/* Common HTML Elements in #content */
+
+#content p,#content ul,#content pre {
+	padding: 5px;
+}
+
+#content h2 {
+	color: #367EA6;
+	padding-top: 6px;
+	font-size: 1.3em;
+	font-weight: bold;
+	margin-top: 0.5em;
+	margin-bottom: 0.8em;
+}
+
+#content h3 {
+	margin-left: 5px;
+	font-size: 1.3em;
+	font-weight: bold;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+#content pre {
+	font-family: courier, monospace;
+	font-size: 1em;
+}
+
+.pmmdetails {
+	padding-left: 80px;
+}
+
+.fieldSubHeader {
+	font-weight:bold;
+	margin-bottom:0.5em;
+	margin-top:0.5em;
+}
+
+/* Table */
+table.basetable {
+	margin-left: 5px;
+	width:100%;
+}
+
+table.basetable td {
+	padding-bottom: 0.6em;
+	padding-right: 0.6em;
+}
+
+/* Order Data Layout */
+table.od {
+	margin: 10px 0px 10px 0px;
+}
+
+table.od td, table.od th  {
+	padding: 5px;
+	border: 1px solid #999;
+}
+
+table.od th {
+	font-weight: bold;;
+}
+
+/* Image Buttons (Payment Methods) */
+
+.imgB, .footerB {
+	width: 158px;
+	height: 32px;
+	padding: 0;
+	border: 0;
+	background: transparent url("../img/bg_buttons.png") no-repeat left 0px;
+	overflow: hidden;
+	color: #444;
+	cursor: pointer; /* hand-shaped cursor */
+	cursor: hand; /* for IE 5.x */
+	font-weight: bold;
+	font-size: 1.2em;
+}
+
+.imgB:hover, .imgB:active, .footerB:hover, .footerB:active {
+	color: #66f;
+}
+
+.pmB {
+	width: 400px;
+	height: 42px;
+	padding-left: 85px;
+	text-align: left;
+	margin-bottom: 6px;
+	font-size: 1.1em;
+	background-color: transparent !important;
+}
+
+/* Image Buttons Footer (next/previous/pay) */
+
+#footerb1div {
+	float: left;
+	text-align: left;
+	margin: 8px 0px 0px 30px;
+}
+
+#footerb2div {
+	float: right;
+	text-align: right;
+	margin: 8px 30px 0px 0px;
+}
+
+.cancelB {
+	background-position: left 0px;
+}
+
+.nextB {
+	background-position: right -32px;
+}
+
+.backB {
+	background-position: left -96px;
+}
+
+.finishB {
+	background-position: right -64px;
+}
+
+/* Links */
+
+a {
+	text-decoration: none;
+	color: #39f
+}
+
+a:visited {
+	text-decoration: none;
+	color: #39f
+}
+
+/* Form elements */
+
+input,select {
+	font-size: 0.95em;
+	padding: 1px;
+	border: 1px solid #C3C3C3;
+	border-top-color: #7C7C7C;
+	border-bottom-color: #DDD;
+}
+
+button:focus {
+	outline: none;
+}
+
+/* Validation */
+
+table.basetable .errorField {
+    border: 1px solid #953b39;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
+}
+table.basetable select.errorField {width: auto;}
+
+.fieldDiv {
+	padding-right: 20px;
+	background: transparent;
+}
+
+.errorDiv {
+	background: transparent url("/hpp/img/icons/error.png") no-repeat 400px 3px;
+	padding-right: 20px;
+}
+
+.errorFrame {
+	background-color: #fff3f3;
+}
+
+/********************************************/
+/*               oneclick                   */
+/********************************************/
+.pmOc {
+	margin-bottom: 10px;
+}
+
+.pmOc div.pmOcDetail {
+	background-color: #E0E6FF;
+	border: 1px solid #CCCCFF;
+	padding: 6px;
+	display: block;
+	margin-right: 8px;
+	margin-bottom: 8px;
+	float: left;
+	width: 168px;
+}
+
+.pmOc div.pmOcPad {
+	height: 1px;
+	display: block;
+	clear: both;
+}
+
+.pmOcRemove {
+	float: left;
+	margin-left: 10px;
+}
+
+.pmOcInput {
+	background-color: #fff;
+}
+
+.pmOcRadio {
+	float: left;
+}
+
+.pmOcDetailSummary {
+
+	height: 97px; /*101px;*/
+	width: 160px;
+	color: white;
+	clear:both;
+	font-family:monospace;
+	font-size: 11px;
+	font-weight:bold;
+	line-height:1.3;
+	padding-top: 10px;
+	margin:4px 0 0 4px;
+}
+
+
+.pmOcDetailSummaryCard {
+	background-image: url(/hpp/img/card_generic.png);
+	background-repeat: no-repeat;
+}
+.pmOcDetailSummaryElv {
+	background-image: url(/hpp/img/elv_generic.png);
+	background-repeat: no-repeat;
+}
+
+.pmOcLogo {
+	height:22px;
+	width:40px;
+	background-color: white;
+	margin: 0px 0px 11px 110px;
+}
+.pmOcElv {
+	color: #888;
+	margin-bottom: 19px;
+	height:15px;
+	margin-left: 10px;
+	letter-spacing: 3px;
+}
+.pmOcPan {
+	height:15px;
+	padding-top: 9px;
+	margin-left: 14px;
+}
+.pmOcExp {
+	height:15px;
+	font-size: 10px;
+	margin-left: 105px;
+}
+.pmOcName {
+	height:15px;
+	margin-left: 14px;
+	text-transform: uppercase;
+}
+
+.pmOcArrow {
+	margin-left: 65px;
+	height: 20px;
+	background-repeat: no-repeat;
+	background-image: url(/hpp/img/arrow_down.png);
+}
+
+/* old oneclick - directdebit_NL */
+.pmOcDDNL, .pmOcDDNLHeader {
+	color: #888;
+}
+
+.pmOcDDNLHeader {
+	margin-bottom: 15px;
+	font-weight: bold;
+	font-size: 1.1em;
+}
+
+.pmOcDDNL {
+	margin-bottom: 5px;
+	letter-spacing: 2px;
+}
+
+div.pmOcDetail .fieldDiv, div.pmOcDetail .errorDiv {
+	display: inline;
+}
+
+div.pmOcDetail input {
+	background-color: white;
+}
+
+div.pmOcPay {
+	text-align: right;
+}
+
+/********************************************/
+/********************************************/
+
+
+/********************************************/
+/*            new oneclick                  */
+/********************************************/
+
+.pmOcOverview {
+	margin-bottom: 10px;
+	display: block;
+}
+
+.pmOcOverview div.pmOcDetail {
+	background-color: #E0E6FF;
+	border: 1px solid #CCCCFF;
+	padding: 6px;
+	display: block;
+	margin-right: 8px;
+	margin-bottom: 8px;
+	float: left;
+	width: 278px;
+}
+
+.pmOcOverview div.pmOcDetailSummary {
+	margin: 0px;
+	padding: 0px;
+	height: 58px;
+	width: 272px;
+	clear:both;
+	font-size: 11px;
+	font-weight:normal;
+	line-height:1.3;
+	cursor: pointer;
+	color: black;
+	font-family: tahoma, verdana, arial, sans-serif;
+}
+
+.pmOcOverview div.pmOcPad {
+	height: 1px;
+	display: block;
+	clear: both;
+}
+
+.pmOcOverview div.pmOcLogo {
+	height:22px;
+	width:40px;
+	background-color: white;
+	margin: 0px;
+}
+
+.pmOcOverview div.pmOcField1 {
+	height:15px;
+	padding-top: 9px;
+	margin-left: 0px;
+}
+
+.pmOcOverview div.pmOcField2 {
+	padding-top: 0px;
+	height:15px;
+	margin-left: 0px;
+}
+
+.pmOcOverview span.pmOcFieldTitle {
+	float: left;	
+	width: 130px;
+}
+
+.ocRemoveDetail {
+	cursor: pointer;
+	position: relative;
+	top: 3px;
+	left: 2px;
+}
+
+.ocNewDetailsLink {
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+.ocStoredDetails {
+	font-size: 1.25em;
+}
+
+/* new oneclick - card */
+.ocCardLogo {
+	cursor: pointer;
+}
+.ocCardUpdateExpiryDate {
+
+}
+.ocCardUpdateExpiryDateLink {
+	cursor: pointer;
+	text-decoration: underline;
+}
+.cardNumberTitle {
+	width:	200px;
+}
+
+
+/* new oneclick - directdebit - generic */
+
+.ocDDAccount {
+	float:	left;
+	padding: 4px;
+}
+
+.ocDDAccountLink {
+	cursor: pointer;
+	border: 1px solid #84e33c;
+	margin: 3px 9px 3px 1px;
+	color: #999999;
+}
+
+.ocDDAccountNoLink {
+	margin: 2px 8px 2px 0px;
+	border: 2px solid #84e33c;
+}
+/* new oneclick - directdebit_NL */
+.ocDDNLAccount {}
+.ocDDNLAccountLink {}
+.ocDDNLAccountNoLink {}
+
+/* new oneclick - directdebit_BR */
+.ocDDBRAccount {}
+.ocDDBRAccountLink {}
+.ocDDBRAccountNoLink {}
+
+/********************************************/
+/********************************************/
+
+
+/* ivr specific css */
+
+.ivricon {
+        display: block;
+        margin-right: 10px;
+        float: left;
+}
+.ivrmessage {
+        display: block;
+        font-weight: bold;
+}
+.ivrdetail {
+        display: block;
+        margin-top: 5px;
+        font-weight: bold;
+        font-family: arial, sans-serif;
+}
+
+
+#phoneNumber .ivrdetail {
+        color: #57A022;
+        font-size: 2.4em;
+}
+
+#payCode .ivrdetail {
+        color: #1F5F98;
+        font-size: 2.4em;
+}
+#timeToCall .ivrmessage {
+        font-weight: normal;
+        line-height: 1.1em;
+}
+
+#timeToCall .ivrmessage .phoneDetails, #timeLeft {
+        font-weight: bold;
+        color:  #57A022;
+        font-family: arial, sans-serif;
+}
+
+
+.progressW {
+        width: 400px; 
+        margin-left: 50px; 
+        padding: 1px;
+        border: 1px solid #666;
+        background-color: transparent
+}
+.progress {
+        width: 0px;
+        font-size: 1px;
+        height: 14px;
+        margin: 0px;
+        padding:0px;
+        background-color: #66C931;
+        background-image: url(/hpp/img/progress3.png);
+        background-repeat: repeat-x;
+}
+
+.ebanking_FIFrame {
+	width: 300px;
+	float: right;
+}
+
+.ebanking_FIHeader {
+    font-weight:    bold;
+    margin-bottom:  5px;
+    margin-top:     5px;
+    color:          #1678A5;
+}
+
+.ebanking_FIText {
+    padding:        5px;
+}
+
+.invoicestat {
+    width: 55%;
+    border: 2px solid black;
+    font-family: courier, monospace;
+    padding: 17px 10px 17px 61px;
+}
+
+.invoicestatPaid      { border-color: green; background-color: #efe; }  
+.invoicestatUnPaid    { border-color: orange; background-color: #fff5ee; } 
+.invoicestatCannotPay { border-color: red; background-color: #fee; } 
+
+
+.airlinedatalabel, .airlinelegdatalabel{
+    float:left;
+    clear:left;
+    padding-top:7px;
+    font-weight:bold;
+
+}
+
+.airlinedataelement, .airlinelegdataelement{
+    float:right;
+    padding-top:7px;
+}
+
+
+.airlinedata{
+	float:left;
+	width:800px;
+	height:100px;
+	border:solid 2px #367EA6;
+	padding:10px;
+	margin:10px;
+	clear:both;
+	position:relative;
+}
+
+.airlinelegdata{
+	float:left;
+	width:800px;
+	border:solid 2px #367EA6;
+	padding:10px; 
+	margin:10px;
+	clear:both;
+	position:relative;
+	height:120px;
+}
+
+.airlinedatatitle{
+	background: #367EA6;
+    color: white;
+    font-size: 20px;
+    margin: -10px;
+    padding: 6px;
+}
+
+.airlinelegdatatitle{
+	background: #367EA6;
+    color: white;
+    font-size: 20px;
+    margin: -10px;
+    padding: 5px;
+    left:640px;
+    position:absolute;
+    
+}
+
+.endairlinelegdata{
+	clear:both;
+}
+
+
+
+.labeldepartairport{
+	background: #367EA6;
+    color: white;
+    font-size: 13px;
+    left: 10px;
+    position: absolute;
+    top: 0px;
+    padding: 5px;
+}
+
+.elementdepartairport{
+	background: #367EA6;
+    color: white;
+    font-size: 13px;
+    left: 200px;
+    position: absolute;
+    top: 0px;
+    padding: 5px;
+}
+
+.labeldestinationcode{
+	background: #367EA6;
+    color: white;
+    font-size: 13px;
+    left: 10px;
+    position: absolute;
+    top: 20px;
+    padding: 5px;
+}
+
+.elementdestinationcode{
+	background: #367EA6;
+    color: white;
+    left: 200px;
+    font-size: 13px;
+    position: absolute;
+    top: 20px;
+    padding: 5px;
+}
+
+.airlinelegdataheader{
+	background: #367EA6;
+	height: 50px;
+    left: 0;
+    position: absolute;
+    width: 820px;
+    top: 0;
+}
+
+.labelflightnumber{
+	position: absolute;
+	top:50px;
+	left:10px;
+}
+.elementflightnumber{
+	position: absolute;
+	top:50px;
+	left:110px;
+}
+.labelcarriercode{
+	position: absolute;
+	top:50px;
+	left:350px;
+}
+.elementcarriercode{
+	position: absolute;
+	top:50px;
+	left:450px;
+}
+.labelfarebasecode{
+	display:none;
+}
+.elementfarebasecode{
+	display:none;
+}
+.labelclassoftravel{
+	position: absolute;
+	top:75px;
+	left:10px;
+}
+.elementclassoftravel{
+	position: absolute;
+	top:75px;
+	left:110px;
+}
+.labelstopovercode{
+	display:none;
+}
+.elementstopovercode{
+	display:none;
+}
+.labeldateoftravel{
+	position: absolute;
+	top:100px;
+	left:10px;
+}
+.elementdateoftravel{
+	position: absolute;
+	top:100px;
+	left:110px;
+}
+.labeldeparttax{
+	display:none;
+}
+.elementdeparttax{
+	display:none;
+}
+
+
+#labelairlinepassengername{
+	position:absolute;
+	left:10px;
+	top:30px;
+}
+#airlinepassengername{
+	position:absolute;
+	left:150px;
+	top:30px;
+}
+#labelairlinecustomerreferencenumber{
+	position:absolute;
+	left:300px;
+	top:30px;
+}
+#airlinecustomerreferencenumber{
+	position:absolute;
+	left:500px;
+	top:30px;
+}
+#labelairlineticketissueaddress{
+	position:absolute;
+	left:10px;
+	top:55px;
+}
+#airlineticketissueaddress{
+	position:absolute;
+	left:150px;
+	top:55px;
+}
+#labelairlineticketnumber{
+	position:absolute;
+	left:300px;
+	top:55px;
+}
+#airlineticketnumber{
+	position:absolute;
+	left:500px;
+	top:55px;
+}
+#labelairlinetravelagencycode{
+	display:none;
+}
+#airlinetravelagencycode{
+	display:none;
+}
+#labelairlinetravelagencyname{
+	position:absolute;
+	left:10px;
+	top:80px;
+}
+#airlinetravelagencyname{
+	position:absolute;
+	left:150px;
+	top:80px;
+}
+#labelairlineagencyplanname{
+	display:none;
+}
+#airlineagencyplanname{
+	display:none;
+}
+#labelairlineagencyinvoicenumber{
+	display:none;
+}
+#airlineagencyinvoicenumber{
+	display:none;
+}
+.receiptNoPrint {
+	display: none;
+}
+.receiptPrint {
+	display: none;
+}
