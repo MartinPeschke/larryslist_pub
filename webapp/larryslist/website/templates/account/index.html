@@ -1,4 +1,5 @@
 <%inherit file="../layout.html"/>
+<%namespace file="larryslist:lib/formlib/templates/baseform.html" name="baseform"/>
 
 <%def name="content()">
     <div class="container">
@@ -7,13 +8,25 @@
                 <h4 class="box-title">Welcome <span class="highlight">${vctxt.user.name}</span></h4>
                 <div class="profile-box">
                     <h4 class="box-title">Basic Information</h4>
-
-
+                    <div class="line">
+                        <div class="key">Your username</div>
+                        <div class="value">${vctxt.user.name}</div>
+                    </div>
+                    <div class="line">
+                        <div class="key">Your email</div>
+                        <div class="value">${vctxt.user.email}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="span12">
+                <div class="profile-box">
                     <h4 class="box-title">Change your password</h4>
-
-
+                    ${self.buildForm(view.form, values.get(view.form.id, {}), errors.get(view.form.id, {}))}
+                </div>
+            </div>
+            <div class="span12">
+                <div class="profile-box">
                     <h4 class="box-title">Balance</h4>
-
                     <div class="line xlarge">
                         <div class="key">Current Credit Balance</div>
                         <div class="value highlight">${vctxt.user.credit}</div>
@@ -28,5 +41,18 @@
             </div>
         </div>
     </div>
+</%def>
 
+
+
+<%def name="buildForm(form, values, errors)">
+    <form class="${form.classes}" method="post" id="${form.id}">
+        ${baseform.prelims(form)}
+        %for field in form.fields:
+            ${field.render(form.id, request, values, errors, view)|n}
+        %endfor
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">${form.action_label}</button>
+        </div>
+    </form>
 </%def>

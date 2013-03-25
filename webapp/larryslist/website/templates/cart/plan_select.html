@@ -5,42 +5,31 @@
 <div class="container centered cart-page">
     <div class="row">
         <div class="span12">
-            <div class="page-body">
-                <h5 class="box-title tinted">Choose a credit package</h5>
-
-                <div class="page-body-wrapper">
-                    <div class="explanation-row">
-                        <h5 class="highlight">This is what you get</h5>
-                        <ul>
-                            <li>access to profile for 1 year (free updated included)</li>
-                            <li>all available information on profile (incl. address, collection, etc.)</li>
-                            <li>access from everywhere 24/7</li>
-                        </ul>
+            <h4 class="box-title">Choose a credit package</h4>
+            <div class="standard-box standard-padded-box">
+                <form class="form-validated" method="post" action="${request.fwd_url("website_checkout_set_option")}">
+                    ${baseform.prelims(form)}
+                    <div class="payment-plans">
+                        %for field in form.fields:
+                            ${field.render(form.id, request, values, errors, view)|n}
+                        %endfor
                     </div>
-
-
-                    <form class="form-validated" method="post" action="${request.fwd_url("website_checkout_set_option")}">
-                        ${baseform.prelims(form)}
-                        <div class="payment-plans">
-                            %for field in form.fields:
-                                ${field.render(form.id, request, values, errors, view)|n}
-                            %endfor
+                    <div class="">
+                        <div class="pull-right">
+                            <img src="${STATIC_URL}img/paymentmethods.png"/>
                         </div>
-                        <div class="">
-                            <div class="pull-right">
-                                <img src="${STATIC_URL}img/paymentmethods.png"/>
-                            </div>
-                            <div>1 credit = 1 profile</div>
-                            <div><a href="#" class="expiry-link">Will the credits expire?</a></div>
-                        </div>
-                    </form>
+                        <div>1 credit = 1 profile</div>
+                        <div><a href="#" class="expiry-link">Will the credits expire?</a></div>
+                    </div>
+                </form>
+                <div class="explanation-row">
+                    <h4 class="highlight">This is what you get</h4>
+                    <ul>
+                        <li>access to profile for 1 year (free updated included)</li>
+                        <li>all available information on profile (incl. address, collection, etc.)</li>
+                        <li>access from everywhere 24/7</li>
+                    </ul>
                 </div>
-                <ul class="recommendation-icons inline">
-                    <li>${g.project_name} is known from:</li>
-                    <li><img src="${STATIC_URL}img/adpartner_nyt.png?v=${VERSION_TOKEN}"/></li>
-                    <li><img src="${STATIC_URL}img/adpartner_cnn.png?v=${VERSION_TOKEN}"/></li>
-                    <li><img src="${STATIC_URL}img/adpartner_art.png?v=${VERSION_TOKEN}"/></li>
-                </ul>
             </div>
         </div>
     </div>

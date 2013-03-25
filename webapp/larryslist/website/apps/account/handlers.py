@@ -1,5 +1,6 @@
+from larryslist.lib.formlib.handlers import FormHandler
+from .forms import PasswordResetForm
 
 
-
-def index(context, request):
-    return {}
+class ProfileHandler(FormHandler):
+    form = PasswordResetForm

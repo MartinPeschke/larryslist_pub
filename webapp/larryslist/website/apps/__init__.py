@@ -18,8 +18,7 @@ ROUTE_LIST = [
     , FunctionRoute ("website_search_entity"     , "/search/entity", contexts.WebsiteRootContext, search.entities, "json", {'xhr':True} )
 
     # user profile
-    , FunctionRoute ("website_user_profile"      , "/account", contexts.WebsiteRootContext, account.index, "account/index.html")
-
+    , ClassRoute    ("website_user_profile"      , "/account", contexts.WebsiteRootContext, account.ProfileHandler, "account/index.html", view_attrs=JSON_FORM_ATTRS)
     , ClassRoute    ("website_cart"              , "/cart", contexts.WebsiteRootContext, cart.SpendCreditsHandler, "cart/index.html", view_attrs=JSON_FORM_ATTRS)
     , FunctionRoute ("website_cart_save"         , "/cart/save", contexts.WebsiteRootContext, cart.save_cart, "json", {'xhr':True})
 
