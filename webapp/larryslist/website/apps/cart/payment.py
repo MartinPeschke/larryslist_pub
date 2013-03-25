@@ -60,6 +60,10 @@ def checkout_handler(context, request):
 
     params = get_request_parameters(standard_params, redirect_params)
     urlparams = '&'.join(['%s=%s' % (k, urllib.quote(v)) for k,v in params.iteritems()])
+
+    if request.session.get(PLAN_SELECTED_TOKEN):
+        del request.session[PLAN_SELECTED_TOKEN]
+
     request.fwd_raw("%s?%s&merchantSig=%s" % (BASE_URL, urlparams, urllib.quote(get_signature(params))))
 
 
@@ -69,7 +73,7 @@ def payment_result_handler(context, request):
     paymentmethod =  request.params.get('paymentMethod')
     if request.params.get('authResult') == 'AUTHORISED':
         request.session.flash(GenericSuccessMessage("Payment Successful!"), "generic_messages")
-        return render_to_response('/contribution/payment_success.html', {}, request)
+        request.fwd("website_index_member")
     else:
         request.session.flash(GenericErrorMessage("Payment Failed!"), "generic_messages")
         return render_to_response('/contribution/payment_fail.html', {}, request)

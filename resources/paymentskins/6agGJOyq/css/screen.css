@@ -26,8 +26,17 @@ body {
 .container:after, .row:after {clear: both;}
 .row {margin-left: -20px;}
 [class*="span"] {float: left;min-height: 1px;margin-left: 20px;}
+.span1 {width: 60px;}
 .span2 {width: 140px;}
+.span3 {width: 220px;}
 .span4 {width: 300px;}
+.span5 {width: 380px;}
+.span6 {width: 460px;}
+.span7 {width: 540px;}
+.span8 {width: 620px;}
+.span9 {width: 700px;}
+.span10 {width: 780px;}
+.span11 {width: 860px;}
 .span12 {width: 940px;}
 
 
@@ -245,6 +254,60 @@ table.basetable select.inputField, table.basetable select.errorField {
     float:left;
 }
 #displayAmount {margin: 15px 0;}
+
+
+.checkout-sidebar {
+    -webkit-box-shadow: 0 0 3px rgba(0,0,0,0.4);
+       -moz-box-shadow: 0 0 3px rgba(0,0,0,0.4);
+            box-shadow: 0 0 3px rgba(0,0,0,0.4);
+}
+.box-title {border-bottom: 1px solid #e5000c;padding: 10px 15px;margin: 0;}
+.box-title.tinted {
+    background-color: #eee;
+    background-image: -moz-linear-gradient(top,#e7e7e7,#f8f8f8);
+    background-image: -webkit-gradient(linear,0 0,0 100%,from(#e7e7e7),to(#f8f8f8));
+    background-image: -webkit-linear-gradient(top,#e7e7e7,#f8f8f8);
+    background-image: -o-linear-gradient(top,#e7e7e7,#f8f8f8);
+    background-image: linear-gradient(to bottom,#e7e7e7,#f8f8f8);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffe7e7e7',endColorstr='#fff8f8f8',GradientType=0);
+}
+.standard-padded-box {padding: 15px;}
+.checkout-sidebar .accordion {margin-bottom: 18px;}
+.checkout-sidebar .accordion-group {margin-bottom: 2px;}
+.accordion-heading {border-bottom: 0;}
+.checkout-sidebar .accordion-heading .accordion-toggle {display: block;padding: 8px 15px 8px 35px;color: #333;cursor: pointer;}
+.checkout-sidebar .accordion-inner {padding: 0 15px 15px 35px;}
+.checkout-sidebar .faq-arrow {
+    background-image: url("../img/faqicons.png?v=6cf5ee94a24ae3d0ea4bd442b3404173");
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    width: 16px;
+    height: 15px;
+    display: block;
+    float: left;
+    margin-left: -22px;
+    margin-top: 3px;
+}
+.collapse {
+    position: relative;
+    height: 0;
+    overflow: hidden;
+    -webkit-transition: height .35s ease;
+    -moz-transition: height .35s ease;
+    -o-transition: height .35s ease;
+    transition: height .35s ease;
+}
+.collapse.in {height: auto;}
+
+
+
+
+
+
+
+
+
 
 
 

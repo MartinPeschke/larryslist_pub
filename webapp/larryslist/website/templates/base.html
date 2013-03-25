@@ -76,7 +76,7 @@
 <%def name="html_class()"></%def>
 
 <%def name="header_messages()">
-    <div id="message-container" class="fixed message-container ${'' if len(request.session.peek_flash("generic_messages")) > 0 else 'hide'}">
+    <div id="message-container" class="container message-container ${'' if len(request.session.peek_flash("generic_messages")) > 0 else 'hide'}">
         %for msg in request.session.pop_flash("generic_messages"):
             <div class="alert alert-${msg.type}">
                 <a class="close" data-dismiss="alert">×</a>
