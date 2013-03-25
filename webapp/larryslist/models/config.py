@@ -200,7 +200,7 @@ class ConfigModel(Mapping):
         if not key or not word_fragment:
             return []
         wordlist = self.searchIndex[key].keys()
-        result = wordlist[bisect_left(wordlist, word_fragment):bisect_left(wordlist, word_fragment[:-1] + chr(ord(word_fragment[-1])+1))]
+        result = wordlist[bisect_left(wordlist, word_fragment):bisect_left(wordlist, word_fragment[:-1] + unichr(ord(word_fragment[-1])+1))]
         lookup = self.searchIndex[key]
         return [lookup[r].toQuery() for r in result[:10]]
 
