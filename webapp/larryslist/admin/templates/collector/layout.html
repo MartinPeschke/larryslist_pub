@@ -12,7 +12,12 @@
                 %elif view.collector.canReview(vctxt.user):
                     <button type="submit" name="status" value="APPROVE" class="btn">Approve</button>
                 %elif vctxt.user.isAdmin():
-                    <button type="submit" name="status" value="DEACTIVATE" class="btn">Set Inactive</button>
+                    %if view.collector.isActive():
+                        <button type="submit" name="status" value="DEACTIVATE" class="btn">Set Inactive</button>
+                    %else:
+                        <span class="label">Inactive</span>
+                    %endif
+
                 %endif
             </form>
         %else:

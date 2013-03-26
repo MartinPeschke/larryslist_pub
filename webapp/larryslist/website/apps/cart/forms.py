@@ -2,7 +2,7 @@ import formencode
 from larryslist.lib.baseviews import GenericErrorMessage
 from larryslist.lib.formlib.formfields import BaseForm, ConfigChoiceField, REQUIRED, EmailField, PasswordField, PlainHeadingField, StringField, CheckboxField, CheckboxPostField, CombinedField, HtmlAttrs
 from larryslist.website.apps.auth import LoginForm, SignupForm
-from larryslist.website.apps.models import RefreshUserProfileProc, PurchaseCreditProc, SpendCreditProc
+from larryslist.website.apps.models import RefreshUserProfileProc, SpendCreditProc
 
 
 PLAN_SELECTED_TOKEN = "PLAN_SELECTED"
@@ -43,81 +43,6 @@ class JoinSignupForm(SignupForm):
             return {'success':True, 'redirect':request.fwd_url("website_checkout_arbiter")}
         else:
             return result
-
-
-
-class CheckoutForm(BaseForm):
-    id = "new"
-    classes = 'form-horizontal form-validated'
-    action_label = "Purchase now"
-    has_discard = False
-    fields = [
-        PlainHeadingField("Credit Card", tag="h5", classes="label-spacealike")
-        , ConfigChoiceField("method", "Card Type:", "CardType", default_none=False)
-        , StringField("holder", "Holder:", REQUIRED)
-        , StringField("number", "Number:", REQUIRED, min = 13, max = 16)
-        , StringField("cvs", "CVV:", attrs = HtmlAttrs(required = True) , min = 3, max = 4,input_classes='input-mini')
-        , CombinedField([ConfigChoiceField("expiryMonth", None, "ExpiryMonth", default_none=False), ConfigChoiceField("expiryYear", None, "ExpiryYear", default_none=False)], "Expiration:", REQUIRED)
-        , PlainHeadingField("Billing address", tag="h5", classes="label-spacealike")
-        , StringField("lastName", "Name", REQUIRED)
-        , StringField("firstName", "Surname", REQUIRED)
-        , StringField("line1", "Street", REQUIRED)
-        , CombinedField([StringField("postCode", "Zip Code", REQUIRED, input_classes="input-mini"), StringField("city", "City", REQUIRED, input_classes="input-medium")], "Post code / City", REQUIRED)
-        , StringField("country", "Country", REQUIRED)
-        , CheckboxPostField("agreeTOS", u"Yes, I have read the Terms and Conditions and Agree.", REQUIRED)
-    ]
-    @classmethod
-    def extraOptions(cls, values):
-        values['saveDetails'] = True
-        return values
-    @classmethod
-    def on_success(cls, request, values):
-        values['userToken'] = request.root.user.token
-        values = cls.extraOptions(values)
-        status = PurchaseCreditProc(request, values)
-        if status.success == True:
-            context = request.root
-            RefreshUserProfileProc(request, {'token':request.root.user.token})
-
-            if not len(context.cart.getItems()):
-                request.fwd("website_index")
-            elif context.cart.canSpend(context.user):
-                values = {'token': context.user.token, 'Collector':[{'id': c.id} for c in context.cart.getCollectors()]}
-                SpendCreditProc(request, values)
-                context.cart.empty()
-                if request.session.get(PLAN_SELECTED_TOKEN):
-                    del request.session[PLAN_SELECTED_TOKEN]
-                request.fwd("website_index")
-            else:
-                request.session.flash(GenericErrorMessage("Not enough credits to purchase all profiles."), "generic_messages")
-                request.fwd("website_cart")
-        else:
-            errors = {}
-            if status.message == "PAYMENT_FAILED":
-                errors = {"number": "Invalid payment data, please check card details."}
-            elif status.message == "INVALID_CARD_NUMBER":
-                errors = {"number": "Invalid card number"}
-            elif status.message.startswith("validation 140"):
-                errors = {"expiryYear": "Expiry date must be in the future"}
-            elif status.message.startswith("validation 103"):
-                errors = {"cvs": "CVC is not right length"}
-            else:
-                errors = {"number": "Invalid card number {}".format(status.message)}
-            return {'success':False, "message":"Payment Failed", 'values':values, 'errors':errors}
-
-class SavedDetailsCheckoutForm(CheckoutForm):
-    id = "saved"
-    has_discard = True
-    fields = [
-        PlainHeadingField("Use Saved Credit Card Details", tag="h5", classes="standard-padded-box")
-        , StringField("number", "Saved Card", attrs = HtmlAttrs(readonly = True))
-        , StringField("cvs", "CVV", attrs = HtmlAttrs(required = True) , min = 3, max = 4)
-    ]
-
-    @classmethod
-    def extraOptions(cls, values):
-        values['useSavedDetails'] = True
-        return values
 
 
 class SpendCreditsForm(BaseForm):

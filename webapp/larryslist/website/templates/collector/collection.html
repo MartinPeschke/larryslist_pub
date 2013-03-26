@@ -32,16 +32,22 @@
 
 <%def name="basicCard(collection)">
     <%self:card title="Basic Information">
-        ${self.simpleLine('name', collection.name)}
-        ${self.simpleLine('Collection is Foundation', collection.foundation)}
-        ${self.simpleLink('Website', collection.url)}
-        ${self.simpleLine('Started collecting in year', collection.year)}
-        ${self.simpleLine('Number of Artworks', collection.getNoArtworks())}
-        ${self.simpleLine('Number of Artists', collection.getNoArtists())}
-        ${self.multiLine(collection, "Themes of Collection", "Theme")}
-        ${self.multiLine(collection, "Category, genre or styistic period represented in collection", "Genre")}
-        ${self.multiLine(collection, "Regional origin of artists in collection", "Origin")}
-        ${self.multiLine(collection, "medium of artworks represented in collection", "Medium")}
+        <div class="row">
+            <div class="span6">
+                ${self.simpleLine('name', collection.name)}
+                ${self.simpleLine('Collection is Foundation', collection.foundation)}
+                ${self.simpleLink('Website', collection.url)}
+                ${self.simpleLine('Started collecting in year', collection.year)}
+                ${self.simpleLine('Number of Artworks', collection.getNoArtworks())}
+                ${self.simpleLine('Number of Artists', collection.getNoArtists())}
+                ${self.multiLine(collection, "Themes of Collection", "Theme")}
+                ${self.multiLine(collection, "Category, genre or styistic period represented in collection", "Genre")}
+            </div>
+            <div class="span6">
+                ${self.multiLine(collection, "Regional origin of artists in collection", "Origin")}
+                ${self.multiLine(collection, "medium of artworks represented in collection", "Medium")}
+            </div>
+        </div>
     </%self:card>
 </%def>
 

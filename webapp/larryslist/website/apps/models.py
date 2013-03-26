@@ -76,6 +76,14 @@ class PaymentStatusModel(Mapping):
     message = TextField()
 
 
+class PaymentModel(Mapping):
+    paymentRef = TextField()
+    amount = IntegerField()
+    currency = TextField()
+    shopperRef = TextField()
+    shopperEmail = TextField()
+
+
 #  ============================= USER SECTION =============================
 
 
@@ -142,7 +150,8 @@ CheckEmailExistsProc = ClientTokenProc('/user/emailavailable')
 RefreshUserProfileProc = LoggingInProc("/user/profile")
 
 
-PurchaseCreditProc = ClientTokenProc("/web/credit/buy", result_cls=PaymentStatusModel, root_key="PaymentStatus")
+CreatePurchaseCreditProc = ClientTokenProc("/web/credit/buy", result_cls=PaymentModel, root_key="Payment")
+CheckPurchaseCreditProc = ClientTokenProc("/web/credit/paymentResult", result_cls=PaymentStatusModel, root_key="PaymentStatus")
 SpendCreditProc = LoggingInProc("/web/credit/spend")
 
 

@@ -1,5 +1,5 @@
 from larryslist.lib.formlib.handlers import FormHandler
-from larryslist.website.apps.cart.forms import PaymentOptionsForm, JoinLoginForm, JoinSignupForm, CheckoutForm, SpendCreditsForm, SavedDetailsCheckoutForm, PLAN_SELECTED_TOKEN
+from larryslist.website.apps.cart.forms import PaymentOptionsForm, JoinLoginForm, JoinSignupForm, SpendCreditsForm, PLAN_SELECTED_TOKEN
 from larryslist.website.apps.contexts import logged_in
 from larryslist.website.apps.models import SpendCreditProc
 from pyramid.decorator import reify
@@ -49,27 +49,6 @@ def straight_purchase(context, request):
         context.cart.empty()
         request.fwd("website_index")
 
-class CheckoutHandler(FormHandler):
-    forms = [CheckoutForm, SavedDetailsCheckoutForm]
-
-    @logged_in("website_checkout_join")
-    def __init__(self, context, request):
-        if not request.session.get(PLAN_SELECTED_TOKEN):
-            request.fwd("website_checkout_plan_select")
-        super(CheckoutHandler, self).__init__(context, request)
-
-    def pre_fill_values(self, request, result):
-        result['options'] = self.context.config.getPaymentOptions()
-        result['values'][self.getForm().id] = {'number': request.root.user.cardNumber}
-        return result
-
-    def getForm(self):
-        return self.forms[self.context.user.hasSavedDetails()]
-    @reify
-    def selectedPlan(self):
-        planToken = self.request.session.get(PLAN_SELECTED_TOKEN)
-        plan = self.context.config.getPaymentOption(planToken)
-        return plan
 
 
 class CheckoutLoginHandler(FormHandler):

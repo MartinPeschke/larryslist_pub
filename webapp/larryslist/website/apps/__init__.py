@@ -58,6 +58,10 @@ class WebsiteSettings(object):
         self.clientToken = settings['backend.token']
         self.gaTrackingCode= settings['ga_tracking_code']
 
+        self.adyenSecret = settings['adyen.secret']
+        self.adyenURL = settings['adyen.url']
+        self.adyenParams = {'merchantAccount': settings['adyen.account'], 'skinCode': settings['adyen.skinCode']}
+
 def home_url(request):
     return request.fwd_url("website_index")
 

@@ -198,6 +198,11 @@ class CollectorModel(SimpleCollectorModel):
     LinkedCollector = DictField(LinkedCollectorModel)
     Fact = ListField(DictField(OtherFactModel))
 
+    inActive = BooleanField()
+
+    def isActive(self):
+        return not self.inActive
+
     def getName(self):
         return u'{firstName} {lastName}'.format(firstName = self.firstName, lastName = self.lastName)
     def getNameWTitle(self):
