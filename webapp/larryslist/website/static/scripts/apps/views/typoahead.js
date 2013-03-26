@@ -28,13 +28,23 @@ define(["tools/ajax", "tools/abstractsearch", "text!templates/taresult.html"], f
                 var view = this, $el = this.$el;
                 opts.mapping = opts.mapping || {};
                 this.$query = this.$(".query");
+                this.current = null;
                 this.search = this.getSearch(opts);
                 this.search.on('selected', function(term){
                     view.search.hide();
                     view.$query.val(term.getSearchLabel());
                     view.$query.prev(".key").attr("name", term.get('key')).val(term.get('value'));
+                    view.current = term;
+
                 });
-                this.search.on('extraItemSelected unknownterm:selected unknownterm:metaSelected', function(termname){});
+                this.search.on('extraItemSelected unknownterm:selected unknownterm:metaSelected', function(termname){view.$query.val("");view.current=null;});
+                this.search.on('hide', function(){
+                    if(!view.current || view.current.getSearchLabel() != view.$query.val()){
+                        view.$query.val("");
+                        view.current = null;
+                    }
+                });
+
             }
             , getSearch: function(opts){
                 return new TypeAheadSearch({

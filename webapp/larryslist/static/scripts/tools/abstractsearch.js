@@ -30,7 +30,7 @@ define(["tools/hash", "tools/ajax", "text!tools/templates/searchresult.html"]
                 this.$resultNode.on({'mouseenter' : $.proxy(this.mouseenter, this),
                         'click':_.bind(this.disAmbiguateEvent, this)}, '.search-result-item');
                 this.$resultNode.on({'click': _.bind(this.hide, this)}, ".dismiss");
-                this.deBouncedSearch = _.debounce(_.bind(this.doSearch, this), 50);
+                this.lastQuery;
             }
             , rePosition: function(){
                 var css = this.$searchBoxC.offset();
@@ -93,7 +93,7 @@ define(["tools/hash", "tools/ajax", "text!tools/templates/searchresult.html"]
                         this.last();
                         break;
                     default:
-                        this.deBouncedSearch(e.target.value);
+                        this.doSearch(e.target.value);
                 }
                 e.stopPropagation();
                 e.preventDefault();
@@ -172,22 +172,26 @@ define(["tools/hash", "tools/ajax", "text!tools/templates/searchresult.html"]
             }
             , doSearch : function(query){
                 var view = this, data = this.buildQuery(query);
-                if(data){
-                    var queryId = view.queryId = hashlib.UUID();
-                    this.$resultNode.html('<div class="loading center"><img src="/static/img/ajax-loader.gif"/></div>');
-                    this.submitFunc({url:this.searchUrl
-                        , data: data
-                        , success: function(resp, status, xhr){
-                            if(queryId == view.queryId){
-                                if(resp.dbMessage){
-                                    view.model.reset([]);
-                                } else {
-                                    view.model.reset(view.model.parse(resp));
+                if(!_.isEqual(this.lastQuery, data)){
+                    if(data){
+                        this.lastQuery = data;
+                        var queryId = view.queryId = hashlib.UUID();
+                        this.$resultNode.html('<div class="loading center"><img src="/static/img/ajax-loader.gif"/></div>');
+                        this.submitFunc({url:this.searchUrl
+                            , data: data
+                            , success: function(resp, status, xhr){
+                                if(queryId == view.queryId){
+                                    if(resp.dbMessage){
+                                        view.model.reset([]);
+                                    } else {
+                                        view.model.reset(view.model.parse(resp));
+                                    }
                                 }
                             }
-                        }});
-                } else {
-                    view.model.reset([]);
+                        });
+                    } else {
+                        view.model.reset([]);
+                    }
                 }
             }
             , onSearchResult: function(collection){
@@ -215,6 +219,7 @@ define(["tools/hash", "tools/ajax", "text!tools/templates/searchresult.html"]
                 this.trigger("show");
             }
             , hide: function(){
+                this.lastQuery = null;
                 this.shown = false;
                 this.$el.removeClass("expanded");
                 this.$resultNode.empty().hide();
