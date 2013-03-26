@@ -38,16 +38,16 @@ define(["tools/ajax"], function(ajax){
             return path?hnc.resUrl(path):"/web/static/img/nopic-83px.png";
         }
         , getRank: function(){
-            return this.get("rank")
+            return this.get("ranking")
         }
-        , getCompletion: function(){
-            return this.get("completion")
+        , getContactCSS: function(){
+            return this.get("isContactable")?"has-prop":"has-not";
+        }
+        , getCollectionCSS: function(){
+            return this.get("hasCollection")?"has-prop":"has-not";
         }
         , parseLocal: function(obj){
             obj.updatedDate = hnc.parseDate(obj.updated);
-            obj.rank = obj.ranking;
-            obj.completion = obj.completness;
-            obj.subscribers = obj.followers;
             return obj;
         }
     });

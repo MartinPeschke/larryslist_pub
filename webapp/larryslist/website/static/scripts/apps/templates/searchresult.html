@@ -1,13 +1,12 @@
 <li class="search-results-row sortable selectable">
     <div class="search-result-item">
-        <div class="search-column completion">
-            <b>{{ model.getCompletion() }}</b>
-        </div><div class="search-column subscribers">
-            <b>{{ model.get("subscribers") }}</b>
+        <div class="search-column collection">
+            <span class="profile-icon {{ model.getCollectionCSS() }}"></span>
+        </div><div class="search-column contact">
+            <span class="profile-icon {{ model.getContactCSS() }}"></span>
         </div><div class="search-column rank">
             <b>{{ model.getRank() }}</b>
         </div><div class="search-column picture">
-
         </div><div class="search-column details">
             <h4 class="name highlight">{{ model.getName() }}</h4>
             <p class="location">{{ model.getAddress() }}</p>

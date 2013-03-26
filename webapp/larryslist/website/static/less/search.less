@@ -36,7 +36,6 @@
     font-weight:bold;
   }
   .show-more, .show-less {
-    display: block;
     text-align: left;
     padding: 5px 0px 10px;
     margin-left:22px;
@@ -218,7 +217,7 @@
     border:1px solid @borderDarker;
     background-color: @navbarBackgroundHighlight;
   }
-  &.completion, &.subscribers, &.rank {
+  &.collection, &.contact, &.rank {
     width: 17%;
     float:right;
     text-align: right;
@@ -261,7 +260,7 @@
 
 .collector-stats {
   .search-column {
-    &.completion, &.subscribers, &.rank {
+    &.contact, &.collection, &.rank {
       width: auto;
       float:None;
       display: block;
@@ -276,6 +275,19 @@
     }
   }
 }
+
+.profile-icon {
+  display: block;
+  display: inline-block;
+  width:24px;
+  height:24px;
+  &.has-prop {
+    .background-image("../img/tick.png");
+    background-position: 0 0;
+    background-repeat: no-repeat;
+  }
+}
+.selected .profile-icon.has-prop {background-position: 0 -25px;}
 
 /* ============================ RECOMMENDATIONS ========================== */
 

@@ -9,13 +9,13 @@
             <b class="value">{{ model.getRank() }}</b>
             <small class="caption">Rank</small>
         </div>
-        <div class="search-column subscribers">
-            <b class="value">{{ model.get("subscribers") }}</b>
-            <small class="caption">Followers</small>
+        <div class="search-column contact">
+            <span class="value profile-icon {{ model.getContactCSS() }}"></span>
+            <small class="caption">Contact</small>
         </div>
-        <div class="search-column completion">
-            <b class="value">{{ model.getCompletion() }}</b>
-            <small class="caption">Completion</small>
+        <div class="search-column collection">
+            <span class="value profile-icon {{ model.getCollectionCSS() }}"></span>
+            <small class="caption">Collection</small>
         </div>
     </div>
 </li>
