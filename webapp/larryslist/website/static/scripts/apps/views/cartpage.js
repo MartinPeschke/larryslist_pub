@@ -15,6 +15,9 @@ define(["tools/ajax", "models/cart", "models/user", "views/colitem", "text!templ
                 this.listenTo(this.model, "Collectors:remove", this.remove);
                 this.model.getItems(function(models){
                     models.each(this.add, this);
+                    if(models.length==0){
+                        this.$results.addClass("is-empty");
+                    }
                 }, this);
             }
             , add: function(collector){

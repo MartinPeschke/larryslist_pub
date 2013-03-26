@@ -40,7 +40,7 @@ define(
             , setSelected: function(selected){
                 this.$el[selected?'addClass':'removeClass']("selected");
                 var btnData = this.$button.data();
-                this.$button.html(btnData[selected?'textUnselected':'textSelected'])[selected?'removeClass':'addClass']("btn-primary");
+                this.$button.html(btnData[selected?'textUnselected':'textSelected'])[selected?'removeClass':'addClass']("btn-primary")[selected?'addClass':'removeClass']("btn-inverse");
                 this.$el.trigger("collector:"+(selected?"selected":"unselected"));
             }
             , toggleInCart: function(){
@@ -57,12 +57,17 @@ define(
             , initialize: function(opts){
                 this.setElement(opts.template({model: this.model, inCart:opts.inCart, owned: opts.owned}));
                 this.listenTo(this.model, "destroy", this.remove);
+                this.listenTo(this.model, "sort", this.reInsert);
             }
             , destroy: function(){
                 this.model.destroy();
             }
             , gotoProfile: function(){
                 window.location.href="/collector/"+this.model.id+"/"+encodeURIComponent(this.model.getFullName());
+            }
+            , reInsert:function(model, idx){
+                var root = this.$el.parent();
+                root.append(this.$el.detach());
             }
         })
         , getView = function(collector, templ){
