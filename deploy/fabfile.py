@@ -18,6 +18,7 @@ PROJECTNAME="larryslist"
 SUBSITES = [
     SubSite(location = 'website', scripts=['setup.js'], styles=Style(['site.less', "content.less"], True))
     , SubSite(location = 'admin', scripts=["setup.js"], styles=Style(['site.less'], True))
+    , SubSite(location = 'reports', scripts=["setup.js"], styles=Style(['site.less'], False))
   ]
 PROCESS_GROUPS = ['p1']
 CLEAN_SESSIONS = False
