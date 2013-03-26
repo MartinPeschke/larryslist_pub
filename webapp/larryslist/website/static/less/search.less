@@ -114,6 +114,7 @@
 .search-results-header {
   border-bottom: 1px solid @linkColor;
   clear:both;
+  padding-right: 24px;
 }
 
 .sortable-col {
@@ -208,6 +209,9 @@
   }
 }
 .search-column {
+  width: 15%;
+  float:right;
+  text-align: right;
   &.picture {
     float:left;
     text-align: center;
@@ -217,14 +221,12 @@
     border:1px solid @borderDarker;
     background-color: @navbarBackgroundHighlight;
   }
-  &.collection, &.contact, &.rank {
-    width: 17%;
-    float:right;
-    text-align: right;
-  }
   &.details {
     margin-left:100px;
     margin-right:45%;
+    float:none;
+    width:auto;
+    text-align: left;
     .name {margin:0 0 5px;}
     .location {font-size: .9em;.text-overflow();}
   }
@@ -247,32 +249,48 @@
     min-width:0;
     margin:0;
     float:left;
-    width: 70%;
+    width: 50%;
   }
   .right-col {
-    margin-left:70%;
-    width:30%;
+    margin-left:50%;
+    width:50%;
   }
   + .search-results-row {
     border-top: 1px solid #eee;
   }
 }
 
-.collector-stats {
-  .search-column {
-    &.contact, &.collection, &.rank {
-      width: auto;
-      float:None;
+.collector-stats.right-col .search-column {
+    width: auto;
+    float:None;
+    display: block;
+    text-align: right;
+    clear:right;
+    height:30px;
+    line-height:30px;
+    .caption {
+      text-transform: uppercase;
+      font-size:@smallFontSize;
+      color:#999;
+      margin-right:35px;
       display: block;
-      text-align: right;
-      .caption {display: block;text-transform: uppercase;font-size:@smallFontSize;color:#999;}
-      .caption, .value{line-height:1em;font-weight:bold;margin-left: 0;}
+      margin-right:30px;
+    }
+    .value{
+      width:24px;
+      height:30px;
+      line-height:30px;
+      text-align: center;
+      font-weight:bold;
+      margin-left: 0;
+      vertical-align: top;
+      display: block;
+      float:right;
     }
     &.details {
       margin-left:0;
       margin-right:0;
       float:left;
-    }
   }
 }
 
@@ -287,6 +305,8 @@
     background-repeat: no-repeat;
   }
 }
+.mini .profile-icon.has-prop, .mini.selected .profile-icon.has-prop {background-position: 0 -50px;height:30px;}
+.mini .profile-icon {float:right;}
 .selected .profile-icon.has-prop {background-position: 0 -25px;}
 
 /* ============================ RECOMMENDATIONS ========================== */

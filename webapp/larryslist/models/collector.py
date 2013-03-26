@@ -13,6 +13,8 @@ class SimpleCollectorModel(Mapping):
     id = IntegerField()
     status = TextField()
     updated = DateTimeField()
+    isContactable = BooleanField()
+    hasCollection = BooleanField()
     initials = TextField()
     picture = TextField()
     ranking = TextField(default = 0)

@@ -12,10 +12,10 @@
                     <div class="search-results-container standard-frame">
                         <h4 class="box-title">Shopping Cart</h4>
                         <div class="search-results-header">
-                            <div class="search-column completion">
-                                Completeness
-                            </div><div class="search-column subscribers">
-                                Followers
+                            <div class="search-column collection">
+                                Collection
+                            </div><div class="search-column contact">
+                                Contact
                             </div><div class="search-column rank">
                                 Rank
                             </div><h4>Collector</h4>
@@ -71,27 +71,6 @@
             </form>
         </div>
     </div>
-</%def>
-
-
-<%def name="buildItem(form, pos, item)">
-    <li class="search-results-row sortable">
-        <div class="search-result-item">
-            <input type="hidden" name="${form.id}.Collector-${pos}.id" value="${item.id}"/>
-            <div class="search-column completion">
-                <b>${item.completion}%</b>
-            </div><div class="search-column subscribers">
-                <b>${item.subscribers}</b>
-            </div><div class="search-column rank">
-                <b>${item.rank}</b>
-            </div><div class="search-column details">
-            <div class="name">${item.getName()}</div>
-            <p class="location">${item.getAddress()}</p>
-            <a class="btn btn-primary dismiss" data-entity-id="${item.id}">Deselect</a>
-        </div>
-            <span class="last-updated">Last updated: ${item.getUpdated()}</span>
-        </div>
-    </li>
 </%def>
 
 <%block name="scripts">
