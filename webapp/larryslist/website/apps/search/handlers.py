@@ -11,3 +11,8 @@ def index(context, request):
 
 def entities(context, request):
     return context.config.querySearch(request.json_body)
+
+def entities_more(context, request):
+    term = request.matchdict.get("term")
+    offset= int(request.matchdict.get("offset"))
+    return context.config.getMore(term, offset, 100)

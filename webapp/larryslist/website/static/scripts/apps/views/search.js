@@ -88,7 +88,6 @@ define(
             this.listenTo(this.allModel, "change:selected", this.allSelected);
             this.listenTo(this.model, "destroy", this.remove);
 
-
             var ta = new PlainTypeAhead({el: this.$(".type-ahead-field"), apiKey: opts.key});
             this.$(".type-ahead-field").find(".query").prop("placeholder", opts.placeholder);
             ta.search.on('selected', function(term){
@@ -133,28 +132,13 @@ define(
             this.allView.selectSilent(this.selectedCount <= 0);
         }
         , showMore: function(e){
-            var $el = this.$(".filter-list")
-                , current = this.$(".filter-list").children(".checkbox")
+            var view = this
                 , limit = this.defaultShow
-                , models = this.model.models
-                , len = models.length
-                , expanded = this.$el.toggleClass("expanded").hasClass("expanded")
-                , $t = $(e.target)
-                , html = []
-                , idx;
-            if(!$t.data("backupText")){$t.data("backupText", $t.html());}
-            if(expanded){
-                $t.html($t.data("toggleText"));
-            } else {
-                $t.html($t.data("backupText"));
-            }
-            if(current.length < len){
-                for(idx=limit;idx<len;idx++){
-                    var model = models[idx], v = new FilterOptionView({model:model, isExtra:true});
-                    html.push(v.el);
-                }
-                $(e.target).before(html);
-            }
+                , len = this.model.models.length;
+            ajax.submit({url:'/search/entity/'+this.options.key+"/"+len, success: function(resp, status, xhr){
+                view.model.addOrUpdate(resp.result, {preserve:true});
+                if(resp.isComplete){view.$el.find(".show-more").remove();}
+            }});
         }
         , getTitle: function(){
             return this.options.title;

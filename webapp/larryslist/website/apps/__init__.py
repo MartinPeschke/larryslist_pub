@@ -16,6 +16,7 @@ ROUTE_LIST = [
     , FunctionRoute ("website_join_checkemail"   , "/signup/checkemail", contexts.WebsiteRootContext, auth.join_checkemail, "json", {'xhr':True})
     , FunctionRoute ("website_search"            , "/search", contexts.WebsiteRootContext, search.index, "search/index.html")
     , FunctionRoute ("website_search_entity"     , "/search/entity", contexts.WebsiteRootContext, search.entities, "json", {'xhr':True} )
+    , FunctionRoute ("website_search_entity_more", "/search/entity/:term/:offset", contexts.WebsiteRootContext, search.entities_more, "json", {'xhr':True} )
 
     # user profile
     , ClassRoute    ("website_user_profile"      , "/account", contexts.WebsiteRootContext, account.ProfileHandler, "account/index.html", view_attrs=JSON_FORM_ATTRS)
