@@ -72,6 +72,7 @@ define(
         , defaultShow: 20
         , events: {
             "click .show-more":"showMore"
+            , "click .show-less":"showLess"
         }
         , initialize: function(opts){
             var view = this;
@@ -86,16 +87,19 @@ define(
             this.listenTo(this.model, "add", this.addOption);
             this.listenTo(this.model, "change:selected", this.filterSelected);
             this.listenTo(this.allModel, "change:selected", this.allSelected);
-            this.listenTo(this.model, "destroy", this.remove);
 
-            var ta = new PlainTypeAhead({el: this.$(".type-ahead-field"), apiKey: opts.key});
-            this.$(".type-ahead-field").find(".query").prop("placeholder", opts.placeholder);
-            ta.search.on('selected', function(term){
-                ta.search.hide();
-                ta.$query.val("");
-                view.model.addOrUpdate(term, {preserve: true});
-                view.model.get(term.id).set("selected", true);
-            });
+            if(opts.hasMore){
+                this.$(".type-ahead-field").before(this.showMoreTempl);
+                var ta = new PlainTypeAhead({el: this.$(".type-ahead-field"), apiKey: opts.key});
+                this.$(".type-ahead-field").find(".query").prop("placeholder", opts.placeholder);
+                ta.search.on('selected', function(term){
+                    ta.search.hide();
+                    ta.$query.val("");
+                    view.model.addOrUpdate(term, {preserve: true});
+                    view.model.get(term.id).set("selected", true);
+                });
+
+            }
         }
         , render: function(model){
             var $el = this.$(".filter-list")
@@ -110,9 +114,6 @@ define(
                 html.push(v.el);
             }
             $el.append(html);
-            if(models.length>limit){
-                $el.append('<a class="link show-more" data-toggle-text="▲ '+ (models.length - limit) +' less">▼ '+ (models.length - limit) +' more</a>')
-            }
         }
         , addOption: function(model){
             var $el = this.$(".filter-list");
@@ -131,13 +132,22 @@ define(
         , checkAll:function(e){
             this.allView.selectSilent(this.selectedCount <= 0);
         }
+        , showLess: function(e){
+            var removals = [];
+            this.model.each(function(m, idx){if(!m.get("selected") && idx > 4 )removals.push(m)});
+            _.invoke(removals, "destroy");
+            this.$el.find(".show-less").hide();
+            this.$el.find(".show-more").show();
+
+        }
         , showMore: function(e){
             var view = this
                 , limit = this.defaultShow
                 , len = this.model.models.length;
             ajax.submit({url:'/search/entity/'+this.options.key+"/"+len, success: function(resp, status, xhr){
                 view.model.addOrUpdate(resp.result, {preserve:true});
-                if(resp.isComplete){view.$el.find(".show-more").remove();}
+                view.$(".show-less").show();
+                if(resp.isComplete){view.$(".show-more").hide();}
             }});
         }
         , getTitle: function(){
@@ -206,13 +216,13 @@ define(
 
     , FilterView = ajax.View.extend({
         FILTER : [
-            {key: "ARTIST", prop:"Artist", title: "Artist", expanded: true, allLabel: "All Artists", placeholder:"Enter artist's name", expandable:false, hasTypeAhead: true}
-            , {key: "CITY", prop:"City", title: "City", expanded: true, allLabel: "All Cities", placeholder:"Enter city name", expandable:false, hasTypeAhead: true}
-            , {key: "GENDER", prop:"Gender", title: "Gender", expanded: false, allLabel: "All Genders", expandable:true, hasTypeAhead: false}
-            , {key: "COUNTRY", prop:"Country", title: "Country", expanded: false, allLabel: "All Countries", placeholder:"Enter country name", expandable:true, hasTypeAhead: true}
-            , {key: "GENRE", prop:"Genre", title: "Genre", expanded: false, allLabel: "All Genres", placeholder:"Enter a genre", expandable:true, hasTypeAhead: true}
-            , {key: "ORIGIN", prop:"Origin", title: "Regional Art Coverage", expanded: false, allLabel: "All Regions", placeholder:"Enter region", expandable:true, hasTypeAhead: true}
-            , {key: "MEDIUM", prop:"Medium", title: "Medium", expanded: false, allLabel: "All Media", placeholder:"Enter medium", expandable:true, hasTypeAhead: true}
+            {key: "ARTIST", prop:"Artist", title: "Artist", expanded: true, allLabel: "All Artists", placeholder:"Enter artist's name", expandable:false, hasMore: true}
+            , {key: "CITY", prop:"City", title: "City", expanded: true, allLabel: "All Cities", placeholder:"Enter city name", expandable:false, hasMore: true}
+            , {key: "GENDER", prop:"Gender", title: "Gender", expanded: false, allLabel: "All Genders", expandable:true, hasMore: false}
+            , {key: "COUNTRY", prop:"Country", title: "Country", expanded: false, allLabel: "All Countries", placeholder:"Enter country name", expandable:true, hasMore: true}
+            , {key: "GENRE", prop:"Genre", title: "Genre", expanded: false, allLabel: "All Genres", placeholder:"Enter a genre", expandable:true, hasMore: true}
+            , {key: "ORIGIN", prop:"Origin", title: "Regional Art Coverage", expanded: false, allLabel: "All Regions", placeholder:"Enter region", expandable:true, hasMore: true}
+            , {key: "MEDIUM", prop:"Medium", title: "Medium", expanded: false, allLabel: "All Media", placeholder:"Enter medium", expandable:true, hasMore: true}
         ]
         , events : {
             "submit .search-filters":"onSubmit"
