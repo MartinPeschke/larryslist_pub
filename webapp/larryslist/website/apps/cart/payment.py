@@ -75,9 +75,8 @@ def payment_result_handler(context, request):
     paymentmethod =  request.params.get('paymentMethod')
 
     result = CheckPurchaseCreditProc(request, request.params.mixed())
-    RefreshUserProfileProc(request, {'token':context.user.token})
-
     if result.success:
+        RefreshUserProfileProc(request, {'token':context.user.token})
         request.session.flash(GenericSuccessMessage("Payment Successful!"), "generic_messages")
         if not len(context.cart.getItems()):
             request.fwd("website_index")
@@ -93,4 +92,4 @@ def payment_result_handler(context, request):
             request.fwd("website_cart")
     else:
         request.session.flash(GenericErrorMessage("Payment Failed!"), "generic_messages")
-        return render_to_response('/contribution/payment_fail.html', {}, request)
+        request.fwd("website_cart")
