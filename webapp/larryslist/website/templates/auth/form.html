@@ -3,16 +3,15 @@
 
 
 <%def name="content()">
-    <div class="container standard-box centered auth-page">
+    <div class="container centered auth-page">
         <div class="row">
             <div class="span12">
-                <h1 class="box-title">${view.form.label}</h1>
+                <h4 class="box-title">${view.form.label}</h4>
             </div>
-            <div class="span6">
-                ${self.buildForm(view.form, values.get(view.form.id, {}), errors.get(view.form.id, {}))}
-            </div>
-            <div class="span6">
-                Side Bar with information about whats happening on ${g.project_name}
+            <div class="span12">
+                <div class="form-fields">
+                    ${self.buildForm(view.form, values.get(view.form.id, {}), errors.get(view.form.id, {}))}
+                </div>
             </div>
         </div>
     </div>
