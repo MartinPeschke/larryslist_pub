@@ -259,12 +259,6 @@ table.basetable select.inputField, table.basetable select.errorField {
 }
 #displayAmount {margin: 15px 0;}
 
-
-.checkout-sidebar {
-    -webkit-box-shadow: 0 0 3px rgba(0,0,0,0.4);
-       -moz-box-shadow: 0 0 3px rgba(0,0,0,0.4);
-            box-shadow: 0 0 3px rgba(0,0,0,0.4);
-}
 .box-title {border-bottom: 1px solid #e5000c;padding: 10px 15px;margin: 0;}
 #stageheader {border-bottom: 1px solid #e5000c;padding: 10px 0;margin: 0;}
 .box-title.tinted {
@@ -278,7 +272,7 @@ table.basetable select.inputField, table.basetable select.errorField {
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffe7e7e7',endColorstr='#fff8f8f8',GradientType=0);
 }
 .standard-padded-box {padding: 15px;}
-.checkout-sidebar .accordion {margin-bottom: 18px;}
+.checkout-sidebar .accordion {margin-bottom: 18px;background-color: #f8f8f8;}
 .checkout-sidebar .accordion-group {margin-bottom: 2px;}
 .accordion-heading {border-bottom: 0;}
 .checkout-sidebar .accordion-heading .accordion-toggle {display: block;padding: 8px 15px 8px 35px;color: #333;cursor: pointer;line-height: 18px;}
