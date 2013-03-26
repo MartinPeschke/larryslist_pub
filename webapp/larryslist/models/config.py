@@ -1,7 +1,7 @@
 from bisect import bisect_left
 from collections import OrderedDict
 from datetime import datetime
-from operator import itemgetter
+from operator import itemgetter, methodcaller
 from jsonclient import Mapping, TextField, DictField, ListField, IntegerField
 from larryslist.models.address import LocationModel
 from larryslist.models.artist import ArtistModel
@@ -203,6 +203,11 @@ class ConfigModel(Mapping):
         result = wordlist[bisect_left(wordlist, word_fragment):bisect_left(wordlist, word_fragment[:-1] + unichr(ord(word_fragment[-1])+1))]
         lookup = self.searchIndex[key]
         return [lookup[r].toQuery() for r in result[:10]]
+
+    def getMore(self, term, offset = 0, length = 100):
+        l = self.searchIndex.get(term, {}).values()
+        return {'result':map(methodcaller('toQuery'), l[offset:offset+length]), 'isComplete':offset+length>=len(l) }
+
 
 
     @classmethod
