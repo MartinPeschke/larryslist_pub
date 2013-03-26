@@ -1,7 +1,7 @@
 <div class="filter-section {{ expandable?'expandable':'' }}">
     <div class="section-header" {{ expandable?'data-toggle-class="expanded" data-toggle-target=".filter-section.expandable"':'' }}>
         <span class="expander"></span>
-        {{ title }}
+        <div class="section-header-text"> {{ title }}</div>
     </div>
     <div class="section-body">
         <div class="filter-list"></div>

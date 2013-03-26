@@ -164,9 +164,9 @@
 }
 .search-results-row {
   clear:both;
-  border-top: 1px solid @borderDarker;
   padding-top:1px;
   cursor:pointer;
+  + .search-results-row {border-top: 1px solid @borderDarker;}
   .search-result-item {
     border-width: 0 4px;
     border-style: solid;
@@ -176,15 +176,13 @@
     height:80px;
   }
   &.owned {
-    background: #f3f3f3;
+    background: #e7e7e7;
   }
   &.selectable{cursor:pointer;}
   &.selected .search-result-item {
     border-color: @linkColor;
     background-color:@borderDarker;
-
   }
-
   .last-updated {
     position: absolute;
     right: 20px;
@@ -268,6 +266,7 @@
 
 .recommended-collectors.vertical {
   min-height:285px;
+  .standard-box;
 }
 
 .recommended-collectors.horizontal {

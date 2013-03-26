@@ -10,7 +10,7 @@
                 <div class="span8">
                     ${baseform.prelims(view.form)}
                     <div class="search-results-container standard-frame">
-                        <h4 class="box-title inline tinted">Shopping Cart</h4>
+                        <h4 class="box-title">Shopping Cart</h4>
                         <div class="search-results-header">
                             <div class="search-column completion">
                                 Completeness
@@ -18,25 +18,18 @@
                                 Followers
                             </div><div class="search-column rank">
                                 Rank
-                            </div><h4 class="box-title">Collector</h4>
+                            </div><h4>Collector</h4>
                         </div>
-                        <ul class="search-results-body cart-items">
-                            <li class="search-placeholder empty">
-                                No profiles in cart
-                            </li>
-                            <li class="show-loading">
-                                <img src="${ROOT_STATIC_URL}img/ajax-loader.gif"/>
-                            </li>
-                        </ul>
+                        <ul class="search-results-body cart-items"><li class="search-placeholder empty">No profiles in cart</li><li class="show-loading"><img src="${ROOT_STATIC_URL}img/ajax-loader.gif"/></li></ul>
                     </div>
 
                     <div class="cart-buttons">
-                        <a href="${request.fwd_url("website_search")}" class="btn">Back to Search</a>
+                        <a href="${request.fwd_url("website_search")}" class="btn">Search for profiles</a>
                     </div>
                 </div>
                 <div class="span4">
+                    <h4 class="box-title">Proceed</h4>
                     <div class="standard-box">
-                        <h4 class="box-title inline">Proceed</h4>
                         <div class="cart-dropdown-section sidebarbox" data-template="templates/checkout-cart.html">
                             <div class="cart-attach-dropdown">
                                 <img src="${ROOT_STATIC_URL}/img/ajax-loader.gif"/>
@@ -71,7 +64,7 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="standard-frame spaced-top">
+                    <div class="spaced-top">
                         ${widgets.recommendations()}
                     </div>
                 </div>

@@ -40,7 +40,7 @@ define(
             , setSelected: function(selected){
                 this.$el[selected?'addClass':'removeClass']("selected");
                 var btnData = this.$button.data();
-                this.$button.html(btnData[selected?'textUnselected':'textSelected'])[selected?'removeClass':'addClass']("btn-primary");
+                this.$button.html(btnData[selected?'textUnselected':'textSelected'])[selected?'removeClass':'addClass']("btn-primary")[selected?'addClass':'removeClass']("btn-inverse");
                 this.$el.trigger("collector:"+(selected?"selected":"unselected"));
             }
             , toggleInCart: function(){
