@@ -29,18 +29,14 @@ define(
             , initialize: function(opts){
                 this.setElement(opts.template({model: this.model, inCart:opts.inCart}));
                 this.listenTo(this.model, "destroy", this.remove);
-                this.listenTo(cart, "added", this.inCart);
-                this.listenTo(cart, "removed", this.outCart);
+                this.listenTo(cart, "added:"+this.model.id, this.inCart);
+                this.listenTo(cart, "removed:"+this.model.id, this.outCart);
                 this.listenTo(this.model, "sort", this.reInsert);
                 this.$button = this.$el.find(".btn");
                 if(opts.inCart)this.setSelected(true);
             }
-            , inCart: function(model){
-                if(model.id == this.model.id)this.setSelected(true);
-            }
-            , outCart: function(model){
-                if(model.id == this.model.id)this.setSelected(false);
-            }
+            , inCart: function(model){this.setSelected(true);}
+            , outCart: function(model){this.setSelected(false);}
             , setSelected: function(selected){
                 this.$el[selected?'addClass':'removeClass']("selected");
                 var btnData = this.$button.data();
