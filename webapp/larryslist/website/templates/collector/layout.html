@@ -43,7 +43,7 @@
 <%def name="collectorCard(collector)">
     <div class="collector-card">
         <div class="collector-picture-card">
-            <div class="collector-picture-big"><img class="picture" src="${request.getStaticUrl(collector.getPicture())}"/></div>
+            <div class="collector-picture-big"><img class="picture" src="${collector.getPicture(request)}"/></div>
             <div class="collector-details">
                 <div class="pull-right collector-stats">
                     <div class="search-column rank">

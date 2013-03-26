@@ -220,8 +220,11 @@ class CollectorModel(SimpleCollectorModel):
             return ', '.join([g.name for g in self.Collection.Genre])
         else:
             return ''
-    def getPicture(self):
-        return self.picture or "http://www.gravatar.com/avatar/00000000000000000000000000000000?d=mm&s=200"
+    def getPicture(self, request):
+        if self.picture:
+            return request.getStaticUrl(self.picture)
+        else:
+            return "{}img/nopic-128px.png".format(request.root.static_prefix)
 
 
     def getDOB(self, request):

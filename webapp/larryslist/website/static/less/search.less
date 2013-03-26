@@ -37,9 +37,9 @@
   }
   .show-more {
     display: block;
-    text-align: right;
-    padding: 0 10px;
-    font-size: .8em;
+    text-align: left;
+    padding: 5px 35px 10px;
+    cursor: pointer;
   }
   .type-ahead-field {
     padding: 0 11px 30px 10px;
@@ -154,14 +154,19 @@
     .show-loading {display:block;}
     .search-results-row {display:none;}
   }
-  .empty {display: none;}
   &.is-empty .empty {display:block;}
 }
 
 .search-placeholder.empty {
   line-height: 150px;
   text-align: center;
+  display: none;
 }
+.search-placeholder.show-more {
+  margin: 10px 0;
+  display: inline-block;
+}
+
 .search-results-row {
   clear:both;
   padding-top:1px;
@@ -226,7 +231,6 @@
 
 .search-results-row.mini{
   height: auto;
-  cursor:default;
   border-top: none;
   padding: 5px 10px;
   .details {

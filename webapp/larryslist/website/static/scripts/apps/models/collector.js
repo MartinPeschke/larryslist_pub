@@ -35,7 +35,7 @@ define(["tools/ajax"], function(ajax){
         }
         , getPicture: function(){
             var path = this.get("picture");
-            return path?hnc.resUrl(path):"http://www.gravatar.com/avatar/00000000000000000000000000000000?d=mm";
+            return path?hnc.resUrl(path):"/web/static/img/nopic-83px.png";
         }
         , getRank: function(){
             return this.get("rank")
