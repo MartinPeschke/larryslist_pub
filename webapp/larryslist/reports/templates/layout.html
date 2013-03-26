@@ -1,0 +1,55 @@
+﻿<%inherit file="base.html" />
+<%def name="containerClass()">container-fluid</%def>
+<%def name="rowClass()">row-fluid</%def>
+<%def name="contentClass()">decorated</%def>
+
+
+<%block name="header">
+    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="brand" href="${request.fwd_url("reports_home")}">${g.project_name} - Reports</a>
+            </div>
+        </div>
+    </div>
+</%block>
+
+<%block name="content">
+    <div class="${self.containerClass()} ${self.contentClass()} body-wrapper">
+        <%block name="outerContentBody">
+            <div class="content-menu">
+                <%block name="contentmenu">${self.contentMenuImpl()}</%block>
+            </div>
+            <div class="content-body">
+                <div style="width:100%;float:left;">
+                    ${self.header_messages()}
+                    <%block name="contentbody"/>
+                </div>
+            </div>
+        </%block>
+    </div>
+</%block>
+
+<%block name="footer"></%block>
+<%block name="scripts"></%block>
+<%def name="navLink(label, route, classes = '', *args, **kwargs)">
+    <li class="${'active' if request.matched_route.name == route else ''}"><a class="${classes}" href="${request.fwd_url(route, *args, **kwargs)}">${label|n}</a></li>
+</%def>
+
+<%def name="menuLink(label, route, icon, classes = 'nav-entry-link', startswith = None, *args, **kwargs)">
+    <%
+    active = request.matched_route.name.startswith(startswith) \
+                if startswith \
+                else request.matched_route.name == route
+    %>
+    <li class="nav-entry ${'active' if active else ''}"><a class="${classes}" href="${request.fwd_url(route, *args, **kwargs)}"><i class="${icon}"></i>${label|n}</a></li>
+</%def>
+
+
+
+<%def name="contentMenuImpl()">
+    <div class="menu-heading">Reports Tool</div>
+    <ul class="nav nav-list">
+        ${self.menuLink("User Actions", "reports_user_actions", "icon-edit")}
+    </ul>
+</%def>
