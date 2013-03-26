@@ -57,12 +57,17 @@ define(
             , initialize: function(opts){
                 this.setElement(opts.template({model: this.model, inCart:opts.inCart, owned: opts.owned}));
                 this.listenTo(this.model, "destroy", this.remove);
+                this.listenTo(this.model, "sort", this.reInsert);
             }
             , destroy: function(){
                 this.model.destroy();
             }
             , gotoProfile: function(){
                 window.location.href="/collector/"+this.model.id+"/"+encodeURIComponent(this.model.getFullName());
+            }
+            , reInsert:function(model, idx){
+                var root = this.$el.parent();
+                root.append(this.$el.detach());
             }
         })
         , getView = function(collector, templ){

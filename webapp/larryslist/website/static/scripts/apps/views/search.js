@@ -296,8 +296,13 @@ define(
             this.lastResult;
         }
         , addResult: function(model){
-            var v = colItem.getView(model, null);
-            this.$results.append(v.$el);
+            var t = this.$results.children(".sortable").eq(this.results.indexOf(model))
+                , v = colItem.getView(model, null);
+            if(t.length){
+                t.before(v.$el);
+            } else {
+                this.$results.append(v.$el);
+            }
         }
         , updatedResults: function(){
             var r = this.results, $r = this.$results;
