@@ -1,13 +1,7 @@
 </div>
     <div class="span3">
         <div class="checkout-sidebar">
-            <h4 class="box-title tinted">Known From:</h4>
-            <div class="standard-padded-box">
-                <div class="adpartner">
-                    <img src="/sf/6agGJOyq/img/adpartner_color.png?v=v=6cf5ee94a24ae3d0ea4bd442b3404173">
-                </div>
-            </div>
-            <h4 style="margin-left:13px;">More Questions?</h4>
+            <h4 class="box-title">Questions?</h4>
             <div class="accordion" id="faq-accordion">
 
                 <div class="accordion-group">
