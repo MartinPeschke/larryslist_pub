@@ -44,6 +44,8 @@ def main(global_config, **settings):
         config.include("larryslist.admin.apps", route_prefix='/admin')
     if settings['deploy.website']:
         config.include("larryslist.website.apps")
+    if settings['deploy.reports'] =='True':
+        config.include("larryslist.reports.apps", route_prefix='/reports')
 
     config.scan()
     return config.make_wsgi_app()
