@@ -26,8 +26,8 @@ class SimpleCollectorModel(Mapping):
     def getAddress(self):
         if not len(self.Address): return ''
         addr = self.Address[0]
-        if not addr.Region or not addr.Country: return ''
-        return u"{region}, {country}".format(region = addr.Region.name, country = addr.Country.name)
+        if not addr.City or not addr.Country: return ''
+        return u"{city}, {country}".format(city = addr.City.name, country = addr.Country.name)
     def getUpdated(self):
         if self.updated:
             return '{:0>2}/{}'.format(self.updated.month, self.updated.year)
