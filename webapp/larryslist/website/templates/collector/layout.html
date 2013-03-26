@@ -108,9 +108,9 @@
 </%def>
 
 
-<%def name="value(v, pref = None)">
+<%def name="value(v, pref = None, classes='')">
     %if v:
-        <div>${'{}: '.format(pref) if pref else ''}${v|n}</div>
+        <div class="${classes}">${'{}: '.format(pref) if pref else ''}${v|n}</div>
     %endif
 </%def>
 

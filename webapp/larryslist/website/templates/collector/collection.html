@@ -80,8 +80,8 @@
                             <li class="single-artwork">
                                 <div>
                                 <a href="${request.fwd_url("website_search", _query=[('ARTIST', artist.id)])}">${artist.getLabel(request)}</a></div>
-                                ${self.value(artwork.title)}
-                                ${self.value(artwork.year)}
+                                ${self.value(artwork.title, classes="strong")}
+                                ${self.value(artwork.year, "Year")}
                                 ${self.value(artwork.medium)}
                                 %if artwork.size:
                                     <div>${artwork.size}</div>
