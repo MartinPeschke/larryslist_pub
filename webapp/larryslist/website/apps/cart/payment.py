@@ -6,7 +6,7 @@ import urllib
 from larryslist.lib.baseviews import GenericErrorMessage, GenericSuccessMessage
 from larryslist.website.apps.cart import PLAN_SELECTED_TOKEN
 import logging
-from larryslist.website.apps.models import CreatePurchaseCreditProc, CheckPurchaseCreditProc
+from larryslist.website.apps.models import CreatePurchaseCreditProc, CheckPurchaseCreditProc, RefreshUserProfileProc, SpendCreditProc
 from pyramid.renderers import render_to_response
 
 log = logging.getLogger(__name__)
@@ -75,10 +75,22 @@ def payment_result_handler(context, request):
     paymentmethod =  request.params.get('paymentMethod')
 
     result = CheckPurchaseCreditProc(request, request.params.mixed())
+    RefreshUserProfileProc(request, {'token':context.user.token})
 
-    if request.params.get('authResult') == 'AUTHORISED':
+    if result.success:
         request.session.flash(GenericSuccessMessage("Payment Successful!"), "generic_messages")
-        request.fwd("website_index_member")
+        if not len(context.cart.getItems()):
+            request.fwd("website_index")
+        elif context.cart.canSpend(context.user):
+            values = {'token': context.user.token, 'Collector':[{'id': c.id} for c in context.cart.getCollectors()]}
+            SpendCreditProc(request, values)
+            context.cart.empty()
+            if request.session.get(PLAN_SELECTED_TOKEN):
+                del request.session[PLAN_SELECTED_TOKEN]
+            request.fwd("website_index")
+        else:
+            request.session.flash(GenericErrorMessage("Not enough credits to purchase all profiles."), "generic_messages")
+            request.fwd("website_cart")
     else:
         request.session.flash(GenericErrorMessage("Payment Failed!"), "generic_messages")
         return render_to_response('/contribution/payment_fail.html', {}, request)
