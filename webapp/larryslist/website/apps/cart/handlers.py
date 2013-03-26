@@ -14,8 +14,6 @@ def checkout_arbiter(context, request):
             request.fwd("website_checkout_plan_select")
         else:
             request.fwd("website_checkout_join")
-    elif not len(context.cart.getItems()):
-        request.fwd("website_search")
     elif context.cart.canSpend(context.user):
         request.fwd("website_purchase")
     else:

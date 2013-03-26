@@ -517,7 +517,7 @@ table.basetable select.errorField {width: auto;}
 }
 
 .errorDiv {
-	background: transparent url("/hpp/img/icons/error.png") no-repeat 400px 3px;
+	background: transparent url("/hpp/img/icons/error.png") no-repeat 100% 3px;
 	padding-right: 20px;
 }
 
