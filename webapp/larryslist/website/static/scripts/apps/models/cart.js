@@ -25,10 +25,10 @@ define(["tools/ajax", "models/collector", "models/user"], function(ajax, Collect
             }});
         }
         , addProfile: function(collector){
-            if (!(collector instanceof Collector)) {collector = new Collector(collector);}
+            var cart = this, model = new Collector((collector instanceof Collector)?collector.attributes:collector);
             if(!this.contains(collector) && !user.ownsProfile(collector)){
-                this.get("Collectors").add(collector);
-                collector.trigger("cart:added");
+                this.get("Collectors").add(model);
+                cart.trigger("added", model);
             }
         }
         , addProfiles: function(collectors){
@@ -41,7 +41,7 @@ define(["tools/ajax", "models/collector", "models/user"], function(ajax, Collect
         }
         , removeProfile: function(collector){
             this.get("Collectors").remove(collector.id);
-            collector.trigger("cart:removed");
+            this.trigger("removed", collector);
         }
         , removeProfiles: function(collectors){
             this.stopListening(this, 'Collectors:add', this.persist);

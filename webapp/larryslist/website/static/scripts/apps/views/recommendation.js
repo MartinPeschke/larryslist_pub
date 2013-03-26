@@ -11,9 +11,17 @@ define(["tools/ajax", "models/cart", "models/user", "models/collector"
 
             this.listenTo(this.results, "add", this.addResult);
             this.listenTo(this.results, "updated", this.updatedResults);
-            this.listenTo(this.results, "cart:added", this.updatedResults);
-            this.listenTo(this.results, "cart:removed", this.updatedResults);
+            this.listenTo(cart, "added", this.cartOut);
+            this.listenTo(cart, "removed", this.cartIn);
             this.fetch();
+        }
+        , cartOut: function(model){
+            var m = this.results.get(model.id)
+            if(m)m.set("selected", false);
+        }
+        , cartIn: function(model){
+            var m = this.results.get(model.id);
+            if(m)m.set("selected", true);
         }
         , addResult: function(result){
             var t = this.$results.children(".sortable").eq(this.results.indexOf(result))

@@ -4,7 +4,7 @@ define(["tools/ajax", "models/cart", "models/user", "views/colitem", "text!templ
         , instance
         , templ = _.template(cartItem)
         , ItemView = colItem.ResultView.extend({
-            outCart: function(){this.remove();}
+            outCart: function(model){if(model.id == this.model.id)this.remove();}
         })
         , View = Backbone.View.extend({
             initialize: function(opts){

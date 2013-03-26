@@ -26,7 +26,7 @@ define(
         template : _.template(typeTmpl)
         , submitFunc: _.bind(ajax.submit, ajax)
         , buildQuery: function(query){
-            return {key: this.options.apiKey, value: query};
+            return query?{key: this.options.apiKey, value: query}:null;
         }
     })
     , PlainTypeAhead = Backbone.View.extend({
