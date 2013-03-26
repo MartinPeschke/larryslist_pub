@@ -14,9 +14,7 @@
                         <button type="submit" class="btn btn-primary">Search</button>
                     </div>
                 </form>
-
                 <div class="results-wrapper hide"></div>
-
             </div>
         </div>
     </div>
@@ -38,11 +36,23 @@
 
                 <div class="control-group">
                     <label class="control-label">Credits:</label>
-                    <div class="controls">{{ user.get("credit") }}</div>
+                    <div class="controls text">{{ user.get('credit') }}</div>
                 </div>
+
+                <div class="control-group">
+                    <label class="control-label">Collectors:</label>
+
+                    {%  if(user.get('Collector').length ==0 ) { %}
+                    <div class="controls text">No collectors yet!</div>
+                    {% } %}
+                    {% for (var i=0; i< user.get('Collector').length ; i++ ){  %}
+                        <div class="controls text">{{ user.get('Collector')[i].feederName }}</div>
+                    {% } %}
+
+                </div>
+
+
             </form>
-
-
             <form class="form-horizontal form-validated free-credits-form">
                 <input type="hidden" name="token" value="{{ user.get('token') }}"/>
                 <div class="control-group">
@@ -56,9 +66,12 @@
 
         </div>
     </script>
+
     <script>
         require(["views/usersearch"], function(View){
             var search = new View({ el: $('#user-actions-wrapper') });
         });
+
+
     </script>
 </%block>
