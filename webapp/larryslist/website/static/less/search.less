@@ -260,7 +260,7 @@
   }
 }
 
-.collector-stats.right-col .search-column {
+.collector-stats .search-column, .collector-stats.right-col .search-column {
     width: auto;
     float:None;
     display: block;
@@ -274,19 +274,19 @@
       color:#999;
       margin-right:35px;
       display: block;
-      margin-right:30px;
     }
     .value{
       width:24px;
-      height:30px;
+      height:28px;
+      line-height:28px;
       font-size:16px;
-      line-height:30px;
       text-align: center;
       font-weight:bold;
       margin-left: 0;
       vertical-align: top;
       display: block;
       float:right;
+      &.large{background-position: 0 3px;}
     }
     &.details {
       margin-left:0;

@@ -51,14 +51,12 @@
                         <small class="caption">Rank</small>
                     </div>
                     <div class="search-column contact">
-                        <b class="value">${collector.isContactable}</b>
+                        <span class="value large profile-icon ${'has-prop' if collector.isContactable else 'no-prop'}"></span>
                         <small class="caption">Contact</small>
                     </div>
                     <div class="search-column collection">
-                        <b class="value">${collector.hasCollection}</b>
-                        <div>
-                            <small class="caption">Collection</small>
-                        </div>
+                        <span class="value large profile-icon ${'has-prop' if collector.hasCollection else 'no-prop'}"></span>
+                        <small class="caption">Collection</small>
                     </div>
                 </div>
 
