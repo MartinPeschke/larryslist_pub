@@ -22,8 +22,8 @@ define(["tools/ajax"], function(ajax){
                 return ' ';
             else {
                 a = a.first();
-                if(a && a.get("Region") && a.get("Country")){
-                    return a.get("Region").name + ", " + a.get("Country").name;
+                if(a && a.get("City") && a.get("Country")){
+                    return a.get("City").name + ", " + a.get("Country").name;
                 } else {
                     return '';
                 }
