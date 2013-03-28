@@ -1,65 +1,44 @@
 <%inherit file="layout.html"/>
 
-
 <%block name="contentbody">
     <div class="padded-body dashboard">
         %if vctxt.user.isAdmin():
             <div class="row-fluid">
                 <div class="span6">
                     <h4>Collectors pending approval</h4>
-                    <div class="collector-list">
-                    %for profile in submitted:
-                        %if profile.isSubmitted():
-                        <div class="single-profile">
-                            <a class="dashbord-col profile-link" href="${request.fwd_url("admin_collector_edit", collectorId = profile.id, stage="base")}">${profile.firstName} ${profile.lastName}
-                            </a><span class="dashbord-col creator">
-                                ${profile.feederName}
-                            </span><span class="dashbord-col last-updated">
-                                ${i18n.format_date(profile.updated, request)}
-                            </span><span class="dashbord-col status">
-                                ${profile.getStatusLabel()}</span>
-                        </div>
-                        %endif
-                    %endfor
-                    </div>
+                    <div class="approval-queue collector-list submitted"><img src="${ROOT_STATIC_URL}img/ajax-loader-light.gif" class="loader"/></div>
                     <hr/>
-                    ${self.myProfiles(profiles)}
+                    <h4>My recent collectors</h4>
+                    <div class="collector-list my-profiles"><img src="${ROOT_STATIC_URL}img/ajax-loader-light.gif" class="loader"/></div>
                 </div>
-
                 <div class="span6">
                     <h4>Approved Collectors</h4>
-                    <div class="collector-list">
-                        %for profile in submitted:
-                            %if profile.isReviewed():
-                            <div class="single-profile">
-                                <a class="dashbord-col profile-link" href="${request.fwd_url("admin_collector_edit", collectorId = profile.id, stage="base")}">${profile.firstName} ${profile.lastName}
-                                </a><span class="dashbord-col creator">
-                            ${profile.feederName}
-                            </span><span class="dashbord-col last-updated">
-                            ${i18n.format_date(profile.updated, request)}
-                            </span><span class="dashbord-col status">
-                            ${profile.getStatusLabel()}</span>
-                            </div>
-                            %endif
-                        %endfor
-                    </div>
+                    <div class="approval-queue collector-list approved"><img src="${ROOT_STATIC_URL}img/ajax-loader-light.gif" class="loader"/></div>
                 </div>
             </div>
         %else:
-            ${self.myProfiles(profiles)}
+            <h4>My recent collectors</h4>
+            <div class="collector-list my-profiles"><img src="${ROOT_STATIC_URL}img/ajax-loader-light.gif" class="loader"/></div>
         %endif
     </div>
 </%block>
 
 
-<%def name="myProfiles(profiles)">
-    <h4>My recent collectors</h4>
-    <div class="collector-list">
-            %for profile in profiles:
-                <div class="single-profile">
-                    <a class="profile-link" href="${request.fwd_url("admin_collector_edit", collectorId = profile.id, stage="base")}">${profile.firstName} ${profile.lastName}</a>
-                ${profile.getStatusLabel()}
-                </div>
-            %endfor
-    </div>
-</%def>
+<%block name="scripts">
+    <script>
+        require(["tools/ajax"], function(ajax){
+            var approvals = $(".approval-queue");
+            if(approvals.length){
+                $.ajax({url:'${request.fwd_url("admin_approval_queue")}', success: function(resp, status, xhr){
+                    _.each(resp.html, function(val, key, obj){
+                        approvals.filter("."+key).html(val);
+                    });
+                }})
+            }
+            $.ajax({url:'${request.fwd_url("admin_myprofiles")}', success: function(resp, status, xhr){
+                $(".collector-list.my-profiles").html(resp.html);
+            }})
+
+        });
+    </script>
+</%block>

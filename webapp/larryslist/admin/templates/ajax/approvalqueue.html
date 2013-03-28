@@ -1,0 +1,5 @@
+${self.content(profiles)}<%def name="content(profiles)">
+%for profile in profiles:
+<div class="single-profile"><a class="dashbord-col profile-link" href="${request.fwd_url("admin_collector_edit", collectorId = profile.id, stage="base")}">${profile.firstName} ${profile.lastName}</a><span class="dashbord-col creator">${profile.feederName}</span><span class="dashbord-col last-updated">${i18n.format_date(profile.updated, request)}</span><span class="dashbord-col status">${profile.getStatusLabel()}</span></div>\
+%endfor
+</%def>

@@ -15,6 +15,8 @@ class AdminSettings(object):
 
 ROUTE_LIST = [
     FunctionRoute   ("admin_index"                   , "/", contexts.AdminAuthedContext, dashboard.index, "index.html")
+    , FunctionRoute ("admin_myprofiles"              , "/ajax/myprofiles", contexts.AdminAuthedContext, dashboard.myprofiles, "json")
+    , FunctionRoute ("admin_approval_queue"          , "/ajax/approvalqueue", contexts.AdminAuthedContext, dashboard.approvalqueue, "json")
     , ClassRoute    ("admin_login"                   , "/login", contexts.AdminRootContext, auth.LoginHandler, "auth/login.html", view_attrs=JSON_FORM_ATTRS)
     , FunctionRoute ("admin_logout"                  , "/logout", contexts.AdminRootContext, auth.logout, None)
     , ClassRoute    ('admin_reset_password'          , '/password/reset/:token', contexts.AdminRootContext, auth.PasswordResetHandler, "auth/password_reset.html", view_attrs = JSON_FORM_ATTRS)
