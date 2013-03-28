@@ -1,5 +1,6 @@
 from jsonclient.backend import VersionedBackend
 import logging, os, random
+from larryslist.tasks.typeahead import get_typeahead_conn, TypeAheadSearch
 
 log = logging.getLogger(__name__)
 
@@ -45,6 +46,7 @@ class Globals(object):
         self.setupDBConfig(self.backend)
 
         self.cache = make_region().configure_from_config(settings, "cache.")
+        self.typeahead_search = TypeAheadSearch('larryslist', get_typeahead_conn(settings))
 
     def getMailConfig(self):
         return self.mailConfig

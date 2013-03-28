@@ -10,7 +10,7 @@ def index(context, request):
 
 
 def entities(context, request):
-    return context.config.querySearch(request.json_body)
+    return request.globals.typeahead_search.get(request.json_body['key'], request.json_body['value'])
 
 def entities_more(context, request):
     term = request.matchdict.get("term")

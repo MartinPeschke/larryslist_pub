@@ -142,7 +142,7 @@ class ConfigModel(Mapping):
     def topMuseumMap(self):
         return {m.name:m for m in self.TopMuseum}
 
-
+    searchIndex = {'MEDIUM': 'Medium', 'GENRE': 'Genre', 'COUNTRY': 'Country', 'ORIGIN': "Origin", 'ARTIST': "Artist", 'CITY': 'City'}
     @reify
     def searchLookups(self):
         return {
@@ -153,18 +153,6 @@ class ConfigModel(Mapping):
             , 'GENRE': {c.name for c in self.Genre}
             , 'ORIGIN': {c.name for c in self.Origin}
         }
-    def getArtist(self, id):
-        lookup = self.searchLookups['ARTIST']
-        try:
-            return lookup.get(int(id))
-        except TypeError, e:
-            return None
-    def getCity(self, token):
-        lookup = self.searchLookups['CITY']
-        return lookup.get(token)
-    def getCountry(self, token):
-        lookup = self.searchLookups['COUNTRY']
-        return lookup.get(token)
 
     def convertToQuery(self, queryMap):
         query = {}
@@ -185,28 +173,10 @@ class ConfigModel(Mapping):
             , 'ARTIST': [g.toQuery() for g in self.Artist[:5]]
             , 'CITY': [g.toQuery() for g in self.City[:5]]
         }
-    @reify
-    def searchIndex(self):
-        return {
-            'MEDIUM': OrderedDict(sorted([(g.name.lower(), g) for g in self.Medium]))
-            , 'GENRE': OrderedDict(sorted([(g.name.lower(), g) for g in self.Genre]))
-            , 'COUNTRY': OrderedDict(sorted([(g.name.lower(), g) for g in self.Country]))
-            , 'ORIGIN': OrderedDict(sorted([(g.name.lower(), g)  for g in self.Origin]))
-            , 'ARTIST': OrderedDict(sorted([(g.name.lower(), g)  for g in self.Artist]))
-            , 'CITY': OrderedDict(sorted([(g.name.lower(), g) for g in self.City]))
-        }
-    def querySearch(self, query):
-        key, word_fragment = query['key'], query['value'].lower()
-        if not key or not word_fragment:
-            return []
-        wordlist = self.searchIndex[key].keys()
-        result = wordlist[bisect_left(wordlist, word_fragment):bisect_left(wordlist, word_fragment[:-1] + unichr(ord(word_fragment[-1])+1))]
-        lookup = self.searchIndex[key]
-        return [lookup[r].toQuery() for r in result[:10]]
 
     def getMore(self, term, offset = 0, length = 100):
-        l = self.searchIndex.get(term, {}).values()
-        return {'result':map(methodcaller('toQuery'), l[offset:offset+length]), 'isComplete':offset+length>=len(l) }
+        l = getattr(self, self.searchIndex[term])
+        return { 'result':map(methodcaller('toQuery'), l[offset:offset+length]), 'isComplete':offset+length>=len(l) }
 
 
 
