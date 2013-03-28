@@ -221,7 +221,7 @@ define(
             , {key: "GENDER", prop:"Gender", title: "Gender", expanded: false, allLabel: "All Genders", expandable:true, hasMore: false}
             , {key: "COUNTRY", prop:"Country", title: "Country", expanded: false, allLabel: "All Countries", placeholder:"Enter country name", expandable:true, hasMore: true}
             , {key: "GENRE", prop:"Genre", title: "Genre", expanded: false, allLabel: "All Genres", placeholder:"Enter a genre", expandable:true, hasMore: true}
-            , {key: "ORIGIN", prop:"Origin", title: "Regional Art Coverage", expanded: false, allLabel: "All Regions", placeholder:"Enter region", expandable:true, hasMore: true}
+            , {key: "ORIGIN", prop:"Origin", title: "Region of Interest", expanded: false, allLabel: "All Regions", placeholder:"Enter region", expandable:true, hasMore: true}
             , {key: "MEDIUM", prop:"Medium", title: "Medium", expanded: false, allLabel: "All Media", placeholder:"Enter medium", expandable:true, hasMore: true}
         ]
         , events : {

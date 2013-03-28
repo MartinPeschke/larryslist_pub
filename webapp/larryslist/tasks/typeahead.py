@@ -1,20 +1,19 @@
 from datetime import datetime
+import logging, simplejson
 from redis import StrictRedis
-import simplejson
-
+log = logging.getLogger(__name__)
 
 def get_config_items(config, prefix):
     lenPref = len(prefix.split(".")) - 1
     return {'.'.join(k.split(".")[lenPref:]):config.get(k) for k in config.keys() if k.startswith(prefix)}
-def get_typeahead_conn(config):
-    params = get_config_items(config, "autocomplete.")
+def get_typeahead_conn(params):
     return StrictRedis(host = params['host'], port = int(params['port']), db=params['db'])
 
 
 class TypeAheadSearch(object):
-    def __init__(self, project, conn, refresh = 60):
+    def __init__(self, project, conn, ttl = 60):
         self.project = project
-        self.refresh = refresh
+        self.ttl = ttl
 
         self.conn = conn
         self.ns = u'{}:typeahead'.format(self.project)
@@ -32,6 +31,7 @@ class TypeAheadSearch(object):
         exists_key = self.exists_key_f(key)
         data_key = self.data_ns_f(key)
         index_key_f = self.index_ns_f(key)
+        ttl = self.ttl
 
         last = self.conn.get(exists_key)
         if not last:
@@ -45,24 +45,23 @@ class TypeAheadSearch(object):
             for name, query in l:
                 elems = name.split()
                 elems = set(elems + [' '.join(elems[i:]) for i, e in enumerate(elems)])
-                prefixes = [ e[0:i+1] for e in elems for i,c in enumerate(e) ]
-                for pref in prefixes:
-                    p.zadd(index_key_f(pref), 0, query['value'])
+                for elem in elems:
+                    for i,c in enumerate(elem):
+                        pref = elem[0:i+1]
+                        p.zadd(index_key_f(pref), len(elem)-len(pref), query['value'])
+                        p.expire(index_key_f(pref), 3*ttl)
             p.execute()
-            self.conn.setex(exists_key, self.refresh, datetime.now())
-            print 'UPDATED Elements in {}:'.format(data_key), self.conn.hlen(data_key)
+            self.conn.setex(exists_key, ttl, datetime.now())
+            log.info('UPDATED Elements in %s: %s', data_key, self.conn.hlen(data_key))
 
 
-    def get(self, key, query, stringify = False):
+    def get(self, key, query, stringify = False, maxHits = 10):
         data_key = self.data_ns_f(key)
         index_key_f = self.index_ns_f(key)
 
         ids = self.conn.zrange(index_key_f(query.lower()), 0, -1)
         if ids:
-            results = self.conn.hmget(data_key, ids)
+            results = self.conn.hmget(data_key, ids[:maxHits])
         else:
             results = []
-        if stringify:
-            results
-        else:
-            return map(simplejson.loads, results)
+        return map(simplejson.loads, results)

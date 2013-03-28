@@ -2,12 +2,9 @@
 {% _(models).each(function(item, idx){ %}
     <li data-entity-id="{{ item.id }}" class="search-result-item" shortcut="{{ idx+1 }}">
         {{ item.getSearchLabel() }}
-        <span class="shortcut">⌘+{{ idx+1 }}</span>
     </li>
 {% }); %}
 {% if(withExtra){ %}
-    <li data-entity-id="CREATE" shortcut="0" class="search-result-item create-new-entity">add new
-        <span class="shortcut">⌘+0</span>
-    </li>
+    <li data-entity-id="CREATE" shortcut="0" class="search-result-item create-new-entity">add new</li>
 {% } %}
 </ul>

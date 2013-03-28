@@ -3,17 +3,18 @@
 
 <%def name="content()">
 
-<div class="container">
-    <div class="row">
-        <div class="span12">
-            <h1 class="profile-count-band">
-                The only<br/>collector database in the web with
-                <b class="count-suffix">${vctxt.config.ReviewedCollectors.no} collector profiles</b>
+<div class="profile-count-band">
+    <div class="container">
+        <div class="row">
+            <div class="span12">
+                The only art collector database - currently containing
+                <b class="count-suffix">${vctxt.config.ReviewedCollectors.no} Collector profiles</b>
                 in the database
-            </h1>
+            </div>
         </div>
     </div>
-
+</div>
+<div class="container">
     <form class="search-form form-validated index-search-form" method="GET" action="${request.fwd_url("website_search", query='')}">
         <div class="row">
             <div class="span12">
@@ -168,8 +169,8 @@
         <div class="panel picture"><img src="${STATIC_URL}img/landing/team.png" class="home-picture"/> </div>
         <div class="panel text">
             <div class="panel-content">
-                <h3 class="highlight">An international team</h3>
-                <p>We believe in transparency. Hence, we defined a ranking that is not based on how much the collector spends but on how active he is in the market. Our methodology is unique.</p>
+                <h3 class="highlight">International team</h3>
+                <p>Our team consists of art market researchers from around the world. Currently, we have more than 20 nationalities, all with an background in art history or art dealing experience.</p>
                 <p>Learn more here.</p>
             </div>
         </div>

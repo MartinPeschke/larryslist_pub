@@ -65,10 +65,11 @@ def main(argv=None):
     config = get_config(configname)
     webconfig = GetWebConfigProc(get_fake_request(config))
 
-    conn = get_typeahead_conn(config)
-    log.info("STARTED UP WITH %s", get_config_items(config, "autocomplete."))
+    conf_items = get_config_items(config, "autocomplete.")
+    conn = get_typeahead_conn(conf_items)
+    log.info("STARTED UP WITH %s", conf_items)
 
-    ta = TypeAheadSearch('larryslist', conn, 600)
+    ta = TypeAheadSearch('larryslist', conn, conf_items.get('ttl', 600))
     while True:
         start = datetime.now()
         ta.index('ARTIST', webconfig.Artist)
