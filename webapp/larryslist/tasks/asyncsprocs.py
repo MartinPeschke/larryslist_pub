@@ -1,11 +1,22 @@
 import ConfigParser, sys, getopt, os
 from datetime import datetime
+import logging
 import time
 from larryslist import Globals
-from larryslist.tasks.typeahead import TypeAheadSearch, get_typeahead_conn
+from larryslist.tasks.typeahead import TypeAheadSearch, get_typeahead_conn, get_config_items
 
 from larryslist.website.apps.contexts import GetWebConfigProc
 from larryslist.website.apps import WebsiteSettings
+
+log = logging.getLogger(__name__)
+log.setLevel(logging.INFO)
+ch = logging.StreamHandler(sys.stdout)
+ch.setLevel(logging.INFO)
+formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+ch.setFormatter(formatter)
+log.addHandler(ch)
+
+
 
 APP_SECTION = 'app:larryslist'
 
@@ -55,6 +66,8 @@ def main(argv=None):
     webconfig = GetWebConfigProc(get_fake_request(config))
 
     conn = get_typeahead_conn(config)
+    log.info("STARTED UP WITH %s", get_config_items(config, "autocomplete."))
+
     ta = TypeAheadSearch('larryslist', conn, 600)
     while True:
         start = datetime.now()
@@ -64,7 +77,7 @@ def main(argv=None):
         ta.index('GENRE', webconfig.Genre)
         ta.index('COUNTRY', webconfig.Country)
         ta.index('ORIGIN', webconfig.Origin)
-        print 'CHECKING TYPEAHEAD SEARCHES in', datetime.now() - start
+        log.info('CHECKING TYPEAHEAD SEARCHES in %s', datetime.now() - start)
         time.sleep(10)
 
 

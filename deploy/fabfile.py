@@ -20,7 +20,7 @@ SUBSITES = [
     , SubSite(location = 'admin', scripts=["setup.js"], styles=Style(['site.less'], True))
     , SubSite(location = 'reports', scripts=["setup.js"], styles=Style(['site.less'], False))
   ]
-PROCESS_GROUPS = ['p1']
+PROCESS_GROUPS = ['p1', 'cache']
 CLEAN_SESSIONS = False
 
 
