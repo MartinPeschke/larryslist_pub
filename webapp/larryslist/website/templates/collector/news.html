@@ -18,7 +18,7 @@
     <%self:card title="Sources">
         %for source in collector.Source:
             %if source.isURL():
-                ${self.simpleLink(source.type, source.url, classes="extra-long")}
+                ${self.simpleLink(source.type, source.url, classes="extra-long", extra_attrs=['target="_blank"'])}
             %else:
                 ${self.simpleLine(source.type, source.getSourceLine(), classes="extra-long")}
             %endif

@@ -360,7 +360,7 @@ define(
             this.appendResults(this.rawResults.slice(len, len+this.pageSize), true);
         }
         , reSort: function(e){
-            var sw = $(e.target);
+            var sw = $(e.currentTarget);
             sw.siblings(".sortable-col").removeClass("down up")
             if(sw.hasClass("down")){
                 sw.removeClass("down").addClass("up");

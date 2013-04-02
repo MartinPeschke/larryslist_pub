@@ -77,7 +77,7 @@ class ReviewedCollectorsModel(Mapping):
 
 
 
-GENDER_CHOICES = [GenderModel(key = 'm', label = 'male'), GenderModel(key = 'f', label = 'female')]
+GENDER_CHOICES = [GenderModel(key = 'm', label = 'Male'), GenderModel(key = 'f', label = 'Female')]
 SOCIAL_NETWORKS = [SocNetModel(name = 'Facebook'), SocNetModel(name = 'Linkedin'), SocNetModel(name = 'Twitter'), SocNetModel(name = 'Xing'), SocNetModel(name = 'Weibo'), SocNetModel(name = 'Renren'), SocNetModel(name = 'Other')]
 DOCUMENT_TYPES = [DocumentTypeModel(name = 'IMAGE'), DocumentTypeModel(name = 'OTHER')]
 
@@ -165,7 +165,7 @@ class ConfigModel(Mapping):
 
     def getFilterSelection(self):
         return {
-            'GENDER': [{'value':'f', 'label':'Woman'}, {'value':'m', 'label':'Man'}]
+            'GENDER': [{'value':'f', 'label':'Female'}, {'value':'m', 'label':'Male'}]
             , 'MEDIUM': [g.toQuery() for g in self.Medium[:5]]
             , 'GENRE': [g.toQuery() for g in self.Genre[:5]]
             , 'COUNTRY': [g.toQuery() for g in self.Country[:5]]

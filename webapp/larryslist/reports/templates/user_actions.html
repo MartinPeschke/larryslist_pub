@@ -46,9 +46,9 @@
                     {%  if(user.get('Collector').length ==0 ) { %}
                     <div class="controls text">No collectors yet!</div>
                     {% } %}
-                    {% for (var i=0; i< user.get('Collector').length ; i++ ){  %}
-                        <div class="controls text">{{ user.get('Collector')[i].feederName }}</div>
-                    {% } %}
+                    {% _.each(user.get('Collector'), function(col){  %}
+                        <div class="controls text">{{ col.firstName }} {{ col.lastName }}</div>
+                    {% }); %}
 
 
                 </div>

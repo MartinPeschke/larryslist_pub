@@ -98,13 +98,13 @@ class CollectionModel(Mapping):
         if self.totalArtistsAprx:
             return u'>{}'.format(self.totalArtists)
         else:
-            return unicode(self.totalArtists or 'Unknown')
+            return unicode(self.totalArtists or '')
 
     def getNoArtworks(self):
         if self.totalWorksAprx:
             return u'>{}'.format(self.totalWorks)
         else:
-            return unicode(self.totalWorks or 'Unknown')
+            return unicode(self.totalWorks or '')
     def hasArtists(self):
         return len(self.Artist) > 0
 

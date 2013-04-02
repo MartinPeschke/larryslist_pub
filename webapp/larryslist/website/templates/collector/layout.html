@@ -99,9 +99,7 @@
 <%def name="card(title)">
     <div class="collector-details-card address-card">
         <h4 class="card-title">${title}</h4>
-        <div class="card-content">
-        ${caller.body()}
-        </div>
+        <div class="card-content">${caller.body()}</div>
     </div>
 </%def>
 
@@ -127,14 +125,14 @@
     %endif
 </%def>
 
-<%def name="simpleLink(label, value, classes='')">
+<%def name="simpleLink(label, value, classes='', extra_attrs = [])">
     %if value:
         <div class="line ${classes}">
             <small class="heading key">
                 ${label}:
             </small>
             <div class="value">
-                <a class="text-overflow" href="${value}">${value}</a>
+                <a class="text-overflow" href="${value}" ${u' '.join(extra_attrs)|n}>${value}</a>
             </div>
         </div>
     %endif
@@ -170,9 +168,7 @@
     <div class="address-line">
         <div class="first-col-value">
             ${caller.body()}
-        </div>
-        <div class="address-value">
-            <div class="line">
+        </div><div class="address-value"><div class="line">
                 <small class="heading key">
                     Location:
                 </small>

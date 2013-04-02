@@ -3,18 +3,16 @@
 
 <%def name="content()">
 
-<div class="profile-count-band">
-    <div class="container">
-        <div class="row">
-            <div class="span12">
+<div class="container">
+    <div class="row">
+        <div class="span12">
+            <h1 class="profile-count-band">
                 The only art collector database - currently containing
                 <b class="count-suffix">${vctxt.config.ReviewedCollectors.no} Collector profiles</b>
                 in the database
-            </div>
+            </h1>
         </div>
     </div>
-</div>
-<div class="container">
     <form class="search-form form-validated index-search-form" method="GET" action="${request.fwd_url("website_search", query='')}">
         <div class="row">
             <div class="span12">
@@ -27,7 +25,7 @@
                     <label class="control-label search-title">
                         What city is the Collector based in?
                     </label>
-                    <div class="controls typeahead" data-api-url="/web/search/addressTypeAhead" data-api-result="TypeAhead">
+                    <div class="controls typeahead" data-api-url="/api/0.0.1/web/search/addressTypeAhead" data-api-result="TypeAhead">
                         <div class="search-field"><input type="hidden" class="key"/><input type="text" class="input-fullwidth query" autocomplete="off"/></div>
                     </div>
                 </div>
@@ -37,7 +35,7 @@
                     <label class="control-label search-title">
                         What artist are you looking for?
                     </label>
-                    <div class="controls typeahead" data-api-url="/web/search/artistTypeAhead" data-api-result="TypeAhead">
+                    <div class="controls typeahead" data-api-url="/search/entity" data-api-key="ARTIST">
 
                         <div class="search-field"><input type="hidden" class="key"/><input type="text" class="input-fullwidth query" autocomplete="off"/></div>
                     </div>
@@ -107,11 +105,7 @@
 
 <%block name="scripts">
     <script>
-        require(["views/typoahead"], function(View){
-            $(".typeahead").each(function(idx, elem){
-                new View(_.extend({el:elem}, $(elem).data()));
-            });
-        })
+        require(["views/landing"], function(View){new View({el: $(".index-search-form") });});
         $("#index-tab-nav").affix({offset: $("#index-tab-nav").offset().top});
         $(window).scrollspy({target: "#index-tab-nav", offset: 200});
     </script>
@@ -125,7 +119,7 @@
             <div class="panel-content">
                 <h3 class="highlight">Detailed Collector Profiles</h3>
                 <p>We compiled detailed information on leading art collectors around the world. Carefully and manually selected by our reserchers there is no other database alike. Use our filters to find your matching art collector</p>
-                <p>Here is an example of a profile</p>
+                <p><a data-toggle="modal" data-target="#data-profile-sample-modal">Here is an example of a profile</a></p>
             </div>
         </div>
     </div><hr class="pane-separator">
@@ -175,4 +169,35 @@
             </div>
         </div>
     </div>
+
+
+<div id="data-profile-sample-modal" class="modal hide">
+    <h1 class="modal-header">Take a peek at what we can do</h1>
+    <div class="modal-body white click-tabs-hint">
+        <ul class="nav nav-pills home-nav-pills four-col">
+          <li class="nav-pill-large active"><a href="#home-index" data-toggle="tab">Personal</a></li>
+          <li class="nav-pill-large"><a href="#home-profile" data-toggle="tab">Collection</a></li>
+          <li class="nav-pill-large"><a href="#home-art" data-toggle="tab">Art Engagement</a></li>
+          <li class="nav-pill-large"><a href="#home-news" data-toggle="tab">Sources</a></li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane fade active in" id="home-index">
+            <img src="${STATIC_URL}img/landing/personal.jpg" align="left">
+          </div>
+
+          <div class="tab-pane fade" id="home-profile">
+           <img src="${STATIC_URL}img/landing/collection.jpg" align="left">
+          </div>
+
+          <div class="tab-pane fade" id="home-art">
+            <img src="${STATIC_URL}img/landing/art-engagement.jpg">
+          </div>
+
+          <div class="tab-pane fade" id="home-news">
+            <img src="${STATIC_URL}img/landing/sources.jpg">
+          </div>
+        </div>
+    </div>
+</div>
+
 </%def>
