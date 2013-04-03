@@ -55,12 +55,13 @@ ROUTE_LIST = [
 class WebsiteSettings(object):
     key = "website"
     def __init__(self, settings):
-        self.clientToken = settings['backend.token']
+        self.clientToken = settings['backendToken']
         self.gaTrackingCode= settings['ga_tracking_code']
 
-        self.adyenSecret = settings['adyen.secret']
-        self.adyenURL = settings['adyen.url']
-        self.adyenParams = {'merchantAccount': settings['adyen.account'], 'skinCode': settings['adyen.skinCode']}
+        aS = settings['adyen']
+        self.adyenSecret = aS['secret']
+        self.adyenURL = aS['url']
+        self.adyenParams = {'merchantAccount': aS['account'], 'skinCode': aS['skinCode']}
 
 def home_url(request):
     return request.fwd_url("website_index")

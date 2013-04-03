@@ -51,5 +51,8 @@
     <div class="menu-heading">Reports Tool</div>
     <ul class="nav nav-list">
         ${self.menuLink("User Actions", "reports_user_actions", "icon-edit")}
+        %for report in vctxt.settings.reports:
+            ${self.menuLink(report.name, "reports_report", report.icon, slug = report.slug)}
+        %endfor
     </ul>
 </%def>

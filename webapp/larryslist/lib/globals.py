@@ -1,6 +1,6 @@
 from jsonclient.backend import VersionedBackend
 import logging, os, random
-from larryslist.tasks.typeahead import get_typeahead_conn, TypeAheadSearch, get_config_items
+from larryslist.tasks.typeahead import get_typeahead_conn, TypeAheadSearch
 
 log = logging.getLogger(__name__)
 
@@ -15,6 +15,19 @@ else:
 log.info("USING NEW STATIC RESOURCE TOKEN: %s", VERSION_TOKEN)
 
 from dogpile.cache import make_region
+
+
+
+def get_config_items(config, prefix):
+    items = {}
+    for key in config.keys():
+        if key.startswith(prefix):
+            subMap = items
+            subKey = key[len(prefix):].strip(".")
+            for k in subKey.split(".")[:-1]: subMap = subMap.setdefault(k, {})
+            subMap[subKey.split(".")[-1]] = config.get(key)
+    return items
+
 
 
 
@@ -55,7 +68,7 @@ class Globals(object):
         return self.mailConfig
 
     def setSettings(self, cls, settings):
-        s = cls({s.replace("{}.".format(cls.key), ""):settings[s] for s in settings.keys() if s.startswith("{}.".format(cls.key))})
+        s = cls(get_config_items(settings, cls.key))
         setattr(self, cls.key, s)
 
     def setupDBConfig(self, backend):

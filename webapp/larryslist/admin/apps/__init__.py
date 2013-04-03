@@ -11,7 +11,7 @@ import simplejson
 class AdminSettings(object):
     key = "admin"
     def __init__(self, settings):
-        self.clientToken = settings['backend.token']
+        self.clientToken = settings['backendToken']
 
 ROUTE_LIST = [
     FunctionRoute   ("admin_index"                   , "/", contexts.AdminAuthedContext, dashboard.index, "index.html")
