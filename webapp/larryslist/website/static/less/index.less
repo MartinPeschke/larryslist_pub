@@ -58,18 +58,20 @@
 }
 #index-tab-nav {.container, .span12 {max-width:100%};}
 
-#index-tab-nav.affix {
-  width: 100%;
-  top: 0;
-  left: 0;
-  z-index: 10;
-  background: rgb(231,231,231);
-  border-bottom: 1px solid @hrBorder;
-  .nav-pills {margin-bottom:-2px;}
+#index-tab-nav {
+  &.affix, &.affix-bottom {
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    background: rgb(231,231,231);
+    border-bottom: 1px solid @hrBorder;
+    .nav-pills {margin-bottom:-2px;}
+  }
 }
 
 .affix-top + .affix-placeholder {display:none;}
-.affix + .affix-placeholder {display: block;height: 51px;width: 100%;}
+.affix-bottom + .affix-placeholder, .affix + .affix-placeholder {display: block;height: 51px;width: 100%;}
 
 .click-tabs-hint {
   background-color: white;
