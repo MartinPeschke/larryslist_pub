@@ -4,10 +4,7 @@ import simplejson
 
 
 def index(context, request):
-    if context.user.isAnon():
-        return {}
-    else:
-        request.fwd("website_index_member")
+    return {}
 
 
 def index_member(context, request):

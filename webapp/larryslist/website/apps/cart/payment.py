@@ -79,14 +79,14 @@ def payment_result_handler(context, request):
         RefreshUserProfileProc(request, {'token':context.user.token})
         request.session.flash(GenericSuccessMessage("Payment Successful!"), "generic_messages")
         if not len(context.cart.getItems()):
-            request.fwd("website_index")
+            request.fwd("website_index_member")
         elif context.cart.canSpend(context.user):
             values = {'token': context.user.token, 'Collector':[{'id': c.id} for c in context.cart.getCollectors()]}
             SpendCreditProc(request, values)
             context.cart.empty()
             if request.session.get(PLAN_SELECTED_TOKEN):
                 del request.session[PLAN_SELECTED_TOKEN]
-            request.fwd("website_index")
+            request.fwd("website_index_member")
         else:
             request.session.flash(GenericErrorMessage("Not enough credits to purchase all profiles."), "generic_messages")
             request.fwd("website_cart")

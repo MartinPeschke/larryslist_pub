@@ -62,4 +62,4 @@ class SpendCreditsForm(BaseForm):
             if request.session.get(PLAN_SELECTED_TOKEN):
                 del request.session[PLAN_SELECTED_TOKEN]
             context.cart.empty()
-        return {'success':True, 'redirect': request.fwd_url("website_index")}
+        return {'success':True, 'redirect': request.fwd_url("website_index_member")}
