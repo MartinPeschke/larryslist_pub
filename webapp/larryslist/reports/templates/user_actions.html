@@ -8,7 +8,7 @@
                 <legend>Search user by email address</legend>
                     <div class="control-group">
                         <label class="control-label" for="search-email">User email</label>
-                        <div class="controls"><input type="email" name="email" id="search-email" required/></div>
+                        <div class="controls"><input type="email" name="email" id="search-email" required value="mapa@friendfund.com"/></div>
                     </div>
                     <div class="form-actions">
                         <button type="submit" class="btn btn-primary">Search</button>
@@ -36,22 +36,25 @@
 
                 <div class="control-group">
                     <label class="control-label">Credits:</label>
-
                     <div class="controls text">{{ user.get('credit') }}</div>
                 </div>
 
                 <div class="control-group">
                     <label class="control-label">Collectors:</label>
 
+                    <div class="controls text">
                     {%  if(user.get('Collector').length ==0 ) { %}
-                    <div class="controls text">No collectors yet!</div>
+                        No collectors yet!
+                    {% } else { %}
+                        {% _.each(user.get('Collector'), function(col, idx, list){  %}{{ col.firstName }} {{ col.lastName }}{{ idx+1<list.length?",":"" }} {% }); %}
                     {% } %}
-                    {% _.each(user.get('Collector'), function(col){  %}
-                        <div class="controls text">{{ col.firstName }} {{ col.lastName }}</div>
-                    {% }); %}
-
-
+                    </div>
                 </div>
+                <div class="control-group">
+                    <label class="control-label">Address:</label>
+                    <div class="controls text">{{ user.get('Address') }}</div>
+                </div>
+
 
 
             </form>
