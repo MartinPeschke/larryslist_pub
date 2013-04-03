@@ -146,7 +146,7 @@ class ConfigModel(Mapping):
 
     @reify
     def usedMedia(self):
-        return (m for m in self.Medium if m.isUsed)
+        return [m for m in self.Medium if m.isUsed]
 
     searchIndex = {'MEDIUM': 'Medium', 'GENRE': 'Genre', 'COUNTRY': 'Country', 'ORIGIN': "Origin", 'ARTIST': "Artist", 'CITY': 'City'}
     @reify
@@ -172,7 +172,7 @@ class ConfigModel(Mapping):
     def getFilterSelection(self):
         return {
             'GENDER': [{'value':'f', 'label':'Female'}, {'value':'m', 'label':'Male'}]
-            , 'MEDIUM': [g.toQuery() for g in islice(self.usedMedia, 0, 5)]
+            , 'MEDIUM': [g.toQuery() for g in self.usedMedia[:5]]
             , 'GENRE': [g.toQuery() for g in self.Genre[:5]]
             , 'COUNTRY': [g.toQuery() for g in self.Country[:5]]
             , 'ORIGIN': [g.toQuery() for g in self.Origin[:5]]

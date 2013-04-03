@@ -103,6 +103,7 @@
   position: relative;
   box-shadow: 0 0 3px rgba(0,0,0,.4);
   vertical-align: top;
+  .box-sizing(border-box);
   .checkbox {
     display: block;
     text-align: center;
@@ -169,7 +170,12 @@
     margin-bottom: 2px;
   }
   .accordion-heading {
-    .accordion-toggle {display: block;padding:8px 15px 8px 35px;color:@textColor;}
+    .accordion-toggle {
+      display: block;
+      padding:8px 15px 8px 35px;
+      color:@textColor;
+      line-height: 1em;
+    }
   }
   .accordion-inner {padding: 0px 15px 15px 35px;}
   .faq-arrow {
@@ -181,7 +187,6 @@
     display: block;
     float: left;
     margin-left: -22px;
-    margin-top:3px;
   }
   .collapsed .faq-arrow {
     background-position: 0 -15px;

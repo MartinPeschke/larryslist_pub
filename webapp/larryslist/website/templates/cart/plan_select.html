@@ -11,7 +11,7 @@
                     ${baseform.prelims(form)}
                     <div class="payment-plans">
                         %for field in form.fields:
-                            ${field.render(form.id, request, values, errors, view)|n}
+                            ${field.render(form.id, request, values, errors, view)|n}\
                         %endfor
                     </div>
                     <div class="">
