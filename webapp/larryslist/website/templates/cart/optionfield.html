@@ -5,17 +5,13 @@
     %if option.preferred:
         <img src="${STATIC_URL}img/preferred_tape.png" class="preferred-tape"/>
     %endif
-    <span class="price quantity">${option.getCredits()}</span>
-    <span class="text">${'credits' if option.getCredits() > 1 else 'credit'}</span>
-    <hr/>
-    <span class="price">${option.getFormattedPrice(request)}</span>
-    <hr/>
-    <span class="text">You save</span>
-    <span class="saved-amount total">${option.getSavedAmount(request)}</span>
-    <hr/>
-    <span class="text">Price per credit</span>
-    <span class="saved-amount per-credit">${option.getPerCreditAmount(request)}</span>
-    <hr/>
+    <span class="name-label">${option.label}</span>
+    <span class="price-band">${option.getFormattedPrice(request)}</span>
+    <span class="price-quantity">${option.getCredits()} ${'credits' if option.getCredits() > 1 else 'credit'}</span>
+    <ul class="unstyled">
+        <li>Access to profile info</li>
+        <li>All available information for 1 year</li>
+    </ul>
     <span class="checkbox">
         <button type="submit" name="${widget.getName(prefix)}" value="${option.getKey(request)}" class="btn btn-primary">Buy credits</button>
     </span>

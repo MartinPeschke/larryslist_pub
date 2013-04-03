@@ -17,6 +17,7 @@ class PaymentOptionModel(Mapping):
     price = IntegerField()
     token = TextField()
     preferred = BooleanField()
+    label = TextField()
 
     def getValue(self, request): return self.token
     def getKey(self, request): return self.token
@@ -31,8 +32,14 @@ class PaymentOptionModel(Mapping):
         return i18n.format_currency(int(self.price / 100 / self.credit), 'EUR', request)
 
 class WebsiteConfigModel(ConfigModel):
-    PaymentOption = ListField(DictField(PaymentOptionModel))
-
+    LABEL = ['One time', 'Basic Package', 'Premium Package']
+    _PaymentOption = ListField(DictField(PaymentOptionModel), name='PaymentOption')
+    @reify
+    def PaymentOption(self):
+        po = self._PaymentOption[:3]
+        for i, p in enumerate(po):
+            p.label = self.LABEL[i]
+        return po
     @reify
     def optionMap(self):
         return {o.token: o for o in self.PaymentOption}
