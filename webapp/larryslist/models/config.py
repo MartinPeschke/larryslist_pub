@@ -1,8 +1,9 @@
 from bisect import bisect_left
 from collections import OrderedDict
 from datetime import datetime
+from itertools import islice
 from operator import itemgetter, methodcaller
-from jsonclient import Mapping, TextField, DictField, ListField, IntegerField
+from jsonclient import Mapping, TextField, DictField, ListField, IntegerField, BooleanField
 from larryslist.models.address import LocationModel
 from larryslist.models.artist import ArtistModel
 from pyramid.decorator import reify
@@ -39,7 +40,8 @@ class RelationshipTypeModel(NamedModel): pass
 
 class InterestModel(NamedModel): pass
 class SocNetModel(NamedModel): pass
-class MediumModel(NamedModel): pass
+class MediumModel(NamedModel):
+    isUsed = BooleanField()
 class MaterialModel(NamedModel): pass
 class GenreModel(NamedModel): pass
 class ThemeModel(NamedModel): pass
@@ -142,6 +144,10 @@ class ConfigModel(Mapping):
     def topMuseumMap(self):
         return {m.name:m for m in self.TopMuseum}
 
+    @reify
+    def usedMedia(self):
+        return (m for m in self.Medium if m.isUsed)
+
     searchIndex = {'MEDIUM': 'Medium', 'GENRE': 'Genre', 'COUNTRY': 'Country', 'ORIGIN': "Origin", 'ARTIST': "Artist", 'CITY': 'City'}
     @reify
     def searchLookups(self):
@@ -149,7 +155,7 @@ class ConfigModel(Mapping):
             'ARTIST':{str(a.id): a for a in self.Artist}
             , 'CITY': {a.token: a for a in self.City}
             , 'COUNTRY': {c.token: c for c in self.Country}
-            , 'MEDIUM': {c.name for c in self.Medium}
+            , 'MEDIUM': {c.name for c in self.usedMedia}
             , 'GENRE': {c.name for c in self.Genre}
             , 'ORIGIN': {c.name for c in self.Origin}
         }
@@ -166,7 +172,7 @@ class ConfigModel(Mapping):
     def getFilterSelection(self):
         return {
             'GENDER': [{'value':'f', 'label':'Female'}, {'value':'m', 'label':'Male'}]
-            , 'MEDIUM': [g.toQuery() for g in self.Medium[:5]]
+            , 'MEDIUM': [g.toQuery() for g in islice(self.usedMedia, 0, 5)]
             , 'GENRE': [g.toQuery() for g in self.Genre[:5]]
             , 'COUNTRY': [g.toQuery() for g in self.Country[:5]]
             , 'ORIGIN': [g.toQuery() for g in self.Origin[:5]]

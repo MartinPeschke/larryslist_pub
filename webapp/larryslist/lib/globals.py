@@ -46,8 +46,10 @@ class Globals(object):
         self.setupDBConfig(self.backend)
 
         self.cache = make_region().configure_from_config(settings, "cache.")
-        conf_items = get_config_items(settings, "autocomplete.")
-        self.typeahead_search = TypeAheadSearch('larryslist', get_typeahead_conn(conf_items))
+        conf_items = get_config_items(settings, "cache.")
+        self.typeahead_search = TypeAheadSearch('larryslist', get_typeahead_conn(conf_items), int(conf_items['expiry']))
+        log.info("STARTED UP WITH %s", conf_items)
+
 
     def getMailConfig(self):
         return self.mailConfig

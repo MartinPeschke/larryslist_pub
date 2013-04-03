@@ -196,7 +196,7 @@ define(
             var model = this;
             _.each(this.FILTERS, function(f){
                 model.get(f.name).each(function(m){
-                    m.set("selected", false);
+                    if(m.get("selected"))m.set("selected", false);
                 })
             })
         }

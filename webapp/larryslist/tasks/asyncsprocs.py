@@ -1,14 +1,11 @@
 import ConfigParser, sys, getopt, os
 from datetime import datetime
-import logging
-import time
+import logging, time
 from larryslist import Globals
-from larryslist.tasks.typeahead import TypeAheadSearch, get_typeahead_conn, get_config_items
-
-from larryslist.website.apps.contexts import GetWebConfigProc
+from larryslist.website.apps.contexts import config_loader
 from larryslist.website.apps import WebsiteSettings
 
-log = logging.getLogger(__name__)
+log = logging.getLogger()
 log.setLevel(logging.INFO)
 ch = logging.StreamHandler(sys.stdout)
 ch.setLevel(logging.INFO)
@@ -17,20 +14,26 @@ ch.setFormatter(formatter)
 log.addHandler(ch)
 
 
-
 APP_SECTION = 'app:larryslist'
 
+
+
 class FakeContext(object):
-    def __init__(self, settings):
-        self.settings = settings
+    def __init__(self, settings):self.settings = settings
 class FakeRequest(object):
     def __init__(self, globals, settings):
+        self.globals = globals
         self.backend = globals.backend
         self.root = FakeContext(settings)
+def get_fake_request(config):
+    g = Globals(**config)
+    g.setSettings(WebsiteSettings, config)
+    settings = getattr(g, WebsiteSettings.key)
+    return FakeRequest(g, settings)
+
 
 class Usage(Exception):
-    def __init__(self, msg):
-        self.msg = msg
+    def __init__(self, msg):self.msg = msg
 
 def get_config(configname):
     _config = ConfigParser.ConfigParser({'here':os.getcwd()})
@@ -39,11 +42,6 @@ def get_config(configname):
     _config = dict(_config.items(APP_SECTION))
     return _config
 
-def get_fake_request(config):
-    g = Globals(**config)
-    g.setSettings(WebsiteSettings, config)
-    settings = getattr(g, WebsiteSettings.key)
-    return FakeRequest(g, settings)
 
 
 def main(argv=None):
@@ -63,18 +61,15 @@ def main(argv=None):
 
     configname = opts['-f']
     config = get_config(configname)
-    webconfig = GetWebConfigProc(get_fake_request(config))
+    request = get_fake_request(config)
+    ta = request.globals.typeahead_search
 
-    conf_items = get_config_items(config, "autocomplete.")
-    conn = get_typeahead_conn(conf_items)
-    log.info("STARTED UP WITH %s", conf_items)
-
-    ta = TypeAheadSearch('larryslist', conn, conf_items.get('ttl', 600))
     while True:
         start = datetime.now()
+        webconfig = config_loader.get(request)
         ta.index('ARTIST', webconfig.Artist)
         ta.index('CITY', webconfig.City)
-        ta.index('MEDIA', webconfig.Medium)
+        ta.index('MEDIA', webconfig.usedMedia)
         ta.index('GENRE', webconfig.Genre)
         ta.index('COUNTRY', webconfig.Country)
         ta.index('ORIGIN', webconfig.Origin)

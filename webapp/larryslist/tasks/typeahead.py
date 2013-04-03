@@ -5,9 +5,18 @@ log = logging.getLogger(__name__)
 
 def get_config_items(config, prefix):
     lenPref = len(prefix.split(".")) - 1
-    return {'.'.join(k.split(".")[lenPref:]):config.get(k) for k in config.keys() if k.startswith(prefix)}
+    items = {}
+    for key in config.keys():
+        if key.startswith(prefix):
+            subMap = items
+            subKey = key[len(prefix):]
+            for k in subKey.split(".")[:-1]: subMap = subMap.setdefault(k, {})
+            subMap[subKey.split(".")[-1]] = config.get(key)
+    return items
 def get_typeahead_conn(params):
-    return StrictRedis(host = params['host'], port = int(params['port']), db=params['db'])
+    p = params['arguments']
+    p['port'] = int(p['port'])
+    return StrictRedis(**p)
 
 
 class TypeAheadSearch(object):
