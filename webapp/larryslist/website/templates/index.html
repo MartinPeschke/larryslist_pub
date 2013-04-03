@@ -3,16 +3,18 @@
 
 <%def name="content()">
 
-<div class="container">
-    <div class="row">
-        <div class="span12">
-            <h1 class="profile-count-band">
-                The only art collector database - currently containing
-                <b class="count-suffix">${vctxt.config.ReviewedCollectors.no} Collector profiles</b>
-                in the database
-            </h1>
+<div class="profile-count-band">
+    <div class="container">
+        <div class="row">
+            <div class="span12">
+                    The only art collector database - currently containing
+                    <b class="count-suffix">${vctxt.config.ReviewedCollectors.no} Collector profiles</b>
+                    in the database
+            </div>
         </div>
     </div>
+</div>
+<div class="container">
     <form class="search-form form-validated index-search-form" method="GET" action="${request.fwd_url("website_search", query='')}">
         <div class="row">
             <div class="span12">
