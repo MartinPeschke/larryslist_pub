@@ -45,7 +45,7 @@ def straight_purchase(context, request):
         if request.session.get(PLAN_SELECTED_TOKEN):
             del request.session[PLAN_SELECTED_TOKEN]
         context.cart.empty()
-        request.fwd("website_index")
+        request.fwd("website_index_member")
 
 
 
