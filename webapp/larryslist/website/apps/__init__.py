@@ -1,5 +1,5 @@
-from jsonclient.routing import FunctionRoute, App, ClassRoute, JSON_FORM_ATTRS, JSON_HANDLER_ATTRS, route_factory, STANDARD_VIEW_ATTRS
-from larryslist.website.apps import search, cart, collector, content
+from jsonclient.routing import FunctionRoute, App, ClassRoute, JSON_FORM_ATTRS, route_factory, STANDARD_VIEW_ATTRS
+from larryslist.website.apps import search, cart, collector
 from pyramid.httpexceptions import HTTPFound
 
 from . import contexts, index, auth, account
@@ -41,14 +41,6 @@ ROUTE_LIST = [
     , ClassRoute ("website_collector_collection"   , "/collector/:collectorId/:name/collection", contexts.WebsiteAuthedContext, collector.CollectorHandler, "collector/collection.html", view_attrs=STANDARD_VIEW_ATTRS)
     , ClassRoute ("website_collector_art"   , "/collector/:collectorId/:name/art", contexts.WebsiteAuthedContext, collector.CollectorHandler, "collector/art.html", view_attrs=STANDARD_VIEW_ATTRS)
     , ClassRoute ("website_collector_news"   , "/collector/:collectorId/:name/news", contexts.WebsiteAuthedContext, collector.CollectorHandler, "collector/news.html", view_attrs=STANDARD_VIEW_ATTRS)
-
-    # static content
-    , FunctionRoute ("website_content_about"   , "/about", contexts.WebsiteRootContext, content.index, "content/about.html")
-    , FunctionRoute ("website_content_contact" , "/contact", contexts.WebsiteRootContext, content.index, "content/contact.html")
-    , FunctionRoute ("website_content_faq"     , "/faq", contexts.WebsiteRootContext, content.index, "content/faq.html")
-    , FunctionRoute ("website_content_press"   , "/press", contexts.WebsiteRootContext, content.index, "content/press.html")
-    , FunctionRoute ("website_content_privacy" , "/privacy", contexts.WebsiteRootContext, content.index, "content/privacy.html")
-    , FunctionRoute ("website_content_terms"   , "/terms", contexts.WebsiteRootContext, content.index, "content/terms.html")
 ]
 
 

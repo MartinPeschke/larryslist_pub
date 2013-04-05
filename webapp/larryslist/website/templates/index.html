@@ -1,8 +1,15 @@
 <%inherit file="layout.html"/>
 
 
-<%def name="content()">
+<%block name="scripts">
+    <script>
+        require(["views/landing"], function(View){new View({el: $(".index-search-form") });});
+        $("#index-tab-nav").affix({offset: $("#index-tab-nav").offset().top});
+        $(window).scrollspy({target: "#index-tab-nav", offset: 200});
+    </script>
+</%block>
 
+<%def name="content()">
 <div class="profile-count-band">
     <div class="container">
         <div class="row">
@@ -10,51 +17,16 @@
                 <div class="counter-band-content">
                     The only art collector database - currently containing
                     <b class="count-suffix">${vctxt.config.ReviewedCollectors.no} Collector profiles</b>
-                    in the database
                 </div>
             </div>
         </div>
     </div>
 </div>
+${self.searchForm()}
 <div class="container">
-    <form class="search-form form-validated index-search-form" method="GET" action="${request.fwd_url("website_search", query='')}">
-        <div class="row">
-            <div class="span12">
-                <h1 class="box-title center">Find Art Collectors</h1>
-            </div>
-        </div>
-        <div class="row">
-            <div class="span6">
-                <div class="control-group first">
-                    <label class="control-label search-title">
-                        What city is the Collector based in?
-                    </label>
-                    <div class="controls typeahead" data-api-url="/api/0.0.1/web/search/addressTypeAhead" data-api-result="TypeAhead">
-                        <div class="search-field"><input type="hidden" class="key"/><input type="text" class="input-fullwidth query" autocomplete="off"/></div>
-                    </div>
-                </div>
-            </div>
-            <div class="span6">
-                <div class="control-group last">
-                    <label class="control-label search-title">
-                        What artist are you looking for?
-                    </label>
-                    <div class="controls typeahead" data-api-url="/search/entity" data-api-key="ARTIST">
-
-                        <div class="search-field"><input type="hidden" class="key"/><input type="text" class="input-fullwidth query" autocomplete="off"/></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="span12 center">
-                <button type="submit" class="btn btn-primary btn-large btn-extra-wide"><span data-icon="s" aria-hidden="true"></span> Search</button>
-            </div>
-        </div>
-    </form>
     <div class="row">
         <div class="span12">
-            <h1 class="box-title center">This Is How It Works</h1>
+            <h4 class="box-title center">This Is How It Works</h4>
         </div>
     </div>
     <div class="row">
@@ -77,7 +49,7 @@
     <div class="container">
         <div class="row">
             <div class="span12">
-                <ul class="nav nav-pills home-nav-pills"><li class="nav-pill-large active"><a href="#what-you-get">
+                <ul class="nav nav-pills home-nav-pills"><li class="nav-pill-large"><a href="#what-you-get">
                     What You Get
                 </a></li><li class="nav-pill-large"><a href="#pricing">
                     Pricing
@@ -104,16 +76,7 @@
         </div>
     </div>
 </div>
-
 </%def>
-
-<%block name="scripts">
-    <script>
-        require(["views/landing"], function(View){new View({el: $(".index-search-form") });});
-        $("#index-tab-nav").affix({offset: $("#index-tab-nav").offset().top});
-        $(window).scrollspy({target: "#index-tab-nav", offset: 200});
-    </script>
-</%block>
 
 
 <%def name="tabs()">
@@ -143,7 +106,7 @@
             <div class="panel-content">
                 <h3 class="highlight">A Transparent Ranking - finally.</h3>
                 <p>We believe in transparency. Hence, we defined a ranking that is not based on how much the collector spends but on how active he is in the market. Our methodology is unique.</p>
-                <p>Learn more here.</p>
+                <p><a href="/coming-soon" class="link">Learn more here.</a></p>
             </div>
         </div>
     </div><hr class="pane-separator">
@@ -155,11 +118,11 @@
                 <h2>so you can instantly find the one collector <b>you are looking for.</b></h2>
             </div>
         </div>
-        <div class="panel text">
+        <div class="panel text" style="margin-top: 100px;">
             <div class="panel-content">
                 <h3 class="highlight">We Love Research.</h3>
                 <p>We love researching. This is our job. We looked into almost every database, book, website, just to find all the information available on the leading art collectors. You dont believe it? </p>
-                <p>Test us.</p>
+                <p><a class="link" href="/">Test us.</a></p>
             </div>
         </div>
     </div><hr class="pane-separator">
@@ -168,8 +131,7 @@
         <div class="panel text">
             <div class="panel-content">
                 <h3 class="highlight">International team</h3>
-                <p>Our team consists of art market researchers from around the world. Currently, we have more than 20 nationalities, all with an background in art history or art dealing experience.</p>
-                <p>Learn more here.</p>
+                <p>Our team consists of art market researchers from around the world. Currently, we have more than 20 nationalities, all with a background in art history or experience in art dealing.</p>
             </div>
         </div>
     </div>
@@ -203,5 +165,42 @@
         </div>
     </div>
 </div>
+</%def>
 
+<%def name="searchForm()">
+    <div class="container">
+        <form class="search-form form-validated index-search-form" method="GET" action="${request.fwd_url("website_search", query='')}">
+            <div class="row">
+                <div class="span12">
+                    <h1 class="box-title center">Find Art Collectors</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span5">
+                    <div class="control-group first">
+                        <label class="control-label search-title">
+                            What city is the Collector based in?
+                        </label>
+                        <div class="controls typeahead" data-api-url="/api/0.0.1/web/search/addressTypeAhead" data-api-result="TypeAhead">
+                            <div class="search-field"><input type="hidden" class="key"/><input type="text" class="input-fullwidth query" autocomplete="off"/></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="span5">
+                    <div class="control-group last">
+                        <label class="control-label search-title">
+                            What artist are you looking for?
+                        </label>
+                        <div class="controls typeahead" data-api-url="/search/entity" data-api-key="ARTIST">
+
+                            <div class="search-field"><input type="hidden" class="key"/><input type="text" class="input-fullwidth query" autocomplete="off"/></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="span2">
+                    <button type="submit" class="btn btn-primary btn-large btn-extra-wide"><span data-icon="s" aria-hidden="true"></span> Search</button>
+                </div>
+            </div>
+        </form>
+    </div>
 </%def>

@@ -218,8 +218,8 @@ define(
         FILTER : [
             {key: "ARTIST", prop:"Artist", title: "Artist", expanded: true, allLabel: "All Artists", placeholder:"Enter artist's name", expandable:false, hasMore: true}
             , {key: "CITY", prop:"City", title: "City", expanded: true, allLabel: "All Cities", placeholder:"Enter city name", expandable:false, hasMore: true}
-            , {key: "GENDER", prop:"Gender", title: "Gender", expanded: false, allLabel: "All Genders", expandable:true, hasMore: false}
             , {key: "COUNTRY", prop:"Country", title: "Country", expanded: false, allLabel: "All Countries", placeholder:"Enter country name", expandable:true, hasMore: true}
+            , {key: "GENDER", prop:"Gender", title: "Gender", expanded: false, allLabel: "All Genders", expandable:true, hasMore: false}
             , {key: "GENRE", prop:"Genre", title: "Genre", expanded: false, allLabel: "All Genres", placeholder:"Enter a genre", expandable:true, hasMore: true}
             , {key: "ORIGIN", prop:"Origin", title: "Region of Interest", expanded: false, allLabel: "All Regions", placeholder:"Enter region", expandable:true, hasMore: true}
             , {key: "MEDIUM", prop:"Medium", title: "Medium", expanded: false, allLabel: "All Media", placeholder:"Enter medium", expandable:true, hasMore: true}
@@ -270,7 +270,7 @@ define(
             , "change [name=myCollectors]":"switchRealm"
         }
         , count: _.template('<b class="highlight">{{ count }} Search Results</b>')
-        , partialCount: _.template('<b class="highlight">{{ count }} of {{ total }} Search Results</b>')
+        , partialCount: _.template('<b class="highlight">{{ total }} Search Results</b>')
         , showMore: '<a class="search-placeholder show-more link">Show more</a>'
         , pageSize:60
         , initialize: function(opts){

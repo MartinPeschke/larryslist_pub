@@ -52,6 +52,7 @@ define(["tools/ajax", "tools/abstractsearch", "text!templates/taresult.html"], f
                     if(!view.current || view.current.getSearchLabel() != view.$query.val()){
                         view.$query.val("");
                         view.current = null;
+                        view.$query.prev(".key").removeAttr("name").val("");
                     }
                 });
             }

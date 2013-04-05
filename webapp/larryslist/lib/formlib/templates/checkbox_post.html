@@ -3,7 +3,7 @@
 <div class="control-group ${widget.group_classes} ${widget.attrs.getClasses()} ${widget.attrs.getGroupClasses()} ${'error' if error else ''}" ${widget.attrs.getGroupAttrs()|n}>
     <div class="controls ${widget.control_classes}">
         <label class="checkbox ${widget.label_classes}">
-            ${widget.getLabel(request)}
+            ${widget.getLabel(request)|n}
             <input type="checkbox" name="${widget.getName(prefix)}" class="${widget.getClasses()}" value="${widget.value}" ${'checked' if value else ''} ${widget.attrs.getInputAttrs(request)|n}/>
         </label>
         ${lib.renderInline(widget, error)}

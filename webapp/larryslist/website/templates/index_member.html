@@ -1,28 +1,10 @@
 <%inherit file="layout.html"/>
 <%namespace file="widgets.html" name="widgets"/>
 <%namespace file="search/index.html" name="search"/>
+<%namespace file="index.html" name="index"/>
 
 <%def name="content()">
-<div class="container">
-    <div class="row">
-        <div class="span8 standard-frame">
-            <h4 class="box-title">News</h4>
-
-            <div class="frame-body news-frame">
-                %for news in newsfeed:
-                    <article>
-                        <div class="summary">${news.value}</div>
-                        <small class="source">${news.source}</small> <small class="date">(${i18n.format_date(news.created, request)})</small>
-                    </article>
-                %endfor
-            </div>
-
-        </div>
-        <div class="span4 standard-frame">
-            ${widgets.recommendations(False, results_classes='standard-box')}
-        </div>
-    </div>
-</div>
+    ${index.searchForm()}
     <div class="search-page-container spaced-top">
         ${search.searchBody(False)}
     </div>
@@ -30,6 +12,7 @@
 
 <%block name="scripts">
     <script>
+        require(["views/landing"], function(View){new View({el: $(".index-search-form") });});
         require(["views/search", "views/recommendation"], function(v, View){
             new View({el: $(".recommended-collectors")});
             new v.View({el: $(".search-page-container"), query:${query|n}, filters: ${filters|n}}).render();

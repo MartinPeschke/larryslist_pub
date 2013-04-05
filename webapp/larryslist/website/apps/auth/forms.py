@@ -1,7 +1,7 @@
 from jsonclient.backend import DBMessage
 import formencode
 from larryslist.lib.baseviews import GenericSuccessMessage
-from larryslist.lib.formlib.formfields import BaseForm, EmailField, PasswordField, Placeholder, REQUIRED, StringField, HtmlAttrs, CheckboxField
+from larryslist.lib.formlib.formfields import BaseForm, EmailField, PasswordField, Placeholder, REQUIRED, StringField, HtmlAttrs, CheckboxField, CheckboxPostField
 from larryslist.website.apps.models import LoginProc, SignupProc, PasswordRequestProc, UpdatePasswordProc, ResendRequestProc
 
 __author__ = 'Martin'
@@ -34,7 +34,7 @@ class SignupForm(BaseForm):
         , EmailField("email", "Email", HtmlAttrs(required = True, data_validation_url = '/signup/checkemail'))
         , PasswordField("pwd", "Password", REQUIRED)
         , PasswordField("pwdconfirm", "Confirm password", REQUIRED)
-        , CheckboxField("agreeTOS", "I accept the terms of use", REQUIRED)
+        , CheckboxPostField("agreeTOS", 'I accept the <a class="link" target="_blank" href="/terms">terms of use</a>', REQUIRED)
     ]
     chained_validators = [formencode.validators.FieldsMatch('pwd', 'pwdconfirm')]
     @classmethod

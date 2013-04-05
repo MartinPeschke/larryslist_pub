@@ -46,7 +46,7 @@
                     {%  if(user.get('Collector').length ==0 ) { %}
                         No collectors yet!
                     {% } else { %}
-                        {% _.each(user.get('Collector'), function(col, idx, list){  %}{{ col.firstName }} {{ col.lastName }}{{ idx+1<list.length?",":"" }} {% }); %}
+                        {% _.each(user.get('Collector'), function(col, idx, list){  %}<div>{{ col.firstName }} {{ col.lastName }}</div> {% }); %}
                     {% } %}
                     </div>
                 </div>
