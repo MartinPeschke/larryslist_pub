@@ -40,6 +40,9 @@ define(["tools/ajax"], function(ajax){
         , getRank: function(){
             return this.get("ranking")
         }
+        , getPoints: function(){
+            return this.get("points")
+        }
         , getContactCSS: function(){
             return this.get("isContactable")?"has-prop":"has-not";
         }

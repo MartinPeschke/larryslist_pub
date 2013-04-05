@@ -5,7 +5,7 @@
         </div><div class="search-column contact">
         <span class="profile-icon {{ model.getContactCSS() }}"></span>
     </div><div class="search-column rank">
-        <b>{{ model.getRank() }}</b>
+        <b>{{ model.getRank() }}</b><small> / {{ model.getPoints() }}</small>
     </div><div class="search-column details">
         <div class="name">{{ model.getName() }}</div>
         <p class="location">{{ model.getAddress() }}</p>

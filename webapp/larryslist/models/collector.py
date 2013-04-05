@@ -18,6 +18,7 @@ class SimpleCollectorModel(Mapping):
     initials = TextField()
     picture = TextField()
     ranking = TextField(default = 0)
+    points = TextField(default = 0)
     followers = TextField(default = 0)
     completness = TextField(default = 0)
     Address = ListField(DictField(AddressModel))
@@ -35,7 +36,9 @@ class SimpleCollectorModel(Mapping):
             return ''
 
     def getRank(self):
-        return u"#{}".format(self.ranking)
+        return self.ranking
+    def getPoints(self):
+        return self.points
     def getSubscribers(self):
         return self.followers
     def getCompletion(self):
