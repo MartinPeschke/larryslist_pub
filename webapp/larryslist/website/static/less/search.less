@@ -222,6 +222,7 @@
     border:1px solid @borderDarker;
     background-color: @navbarBackgroundHighlight;
   }
+  &.rank {font-size:16px;}
   &.details {
     margin-left:100px;
     margin-right:45%;
@@ -273,14 +274,14 @@
       text-transform: uppercase;
       font-size:@smallFontSize;
       color:#999;
-      margin-right:45px;
+      margin-right:75px;
       display: block;
     }
     .profile-points {
       font-weight:normal;
     }
     .value{
-      width:34px;
+      min-width:34px;
       height:28px;
       line-height:28px;
       font-size:16px;
@@ -310,7 +311,7 @@
     background-repeat: no-repeat;
   }
 }
-.mini .profile-icon.has-prop, .mini.selected .profile-icon.has-prop {background-position: 0 -50px;height:30px;}
+.mini .profile-icon.has-prop, .mini.selected .profile-icon.has-prop {background-position: 100% -50px;height:30px;}
 .mini .profile-icon {float:right;}
 .selected .profile-icon.has-prop {background-position: 0 -25px;}
 
