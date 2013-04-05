@@ -30,12 +30,12 @@ class SimpleCollectorModel(Mapping):
         return u"{city}, {country}".format(city = addr.City.name, country = addr.Country.name)
     def getUpdated(self):
         if self.updated:
-            return '{:0>2}/{}'.format(self.updated.month, self.updated.year)
+            return u'{:0>2}/{}'.format(self.updated.month, self.updated.year)
         else:
             return ''
 
     def getRank(self):
-        return "#{}".format(self.ranking)
+        return u"#{}".format(self.ranking)
     def getSubscribers(self):
         return self.followers
     def getCompletion(self):
@@ -210,7 +210,7 @@ class CollectorModel(SimpleCollectorModel):
     def getNameWTitle(self):
         result = self.getName()
         if self.title:
-            result ="{} {}".format(self.title, result)
+            result = u"{} {}".format(self.title, result)
         return result
     def getStatusLabel(self):
         return STATUS[self.status]
@@ -231,7 +231,7 @@ class CollectorModel(SimpleCollectorModel):
         if self.picture:
             return request.getStaticUrl(self.picture)
         else:
-            return "{}img/nopic-128px.png".format(request.root.static_prefix)
+            return u"{}img/nopic-128px.png".format(request.root.static_prefix)
 
 
     def getDOB(self, request):
