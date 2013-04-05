@@ -38,7 +38,7 @@ define(["tools/ajax", "models/cart", "models/user", "text!templates/flyout.html"
         , className: "cart-flyout"
         , initialize:function(opts){
             this.model = cart;
-            this.alignTo = opts.root.children(".container");
+            this.alignTo = opts.root.children(".container").filter(":visible");
             this.$el.appendTo("body");
 
             this.render();
