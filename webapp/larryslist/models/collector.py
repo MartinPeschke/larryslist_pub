@@ -269,7 +269,6 @@ class MuseumModel(AddressModel):
     year = TextField()
     url = TextField()
     permanentSpace = TextField()
-    website = url
 
 class DirectorModel(Mapping):
     id = IntegerField()

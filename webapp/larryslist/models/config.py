@@ -60,6 +60,7 @@ class GenderModel(Mapping):
 
 
 class TopMuseumModel(NamedModel):
+    id = IntegerField()
     city = TextField()
     country = TextField()
     postCode = TextField()
@@ -67,7 +68,8 @@ class TopMuseumModel(NamedModel):
     line2 = TextField()
     city = TextField()
     def getLabel(self, request):return u"{0.name} ({0.city})".format(self)
-    def getKey(self, request):return self.name
+    def getKey(self, request):
+        return u'{}-{}'.format(self.name, self.city)
 
 
 

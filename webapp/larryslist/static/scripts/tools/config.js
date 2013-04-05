@@ -6,12 +6,19 @@ define(["tools/ajax"], function(ajax){
             , getSearchLabel: function(){return this.get('name')}
         })
         , NamedModelCollection = ajax.Collection.extend({idAttribute: 'name', model: NamedModel})
-
+        , TopMuseum  = ajax.Model.extend({
+            getSearchLabel: function(){return this.get('name')}
+            , parseLocal: function(data){
+                data.id = data.name+"-"+data.city;
+                return data;
+            }
+        })
+        , TopMuseumCollection = ajax.Collection.extend({idAttribute: 'id', model: TopMuseum})
 
         , ConfigModel = ajax.Model.extend({
             initialize:function(){
                 this.register({
-                    TopMuseum: new NamedModelCollection()
+                    TopMuseum: new TopMuseumCollection()
                     , Publisher : new NamedModelCollection()
                     , CooperationType: new NamedModelCollection()
                     , EngagementPosition: new NamedModelCollection()
