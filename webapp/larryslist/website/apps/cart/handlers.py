@@ -1,6 +1,5 @@
 from larryslist.lib.formlib.handlers import FormHandler
 from larryslist.website.apps.cart.forms import PaymentOptionsForm, JoinLoginForm, JoinSignupForm, SpendCreditsForm, PLAN_SELECTED_TOKEN
-from larryslist.website.apps.contexts import logged_in
 from larryslist.website.apps.models import SpendCreditProc
 from pyramid.decorator import reify
 from pyramid.renderers import render_to_response

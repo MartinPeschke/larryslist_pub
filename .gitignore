@@ -6,6 +6,7 @@ tmp
 .DS_Store
 
 /deploy/node_modules
+/deploy/deploy*
 /resources/LL_web_for Martin_130321
 /resources/profile
 /resources/LL_web_130326 Folder

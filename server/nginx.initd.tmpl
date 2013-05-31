@@ -1,0 +1,63 @@
+#! /bin/sh
+
+### BEGIN INIT INFO
+# Provides:          nginx
+# Required-Start:    $all
+# Required-Stop:     $all
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: starts the nginx web server
+# Description:       starts nginx using start-stop-daemon
+### END INIT INFO
+
+BASE=/server/nginx
+PATH=$BASE:$BASE/etc
+DAEMON=$BASE/%(NGINX_VERSION)s/sbin/nginx
+NAME=nginx
+DESC=nginx
+
+test -x $DAEMON || exit 0
+
+# Include nginx defaults if available
+if [ -f $BASE/conf ] ; then
+        . $BASE/conf
+fi
+
+set -e
+case "$1" in
+  start)
+        ulimit -c 65536
+        echo -n "Starting $DESC: "
+        /sbin/start-stop-daemon --start --quiet --pidfile $BASE/run/$NAME.pid \
+                --exec $DAEMON -- $DAEMON_OPTS || true
+        echo "$NAME."
+        ;;
+  stop)
+        echo -n "Stopping $DESC: "
+        /sbin/start-stop-daemon --stop --quiet --pidfile $BASE/run/$NAME.pid \
+                --exec $DAEMON || true
+        echo "$NAME."
+        ;;
+  restart|force-reload)
+        echo -n "Restarting $DESC: "
+        /sbin/start-stop-daemon --stop --quiet --pidfile $BASE/run/$NAME.pid \
+                --exec $DAEMON || true
+        /bin/sleep 1
+        /sbin/start-stop-daemon --start --quiet --pidfile $BASE/run/$NAME.pid \
+                --exec $DAEMON -- $DAEMON_OPTS || true
+        echo "$NAME."
+        ;;
+  reload)
+      echo -n "Reloading $DESC configuration: "
+      /sbin/start-stop-daemon --stop --signal HUP --quiet --pidfile $BASE/run/$NAME.pid \
+          --exec $DAEMON || true
+      echo "$NAME."
+      ;;
+  *)
+        N=/etc/init.d/$NAME
+        echo "Usage: $N {start|stop|restart|reload|force-reload}" >&2
+        exit 1
+        ;;
+esac
+
+exit 0
