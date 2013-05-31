@@ -20,9 +20,12 @@ SUBSITES = [
     , SubSite(location = 'admin', scripts=["setup.js"], styles=Style(['site.less'], True))
     , SubSite(location = 'reports', scripts=["setup.js"], styles=Style(['site.less'], False))
   ]
-PROCESS_GROUPS = ['p1', 'cache']
-CLEAN_SESSIONS = False
+PROCESS_GROUPS = {
+    'dev':['p1','cache']
+    ,'live':['p1','p2','cache']
+}
 
+CLEAN_SESSIONS = False
 
 CREATE_CMDS = {
     'dev':"git clone git@github.com:HarryMcCarney/LarrysList.git ."
@@ -86,7 +89,6 @@ def build(env, version):
 def build_statics(env, version):
     code_path = get_code_path(env, version)
   
-    # build player skin
     with cd(code_path):
         for subsite in SUBSITES:
             loc = subsite.location
@@ -144,7 +146,7 @@ def switch(env, version):
         run("env/bin/python {}setup.py develop".format(code_path))
         with cd("code"):
             run("rm current;ln -s {} current".format(version))
-        for pg in PROCESS_GROUPS:
+        for pg in PROCESS_GROUPS[env]:
             result = run("env/bin/supervisorctl -c supervisor.cfg restart {}:*".format(pg), pty=True)
             if "ERROR" in result:
               run("tail -n50 logs/python*.log", pty=True)
