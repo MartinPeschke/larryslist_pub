@@ -10,23 +10,28 @@
 </%block>
 
 <%def name="content()">
-<div class="profile-count-band">
+${parent.header_messages()}
+${self.searchForm()}
+<div class="profile-count-band container">
     <div class="container">
         <div class="row">
             <div class="span12">
                 <div class="counter-band-content">
-                    The only art collector database - currently containing
-                    <b class="count-suffix">${vctxt.config.ReviewedCollectors.no} Collector profiles</b>
+                    <h3>The only art collector database,</h3>
+                    <p>currently containing <b class="count-suffix">${vctxt.config.ReviewedCollectors.no} Collector profiles.</b></p>
+                </div>
+		<div id="how-button">
+		  <a href="#who-it-works">How does it work?</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
-${parent.header_messages()}
-${self.searchForm()}
+
 <div class="container">
     <div class="row">
         <div class="span12">
+            <a name="who-it-works"></a>
             <h4 class="box-title center">This Is How It Works</h4>
         </div>
     </div>
@@ -82,60 +87,54 @@ ${self.searchForm()}
 
 <%def name="tabs()">
     <div id="what-you-get" class="index-pane">
-        <div class="panel picture"><img src="${STATIC_URL}img/landing/profiles.png?${VERSION_TOKEN}" class="home-picture"/> </div>
-        <div class="panel text">
+        <div class="panel picture panel-left"><img src="${STATIC_URL}img/landing/profiles.png?${VERSION_TOKEN}" class="home-picture"/> </div>
+        <div class="panel text panel-right">
             <div class="panel-content">
-                <h3 class="highlight">Detailed Collector Profiles</h3>
+                <h3>Unique Information on Art Collectors.</h3>
                 <p>We compiled detailed information on leading art collectors around the world. Carefully and manually selected by our reserchers there is no other database alike. Use our filters to find your matching art collector</p>
-                <p><a class="link" data-toggle="modal" data-target="#data-profile-sample-modal">Here is an example of a profile</a></p>
+                <p><a class="link" data-toggle="modal" data-target="#data-profile-sample-modal">Here</a> is an example of a profile</p>
             </div>
         </div>
     </div><hr class="pane-separator">
     <div id="pricing" class="index-pane">
-        <div class="panel picture"><img src="${STATIC_URL}img/landing/pricing.png?${VERSION_TOKEN}" class="home-picture"/> </div>
-        <div class="panel text">
+        <div class="panel text panel-left">
             <div class="panel-content">
-                <h3 class="highlight">Simple Pricing</h3>
-                <p>Yearly subscription fee, several thousands for a database - no way. We created a fair and simple pricing. You can either pay per profile. Or you can buy credits for purchases at a later time.</p>
-                <p>Once you purchased a profile, you will be able to see it for a year, including all updates.</p>
+                <h3>One Profile = 9 &euro;<br />Simple.</h3>
+                <p>We created a fair and simple pricing. You can either pay per profile. Or you can either per profile or you can buy credits for purchases at a later time.</p>
+                <p>You will be able to see the profile for a year, including all updates.</p>
             </div>
         </div>
+        <div class="panel picture panel-right"><img src="${STATIC_URL}img/landing/pricing.png?${VERSION_TOKEN}" class="home-picture"/> </div>
     </div><hr class="pane-separator">
     <div id="ranking" class="index-pane">
-        <div class="panel picture"><img src="${STATIC_URL}img/landing/ranking.png?${VERSION_TOKEN}" class="home-picture"/> </div>
-        <div class="panel text">
+        <div class="panel picture panel-right"><img src="${STATIC_URL}img/landing/ranking.png?${VERSION_TOKEN}" class="home-picture"/> </div>
+        <div class="panel text panel-left">
             <div class="panel-content">
-                <h3 class="highlight">A Transparent Ranking - finally.</h3>
-                <p>We believe in transparency. Hence, we defined a ranking that is not based on how much the collector spends but on how active he is in the market. Our methodology is unique.</p>
-                <p><a href="/collector-report" class="link">Learn more here.</a></p>
+                <h3>A Transparent Ranking,<br />Finally.</h3>
+                <p>We defined a ranking that is not based on how much the collector spends but on how active he is in the market. This methodology is unique and brings transparency.</p>
+                <p>Learn more <a href="/collector-report" class="link">here.</a></p>
             </div>
         </div>
     </div><hr class="pane-separator">
     <div id="data-sources" class="index-pane">
-        <div class="panel">
-            <div class="panel-content spaced">
-                <h2>We search <b>every document in the planet in every language,</b></h2>
-                <h2>And assign the data to the most select <b>10.000 art collectors,</b></h2>
-                <h2>so you can instantly find the one collector <b>you are looking for.</b></h2>
-            </div>
-        </div>
-        <div class="panel text" style="margin-top: 100px;">
+        <div class="panel text panel-left">
             <div class="panel-content">
-                <h3 class="highlight">We Love Research.</h3>
+                <h3>We Love Research.</h3>
                 <p>We love researching. This is our job. We looked into almost every database, book, website, just to find all the information available on the leading art collectors. You dont believe it? </p>
-                <p><a class="link" href="/">Test us.</a></p>
             </div>
         </div>
+        <div class="panel picture panel-right"><img src="${STATIC_URL}img/landing/research.png?${VERSION_TOKEN}" class="home-picture"/> </div>
     </div><hr class="pane-separator">
     <div id="who-is-larry" class="index-pane">
-        <div class="panel picture"><img src="${STATIC_URL}img/landing/team.png?${VERSION_TOKEN}" class="home-picture"/> </div>
-        <div class="panel text">
+        <div class="panel picture panel-left"><img src="${STATIC_URL}img/landing/team.png?${VERSION_TOKEN}" class="home-picture"/> </div>
+        <div class="panel text panel-right">
             <div class="panel-content">
-                <h3 class="highlight">International team</h3>
+                <h3>We are global.</h3>
                 <p>Our team consists of art market researchers from around the world. Currently, we have more than 20 nationalities, all with a background in art history or experience in art dealing.</p>
             </div>
         </div>
-    </div>
+    </div><hr class="pane-separator">
+    <div style="height:110px;"></div>
 
 
 <div id="data-profile-sample-modal" class="modal hide">
@@ -171,35 +170,29 @@ ${self.searchForm()}
 <%def name="searchForm()">
     <div class="container">
         <form class="search-form form-validated index-search-form" method="GET" action="${request.fwd_url("website_search", query='')}">
-            <div class="row">
-                <div class="span12">
-                    <h1 class="box-title center">Find Art Collectors</h1>
-                </div>
-            </div>
-            <div class="row">
+            <div class="row" style="margin-top:90px;">
                 <div class="span5">
                     <div class="control-group first">
                         <label class="control-label search-title">
-                            What city is the Collector based in?
+                            What city/region/country is the collector based in?
                         </label>
                         <div class="controls typeahead" data-api-url="/api/0.0.1/web/search/addressTypeAhead" data-api-result="TypeAhead">
-                            <div class="search-field"><input type="hidden" class="key"/><input type="text" class="input-fullwidth query" autocomplete="off"/></div>
+                            <div class="search-field"><input type="hidden" class="key"/><input type="text" class="input-fullwidth query field-where" autocomplete="off"/></div>
                         </div>
                     </div>
                 </div>
                 <div class="span5">
                     <div class="control-group last">
                         <label class="control-label search-title">
-                            What artist are you looking for?
+                            What artist are you looking for (optional)?
                         </label>
                         <div class="controls typeahead" data-api-url="/search/entity" data-api-key="ARTIST">
-
-                            <div class="search-field"><input type="hidden" class="key"/><input type="text" class="input-fullwidth query" autocomplete="off"/></div>
+                            <div class="search-field"><input type="hidden" class="key"/><input type="text" class="input-fullwidth query field-who" autocomplete="off"/></div>
                         </div>
                     </div>
                 </div>
                 <div class="span2">
-                    <button type="submit" class="btn btn-primary btn-large btn-extra-wide"><span data-icon="s" aria-hidden="true"></span> Search</button>
+                    <button type="submit" class="btn btn-primary btn-large btn-extra-wide search-button"><span data-icon="s" aria-hidden="true"></span> Search</button>
                 </div>
             </div>
         </form>
