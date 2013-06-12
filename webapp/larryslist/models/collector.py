@@ -167,6 +167,13 @@ class LinkedCollectorModel(Mapping):
         if self.relation:
             result += u" ({})".format(self.relation)
         return result
+    def getNameWithPrivacy(self):
+        result = u'{0.firstName} {0.lastName}'.format(self)
+        if self.relation:
+            if self.relation == u'other':
+                return ''
+            result += u" ({})".format(self.relation)
+        return result
     def getJson(self):
         return saxutils.quoteattr(simplejson.dumps(self.unwrap()))
 
