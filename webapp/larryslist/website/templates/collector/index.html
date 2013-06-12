@@ -11,10 +11,10 @@
 
 <%def name="basicCard(collector)">
     <%self:card title="Basic Information">
-        ${self.simpleLine('Nationality', collector.nationality)}
+##        ${self.simpleLine('Nationality', collector.nationality)}
         ${self.simpleLine('Born', collector.getDOB(request))}
         ${self.multiLine(collector, "Areas of interest", "Interest")}
-        ${self.multiLine(collector, "Education", "University")}
+##        ${self.multiLine(collector, "Education", "University")}
         ${self.multiLine(collector, "Email", "Email")}
 
         %if len(collector.Network):

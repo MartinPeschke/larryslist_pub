@@ -5,7 +5,7 @@
     <script>
         require(["views/landing"], function(View){new View({el: $(".index-search-form") });});
         $("#index-tab-nav").affix({offset: $("#index-tab-nav").offset().top});
-        $(window).scrollspy({target: "#index-tab-nav", offset: 200});
+        $(window).scrollspy({target: "#index-tab-nav", offset: 50});
     </script>
 </%block>
 
@@ -55,17 +55,12 @@ ${self.searchForm()}
     <div class="container">
         <div class="row">
             <div class="span12">
-                <ul class="nav nav-pills home-nav-pills"><li class="nav-pill-large"><a href="#what-you-get">
-                    What You Get
-                </a></li><li class="nav-pill-large"><a href="#pricing">
-                    Pricing
-                </a></li><li class="nav-pill-large"><a href="#ranking">
-                    Collector Ranking
-                </a></li><li class="nav-pill-large"><a href="#data-sources">
-                    Data Sources
-                </a></li><li class="nav-pill-large"><a href="#who-is-larry">
-                    Who is Larry?
-                </a></li>
+                <ul class="nav nav-pills home-nav-pills">
+                   <li class="nav-pill-large"><a class="left-pill" href="#what-you-get"> What You Get</a></li>
+                   <li class="nav-pill-large"><a href="#pricing">Pricing</a></li>
+                   <li class="nav-pill-large"><a href="#ranking">Collector Ranking</a></li>
+                   <li class="nav-pill-large"><a href="#data-sources">Data Sources</a></li>
+                   <li class="nav-pill-large"><a class="right-pill" href="#who-is-larry">Who is Larry?</a></li>
                 </ul>
             </div>
         </div>
@@ -91,8 +86,8 @@ ${self.searchForm()}
         <div class="panel text panel-right">
             <div class="panel-content">
                 <h3>Unique Information on Art Collectors.</h3>
-                <p>We compiled detailed information on leading art collectors around the world. Carefully and manually selected by our reserchers there is no other database alike. Use our filters to find your matching art collector</p>
-                <p><a class="link" data-toggle="modal" data-target="#data-profile-sample-modal">Here</a> is an example of a profile</p>
+                <p>We compiled detailed information on leading art collectors around the world. Our reserchers carefully selected the data manually. There is no database like this.</p>
+                <p><a class="link" data-toggle="modal" data-target="#data-profile-sample-modal">Here</a> is an example of a profile.</p>
             </div>
         </div>
     </div><hr class="pane-separator">
@@ -100,7 +95,7 @@ ${self.searchForm()}
         <div class="panel text panel-left">
             <div class="panel-content">
                 <h3>One Profile = 9 &euro;<br />Simple.</h3>
-                <p>We created a fair and simple pricing. You can either pay per profile. Or you can either per profile or you can buy credits for purchases at a later time.</p>
+                <p>We created a fair and simple pricing model. You can either pay per profile or you can buy credits for purchases at a later date.</p>
                 <p>You will be able to see the profile for a year, including all updates.</p>
             </div>
         </div>
@@ -111,7 +106,7 @@ ${self.searchForm()}
         <div class="panel text panel-left">
             <div class="panel-content">
                 <h3>A Transparent Ranking,<br />Finally.</h3>
-                <p>We defined a ranking that is not based on how much the collector spends but on how active he is in the market. This methodology is unique and brings transparency.</p>
+                <p>We defined a ranking that is not based on how much the collector spends but on how active he is on the market. This methodology is unique and brings transparency.</p>
                 <p>Learn more <a href="/collector-report" class="link">here.</a></p>
             </div>
         </div>
@@ -120,7 +115,7 @@ ${self.searchForm()}
         <div class="panel text panel-left">
             <div class="panel-content">
                 <h3>We Love Research.</h3>
-                <p>We love researching. This is our job. We looked into almost every database, book, website, just to find all the information available on the leading art collectors. You dont believe it? </p>
+                <p>This is our job. We looked into almost every database, book, website, just to find all the information available on the leading art collectors.</p>
             </div>
         </div>
         <div class="panel picture panel-right"><img src="${STATIC_URL}img/landing/research.png?${VERSION_TOKEN}" class="home-picture"/> </div>
