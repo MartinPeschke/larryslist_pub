@@ -27,5 +27,7 @@ Commit changes to github and call deploy script.
 How to edit documentation
 -------------------------
 
-* http://daringfireball.net/projects/markdown/syntax
-* https://help.github.com/articles/github-flavored-markdown
+github uses Markdown as markup language.
+
+* [Markdown Home](http://daringfireball.net/projects/markdown/syntax)
+* [github flavored markdown](https://help.github.com/articles/github-flavored-markdown)
