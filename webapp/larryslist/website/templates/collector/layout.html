@@ -69,14 +69,14 @@
                 </div>
                 %if collector.LinkedCollector:
                     <% ll = collector.LinkedCollector %>
-                    <div class="collector-partner">
-                        <small class="heading" style="display: inline-block;margin-top: 10px;">Partner:</small>
-                        %if vctxt.user.hasCollector(ll):
-                            <a href="${request.fwd_url("website_collector_personal", collectorId=ll.id, name=ll.getName())}" class="text">${ll.getName()}</a>
-                        %else:
-                            <span class="text">${ll.getNameWithPrivacy()}</span> &nbsp;&nbsp; <a href="#" class="btn btn-primary add-to-cart-link" data-profile=${ll.getJson()|n}>Buy Now</a>
-                        %endif
-                    </div>
+##                    <div class="collector-partner">
+##                        <small class="heading" style="display: inline-block;margin-top: 10px;">Partner:</small>
+##                        %if vctxt.user.hasCollector(ll):
+##                            <a href="${request.fwd_url("website_collector_personal", collectorId=ll.id, name=ll.getName())}" class="text">${ll.getName()}</a>
+##                        %else:
+##                            <span class="text">${ll.getName()}</span> &nbsp;&nbsp; <a href="#" class="btn btn-primary add-to-cart-link" data-profile=${ll.getJson()|n}>Buy Now</a>
+##                        %endif
+##                    </div>
                 %endif
             </div>
         </div>
