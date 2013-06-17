@@ -80,6 +80,8 @@
     %endif
 
     <ul class="nav pull-right">
+	<li class="nav-entry"><a class="nav-entry-link" href="http://artmarket.larryslist.com">Blog</a></li>
+        <li class="nav-entry"><a class="nav-entry-link" href="/collector-report">Collector Report</a></li>
         <li class="dropdown cart-dropdown-section">
             <a class="dropdown-toggle" data-toggle="dropdown" href="${request.fwd_url("website_cart")}">
                 <span class="cart-total total">${len(vctxt.cart.getItems())}</span><span class="cart-icon"></span>
@@ -89,10 +91,7 @@
                 <li class="nav-entry cart-attach-dropdown"></li>
             </ul>
      </li>
-    <ul class="nav pull-right">
-        <li class="nav-entry"><a class="nav-entry-link" href="http://artmarket.larryslist.com">Blog</a></li>
-        <li class="nav-entry"><a class="nav-entry-link" href="/collector-report">Collector Report</a></li>
-    </ul>
+
 
     %if user.isAnon():
             <li class="dropdown">

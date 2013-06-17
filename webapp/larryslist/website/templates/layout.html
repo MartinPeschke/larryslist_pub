@@ -78,21 +78,6 @@
             <li class="nav-entry"><a class="nav-entry-link" href="${request.fwd_url("website_index_member")}">My Collectors</a></li>
         </ul>
     %endif
-
-    <ul class="nav pull-right">
-	<li class="nav-entry"><a class="nav-entry-link" href="http://artmarket.larryslist.com">Blog</a></li>
-        <li class="nav-entry"><a class="nav-entry-link" href="/collector-report">Collector Report</a></li>
-        <li class="dropdown cart-dropdown-section">
-            <a class="dropdown-toggle" data-toggle="dropdown" href="${request.fwd_url("website_cart")}">
-                <span class="cart-total total">${len(vctxt.cart.getItems())}</span><span class="cart-icon"></span>
-                <span class="caret"></span>
-            </a>
-            <ul class="dropdown-menu">
-                <li class="nav-entry cart-attach-dropdown"></li>
-            </ul>
-     </li>
-
-
     %if user.isAnon():
             <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="${request.fwd_url("website_login")}">
@@ -138,6 +123,21 @@
                 </ul>
             </li>
     %endif
+    <ul class="nav pull-right">
+	<li class="nav-entry"><a class="nav-entry-link" href="http://artmarket.larryslist.com">Blog</a></li>
+        <li class="nav-entry"><a class="nav-entry-link" href="/collector-report">Collector Report</a></li>
+        <li class="dropdown cart-dropdown-section">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="${request.fwd_url("website_cart")}">
+                <span class="cart-total total">${len(vctxt.cart.getItems())}</span><span class="cart-icon"></span>
+                <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li class="nav-entry cart-attach-dropdown"></li>
+            </ul>
+     </li>
+
+
+
     </ul>
 </%def>
 
