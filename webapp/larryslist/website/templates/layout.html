@@ -78,7 +78,7 @@
         <li class="nav-entry"><a class="nav-entry-link" href="/collector-report">Collector Report</a></li>
     </ul>
     %if not vctxt.user.isAnon():
-        <ul class="nav">
+        <ul class="nav pull-right">
             <li class="nav-entry"><a class="nav-entry-link" href="${request.fwd_url("website_index_member")}">My Collectors</a></li>
         </ul>
     %endif
@@ -94,7 +94,7 @@
             </ul>
         </li>
     %if user.isAnon():
-            <li class="dropdown">
+        <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="${request.fwd_url("website_login")}">
                     Login
                     <span class="caret"></span>
