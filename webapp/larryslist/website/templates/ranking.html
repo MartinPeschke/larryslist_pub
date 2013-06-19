@@ -1,0 +1,18 @@
+<%inherit file="layout.html"/>
+
+
+<%block name="scripts">
+    <script>
+        require(["views/landing"], function(View){new View({el: $(".index-search-form") });});
+        $("#index-tab-nav").affix({offset: $("#index-tab-nav").offset().top});
+        $(window).scrollspy({target: "#index-tab-nav", offset: 50});
+    </script>
+</%block>
+
+<%def name="content()">
+${parent.header_messages()}
+${self.searchForm()}
+<div class="profile-count-band container">
+    RANKING
+</div>
+<%def name="header_messages()"></%def>
