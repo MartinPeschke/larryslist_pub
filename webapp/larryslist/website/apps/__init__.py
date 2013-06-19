@@ -7,7 +7,7 @@ from .cart import payment
 
 ROUTE_LIST = [
     FunctionRoute   ("website_index"             , "/", contexts.WebsiteRootContext, index.index, "index.html")
-    , FunctionRoute ("website_ranking"             , "/artcollector-raning", contexts.WebsiteRootContext, index.index, "ranking.html")
+    , FunctionRoute ("website_ranking"           , "/", contexts.WebsiteRootContext, index.index, "index.html")
     , FunctionRoute ("website_index_member"      , "/home", contexts.WebsiteAuthedContext, index.index_member, "index_member.html")
     , ClassRoute    ("website_login"             , "/login", contexts.WebsiteAnonOnlyContext, auth.LoginHandler, "auth/form.html", view_attrs=JSON_FORM_ATTRS)
     , FunctionRoute ("website_logout"            , "/logout", contexts.WebsiteRootContext, auth.logout, None)
