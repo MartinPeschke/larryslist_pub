@@ -6,7 +6,7 @@
 <%def name="content()">
     <div class="container centered cart-page">
 	<div class="row">
-             <h4 class="box-title">Shopping Cart</h4>
+             <h4 class="box-title page-title">Shopping Cart</h4>
   	</div>
         <div class="row">
             <form class="${view.form.classes}" id="${view.form.id}" method="POST" action="${request.fwd_url("website_purchase")}">
@@ -14,7 +14,7 @@
                     ${baseform.prelims(view.form)}
                     <div class="search-results-container standard-frame">
                         <div class="search-results-header">
-                            <div class="search-column collection">
+                            <div class="search-column collection small-title">
                                 Collection
                             </div><div class="search-column contact">
                                 Contact
@@ -33,7 +33,7 @@
                     <h4 class="box-title">&nbsp;</h4>
                     <div class="standard-box">
                         <div class="cart-dropdown-section sidebarbox" data-template="templates/checkout-cart.html">
-			    <h4>Credit balance</h4>
+			    <h4 class="small-title">Credit balance</h4>
                             <div class="cart-attach-dropdown">
                                 <img src="${ROOT_STATIC_URL}/img/ajax-loader-light.gif"/>
                             </div>
@@ -67,7 +67,7 @@
                 </div>
             </form>
         </div>
-	<div class="row">
+	<div class="row recommendations-content">
 	    <div class="spaced-top">
 		${widgets.recommendations()}
 	    </div>

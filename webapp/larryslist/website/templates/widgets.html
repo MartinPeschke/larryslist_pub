@@ -1,7 +1,7 @@
 
 
 <%def name="recommendations(horizontal = False, classes='box-title', results_classes='')">
-    <h4 class="${classes}">People who selected these profiles also selected:</h4>
+    <h4 class="${classes} small-title">People who selected these profiles also selected:</h4>
     <div class="recommended-collectors ${'horizontal' if horizontal else 'vertical'}">
         <ul class="search-results-body loading ${results_classes}"><li class="show-loading"><img src="${ROOT_STATIC_URL}img/ajax-loader-light.gif"/></li><li class="search-placeholder empty">No Recommendations at this point</li></ul>
     </div>
