@@ -27,8 +27,8 @@ PROCESS_GROUPS = {
 
 #Anderson disabled to force cleaning cache
 #trying to fix Tags
-#CLEAN_SESSIONS = False
-CLEAN_SESSIONS = True
+#CLEAN_SESSIONS = True
+CLEAN_SESSIONS = False
 
 CREATE_CMDS = {
     'dev':"git clone git@github.com:HarryMcCarney/LarrysList.git ."

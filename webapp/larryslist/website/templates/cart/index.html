@@ -5,12 +5,14 @@
 
 <%def name="content()">
     <div class="container centered cart-page">
+	<div class="row">
+             <h4 class="box-title">Shopping Cart</h4>
+  	</div>
         <div class="row">
             <form class="${view.form.classes}" id="${view.form.id}" method="POST" action="${request.fwd_url("website_purchase")}">
                 <div class="span8">
                     ${baseform.prelims(view.form)}
                     <div class="search-results-container standard-frame">
-                        <h4 class="box-title">Shopping Cart</h4>
                         <div class="search-results-header">
                             <div class="search-column collection">
                                 Collection
@@ -31,6 +33,7 @@
                     <h4 class="box-title">&nbsp;</h4>
                     <div class="standard-box">
                         <div class="cart-dropdown-section sidebarbox" data-template="templates/checkout-cart.html">
+			    <h4>Credit balance</h4>
                             <div class="cart-attach-dropdown">
                                 <img src="${ROOT_STATIC_URL}/img/ajax-loader-light.gif"/>
                             </div>
@@ -39,14 +42,11 @@
                                 %if not vctxt.cart.canSpend(vctxt.user):
                                     <span class="insufficient-credits">
                                         %if not len(vctxt.cart.getItems()):
-                                            No profiles selected yet:
-                                            <a href="${request.fwd_url("website_search")}" class="btn btn-primary btn-large wide-button">Search for profiles</a>
+                                            <a href="${request.fwd_url("website_search")}" class="btn btn-primary">Search for profiles</a>
                                         %elif not vctxt.user.getCredits():
-                                            No credits yet:
-                                            <a href="${request.fwd_url("website_checkout_arbiter")}" class="btn btn-primary btn-large wide-button">Buy credits now</a>
+                                            <a href="${request.fwd_url("website_checkout_arbiter")}" class="btn btn-primary">Buy credits now</a>
                                         %else:
-                                            Not enough credits:
-                                            <a href="${request.fwd_url("website_checkout_arbiter")}" class="btn btn-primary btn-large wide-button">Buy more credits</a>
+                                            <a href="${request.fwd_url("website_checkout_arbiter")}" class="btn btn-primary">Buy more credits</a>
                                         %endif
                                     </span>
                                 %else:
