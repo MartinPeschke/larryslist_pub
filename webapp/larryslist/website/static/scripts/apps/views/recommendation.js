@@ -43,7 +43,7 @@ define(["tools/ajax", "models/cart", "models/user", "models/collector"
                 url: '/web/search/recommended'
                 , data: {'userToken': user.get("token")}
                 , success: function(resp, status, xhr){
-                    var results = hnc.getRecursive(resp, "Collectors.Collector", []).slice(0,3);
+                    var results = hnc.getRecursive(resp, "Collectors.Collector", []).slice(0,20);
                     _.each(results, function(obj){
                         cart.prepResult(user.prepResult(obj));
                     });
