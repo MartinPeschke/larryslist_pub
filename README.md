@@ -9,7 +9,7 @@ Load environment and start server.
 
 	. ~/Development/virtualenv/Larryslist/bin/activate
 	cd ~/Development/projects/LarrysList/webapp
-	pserver local.ini
+	pserve local.ini
 
 
 How to deploy
