@@ -83,7 +83,7 @@
 .cart-page .standard-box hr{
   border-color: #ff0000;
   border-bottom: 0;	
-  margin-top: 15px;
+  margin-top: 35px;
 }
 .flyout-line {
   margin: 5px 0;min-width: 200px;color:white;
@@ -186,22 +186,23 @@
 .recommended-collectors{
   margin-top: 15px;
   overflow: hidden;
-
-  .vertical{
-    height: 100px;
   }
   .search-results-row{
     float: left;
     width: 280px:
-    padding: 5px 23px;
+    padding: 5px 23px !important;
     border-right: 1px solid #ccc;
     border-top: 0;
     clear: none;
-    border-top: 0;
+    border-top: 0 !important;
   }
   .search-results-row.mini.selected{
     display: none;
   }
+}
+.recommended-collectors.vertical{
+  min-height: 100px;
+  height: 100px;
 }
 
 // ====================== CHECKOUT ==========================
