@@ -70,7 +70,16 @@
 }
 
 .cart-attach-dropdown {
-  padding: 10px 15px;
+  padding: 10px 0px;
+
+  .flyout-line > b{
+    min-width: auto;
+  }
+}
+.cart-dropdown-section hr{
+  border-color: #ff0000;
+  border-bottom: 0;	
+  margin-top: 15px;
 }
 .flyout-line {
   margin: 5px 0;min-width: 200px;color:white;
@@ -164,7 +173,7 @@
 	  font-family: "OpenSans","Helvetica Neue",sans-serif; 
 	  font-size: 13px;
 	  text-align: left;
-	  text-weight: bold;
+	  font-weight: bold;
 	}
 	.page-title{
 	  margin-bottom: 15px;
@@ -172,9 +181,11 @@
 }
 .recommended-collectors{
   margin-top: 15px;
-  height: 100px;
   overflow: hidden;
 
+  .vertical{
+    height: 100px;
+  }
   .search-results-row{
     float: left;
     width: 280px:
@@ -182,6 +193,7 @@
     border-right: 1px solid #ccc;
     border-top: 0;
     clear: none;
+    border-top: 0;
   }
   .search-results-row.mini.selected{
     display: none;
