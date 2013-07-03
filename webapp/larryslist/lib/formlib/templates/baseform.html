@@ -13,9 +13,33 @@
 <%def name="funnel()">
     <div class="funnel-header">
 	<ul class="inline">
-	    <li><a href="#">Choose your price plan</a></li>
-   	    <li><a href="#">Payment details</a></li>
-	    <li><a href="#">Place order</a></li>
+               
+	    <li
+		%if (request.path <> "/") and (request.path in request.fwd_url("website_checkout_plan_select")):
+		 class="selected"
+		%endif
+>
+		%if (request.path <> "/") and (request.path in request.fwd_url("website_checkout_plan_select")):
+		<span>Choose your price plan</span>
+		%else:
+		<a href="${request.fwd_url("website_checkout_plan_select")}">Choose your price plan</a>
+		%endif
+
+		<i></i></li>
+   	    <li
+		##%if str(request.fwd_url("")).find(request.path):
+		## class="selected"
+		##%endif
+><a href="#">Payment details</a>
+		##else:
+		<i></i></li>
+	    <li
+		##%if str(request.fwd_url("")).find(request.path):
+		## class="selected"
+		##%endif
+><a href="#">Place order</a>
+		##else:
+		<i></i></li>
 	</ul>
     </div>
 </%def>

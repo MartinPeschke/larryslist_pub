@@ -1,3 +1,11 @@
+.gradient (@origin: left, @start: #ffffff, @stop: #000000) {
+    background-color: @start;
+    background: -webkit-linear-gradient(@origin, @start, @stop);
+    background: -moz-linear-gradient(@origin, @start, @stop);
+    background: -o-linear-gradient(@origin, @start, @stop);
+    background: -ms-linear-gradient(@origin, @start, @stop);
+    background: linear-gradient(@origin, @start, @stop);
+}
 .small-title{
   padding-top: 5px;
   font-family: "OpenSans","Helvetica Neue",sans-serif; 
@@ -23,16 +31,31 @@ h2.page-title{
   li{
     display: inline-block;
     float: left; 
-    width: 228px;
-    padding: 9px 40px !important;
+    width: 315px;
     margin-bottom: 15px;
     margin-right: 5px;
     text-align: center;
-    background: #ededed url(../img/arrow_funnel.png) right -6px no-repeat;
+    padding: 0 !important;
+    background-color: #ededed;
 
-    a{
+    a, span{
       color: #fff;
+      padding: 10px 0 0 15px;
+      display: inline-block;
+      margin: 0 30px;
     }
+    i{
+      background:  url(../img/arrow_funnel.png) right -4px no-repeat;
+      display: block;
+      float: right;
+      height: 40px;
+      width: 50px;
+    }
+  }
+
+  li.selected{
+    background-color: #323232;
+    .gradient(bottom, #323232, #4b4b4b);
   }
 }
 
