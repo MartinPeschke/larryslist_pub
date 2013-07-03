@@ -45,10 +45,10 @@
    width: 10px; 
 }
 ::-webkit-scrollbar-track {
-   background: transparent url(../img/bg_scrollbar.png) top 3px scroll-y;
+   background: #fff url(../img/bg_scrollbar.png) 4px 0 repeat-y;
 }
 ::-webkit-scrollbar-thumb {
-   color: rgba(0,0,0,0.9);
+   background-color: rgba(0,0,0,0.9);
 }
 
 .cart-page {
@@ -58,10 +58,11 @@
   }
   .search-results-body {
     scrollbar-track-background-image: url('../img/bg_scrollbar.png'); 
+    scrollbar-track-background-position: 4px 0;
     scrollbar-face-color: #000000; 
     scrollbar-track-color: #fff; 
     scrollbar-arrow-color: #fff; 
-    height: 250px;
+    height: 379px;
     overflow-y: scroll;
   }
   .search-column.picture {
