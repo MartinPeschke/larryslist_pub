@@ -22,6 +22,8 @@ define(["tools/ajax", "models/cart", "models/user", "models/collector"
         , cartIn: function(model){
             var m = this.results.get(model.id);
             if(m)m.set("selected", true);
+            var v = document.getElementById("shopping-cart");
+	    v.scrollTop = v.scrollHeight;
         }
         , addResult: function(result){
             var t = this.$results.children(".sortable").eq(this.results.indexOf(result))

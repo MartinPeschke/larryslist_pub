@@ -4,14 +4,23 @@
 
 
 <%def name="content()">
+    <div class="funil-header">
+	<ul class="inline">
+	    <li><a href="#">Choose your price plan</a></li>
+   	    <li><a href="#">Payment details</a></li>
+	    <li><a href="#">Place order</a></li>
+	</ul>
+    </div>
     <div class="container auth-page">
         <div class="row">
-            <div class="span6">
-                ${self.buildForm(view.schemas['signup'], values.get(view.schemas['signup'].id, {}), errors.get(view.schemas['signup'].id, {}))}
-           </div>
-           <div class="span6">
+           <div class="span6 left-column">
+		<h4 class="small-title">I am already a customer</h4>
                 ${self.buildForm(view.schemas['login'], values.get(view.schemas['login'].id, {}), errors.get(view.schemas['login'].id, {}))}
             </div>
+            <div class="span6">
+		<h4 class="small-title">I am a new customer</h4>
+                ${self.buildForm(view.schemas['signup'], values.get(view.schemas['signup'].id, {}), errors.get(view.schemas['signup'].id, {}))}
+           </div>
         </div>
     </div>
 </%def>
