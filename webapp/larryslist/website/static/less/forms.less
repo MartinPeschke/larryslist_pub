@@ -16,6 +16,9 @@
     color: rgb(211, 102, 100);
   }
 }
+.navbar .nav > li > .dropdown-menu{
+  padding: 10px;
+}
 
 .form-fields {
   background: #f8f8f8;
@@ -24,4 +27,41 @@
 }
 .form-fields-inner {
   min-height: 200px;
+}
+
+.auth-page{
+  .form-horizontal{
+     .empty-label,
+     .control-label {
+	text-align: left;
+	width: 130px;
+	float: left;
+     }
+     .empty-label{
+	margin-right: 20px;
+     }
+     .controls {
+	margin-left: 0;
+
+	.input-large {
+		width: 265px;
+	}
+     }
+     p.buttons {
+       text-align: right;
+
+       .btn-large{
+	  padding: 7px 40px;
+       }
+     }
+
+  }
+  .left-column{
+     border-right: 1px solid #000;
+     width: 459px;
+  }
+  #login p.buttons{
+	margin-top: 44px;
+  }
+
 }

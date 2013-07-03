@@ -5,7 +5,7 @@
 <div class="container centered cart-page">
     <div class="row">
         <div class="span12">
-            <h4 class="box-title">Choose a credit package</h4>
+            <h4 class="box-title">Choose your price plan</h4>
             <div class="standard-box standard-padded-box">
                 <form class="form-validated" method="post" action="${request.fwd_url("website_checkout_set_option")}">
                     ${baseform.prelims(form)}
@@ -22,14 +22,6 @@
                         <div><a href="#" class="expiry-link">Will the credits expire?</a></div>
                     </div>
                 </form>
-                <div class="explanation-row">
-                    <h4 class="highlight">This is what you get</h4>
-                    <ul>
-                        <li>access to profile for 1 year (free updated included)</li>
-                        <li>all available information on profile (incl. address, collection, etc.)</li>
-                        <li>access from everywhere 24/7</li>
-                    </ul>
-                </div>
             </div>
         </div>
     </div>
@@ -52,7 +44,9 @@
     <script>
         $(function(){
             $(".expiry-link").on({click: function(e){
+		e.preventDefault();
                 $("#expiry-modal").modal("show");
+		return false;
             }});
         })
     </script>

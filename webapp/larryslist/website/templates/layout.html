@@ -6,7 +6,9 @@
         <div class="navbar-inner">
         <div class="container">
             <a class="brand" href="${request.fwd_url("website_index")}"><img src="${ROOT_STATIC_URL}img/logo.png?${VERSION_TOKEN}" alt="${g.project_name}"/></a>
+            %if not request.path.startswith("/checkout"):
             ${self.menu(vctxt.user)}
+	    %endif
        </div>
        </div>
        </div>

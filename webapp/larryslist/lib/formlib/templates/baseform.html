@@ -10,3 +10,12 @@
     <input type="hidden" name="type" value="${form.id}"/>
     <input type="hidden" name="token" value="${request.session.get_csrf_token()}"/>
 </%def>
+<%def name="funnel()">
+    <div class="funnel-header">
+	<ul class="inline">
+	    <li><a href="#">Choose your price plan</a></li>
+   	    <li><a href="#">Payment details</a></li>
+	    <li><a href="#">Place order</a></li>
+	</ul>
+    </div>
+</%def>

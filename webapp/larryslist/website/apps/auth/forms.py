@@ -27,13 +27,13 @@ class LoginForm(BaseForm):
 
 class SignupForm(BaseForm):
     id="signup"
-    label = "Signup"
-    action_label = "Signup"
+    label = "Create account"
+    action_label = "Create account"
     fields = [
         StringField("name", "Name", REQUIRED)
         , EmailField("email", "Email", HtmlAttrs(required = True, data_validation_url = '/signup/checkemail'))
         , PasswordField("pwd", "Password", REQUIRED)
-        , PasswordField("pwdconfirm", "Confirm password", REQUIRED)
+        , PasswordField("pwdconfirm", "Retype password", REQUIRED)
         , CheckboxPostField("agreeTOS", 'I accept the <a class="link" target="_blank" href="/terms">terms of use</a>', REQUIRED)
     ]
     chained_validators = [formencode.validators.FieldsMatch('pwd', 'pwdconfirm')]
