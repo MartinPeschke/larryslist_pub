@@ -8,7 +8,7 @@
 	</div>
     <div class="row">
         <div class="span12">
-            <h4 class="box-title">Choose your price plan</h4>
+	    <h2 class="page-title centered">Choose your price plan</h2>
             <div class="standard-box standard-padded-box">
                 <form class="form-validated" method="post" action="${request.fwd_url("website_checkout_set_option")}">
                     ${baseform.prelims(form)}
@@ -17,7 +17,7 @@
                             ${field.render(form.id, request, values, errors, view)|n}\
                         %endfor
                     </div>
-                    <div class="">
+                    <div class="payment-methods">
                         <div class="pull-right">
                             <img src="${STATIC_URL}img/paymentmethods.png"/>
                         </div>

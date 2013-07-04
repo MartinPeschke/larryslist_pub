@@ -18,7 +18,8 @@
 		%if (request.path <> "/") and (request.path in request.fwd_url("website_checkout_plan_select")):
 		 class="selected"
 		%endif
->
+> 
+		<b>1</b>
 		%if (request.path <> "/") and (request.path in request.fwd_url("website_checkout_plan_select")):
 		<span>Choose your price plan</span>
 		%else:
@@ -30,14 +31,14 @@
 		##%if str(request.fwd_url("")).find(request.path):
 		## class="selected"
 		##%endif
-><a href="#">Payment details</a>
+><b>2</b><a href="#">Payment details</a>
 		##else:
 		<i></i></li>
 	    <li
 		##%if str(request.fwd_url("")).find(request.path):
 		## class="selected"
 		##%endif
-><a href="#">Place order</a>
+><b>3</b><a href="#">Place order</a>
 		##else:
 		<i></i></li>
 	</ul>

@@ -9,11 +9,11 @@
 	</div>
         <div class="row">
  	   <h2 class="page-title centered">Login or Create your account</h2>
-           <div class="span6 left-column">
+           <div class="column left-column">
 		<h4 class="small-title">I am already a customer</h4>
                 ${self.buildForm(view.schemas['login'], values.get(view.schemas['login'].id, {}), errors.get(view.schemas['login'].id, {}))}
             </div>
-            <div class="span6">
+            <div class="column">
 		<h4 class="small-title">I am a new customer</h4>
                 ${self.buildForm(view.schemas['signup'], values.get(view.schemas['signup'].id, {}), errors.get(view.schemas['signup'].id, {}))}
            </div>

@@ -13,7 +13,7 @@
         <li>All available information for 1 year</li>
     </ul>
     <span class="checkbox">
-        <button type="submit" name="${widget.getName(prefix)}" value="${option.getKey(request)}" class="btn btn-primary">Buy credits</button>
+        <button type="submit" name="${widget.getName(prefix)}" value="${option.getKey(request)}" class="btn ${'btn-primary btn-large' if i == 1 else 'btn-dark'}"> Buy now</button>
     </span>
     </div>\
 %endfor
