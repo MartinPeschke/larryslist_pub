@@ -1,5 +1,5 @@
 
-class BaseEPayMod(Persistent):
+class BaseEPayMod(object):
 
     def __init__(self):
         self._enabled = False
@@ -16,7 +16,7 @@ class BaseEPayMod(Persistent):
         self._title = title
 
 
-class BaseTransaction(Persistent):
+class BaseTransaction(object):
 
     def __init__(self):
         pass
