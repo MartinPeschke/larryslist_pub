@@ -9,10 +9,11 @@ from pyramid.renderers import render_to_response
 
 def checkout_arbiter(context, request):
     if context.user.isAnon():
-        if not request.session.get(PLAN_SELECTED_TOKEN):
-            request.fwd("website_checkout_plan_select")
-        else:
-            request.fwd("website_checkout_join")
+        request.fwd("website_checkout_join")
+
+    if not request.session.get(PLAN_SELECTED_TOKEN):
+        request.fwd("website_checkout_plan_select")
+            
     elif context.cart.canSpend(context.user):
         request.fwd("website_purchase")
     else:
@@ -20,6 +21,7 @@ def checkout_arbiter(context, request):
             request.fwd("website_checkout_plan_select")
         else:
             request.fwd("website_checkout")
+            
 
 def checkout_plan_select(context, request):
     handler = PaymentOptionsHandler(context, request)

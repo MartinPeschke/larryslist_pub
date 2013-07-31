@@ -41,10 +41,39 @@ def get_request_parameters(standard_params, params):
 
 
 
+def checkout_preview(context, request):
+    """
+    Checkout for Worldpay based on checkout_handler function
+    """
+    settings = request.globals.website
+
+    planToken = request.session.get(PLAN_SELECTED_TOKEN)
+    plan = context.config.getPaymentOption(planToken)
+    payment = CreatePurchaseCreditProc(request, {'userToken':context.user.token, 'paymentOptionToken': plan.token})
+    standard_params = settings.adyenParams.copy()
+
+    redirect_params = {
+        "paymentAmount":unicode(payment.amount)
+        ,"currencyCode":payment.currency
+        ,"shopperLocale":'en_US'
+        ,'allowedMethods': 'visa,mc,amex'
+        ,"merchantReference" : payment.paymentRef
+        ,"shopperReference" : payment.shopperRef
+        ,"shopperEmail" : payment.shopperEmail
+        ,"instId" : settings.worldpayInstallationId
+        ,"resURL":request.fwd_url("website_checkout_result")
+    }
+
+    params = get_request_parameters(standard_params, redirect_params)
+    urlparams = '&'.join(['%s=%s' % (k, urllib.quote(v)) for k,v in params.iteritems()])
+
+    if request.session.get(PLAN_SELECTED_TOKEN):
+        del request.session[PLAN_SELECTED_TOKEN]
+    request.fwd_raw("%s?%s" % (settings.worldpayURL, urlparams))
+
 
 def checkout_handler(context, request):
     settings = request.globals.website
-
 
     planToken = request.session.get(PLAN_SELECTED_TOKEN)
     plan = context.config.getPaymentOption(planToken)
