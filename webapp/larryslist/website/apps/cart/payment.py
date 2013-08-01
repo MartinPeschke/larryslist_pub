@@ -108,8 +108,8 @@ def checkout_handler(context, request):
 
 def payment_result_handler(context, request):
     log.info( 'PAYMENT RETURN from External: %s' , request.params )
-    merchantReference = request.params.get('merchantReference')
-    paymentmethod =  request.params.get('paymentMethod')
+    merchantReference = request.params.get('cartId')
+    paymentmethod =  request.params.get('cardType')
 
     result = CheckPurchaseCreditProc(request, request.params.mixed())
     if result.success:
