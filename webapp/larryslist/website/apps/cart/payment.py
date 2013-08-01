@@ -47,7 +47,8 @@ def checkout_preview(context, request):
     """
     settings = request.globals.website
     
-    # import pdb; pdb.set_trace()
+    installationId="301925"
+    url="https://secure-test.worldpay.com/wcc/purchase"
     planToken = request.session.get(PLAN_SELECTED_TOKEN)
     plan = context.config.getPaymentOption(planToken)
     payment = CreatePurchaseCreditProc(request, {'userToken':context.user.token, 'paymentOptionToken': plan.token})
@@ -61,7 +62,7 @@ def checkout_preview(context, request):
         ,"merchantReference" : payment.paymentRef
         ,"shopperReference" : payment.shopperRef
         ,"shopperEmail" : payment.shopperEmail
-        ,"instId" : settings.worldpayInstallationId
+        ,"instId" : installationId
         ,"resURL":request.fwd_url("website_checkout_result")
     }
 
@@ -70,7 +71,7 @@ def checkout_preview(context, request):
 
     if request.session.get(PLAN_SELECTED_TOKEN):
         del request.session[PLAN_SELECTED_TOKEN]
-    request.fwd_raw("%s?%s" % (settings.worldpayURL, urlparams))
+    request.fwd_raw("%s?%s" % (url, urlparams))
 
 
 def checkout_handler(context, request):

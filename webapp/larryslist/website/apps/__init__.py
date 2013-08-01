@@ -35,7 +35,7 @@ ROUTE_LIST = [
 
 
 
-    , FunctionRoute ("website_checkout"             , "/checkout", contexts.WebsiteRootContext, payment.checkout_handler, None)
+    , FunctionRoute ("website_checkout"             , "/checkout", contexts.WebsiteRootContext, payment.checkout_preview, None)
     , FunctionRoute ("website_checkout_result"      , "/payment/result", contexts.WebsiteRootContext, payment.payment_result_handler, None)
 
     , ClassRoute ("website_collector_personal"   , "/collector/:collectorId/:name", contexts.WebsiteAuthedContext, collector.CollectorHandler, "collector/index.html", view_attrs=STANDARD_VIEW_ATTRS)
