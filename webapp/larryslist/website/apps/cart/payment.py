@@ -55,7 +55,7 @@ def checkout_preview(context, request):
     standard_params = settings.adyenParams.copy()
 
     redirect_params = {
-        "amount":unicode(payment.amount)
+        "amount": "220.00"#unicode(payment.amount)
         ,"currency": "EUR"#payment.currency
         ,"lang":'en_US'
         ,"cartId" : payment.paymentRef
