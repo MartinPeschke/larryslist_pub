@@ -17,7 +17,7 @@ class PaymentOptionField(ConfigChoiceField):
 class PaymentOptionsForm(BaseForm):
     fields = [PaymentOptionField("option", None, "PaymentOption", default_none = False)]
     action_label = "Buy your plan now"
-    @classmethod
+    @classmethodo
     def on_success(cls, request, values):
         request.session[PLAN_SELECTED_TOKEN] = values['option']
         return {'success':True, 'redirect':request.fwd_url("website_checkout_arbiter")}
