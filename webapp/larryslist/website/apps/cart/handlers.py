@@ -30,7 +30,7 @@ def checkout_plan_select(context, request):
 def discard_saved_details(context, request):
     context.user.discardSavedDetails()
     request.fwd("website_checkout")
-    
+
 
 def straight_purchase(context, request):
     collectors = context.cart.getItems()

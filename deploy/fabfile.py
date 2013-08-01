@@ -25,9 +25,6 @@ PROCESS_GROUPS = {
     ,'live':['p1','p2','cache']
 }
 
-#Anderson disabled to force cleaning cache
-#trying to fix Tags
-#CLEAN_SESSIONS = True
 CLEAN_SESSIONS = False
 
 CREATE_CMDS = {
