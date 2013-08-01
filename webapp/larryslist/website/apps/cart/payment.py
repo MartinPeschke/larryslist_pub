@@ -110,8 +110,14 @@ def payment_result_handler(context, request):
     log.info( 'PAYMENT RETURN from External: %s' , request.params )
     merchantReference = request.params.get('cartId')
     paymentmethod =  request.params.get('cardType')
+    params = request.params.mixed()
+    params["merchantReference"] = merchantReference
+    params["shopperReference"] = merchantReference
+    params["shopperEmail"] = request.params.get('email')
+    params["paymentAmount"] = request.params.get('authAmount').replace(".","")
+    
 
-    result = CheckPurchaseCreditProc(request, request.params.mixed())
+    result = CheckPurchaseCreditProc(request, params)
     if result.success:
         RefreshUserProfileProc(request, {'token':context.user.token})
         request.session.flash(GenericSuccessMessage("Payment Successful!"), "generic_messages")
