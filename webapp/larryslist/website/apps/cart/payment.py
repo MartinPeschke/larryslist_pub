@@ -47,7 +47,7 @@ def checkout_preview(context, request):
     """
     settings = request.globals.website
     
-    import pdb; pdb.set_trace()
+    # import pdb; pdb.set_trace()
     planToken = request.session.get(PLAN_SELECTED_TOKEN)
     plan = context.config.getPaymentOption(planToken)
     payment = CreatePurchaseCreditProc(request, {'userToken':context.user.token, 'paymentOptionToken': plan.token})
