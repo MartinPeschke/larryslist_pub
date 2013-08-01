@@ -55,15 +55,17 @@ def checkout_preview(context, request):
     standard_params = settings.adyenParams.copy()
 
     redirect_params = {
-        "paymentAmount":unicode(payment.amount)
-        ,"currencyCode":payment.currency
-        ,"shopperLocale":'en_US'
-        ,'allowedMethods': 'visa,mc,amex'
-        ,"merchantReference" : payment.paymentRef
-        ,"shopperReference" : payment.shopperRef
-        ,"shopperEmail" : payment.shopperEmail
+        "amount":unicode(payment.amount)
+        ,"currency": "EUR"#payment.currency
+        ,"lang":'en_US'
+        ,"cartId" : payment.paymentRef
+        ,"M_shopperReference" : payment.shopperRef
+        ,"email" : payment.shopperEmail
         ,"instId" : installationId
         ,"resURL":request.fwd_url("website_checkout_result")
+        ,"testMode":"100"
+        ,"noLanguageMenu": "true"
+        ,"hideCurrency": "true"
     }
 
     params = get_request_parameters(standard_params, redirect_params)
