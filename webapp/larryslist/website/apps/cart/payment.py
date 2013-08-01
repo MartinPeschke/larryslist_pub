@@ -52,14 +52,14 @@ def checkout_preview(context, request):
     planToken = request.session.get(PLAN_SELECTED_TOKEN)
     plan = context.config.getPaymentOption(planToken)
     payment = CreatePurchaseCreditProc(request, {'userToken':context.user.token, 'paymentOptionToken': plan.token})
-    #standard_params = settings.adyenParams.copy()
+    standard_params = {}#settings.adyenParams.copy()
     
     formatCurrency = lambda v: v[:-2]+"."+v[-2:]
 
 
     redirect_params = {
         "amount": formatCurrency(unicode(payment.amount))
-        ,"currency": "EUR"#payment.currency
+        ,"currency": "EUR"
         ,"lang":'en_US'
         ,"cartId" : payment.paymentRef
         ,"M_shopperReference" : payment.shopperRef
