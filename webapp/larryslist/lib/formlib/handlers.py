@@ -59,6 +59,7 @@ class FormHandler(object):
         return self.result
 
     def POST(self):
+        import pdb; pdb.set_trace()
         try:
             return self.validate_form()
         except InvalidCSRFToken:
