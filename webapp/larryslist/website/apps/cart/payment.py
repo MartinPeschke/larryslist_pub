@@ -137,24 +137,28 @@ def payment_result_handler(context, request):
     sss = ", , , , , , , , , , , , , , , , , , "
 
 
+    #Old code that validates transaction
     #result = CheckPurchaseCreditProc(request, params)
     #if result.success:  #TODO: WorldPay save the credits locally
     
+    #New transaction validators using sqlite
     #validator = PaymentTransaction(merchantReference, shopperReference)
     #if validator.validate_transaction(context.user.token, p(request,"transId"), p(request,"transStatus"), p(request,"ipAddress")):
 
-    s = " ('installation' 'msgType' 'region' 'authAmountString' 'desc' 'tel' 'address1' 'countryMatch' 'address2' 'cartId' 'address3' 'callbackPW' 'lang' 'rawAuthCode' 'transStatus' 'amountString' 'authCost' 'currency' 'installation' 'amount' 'M_shopperReference' 'wafMerchMessage', 'countryString' 'displayAddress', 'transTime','name' 'testMode' 'routeKey' 'ipAddress' 'fax' 'rawAuthMessage' 'instId' 'AVS' 'compName' 'authAmount' 'postcode' 'cardType' 'cost' 'authCurrency' 'country' 'charenc' 'email' 'address' 'transId' 'msgType' 'town' 'authMode'"
-    ss = "token, interval, amount, year_price, method, method_id, payment_ref, payment, email, user_id, option, new_credit_id, credit, number, saveDetails "
-    
+    #Just for reference
+    #tmp_fields_from_request.params = " ('installation' 'msgType' 'region' 'authAmountString' 'desc' 'tel' 'address1' 'countryMatch' 'address2' 'cartId' 'address3' 'callbackPW' 'lang' 'rawAuthCode' 'transStatus' 'amountString' 'authCost' 'currency' 'installation' 'amount' 'M_shopperReference' 'wafMerchMessage', 'countryString' 'displayAddress', 'transTime','name' 'testMode' 'routeKey' 'ipAddress' 'fax' 'rawAuthMessage' 'instId' 'AVS' 'compName' 'authAmount' 'postcode' 'cardType' 'cost' 'authCurrency' 'country' 'charenc' 'email' 'address' 'transId' 'msgType' 'town' 'authMode'"
+    #tmp_fields_stored_procedure = "token, interval, amount, year_price, method, method_id, payment_ref, payment, email, user_id, option, new_credit_id, credit, number, saveDetails "
+    #end reference
 
     if True:  # Should check if the transaction is valid
         settings = request.globals.website
 
         plan = context.config.getPaymentOption(planToken)
 
-        #save credits
+        #save credits ANDERSON attempt
         #credits = UserCredits()
         #credits.create(userId,credits)
+        #end save credits
         
         ########## IMPORTANT ALEX
         #This is the code that calls the payment procedure
@@ -166,7 +170,7 @@ def payment_result_handler(context, request):
         request.session.flash(GenericSuccessMessage("Payment Successful!"), "generic_messages")
         if not len(context.cart.getItems()):
             request.fwd("website_index_member")
-        elif True: #context.cart.canSpend(context.user):
+        elif True: #context.cart.canSpend(context.user): TODO: ignoring check of the purchase. I believe context.cart won't work in this request because it's been posted by WorldPay and not through the user
             values = {'token': context.user.token, 'Collector':[{'id': c.id} for c in context.cart.getCollectors()]}
             SpendCreditProc(request, values)
             context.cart.empty()

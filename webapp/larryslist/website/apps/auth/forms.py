@@ -34,7 +34,7 @@ class SignupForm(BaseForm):
         , EmailField("email", "Email", HtmlAttrs(required = True, data_validation_url = '/signup/checkemail'))
         , PasswordField("pwd", "Password", REQUIRED)
         , PasswordField("pwdconfirm", "Retype password", REQUIRED)
-        , CheckboxPostField("agreeTOS", 'I accept the <a class="link" target="_blank" href="/terms">terms of use</a> and <a class="link" target="_blank" href="/privacy">privacy</a>', REQUIRED)
+        , CheckboxPostField("agreeTOS", 'I accept the <a class="link" target="_blank" href="/terms">terms of use</a> and <a class="link" target="_blank" href="/privacy">privacy statement</a>', REQUIRED)
     ]
     chained_validators = [formencode.validators.FieldsMatch('pwd', 'pwdconfirm')]
     @classmethod
