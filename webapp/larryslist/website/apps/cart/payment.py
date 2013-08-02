@@ -147,15 +147,20 @@ def payment_result_handler(context, request):
     ss = "token, interval, amount, year_price, method, method_id, payment_ref, payment, email, user_id, option, new_credit_id, credit, number, saveDetails "
     
 
-    if True:
-
+    if True:  # Should check if the transaction is valid
         settings = request.globals.website
 
         plan = context.config.getPaymentOption(planToken)
 
         #save credits
-        credits = UserCredits()
-        credits.create(userId,credits)
+        #credits = UserCredits()
+        #credits.create(userId,credits)
+        
+        ########## IMPORTANT ALEX
+        #This is the code that calls the payment procedure
+        plan = context.config.getPaymentOption(planToken)
+        payment = CreatePurchaseCreditProc(request, {'userToken':context.user.token, 'paymentOptionToken': plan.token})
+        #End code
 
         RefreshUserProfileProc(request, {'token':context.user.token})
         request.session.flash(GenericSuccessMessage("Payment Successful!"), "generic_messages")
