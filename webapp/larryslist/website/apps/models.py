@@ -169,7 +169,7 @@ import sqlite3 as lite
 conn = None
 def get_connection():
     if not conn:
-        conn = lite.connect('transactions.db')
+        conn = lite.connect('/server/www/larryslist/live/transactions.db')
     return conn
 
 class SimpleDB(object):
