@@ -66,6 +66,7 @@ def checkout_preview(context, request):
         ,"lang":'en_US'
         ,"cartId" : payment.paymentRef
         ,"M_shopperReference" : payment.shopperRef
+        ,"M_planToken" : PLAN_SELECTED_TOKEN
         ,"email" : payment.shopperEmail
         ,"instId" : installationId
         ,"resURL":request.fwd_url("website_checkout_result")
@@ -113,6 +114,7 @@ def payment_result_handler(context, request):
     log.info( 'PAYMENT RETURN from External: %s' , request.params )
     merchantReference = request.params.get('cartId')
     shopperReference = request.params.get('M_shopperReference')
+    planToken = request.params.get('M_planToken') 
     paymentmethod =  request.params.get('cardType')
     params = request.params.mixed()
     p = lambda r,v: r.params.get(v)
@@ -147,7 +149,12 @@ def payment_result_handler(context, request):
 
     if True:
 
-        result = CreatePurchaseCreditProc(request, params)
+        settings = request.globals.website
+
+        planToken = request.session.get(PLAN_SELECTED_TOKEN)
+        plan = context.config.getPaymentOption(planToken)
+        payment = CreatePurchaseCreditProc(request, {'userToken':context.user.token, 'paymentOptionToken': planToken})
+        #result = CreatePurchaseCreditProc(request, params)
         RefreshUserProfileProc(request, {'token':context.user.token})
         request.session.flash(GenericSuccessMessage("Payment Successful!"), "generic_messages")
         if not len(context.cart.getItems()):
