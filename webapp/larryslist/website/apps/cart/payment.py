@@ -134,8 +134,6 @@ def payment_result_handler(context, request):
     params["userToken"] =  context.user.token
     params["transactionId"] =  p(request,"transId")
 
-    sss = ", , , , , , , , , , , , , , , , , , "
-
 
     #Old code that validates transaction
     #result = CheckPurchaseCreditProc(request, params)
