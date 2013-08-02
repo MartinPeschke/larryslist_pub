@@ -53,8 +53,8 @@ def checkout_preview(context, request):
     planToken = request.session.get(PLAN_SELECTED_TOKEN)
     plan = context.config.getPaymentOption(planToken)
     payment = CreatePurchaseCreditProc(request, {'userToken':context.user.token, 'paymentOptionToken': plan.token})
-    validator = PaymentTransaction()
-    validator.create(context.user.token, plan.token, payment.paymentRef, payment.shopperRef, plan.credit)
+    #validator = PaymentTransaction()
+    #validator.create(context.user.token, plan.token, payment.paymentRef, payment.shopperRef, plan.credit)
     standard_params = {}#settings.adyenParams.copy()
     
     formatCurrency = lambda v: v[:-2]+"."+v[-2:]
@@ -124,8 +124,9 @@ def payment_result_handler(context, request):
     #result = CheckPurchaseCreditProc(request, params)
     #if result.success:  #TODO: WorldPay save the credits locally
     p = lambda r,v: r.params.get(v)
-    validator = PaymentTransaction(merchantReference, shopperReference)
-    if validator.validate_transaction(context.user.token, p(request,"transId"), p(request,"transStatus"), p(request,"ipAddress")):                        
+    #validator = PaymentTransaction(merchantReference, shopperReference)
+    #if validator.validate_transaction(context.user.token, p(request,"transId"), p(request,"transStatus"), p(request,"ipAddress")):                        
+    if True:
 
         result = CreatePurchaseCreditProc(request, params)
         RefreshUserProfileProc(request, {'token':context.user.token})

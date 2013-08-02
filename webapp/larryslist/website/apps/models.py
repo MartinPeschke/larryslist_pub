@@ -165,7 +165,10 @@ SpendCreditProc = LoggingInProc("/web/credit/spend")
 GetCollectorProc = ClientTokenProc("/web/user/getcollector", result_cls=FullCollectorModel, root_key="Collector")
 
 
-import sqlite3 as lite
+#import sqlite3 as lite
+class lite(object):
+    pass
+    
 conn = None
 def get_connection():
     if not conn:
