@@ -21,6 +21,9 @@ def checkout_arbiter(context, request):
             
 
 def checkout_plan_select(context, request):
+    if context.user.isAnon():
+        request.fwd("website_checkout_join")
+
     handler = PaymentOptionsHandler(context, request)
     result = handler.getForm()
     result['options'] = context.config.getPaymentOptions()
