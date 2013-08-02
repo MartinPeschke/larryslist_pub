@@ -66,7 +66,7 @@ def checkout_preview(context, request):
         ,"lang":'en_US'
         ,"cartId" : payment.paymentRef
         ,"M_shopperReference" : payment.shopperRef
-        ,"M_planToken" : PLAN_SELECTED_TOKEN
+        ,"M_planToken" : request.session.get(PLAN_SELECTED_TOKEN)
         ,"email" : payment.shopperEmail
         ,"instId" : installationId
         ,"resURL":request.fwd_url("website_checkout_result")
