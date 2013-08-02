@@ -7,7 +7,7 @@ from larryslist.lib.baseviews import GenericErrorMessage, GenericSuccessMessage
 from larryslist.website.apps.cart import PLAN_SELECTED_TOKEN
 import logging
 from larryslist.website.apps.models import CreatePurchaseCreditProc, CheckPurchaseCreditProc, RefreshUserProfileProc, SpendCreditProc, \
-                                        PaymentTransaction
+                                        PaymentTransaction, UserCredits
 from pyramid.renderers import render_to_response
 
 log = logging.getLogger(__name__)
@@ -53,8 +53,8 @@ def checkout_preview(context, request):
     planToken = request.session.get(PLAN_SELECTED_TOKEN)
     plan = context.config.getPaymentOption(planToken)
     payment = CreatePurchaseCreditProc(request, {'userToken':context.user.token, 'paymentOptionToken': plan.token})
-    #validator = PaymentTransaction()
-    #validator.create(context.user.token, plan.token, payment.paymentRef, payment.shopperRef, plan.credit)
+    validator = PaymentTransaction()
+    validator.create(context.user.token, plan.token, payment.paymentRef, payment.shopperRef, plan.credit)
     standard_params = {}#settings.adyenParams.copy()
     
     formatCurrency = lambda v: v[:-2]+"."+v[-2:]
@@ -140,7 +140,7 @@ def payment_result_handler(context, request):
     #result = CheckPurchaseCreditProc(request, params)
     #if result.success:  #TODO: WorldPay save the credits locally
     
-    #validator = PaymentTransaction(merchantReference, shopperReference)
+    validator = PaymentTransaction(merchantReference, shopperReference)
     #if validator.validate_transaction(context.user.token, p(request,"transId"), p(request,"transStatus"), p(request,"ipAddress")):
 
     s = " ('installation' 'msgType' 'region' 'authAmountString' 'desc' 'tel' 'address1' 'countryMatch' 'address2' 'cartId' 'address3' 'callbackPW' 'lang' 'rawAuthCode' 'transStatus' 'amountString' 'authCost' 'currency' 'installation' 'amount' 'M_shopperReference' 'wafMerchMessage', 'countryString' 'displayAddress', 'transTime','name' 'testMode' 'routeKey' 'ipAddress' 'fax' 'rawAuthMessage' 'instId' 'AVS' 'compName' 'authAmount' 'postcode' 'cardType' 'cost' 'authCurrency' 'country' 'charenc' 'email' 'address' 'transId' 'msgType' 'town' 'authMode'"
@@ -151,15 +151,17 @@ def payment_result_handler(context, request):
 
         settings = request.globals.website
 
-        #planToken = request.session.get(PLAN_SELECTED_TOKEN)
         plan = context.config.getPaymentOption(planToken)
-        payment = CreatePurchaseCreditProc(request, {'userToken':context.user.token, 'paymentOptionToken': planToken})
-        #result = CreatePurchaseCreditProc(request, params)
+
+        #save credits
+        credits = UserCredits()
+        credits.create(userId,credits)
+
         RefreshUserProfileProc(request, {'token':context.user.token})
         request.session.flash(GenericSuccessMessage("Payment Successful!"), "generic_messages")
         if not len(context.cart.getItems()):
             request.fwd("website_index_member")
-        elif context.cart.canSpend(context.user):
+        elif True: #context.cart.canSpend(context.user):
             values = {'token': context.user.token, 'Collector':[{'id': c.id} for c in context.cart.getCollectors()]}
             SpendCreditProc(request, values)
             context.cart.empty()

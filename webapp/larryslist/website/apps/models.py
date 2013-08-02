@@ -6,6 +6,7 @@ from larryslist.models import ClientTokenProc
 from larryslist.models.config import ConfigModel
 from pyramid.decorator import reify
 import simplejson
+import uuid
 
 from larryslist.models.collector import CollectorModel as FullCollectorModel
 from larryslist.models.collector import SimpleCollectorModel as CollectorModel
@@ -165,10 +166,8 @@ SpendCreditProc = LoggingInProc("/web/credit/spend")
 GetCollectorProc = ClientTokenProc("/web/user/getcollector", result_cls=FullCollectorModel, root_key="Collector")
 
 
-#import sqlite3 as lite
-class lite(object):
-    pass
-    
+import sqlite3 as lite
+
 conn = None
 def get_connection():
     if not conn:
@@ -266,7 +265,47 @@ class PaymentTransaction(SimpleDB):
 
 
 class UserCredits(SimpleDB):
-    pass
+    sql_create = "CREATE TABLE user_credits(id VARCHAR(50) PRIMARY KEY, userId VARCHAR(50), credits INTEGER, expires DATETIME);"
+    table_name = "user_credits"
+    sql_insert = "INSERT INTO user_credits(id, userId, credits) VALUES (?,?,?);"
+    sql_update = "UPDATE user_credits SET credits=? WHERE id=?;"
+    sql_retrieve = "SELECT id, userId, credits, expires FROM user_credits WHERE userId=?"  #TODO
+
+    def __init__(self, userId=""):
+        super(UserCredits, self).__init__()
+
+        self.id = ""
+        self.userId = ""
+        self.credits = ""
+        self.expires = ""
+
+        self._retrieve_user(userId)
+
+    def _retrieve_user(self, userId):
+        cur = self.get_cursor()
+        cur.execute(sql_retrieve,(userId,))
+        #TODO: consider multiple users!
+        row = cur.fetchone()
+        if row != None:
+            self.id = row[0]
+            self.userId = row[1]
+            self.credits = row[2]
+
+    def create(self, userId, credits, expires=""):
+        self.id = uuid.uuid1().hex 
+        self.userId = userId
+        self.credits = credits
+        self.expires = expires or (datetime.now()+timedelta(days=365))
+        self.__insert()
+
+    def getCredits(self):
+        #TODO: consider expiration date and multiple credits!
+        return self.credits
+
+    def __insert(self):
+        cur = self.get_cursor()
+        cur.execute(sql_insert,(self.id, self.userId, self.credits))
+
 
 
 class CreditPaymentManager(object):
