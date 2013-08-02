@@ -116,13 +116,16 @@ def payment_result_handler(context, request):
     paymentmethod =  request.params.get('cardType')
     params = request.params.mixed()
     p = lambda r,v: r.params.get(v)
-    methods = {'visa':"VISA",'amex':'AMEX','mastercard':'MC'}
+    methods = {'Visa':"VISA",'Amex':'AMEX','MasterCard':'MC'}
     params["paymentRef"] = merchantReference
     params["shopperRef"] = shopperReference
     params["shopperEmail"] = request.params.get('email')
     params["amount"] = request.params.get('authAmount').replace(".","")
     params["year_price"] =  p(request,"amount").replace(".","")
-    params["method"] =  methods[p(request,"method")]
+    try:
+        params["method"] =  methods[p(request,"cardType")]
+    except:
+        params["method"] = "ELV"
     params["payment_ref"] = merchantReference
     params["saveDetails"] = "0"
     params["currency"] =  p(request,"authCurrency")
