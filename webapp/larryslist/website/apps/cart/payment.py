@@ -115,6 +115,7 @@ def payment_result_handler(context, request):
     shopperReference = request.params.get('M_shopperReference')
     paymentmethod =  request.params.get('cardType')
     params = request.params.mixed()
+    p = lambda r,v: r.params.get(v)
     methods = {'visa':"VISA",'amex':'AMEX','mastercard':'MC'}
     params["paymentRef"] = merchantReference
     params["shopperRef"] = shopperReference
@@ -133,7 +134,7 @@ def payment_result_handler(context, request):
 
     #result = CheckPurchaseCreditProc(request, params)
     #if result.success:  #TODO: WorldPay save the credits locally
-    p = lambda r,v: r.params.get(v)
+    
     #validator = PaymentTransaction(merchantReference, shopperReference)
     #if validator.validate_transaction(context.user.token, p(request,"transId"), p(request,"transStatus"), p(request,"ipAddress")):
 
