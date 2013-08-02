@@ -6,7 +6,8 @@ import urllib
 from larryslist.lib.baseviews import GenericErrorMessage, GenericSuccessMessage
 from larryslist.website.apps.cart import PLAN_SELECTED_TOKEN
 import logging
-from larryslist.website.apps.models import CreatePurchaseCreditProc, CheckPurchaseCreditProc, RefreshUserProfileProc, SpendCreditProc
+from larryslist.website.apps.models import CreatePurchaseCreditProc, CheckPurchaseCreditProc, RefreshUserProfileProc, SpendCreditProc, \
+                                        PaymentTransaction
 from pyramid.renderers import render_to_response
 
 log = logging.getLogger(__name__)
@@ -52,6 +53,8 @@ def checkout_preview(context, request):
     planToken = request.session.get(PLAN_SELECTED_TOKEN)
     plan = context.config.getPaymentOption(planToken)
     payment = CreatePurchaseCreditProc(request, {'userToken':context.user.token, 'paymentOptionToken': plan.token})
+    validator = PaymentTransaction()
+    validator.create(context.user.token, plan.token, payment.paymentRef, payment.shopperRef, plan.credit)
     standard_params = {}#settings.adyenParams.copy()
     
     formatCurrency = lambda v: v[:-2]+"."+v[-2:]
@@ -109,17 +112,22 @@ def checkout_handler(context, request):
 def payment_result_handler(context, request):
     log.info( 'PAYMENT RETURN from External: %s' , request.params )
     merchantReference = request.params.get('cartId')
+    shopperReference = request.params.get('M_shopperReference')
     paymentmethod =  request.params.get('cardType')
     params = request.params.mixed()
     params["merchantReference"] = merchantReference
-    params["shopperReference"] = merchantReference
+    params["shopperReference"] = shopperReference
     params["shopperEmail"] = request.params.get('email')
     params["paymentAmount"] = request.params.get('authAmount').replace(".","")
-    
+
 
     #result = CheckPurchaseCreditProc(request, params)
-    #TODO: save the 
-    if True: #result.success:
+    #if result.success:  #TODO: WorldPay save the credits locally
+    p = lambda r,v: r.params.get(v)
+    validator = PaymentTransaction(merchantReference, shopperReference)
+    if validator.validate_transaction(context.user.token, p(request,"transId"), p(request,"transStatus"), p(request,"ipAddress")):                        
+
+        result = CreatePurchaseCreditProc(request, params)
         RefreshUserProfileProc(request, {'token':context.user.token})
         request.session.flash(GenericSuccessMessage("Payment Successful!"), "generic_messages")
         if not len(context.cart.getItems()):

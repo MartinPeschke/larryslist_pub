@@ -36,11 +36,14 @@ def straight_purchase(context, request):
     collectors = context.cart.getItems()
     if not collectors:
         request.fwd("website_cart")
-    elif not context.cart.canSpend(context.user):
+    #TODO: WorldPay local
+    # elif not context.cart.canSpend(context.user):
+    elif not True:
         request.fwd("website_checkout_arbiter")
     else:
         values = {'token': context.user.token, 'Collector':collectors}
-        SpendCreditProc(request, values)
+        #TODO: WorldPay local
+        #SpendCreditProc(request, values)
         if request.session.get(PLAN_SELECTED_TOKEN):
             del request.session[PLAN_SELECTED_TOKEN]
         context.cart.empty()
