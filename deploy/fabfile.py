@@ -25,7 +25,7 @@ PROCESS_GROUPS = {
     ,'live':['p1','p2','cache']
 }
 
-CLEAN_SESSIONS = False
+CLEAN_SESSIONS = True #False
 
 CREATE_CMDS = {
     'dev':"git clone git@github.com:HarryMcCarney/LarrysList.git ."
