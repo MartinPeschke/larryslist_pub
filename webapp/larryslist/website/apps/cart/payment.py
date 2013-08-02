@@ -151,7 +151,7 @@ def payment_result_handler(context, request):
 
         settings = request.globals.website
 
-        planToken = request.session.get(PLAN_SELECTED_TOKEN)
+        #planToken = request.session.get(PLAN_SELECTED_TOKEN)
         plan = context.config.getPaymentOption(planToken)
         payment = CreatePurchaseCreditProc(request, {'userToken':context.user.token, 'paymentOptionToken': planToken})
         #result = CreatePurchaseCreditProc(request, params)
