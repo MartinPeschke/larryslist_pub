@@ -115,17 +115,32 @@ def payment_result_handler(context, request):
     shopperReference = request.params.get('M_shopperReference')
     paymentmethod =  request.params.get('cardType')
     params = request.params.mixed()
-    params["merchantReference"] = merchantReference
-    params["shopperReference"] = shopperReference
+    methods = {'visa':"VISA",'amex':'AMEX','mastercard':'MC'}
+    params["paymentRef"] = merchantReference
+    params["shopperRef"] = shopperReference
     params["shopperEmail"] = request.params.get('email')
-    params["paymentAmount"] = request.params.get('authAmount').replace(".","")
+    params["amount"] = request.params.get('authAmount').replace(".","")
+    params["year_price"] =  p(request,"amount").replace(".","")
+    params["method"] =  methods[p(request,"method")]
+    params["payment_ref"] = merchantReference
+    params["saveDetails"] = "0"
+    params["currency"] =  p(request,"authCurrency")
+    params["userToken"] =  context.user.token
+    params["transactionId"] =  p(request,"transId")
+
+    sss = ", , , , , , , , , , , , , , , , , , "
 
 
     #result = CheckPurchaseCreditProc(request, params)
     #if result.success:  #TODO: WorldPay save the credits locally
     p = lambda r,v: r.params.get(v)
     #validator = PaymentTransaction(merchantReference, shopperReference)
-    #if validator.validate_transaction(context.user.token, p(request,"transId"), p(request,"transStatus"), p(request,"ipAddress")):                        
+    #if validator.validate_transaction(context.user.token, p(request,"transId"), p(request,"transStatus"), p(request,"ipAddress")):
+
+    s = " ('installation' 'msgType' 'region' 'authAmountString' 'desc' 'tel' 'address1' 'countryMatch' 'address2' 'cartId' 'address3' 'callbackPW' 'lang' 'rawAuthCode' 'transStatus' 'amountString' 'authCost' 'currency' 'installation' 'amount' 'M_shopperReference' 'wafMerchMessage', 'countryString' 'displayAddress', 'transTime','name' 'testMode' 'routeKey' 'ipAddress' 'fax' 'rawAuthMessage' 'instId' 'AVS' 'compName' 'authAmount' 'postcode' 'cardType' 'cost' 'authCurrency' 'country' 'charenc' 'email' 'address' 'transId' 'msgType' 'town' 'authMode'"
+    ss = "token, interval, amount, year_price, method, method_id, payment_ref, payment, email, user_id, option, new_credit_id, credit, number, saveDetails "
+    
+
     if True:
 
         result = CreatePurchaseCreditProc(request, params)
