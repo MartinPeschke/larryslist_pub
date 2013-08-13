@@ -111,25 +111,6 @@ def checkout_handler(context, request):
 
 
 def payment_result_handler(context, request):
-    log.info( 'PAYMENT RETURN from External: %s' , request.params )
-    merchantReference = request.params.get('cartId')
-    shopperReference = request.params.get('M_shopperReference')
-
-    params = {}
-
-    methods = {'Visa':"VISA",'Amex':'AMEX','MasterCard':'MC'}
-    params["paymentRef"] = merchantReference
-    params["payment_ref"] = merchantReference
-    params["method"] =  methods.get(request.params.get("cardType"), "ELV")
-
-    params["shopperRef"] = shopperReference
-    params["shopperEmail"] = request.params.get('email')
-    params["amount"] = request.params.get('authAmount', '').replace(".","")
-    params["year_price"] =  request.params.get("amount", '').replace(".","")
-    params["saveDetails"] = "0"
-    params["currency"] =  request.params.get("authCurrency")
-    params["userToken"] =  context.user.token
-    params["transactionId"] =  request.params.get("transId")
-
-    result = CheckPurchaseCreditProc(request, params)
+    log.info( 'PAYMENT RETURN from External: %s' , dict(request.params) )
+    result = CheckPurchaseCreditProc( request, dict(request.params) )
     return {}
