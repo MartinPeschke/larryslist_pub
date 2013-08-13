@@ -35,6 +35,7 @@ class TypeAheadSearch(object):
         last = self.conn.get(exists_key)
         if not last:
             p = self.conn.pipeline()
+            log.info('RECEIVED %s Elements for %s', len(data), key)
 
             l = sorted([(g.name.lower(), g.toQuery())  for g in data])
             for name, query in l:

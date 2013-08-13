@@ -114,70 +114,22 @@ def payment_result_handler(context, request):
     log.info( 'PAYMENT RETURN from External: %s' , request.params )
     merchantReference = request.params.get('cartId')
     shopperReference = request.params.get('M_shopperReference')
-    planToken = request.params.get('M_planToken') 
-    paymentmethod =  request.params.get('cardType')
-    params = request.params.mixed()
-    p = lambda r,v: r.params.get(v)
+
+    params = {}
+
     methods = {'Visa':"VISA",'Amex':'AMEX','MasterCard':'MC'}
     params["paymentRef"] = merchantReference
+    params["payment_ref"] = merchantReference
+    params["method"] =  methods.get(request.params.get("cardType"), "ELV")
+
     params["shopperRef"] = shopperReference
     params["shopperEmail"] = request.params.get('email')
-    params["amount"] = request.params.get('authAmount').replace(".","")
-    params["year_price"] =  p(request,"amount").replace(".","")
-    try:
-        params["method"] =  methods[p(request,"cardType")]
-    except:
-        params["method"] = "ELV"
-    params["payment_ref"] = merchantReference
+    params["amount"] = request.params.get('authAmount', '').replace(".","")
+    params["year_price"] =  request.params.get("amount", '').replace(".","")
     params["saveDetails"] = "0"
-    params["currency"] =  p(request,"authCurrency")
+    params["currency"] =  request.params.get("authCurrency")
     params["userToken"] =  context.user.token
-    params["transactionId"] =  p(request,"transId")
+    params["transactionId"] =  request.params.get("transId")
 
-
-    #Old code that validates transaction
-    #result = CheckPurchaseCreditProc(request, params)
-    #if result.success:  #TODO: WorldPay save the credits locally
-    
-    #New transaction validators using sqlite
-    #validator = PaymentTransaction(merchantReference, shopperReference)
-    #if validator.validate_transaction(context.user.token, p(request,"transId"), p(request,"transStatus"), p(request,"ipAddress")):
-
-    #Just for reference
-    #tmp_fields_from_request.params = " ('installation' 'msgType' 'region' 'authAmountString' 'desc' 'tel' 'address1' 'countryMatch' 'address2' 'cartId' 'address3' 'callbackPW' 'lang' 'rawAuthCode' 'transStatus' 'amountString' 'authCost' 'currency' 'installation' 'amount' 'M_shopperReference' 'wafMerchMessage', 'countryString' 'displayAddress', 'transTime','name' 'testMode' 'routeKey' 'ipAddress' 'fax' 'rawAuthMessage' 'instId' 'AVS' 'compName' 'authAmount' 'postcode' 'cardType' 'cost' 'authCurrency' 'country' 'charenc' 'email' 'address' 'transId' 'msgType' 'town' 'authMode'"
-    #tmp_fields_stored_procedure = "token, interval, amount, year_price, method, method_id, payment_ref, payment, email, user_id, option, new_credit_id, credit, number, saveDetails "
-    #end reference
-
-    if True:  # Should check if the transaction is valid
-        settings = request.globals.website
-
-        plan = context.config.getPaymentOption(planToken)
-
-        #save credits ANDERSON attempt
-        #credits = UserCredits()
-        #credits.create(userId,credits)
-        #end save credits
-        
-        ########## IMPORTANT ALEX
-        #This is the code that calls the payment procedure
-        plan = context.config.getPaymentOption(planToken)
-        payment = CreatePurchaseCreditProc(request, {'userToken':context.user.token, 'paymentOptionToken': plan.token})
-        #End code
-
-        RefreshUserProfileProc(request, {'token':context.user.token})
-        request.session.flash(GenericSuccessMessage("Payment Successful!"), "generic_messages")
-        if not len(context.cart.getItems()):
-            request.fwd("website_index_member")
-        elif True: #context.cart.canSpend(context.user): TODO: ignoring check of the purchase. I believe context.cart won't work in this request because it's been posted by WorldPay and not through the user
-            values = {'token': context.user.token, 'Collector':[{'id': c.id} for c in context.cart.getCollectors()]}
-            SpendCreditProc(request, values)
-            context.cart.empty()
-            if request.session.get(PLAN_SELECTED_TOKEN):
-                del request.session[PLAN_SELECTED_TOKEN]
-            request.fwd("website_index_member")
-        else:
-            request.session.flash(GenericErrorMessage("Not enough credits to purchase all profiles."), "generic_messages")
-            request.fwd("website_cart")
-    else:
-        request.session.flash(GenericErrorMessage("Payment Failed!"), "generic_messages")
-        request.fwd("website_cart")
+    result = CheckPurchaseCreditProc(request, params)
+    return {}
