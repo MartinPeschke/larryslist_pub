@@ -110,6 +110,10 @@ def checkout_handler(context, request):
     request.fwd_raw("%s?%s&merchantSig=%s" % (settings.adyenURL, urlparams, urllib.quote(get_signature(settings.adyenSecret, params))))
 
 
+def payment_result(context, request):
+    RefreshUserProfileProc(request)
+    request.fwd("website_index_member")
+
 def payment_result_handler(context, request):
     log.info( 'PAYMENT RETURN from External: %s' , dict(request.params) )
     result = CheckPurchaseCreditProc( request, dict(request.params) )
