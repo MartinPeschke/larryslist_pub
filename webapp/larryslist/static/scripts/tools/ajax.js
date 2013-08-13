@@ -23,7 +23,7 @@ define(['tools/messaging', "tools/hash"], function(messaging, hashlib){
                       messaging[resp.success?'addSuccess':'addError']({message:resp.message})
                   }
               };
-              params.error = params.error || function(xhr, status, msg){messaging.addError({message:msg});};
+              params.error = params.error || function(xhr, status, msg){if(msg)messaging.addError({message:msg});};
               if (typeof params.data != 'string') { params.data = JSON.stringify(params.data) }
               $.ajax(params);
       }
