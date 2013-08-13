@@ -101,15 +101,11 @@ text-decoration:none;
 #index-tab-nav {.container, .span12 {max-width:100%};}
 
 #index-tab-nav {
-   xborder-radius:10px 0 0 10px;
-
   &.affix, &.affix-bottom {
     width: 100%;
     top: 0;
     left: 0;
     z-index: 10;
-//    background: rgb(231,231,231);
-//    border-bottom: 1px solid @hrBorder;
     .nav-pills {margin-bottom:-2px;}
   }
 }
@@ -128,18 +124,25 @@ text-decoration:none;
 
 .home-nav-pills {
   @bgColor: rgb(231,231,231);
+
   margin-bottom: 0;
+  .borderradius(10px);
  .box-shadow(0 -2px 3px rgba(0,0,0,.2));
+
+
   &.four-col > .nav-pill-large {width:25%;}
-  .left-pill {
-    xborder-radius:10px 0 0 10px;
-  }
-  .right-pill {
-    xborder-radius:0 10px 10px 0;
-  }
+
   > .nav-pill-large {
     width:20%;
     border-bottom: 1px solid @white;
+    &:first-child > a {
+      .border-top-left-radius(10px);
+      .border-bottom-left-radius(10px);
+    }
+    &:last-child > a {
+      .border-top-right-radius(10px);
+      .border-bottom-right-radius(10px);
+    }
     > a {
       line-height: 48px;
       height: 48px;
