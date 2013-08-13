@@ -112,7 +112,7 @@ def checkout_handler(context, request):
 
 def payment_result(context, request):
     RefreshUserProfileProc(request, {'token':request.root.user.token})
-    request.fwd("website_index_member")
+    request.fwd("website_index_member", _query= [('payment', 'done')])
 
 def payment_result_handler(context, request):
     log.info( 'PAYMENT RETURN from External: %s' , dict(request.params) )
