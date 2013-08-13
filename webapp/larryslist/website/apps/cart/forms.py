@@ -58,8 +58,7 @@ class SpendCreditsForm(BaseForm):
         elif not context.cart.canSpend(context.user):
             return {'success':False, 'message': "Insufficient credits"}
         else:
-            #TODO: WorldPay 
-            #SpendCreditProc(request, values)
+            SpendCreditProc(request, values)
             if request.session.get(PLAN_SELECTED_TOKEN):
                 del request.session[PLAN_SELECTED_TOKEN]
             context.cart.empty()
