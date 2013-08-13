@@ -15,7 +15,7 @@ class TypeAheadSearch(object):
         self.ttl = ttl
 
         self.conn = conn
-        self.ns = u'{}:typeahead'.format(self.project)
+        self.ns = u'{}:ta'.format(self.project)
 
         self.exists_key_f = lambda key: u'{}-{}:_exists'.format(self.ns, key)
         self.data_ns_f = lambda key: u'{}-{}:data'.format(self.ns, key)
@@ -33,6 +33,7 @@ class TypeAheadSearch(object):
         ttl = self.ttl
 
         last = self.conn.get(exists_key)
+        self.conn.setex(exists_key, ttl, datetime.now())
         if not last:
             p = self.conn.pipeline()
             log.info('RECEIVED %s Elements for %s', len(data), key)
@@ -46,12 +47,13 @@ class TypeAheadSearch(object):
                 elems = name.split()
                 elems = set(elems + [' '.join(elems[i:]) for i, e in enumerate(elems)])
                 for elem in elems:
+                    l = len(elem)
                     for i,c in enumerate(elem):
-                        pref = elem[0:i+1]
-                        p.zadd(index_key_f(pref), len(elem)-len(pref), query['value'])
-                        p.expire(index_key_f(pref), 3*ttl)
+                        k = index_key_f(elem[0:i+1])
+                        p.zadd(k, l-i+1, query['value'])
+                        p.expire(k, 3*ttl)
             p.execute()
-            self.conn.setex(exists_key, ttl, datetime.now())
+
             log.info('UPDATED Elements in %s: %s', data_key, self.conn.hlen(data_key))
 
 
