@@ -111,7 +111,7 @@ def checkout_handler(context, request):
 
 
 def payment_result(context, request):
-    RefreshUserProfileProc(request)
+    RefreshUserProfileProc(request, {'token':request.root.user.token})
     request.fwd("website_index_member")
 
 def payment_result_handler(context, request):
