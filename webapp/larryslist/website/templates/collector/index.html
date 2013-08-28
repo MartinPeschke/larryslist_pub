@@ -11,16 +11,12 @@
 
 <%def name="basicCard(collector)">
     <%self:card title="Basic Information">
-##        ${self.simpleLine('Nationality', collector.nationality)}
-        ${self.simpleLine('Born', collector.getDOB(request))}
-        ${self.multiLine(collector, "Areas of interest", "Interest")}
-##        ${self.multiLine(collector, "Education", "University")}
         ${self.multiLine(collector, "Email", "Email")}
 
         %if len(collector.Network):
             <%self:line label="Social Media">
                 %for net in collector.Network:
-                    <a href="${net.getAddress(request)}" class="social-media ${net.getIcon(request)}">${net.getLabel(request)}</a>
+                    <span class="social-media ${net.getIcon(request)}" title="${net.getLabel(request)} profile exists">${net.getLabel(request)}</span>
                 %endfor
             </%self:line>
         %endif

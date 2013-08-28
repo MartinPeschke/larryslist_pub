@@ -67,12 +67,12 @@ def main(argv=None):
     while True:
         start = datetime.now()
         webconfig = config_loader.get(request)
-        ta.index('ARTIST', webconfig.Artist)
-        ta.index('CITY', webconfig.City)
         ta.index('MEDIA', webconfig.usedMedia)
         ta.index('GENRE', webconfig.Genre)
         ta.index('COUNTRY', webconfig.Country)
         ta.index('ORIGIN', webconfig.Origin)
+        ta.index('CITY', webconfig.City)
+        ta.index('ARTIST', webconfig.Artist)
         log.info('CHECKING TYPEAHEAD SEARCHES in %s', datetime.now() - start)
         time.sleep(10)
 

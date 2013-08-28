@@ -111,7 +111,10 @@ def checkout_handler(context, request):
 
 
 def payment_result(context, request):
-    RefreshUserProfileProc(request, {'token':request.root.user.token})
+    user = request.root.user
+    if user.isAnon():
+        request.fwd("website_index")
+    RefreshUserProfileProc(request, {'token':user.token})
     request.fwd("website_index_member", _query= [('payment', 'done')])
 
 def payment_result_handler(context, request):

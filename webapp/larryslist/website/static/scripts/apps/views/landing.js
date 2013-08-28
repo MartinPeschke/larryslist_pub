@@ -7,6 +7,8 @@ define(["tools/ajax", "tools/abstractsearch", "text!templates/taresult.html"], f
                 return this.get("key")||'ARTIST'
             }
             , getSearchLabel: function(){
+                if(this.get('country'))
+                    return this.get("label") +", " + this.get('country');
                 return this.get("label");
             }
         })

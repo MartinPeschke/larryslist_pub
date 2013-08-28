@@ -165,7 +165,7 @@ class ConfigModel(Mapping):
     def convertToQuery(self, queryMap):
         query = {}
         for k,v in queryMap.items():
-            lookup = self.searchLookups.get(k)
+            lookup = self.searchLookups.get(k, {})
             obj = lookup.get(v)
             if obj:
                 query[k] = obj.toQuery()
