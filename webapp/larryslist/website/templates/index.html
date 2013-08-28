@@ -18,10 +18,13 @@ ${self.searchForm()}
             <div class="span12">
                 <div class="counter-band-content">
                     <h3>The only art collector database,</h3>
-                    <p>currently containing <b class="count-suffix">${vctxt.config.ReviewedCollectors.no} Collector profiles.</b></p>
+                    <p>currently containing <b class="count-suffix">${vctxt.config.ReviewedCollectors.no} Collector profiles*.</b>
+                    <br/>
+                    <a class="link" style="font-size:60%;color:black;" data-toggle="modal" data-target="#data-collector-artist">(* Information for Artists and Collectors)</a>
+                    </p>
                 </div>
-		<div id="how-button">
-		  <a href="#how-it-works">How does it work?</a>
+                <div id="how-button">
+                    <a href="#how-it-works">How does it work?</a>
                 </div>
             </div>
         </div>
@@ -161,6 +164,7 @@ ${self.searchForm()}
         </div>
     </div>
 </div>
+
 <div id="data-ranking-methodology" class="modal hide">
  <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><img src="${STATIC_URL}img/close-button.png" class="close-button" /></button>
     <h1 class="modal-header">Our Ranking Methodology</h1>
@@ -206,7 +210,29 @@ it an optional criteria: The number of artworks collected.</p>
 <p><small>*Every criteria can earn a maximum of 2.000 points. The Internet Presence is a must criterion. Out of the 
 remaining five criteria only the highest four criteria count for the final source.</small></p>
 </div>
-    </div>
+</div>
+
+<div id="data-collector-artist" class="modal hide">
+ <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><img src="${STATIC_URL}img/close-button.png" class="close-button" /></button>
+    <h1 class="modal-header">Are you a collector or artist</h1>
+    <div class="modal-body white">
+    <p>&nbsp;</p>
+    <h4>I’m an art collector:</h4>
+    <p>
+         The information provided at Larry’s List is based only on publicly available data.<br/>
+         We list art collectors who we have identified to be among the most important art collectors in their country. If you feel you should be listed, please contact us. If you would prefer us not to include some of the information which currently appears on your profile, please also contact us. Please refer to the FAQ section to learn more.
+    </p>
+    <p>&nbsp;</p>
+    <h4>I’m an artist:</h4>
+    <p>
+        Go ahead and search your name in the database to find your collectors and their locations. For an artist to search his or her own name, it is completely free. Learn more in the FAQ section how to claim your free search results.
+    </p>
+    <p>&nbsp;</p><p>&nbsp;</p>
+</div>
+</div>
+
+
+
 </%def>
 
 <%def name="searchForm()">
