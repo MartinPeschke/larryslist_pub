@@ -20,7 +20,13 @@ define(
             return this.get("label");
         }
     })
-    , FilterTags = ajax.Collection.extend({idAttribute: "value", model: FilterTag})
+    , FilterTags = ajax.Collection.extend({
+        idAttribute: "value"
+        , model: FilterTag
+        , parse: function(models){
+            return models.TypeAhead?models.TypeAhead:[];
+        }
+    })
 
     , TypeAheadSearch = AbstractSearch.extend({
         template : _.template(typeTmpl)
@@ -41,7 +47,7 @@ define(
                 el:this.$el
                 , suppressExtra: true
                 , model: new FilterTags([])
-                , searchUrl: '/search/entity'
+                , searchUrl: '/api/0.0.1/web/search/typeahead'
                 , apiKey: opts.apiKey
             });
         }

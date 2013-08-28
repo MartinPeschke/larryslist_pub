@@ -47,12 +47,15 @@ define(["tools/ajax", "tools/abstractsearch", "text!templates/taresult.html"], f
                     view.$query.val(term.getSearchLabel());
                     view.$query.prev(".key").attr("name", term.getKey()).val(term.get('value'));
                     view.current = term;
+                    view.$query.closest(".control-group").removeClass("error");
 
                 });
-                this.search.on('extraItemSelected unknownterm:selected unknownterm:metaSelected', function(termname){view.$query.val("");view.current=null;});
+                this.search.on('extraItemSelected unknownterm:selected unknownterm:metaSelected', function(termname){
+                    view.current=null;
+                    view.$query.closest(".control-group").addClass("error");
+                });
                 this.search.on('hide', function(){
                     if(!view.current || view.current.getSearchLabel() != view.$query.val()){
-                        view.$query.val("");
                         view.current = null;
                         view.$query.prev(".key").removeAttr("name").val("");
                     }
